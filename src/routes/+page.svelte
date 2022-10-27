@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Parser, Switch } from 'rain-svelte-components/package';
+	import { page } from '$app/stores';
+	import Account from '$lib/Account.svelte';
+	import Auth from '$lib/Auth.svelte';
 	import { signer, defaultEvmStores } from 'svelte-ethers-store';
 
 	const connect = () => {
@@ -7,8 +10,11 @@
 	};
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+{#if !$page.data.session}
+	<Auth />
+{:else}
+	<Account session={$page.data.session} />
+{/if}
 
 <Switch />
 <Parser signer={$signer} />
