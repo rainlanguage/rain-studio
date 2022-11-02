@@ -2279,9 +2279,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@git+https://github.com/beehive-innovation/rain-svelte-components#4ab88e2892d553fec9b1fa5f2ceaa2fe970bd495":
+"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#4ab88e2892d553fec9b1fa5f2ceaa2fe970bd495":
   version "0.0.1"
-  resolved "git+https://github.com/beehive-innovation/rain-svelte-components#4ab88e2892d553fec9b1fa5f2ceaa2fe970bd495"
+  resolved "https://github.com/beehive-innovation/rain-svelte-components#4ab88e2892d553fec9b1fa5f2ceaa2fe970bd495"
   dependencies:
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@steeze-ui/heroicons" "^2.1.0"
