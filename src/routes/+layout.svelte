@@ -3,6 +3,7 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import Nav from '$lib/Nav.svelte';
 
 	onMount(() => {
 		const {
@@ -17,4 +18,5 @@
 	});
 </script>
 
+<Nav />
 <slot />

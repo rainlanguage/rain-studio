@@ -34,10 +34,12 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@steeze-ui/heroicons": "^2.1.0",
+		"@steeze-ui/svelte-icon": "^1.3.2",
 		"@supabase/auth-helpers-sveltekit": "^0.8.3",
 		"@supabase/supabase-js": "^2.0.4",
 		"install": "^0.13.0",
-		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#4ab88e2892d553fec9b1fa5f2ceaa2fe970bd495",
+		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#3e0388087fe36cfa62aee3ffe9e6b13d8442acee",
 		"svelte-ethers-store": "^2.5.8"
 	}
 }
