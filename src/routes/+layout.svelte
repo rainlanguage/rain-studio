@@ -18,5 +18,7 @@
 	});
 </script>
 
-<Nav />
-<slot />
+<div class="min-h-screen flex flex-col">
+	<Nav />
+	<slot />
+</div>

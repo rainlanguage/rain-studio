@@ -15,6 +15,3 @@
 {:else}
 	<Account session={$page.data.session} />
 {/if}
-
-<Switch />
-<Parser signer={$signer} />
