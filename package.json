@@ -39,7 +39,7 @@
 		"@supabase/auth-helpers-sveltekit": "^0.8.3",
 		"@supabase/supabase-js": "^2.0.4",
 		"install": "^0.13.0",
-		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#1f053d07651af56a342eb6a2acda98b984759cd0",
+		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#2e1a1a5b0e7d573af018ac31edd6c1bc6d81a2c0",
 		"svelte-ethers-store": "^2.5.8"
 	}
 }
