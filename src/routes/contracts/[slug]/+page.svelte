@@ -9,10 +9,14 @@
 	import { Tabs, TabList, TabPanel, Tab } from 'rain-svelte-components/package/tabs/tabs';
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 
+	import { env } from '$env/dynamic/public';
+
 	$: project = $page.data.contract.project;
 	$: metadata = $page.data.contract.metadata;
 	$: abi = $page.data.contract.abi;
 </script>
+
+{env.PUBLIC_SUPABASE_URL}{env.PUBLIC_SUPABASE_ANON_KEY}
 
 <PageHeader>
 	<div class="flex flex-col container mx-auto h-full items-stretch">
