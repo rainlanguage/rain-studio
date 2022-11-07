@@ -8,6 +8,8 @@
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
 	import { Tabs, TabList, TabPanel, Tab } from 'rain-svelte-components/package/tabs/tabs';
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
+	import Write from './Write.svelte';
+	import Summary from './Summary.svelte';
 
 	$: project = $page.data.contract.project;
 	$: metadata = $page.data.contract.metadata;
@@ -40,14 +42,10 @@
 	<div class="container flex mx-auto justify-stretch">
 		<div class="w-2/3 flex flex-col pt-10 gap-y-8 pr-6">
 			<TabPanel>
-				<div class="flex flex-col gap-y-3 max-w-prose">
-					<span class="text-2xl">{metadata.name}</span>
-					<span>{metadata.description}</span>
-				</div>
-				<AutoAbiFormSeparated abi={abi.abi} {metadata} />
-				<div class="self-start">
-					<Button variant="primary">Deploy {metadata.name}</Button>
-				</div>
+				<Summary {abi} {metadata} />
+			</TabPanel>
+			<TabPanel>
+				<Write {abi} {metadata} />
 			</TabPanel>
 		</div>
 		<div class="border-l border-gray-200 w-1/3"><Sidebar /></div>
