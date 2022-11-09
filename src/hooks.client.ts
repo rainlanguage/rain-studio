@@ -1,5 +1,8 @@
 import { env } from '$env/dynamic/public'
+import TimeAgo from 'javascript-time-ago';
+import en from '$lib/assets/en.json';
+
+
+TimeAgo.addDefaultLocale(en);
 
 import '$lib/supabaseClient'
-
-console.log('client', env.PUBLIC_SUPABASE_URL, env.PUBLIC_SUPABASE_ANON_KEY)

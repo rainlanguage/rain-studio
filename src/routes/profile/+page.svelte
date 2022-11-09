@@ -4,3 +4,5 @@
 </script>
 
 <Account session={$page.data.session} />
+
+<a href={`/user/${$page.data.session.user.id}/expressions`}>Expressions</a>
