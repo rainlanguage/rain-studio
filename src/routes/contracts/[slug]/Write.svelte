@@ -56,7 +56,11 @@
 					.name}</span
 			>
 			<span>Select a method to write</span>
-			<Select items={knownAddresses} bind:value={contractAddress} />
+			{#if knownAddresses?.length}
+				<Select items={knownAddresses} bind:value={contractAddress} />
+			{:else}
+				<span class="text-gray-500">No known deployments for this chain.</span>
+			{/if}
 			<Select items={writeMethods} bind:value={methodName} />
 		</div>
 	{/if}
