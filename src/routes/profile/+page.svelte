@@ -2,8 +2,9 @@
 <script>
 	import { page } from '$app/stores';
 	import Account from '$lib/Account.svelte';
+	import Background from '$lib/Background.svelte';
 </script>
-<div class="w-full flex-grow bg-gray-100 flex flex-col items-center justify-center">
+<Background>
 	<Account session={$page.data.session} />
-</div>
+</Background>
 
