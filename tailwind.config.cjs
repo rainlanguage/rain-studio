@@ -8,6 +8,10 @@ const config = {
 		colors: {
 			...colors,
 			gray: colors.neutral
+		},
+		fontFamily: {
+			sans: ['DM Sans', { fontFeatureSettings: '"calt", "off"' }],
+			mono: 'DM Mono'
 		}
 	},
 	darkMode: 'class',

@@ -8,4 +8,4 @@
 	).size;
 </script>
 
-{addressCount} known addresse{#if addressCount > 1}s{/if} on {chainCount} chain{#if chainCount > 1}s{/if}
+{addressCount} known address{#if addressCount > 1}es{/if} on {chainCount} chain{#if chainCount > 1}s{/if}

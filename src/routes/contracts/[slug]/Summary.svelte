@@ -11,22 +11,24 @@
 	<SectionHeading>Known addresses</SectionHeading>
 	<SectionBody>
 		<div class="flex flex-col text-sm">
-			<div class="grid grid-cols-3 pb-2">
-				<span class="font-medium">Network</span>
-				<span class="font-medium">Chain id</span>
-				<span class="font-medium">Address</span>
-			</div>
-			{#if metadata.addresses}
-				{#each metadata.addresses as chain}
-					{#each chain.knownAddresses as knownAddress}
-						<div class="border-t border-gray-200 grid grid-cols-3 py-2">
-							<span>{chain.chainId}</span>
-							<span>{chain.chainId}</span>
-							<span>{knownAddress}</span>
-						</div>
+			<table class="">
+				<tr class="pb-2 border-b border-gray-200">
+					<td class="pb-2">Network</td>
+					<td class="pb-2">Chain id</td>
+					<td class="pb-2">Address</td>
+				</tr>
+				{#if metadata.addresses}
+					{#each metadata.addresses as chain}
+						{#each chain.knownAddresses as knownAddress}
+							<tr>
+								<td class="pt-3">{chain.chainId}</td>
+								<td class="pt-3">{chain.chainId}</td>
+								<td class="truncate pt-3">{knownAddress}</td>
+							</tr>
+						{/each}
 					{/each}
-				{/each}
-			{/if}
+				{/if}
+			</table>
 		</div>
 	</SectionBody>
 </Section>
