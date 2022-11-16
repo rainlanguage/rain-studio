@@ -4,6 +4,6 @@
   
 </script>
 
-<div class={`w-full flex-grow bg-gray-100 flex flex-col ${alignItems} ${justifyContent}`}>
+<div class={`w-full flex-grow bg-gray-100 flex ${alignItems} ${justifyContent}`}>
   <slot/>
 </div>
