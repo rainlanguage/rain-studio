@@ -11,11 +11,10 @@
 
 <script lang="ts">
 	import ProjectTag from '$lib/ProjectTag.svelte';
-
 	import { supabaseClient } from '$lib/supabaseClient';
-
 	import { Button, Input } from 'rain-svelte-components/package';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
+
 	export let presaveExpression: PresaveExpression;
 
 	let error: string | null;
@@ -33,11 +32,7 @@
 		const response = await supabaseClient.from('draft_expressions').insert(expression).select();
 		if (response.status == 400) error = 'Something went wrong';
 		if (response.status == 201 && response.data) newSlug = response.data[0].sharable_slug;
-		console.log(response);
 	};
-	// save an expression i'm currently writing
-	// fork an exression from somewhere else
-	// write an entirely new expression
 </script>
 
 <div class="flex flex-col gap-y-4 w-96">
