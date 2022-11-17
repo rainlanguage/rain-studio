@@ -12,6 +12,7 @@
 	import Summary from './Summary.svelte';
 
 	$: project = $page.data.contract.project;
+	$: contract = $page.data.contract;
 	$: metadata = $page.data.contract.metadata;
 	$: abi = $page.data.contract.abi;
 </script>
@@ -45,7 +46,7 @@
 				<Summary {abi} {metadata} />
 			</TabPanel>
 			<TabPanel>
-				<Write {abi} {metadata} />
+				<Write {abi} {metadata} {contract} {project} />
 			</TabPanel>
 		</div>
 		<div class="border-l border-gray-200 w-1/3"><Sidebar /></div>

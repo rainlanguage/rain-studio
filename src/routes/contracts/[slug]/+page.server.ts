@@ -8,7 +8,7 @@ export async function load({ params }) {
 
     const query = await supabaseClient
         .from('contracts')
-        .select('project ( name, logo_url ), metadata, abi')
+        .select('project ( name, logo_url ), metadata, abi, id')
         .eq('slug', params.slug)
 
     if (query.error) throw error(404, 'Not found');
