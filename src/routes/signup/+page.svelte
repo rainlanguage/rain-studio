@@ -1,8 +1,8 @@
 <script>
-	import Auth from '$lib/Auth.svelte';
+	import Signup from '$lib/Signup.svelte';
 	import Background from '$lib/Background.svelte';
 </script>
 
 <Background>
-	<Auth />
+	<Signup />
 </Background>

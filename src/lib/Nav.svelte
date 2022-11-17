@@ -8,8 +8,8 @@
 	class="flex justify-between px-4 py-3 sticky top-0 bg-white bg-opacity-70 backdrop-blur-md border-b border-gray-200"
 >
 	<div class="flex items-center gap-x-2">
-		<img alt="Brainscan lgoo" class="w-7" src={logo} />
-		<span class="text-xl font-medium">Brainscan</span>
+		<img alt="Rain Studio lgoo" class="w-7" src={logo} />
+		<span class="text-xl font-medium">Rain Studio</span>
 	</div>
 	<div class="flex gap-x-5 items-center">
 		<a
@@ -27,7 +27,14 @@
 				on:click={() => {
 					goto('/login');
 				}}
-				class="p-1 px-2 bg-gray-700 rounded-lg text-white">Sign in</a
+				class="p-1 px-2 -mr-2 bg-gray-700 rounded-lg text-white">Log in</a
+			>
+			<a
+				href="/signup"
+				on:click={() => {
+					goto('/signup');
+				}}
+				class="p-1 px-2 -ml-2 bg-gray-700 rounded-lg text-white">Sign Up</a
 			>
 		{:else}
 			<a
