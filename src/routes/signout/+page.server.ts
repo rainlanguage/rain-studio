@@ -7,6 +7,6 @@ export async function load(event) {
 	if (!session) {
 		throw redirect(307, '/login');
 	} else {
-		throw redirect(308, '/profile');
+		throw redirect(307, '/profile');
 	}
 }

@@ -5,6 +5,6 @@ import { redirect } from '@sveltejs/kit';
 export async function load(event) {
 	const session = await getServerSession(event);
 	if (session) {
-		throw redirect(308, '/profile');
+		throw redirect(307, '/profile');
 	}
 }
