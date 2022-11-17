@@ -7,7 +7,6 @@
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
 
 	export let expression: any;
-	console.log(expression);
 </script>
 
 <div class="flex flex-col xl:flex-row border border-gray-200 p-5 rounded-lg gap-x-4 gap-y-4">
