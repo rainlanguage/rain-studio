@@ -6,19 +6,18 @@
 	import { Eye, EyeSlash, ArrowLeftOnRectangle } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 
-
 	let loading = false;
 	let email: string;
 	let password: string;
 
-	let show_password = false
-	$: type = show_password ? 'text' : 'password'
-	$: hideIcon = show_password ? EyeSlash : Eye
+	let show_password = false;
+	$: type = show_password ? 'text' : 'password';
+	$: hideIcon = show_password ? EyeSlash : Eye;
 
 	const handleLogin = async () => {
 		try {
 			loading = true;
-			const { error} = await supabaseClient.auth.signInWithPassword({ email, password });
+			const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 			if (error) throw error;
 			alert('Logged');
 			goto('/profile');
@@ -28,7 +27,6 @@
 			}
 		} finally {
 			loading = false;
-
 		}
 	};
 </script>
@@ -44,11 +42,8 @@
 		<Input bind:value={email} placeholder="Your email" />
 		<div class="flex w-full rounded-md bg-gray-200 dark:bg-gray-800">
 			<Input bind:value={password} placeholder="Your password" {type} />
-			<button type="button" on:click={ () => show_password = !show_password }>
-				<Icon
-					src={hideIcon}
-					class="cursor-pointer h-6 px-2"
-				/>
+			<button type="button" on:click={() => (show_password = !show_password)}>
+				<Icon src={hideIcon} class="cursor-pointer h-6 px-2" />
 			</button>
 		</div>
 
@@ -57,6 +52,5 @@
 				{loading ? 'Loading' : 'Log in'}
 			</Button>
 		</div>
-
 	</div>
 </form>
