@@ -105,7 +105,7 @@
 					}}
 				>
 					<input name="address" value={$signerAddress} hidden />
-					<Button>New Link</Button>
+					<Button>Link address</Button>
 				</form>
 
 				<Button disabled={!$signerAddress} on:click={async () => defaultEvmStores.disconnect()}>

@@ -10,19 +10,6 @@ export async function load(event) {
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-	getNonce: async (event) => {
-		const { request } = event;
-		const { supabaseClient } = await getSupabase(event);
-
-		const formData = await request.formData();
-		const address = formData.get('address');
-		const { data, error } = await supabaseClient.functions.invoke('get_nonce', {
-			body: { address }
-		});
-
-		return { success: true, id: data.id, error };
-	},
-
 	linkAddress: async (event) => {
 		const { request } = event;
 		const { supabaseClient, session } = await getSupabase(event);
