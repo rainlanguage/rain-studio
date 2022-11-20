@@ -2,20 +2,19 @@
 	import { providers } from 'ethers';
 	import { onMount } from 'svelte';
 	import { Button } from 'rain-svelte-components/package';
-	import { defaultEvmStores, signerAddress, connected } from 'svelte-ethers-store';
+	import { defaultEvmStores, signerAddress, connected, signer } from 'svelte-ethers-store';
 	import Web3Modal from 'web3modal';
 	import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min';
 
 	import { page } from '$app/stores';
-	import { enhance, applyAction } from '$app/forms';
 	import Account from '$lib/Account.svelte';
 	import Background from '$lib/Background.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
+	import { createMessage, postRequest } from '$lib/utils';
 
 	let web3Modal: Web3Modal;
 	let ethersProvider: providers.Web3Provider;
 
-	let wallets: any[] = [];
 	let loading = false;
 	let message = '';
 
@@ -46,42 +45,72 @@
 		const provider = await web3Modal.connect();
 		ethersProvider = new providers.Web3Provider(provider);
 		defaultEvmStores.setProvider(provider);
-		searchLinkAddress();
 	};
 
-	const getWallets = async () => {
-		const user = $page.data.session.user;
+	const disconectWallet = async () => {
+		defaultEvmStores.disconnect();
 	};
 
-	const searchLinkAddress = async () => {
+	const linkAddress = async () => {
+		message = 'Waiting for sign...';
+
+		const address = $signerAddress;
+
+		// Get the nonce with the current address to sign the message
+		const nonceResp = await (await postRequest('/api/get_nonce', { address })).json();
+		if (!nonceResp.success) {
+			const error = nonceResp.error.message;
+			message = error;
+			alert(error);
+			return;
+		}
+
+		// Sign the message
+		const messageToSign = createMessage(address, nonceResp.id);
+		const signedMessage = await $signer.signMessage(messageToSign);
+
+		message = 'Linking the address...';
+
+		// Request to link address
+		const linkResp = await (
+			await postRequest('/api/link_address', { address, signedMessage })
+		).json();
+		if (!linkResp.success) {
+			message = 'The address could not be linked to your account.';
+			alert(message);
+			return;
+		}
+
+		message = 'Address linked to this account.';
+		alert('Address linked to this account.');
+	};
+
+	const searchAddress = async () => {
 		loading = true;
 		const user = $page.data.session.user;
 
+		console.log('here1');
+
 		let { data, error } = await supabaseClient
-			.from('profiles')
-			.select('wallets(*)')
-			.eq('id', user.id)
+			.from('wallets')
+			.select('user_id')
+			.eq('address', $signerAddress)
 			.single();
 
-		const value = data?.wallets.find((element: any) => {
-			if (element.address == $signerAddress) {
-				return true;
-			}
-		});
-
 		if (error) {
-			message = error.message;
-		} else if (value) {
-			message = 'This address is linked to your account.';
+			message = 'The address is not linked to your account';
+		} else if (user.id === data?.user_id) {
+			message = 'This address is linked to your account';
 		} else {
-			message = "You don't have address linked to your account.";
+			message = 'This address is linked to other account';
 		}
 
 		loading = false;
 	};
 
+	// Only search if connected
 	$: if ($connected) {
-		searchLinkAddress();
+		searchAddress();
 	}
 </script>
 
@@ -92,35 +121,24 @@
 		{#if !$signerAddress}
 			<Button disabled={!!$signerAddress} on:click={connectWallet}>Connect wallet</Button>
 		{:else}
-			<div class="space-y-2">
-				<form
-					method="POST"
-					action="?/linkAddress"
-					use:enhance={() => {
-						loading = true;
-						return async ({ result }) => {
-							searchLinkAddress();
-							await applyAction(result);
-						};
-					}}
-				>
-					<input name="address" value={$signerAddress} hidden />
-					<Button>Link address</Button>
-				</form>
+			<Button variant="primary" on:click={linkAddress}>Link you address</Button>
 
-				<Button disabled={!$signerAddress} on:click={async () => defaultEvmStores.disconnect()}>
-					Disconnect
-				</Button>
+			<div>
+				<Button disabled={!$signerAddress} on:click={disconectWallet}>Disconnect</Button>
 			</div>
 		{/if}
 	</div>
 
-	<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3 ml-5">
-		{#if $signerAddress}
+	{#if $signerAddress}
+		<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3 ml-5">
 			<div class="space-y-2">
-				<p>{loading ? 'Searching' : message}</p>
-				<p>Address connected: {$signerAddress}</p>
+				<p>
+					Address connected: {$signerAddress}
+				</p>
+				<p class="border-t-2 border-double border-gray-300 pt-1.5">
+					{loading ? 'Loading...' : message}
+				</p>
 			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 </Background>
