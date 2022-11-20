@@ -18,11 +18,7 @@ serve(async (req) => {
 
 		const id = uuidv5(address, namespace);
 
-		const { data } = await supabaseClient.from('wallets').select('*').eq(`id`, id).single();
-
-		if (data) {
-			throw new Error('Address already linked');
-		}
+		await supabaseClient.from('wallets').select('*').eq(`id`, id).single();
 
 		return new Response(JSON.stringify({ id }), {
 			headers: { 'Content-Type': 'application/json' },
