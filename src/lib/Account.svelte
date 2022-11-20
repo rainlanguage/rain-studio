@@ -5,7 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { Button, Input } from 'rain-svelte-components/package';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { ArrowRightOnRectangle, TableCells, CommandLine } from '@steeze-ui/heroicons';
+	import { ArrowRightOnRectangle, TableCells } from '@steeze-ui/heroicons';
 
 	export let session: AuthSession;
 

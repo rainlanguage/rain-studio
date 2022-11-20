@@ -1,5 +1,5 @@
-import { getServerSession, getSupabase } from '@supabase/auth-helpers-sveltekit';
-import { redirect, error, invalid } from '@sveltejs/kit';
+import { getServerSession } from '@supabase/auth-helpers-sveltekit';
+import { redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load(event) {
