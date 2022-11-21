@@ -1,4 +1,4 @@
-import { getSupabase } from "@supabase/auth-helpers-sveltekit"
+import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */

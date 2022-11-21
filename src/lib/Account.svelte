@@ -5,7 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { Button, Input } from 'rain-svelte-components/package';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { ArrowRightOnRectangle, TableCells, CommandLine} from '@steeze-ui/heroicons';
+	import { ArrowRightOnRectangle, TableCells } from '@steeze-ui/heroicons';
 
 	export let session: AuthSession;
 
@@ -91,47 +91,55 @@
 
 <div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3">
 	<div class="w-full border-b-2 border-double border-gray-300 pb-4">
-		<a class= "flex w-5/6 py-1 mx-auto text-white rounded-[10px] border border-neutral-300 bg-blue-500 hover:bg-blue-400" href={`/user/${session.user.id}/expressions`}>
-			<Icon class="h-6 w-4/12" src={TableCells}/>
+		<a
+			class="flex w-5/6 py-1 mx-auto text-white rounded-[10px] border border-neutral-300 bg-blue-500 hover:bg-blue-400"
+			href={`/user/${session.user.id}/expressions`}
+		>
+			<Icon class="h-6 w-4/12" src={TableCells} />
 			Expressions
 		</a>
 	</div>
 
-	<form class="form-widget space-y-4 border-b-2 border-double border-gray-300 pb-4" on:submit|preventDefault={updateProfile}>
+	<form
+		class="form-widget space-y-4 border-b-2 border-double border-gray-300 pb-4"
+		on:submit|preventDefault={updateProfile}
+	>
 		<div id="email">
 			<Input value={session.user.email} disabled>
 				<span slot="label">Email</span>
 			</Input>
 		</div>
 		<div id="username">
-			<Input bind:value={username} >
+			<Input bind:value={username}>
 				<span slot="label">User name</span>
 			</Input>
 		</div>
 		<div id="fullname">
-			<Input bind:value={fullname} >
+			<Input bind:value={fullname}>
 				<span slot="label">Full name</span>
 			</Input>
 		</div>
 		<div id="website">
-			<Input type="website" bind:value={website} >
+			<Input type="website" bind:value={website}>
 				<span slot="label">Website</span>
 			</Input>
 		</div>
 		<div id="avatarUrl">
-			<Input  bind:value={avatarUrl} >
+			<Input bind:value={avatarUrl}>
 				<span slot="label">Avatar Url</span>
 			</Input>
 		</div>
-	
+
 		<div class="w-max mx-auto">
-			<Button size=small variant=secondary disabled={loading} >{loading ? 'Loading...' : 'Update'}</Button>
+			<Button size="small" variant="secondary" disabled={loading}
+				>{loading ? 'Loading...' : 'Update'}</Button
+			>
 		</div>
 	</form>
 
 	<div class="mx-auto">
-		<Button size=small icon={ArrowRightOnRectangle}  on:click={signOut} disabled={loading} >Sign Out</Button>
+		<Button size="small" icon={ArrowRightOnRectangle} on:click={signOut} disabled={loading}
+			>Sign Out</Button
+		>
 	</div>
 </div>
-
-
