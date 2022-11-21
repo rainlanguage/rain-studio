@@ -1,22 +1,21 @@
-import { getSupabase } from '@supabase/auth-helpers-sveltekit';
+import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
+import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load(event) {
+// /** @type {import('./$types').PageServerLoad} */
+export const load: PageServerLoad = async (event) => {
+	const { fetch, params } = event
+	const { supabaseClient, session } = await getSupabase(event);
+	const userQuery = await supabaseClient.from('profiles').select('*').eq('username', params.user)
+	if (!userQuery?.data?.[0]) throw error(404, 'Not found');
 
-    const { supabaseClient, session } = await getSupabase(event)
+	// using an endpoint here to get the current users expressions
+	// note that this endpoint takes the user id, not the username,
+	// as the user id is generally more readily available in the app
+	// as part of the session
+	const resp = await fetch(`/user/${session?.user.id}/expressions`, { method: 'POST' })
+	let draft_expressions
+	if (resp.ok) ({ draft_expressions } = await resp.json())
 
-    // console.log(event)
-
-    const query = await supabaseClient
-        .from('draft_expressions')
-        .select('*, contract ( metadata, project (name, logo_url) ), interpreter ( metadata, id )')
-
-    const draft_expressions = (session?.user.id == event.params.user) ? query.data : []
-
-    console.log(session)
-
-    if (query.error) throw error(404, 'Not found');
-
-    return { draft_expressions }
+	return { draft_expressions };
 }

@@ -1,7 +1,9 @@
 <script lang="ts">
 	import TimeAgo from 'javascript-time-ago';
+	import en from '$lib/assets/en.json';
 
 	// English.
+	TimeAgo.addDefaultLocale(en);
 
 	export let dateString: string = '';
 	export let date: Date | null = null;
