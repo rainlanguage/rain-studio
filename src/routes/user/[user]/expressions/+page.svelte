@@ -4,8 +4,13 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import { Plus } from '@steeze-ui/heroicons';
 	import { Button, Select, Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components/package';
+	import autoAnimate from '@formkit/auto-animate';
 
 	$: draftExpressions = $page.data?.draft_expressions;
+
+	const removeExpression = (id: string) => {
+		draftExpressions = draftExpressions.filter((expression: any) => expression.id !== id);
+	};
 </script>
 
 <PageHeader>
@@ -37,9 +42,14 @@
 					</div>
 					<div class="flex">
 						<div class="w-96">filters</div>
-						<div class="flex-grow gap-y-4 flex-col flex">
-							{#each draftExpressions as expression}
-								<ExpressionSummaryRow {expression} />
+						<div use:autoAnimate class="flex-grow gap-y-4 flex-col flex">
+							{#each draftExpressions as expression (expression.id)}
+								<ExpressionSummaryRow
+									{expression}
+									on:deleted={() => {
+										removeExpression(expression.id);
+									}}
+								/>
 							{/each}
 						</div>
 					</div>
