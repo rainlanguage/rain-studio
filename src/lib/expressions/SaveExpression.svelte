@@ -13,9 +13,11 @@
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { Button, Input } from 'rain-svelte-components/package';
+	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
 
 	export let presaveExpression: PresaveExpression;
+	export let forking: boolean = false;
 
 	let error: string | null;
 	let newSlug: string;
@@ -35,15 +37,17 @@
 	};
 </script>
 
-<div class="flex flex-col gap-y-4 w-96">
+<div class="flex flex-col gap-y-4 w-screen max-w-2xl">
 	{#if !newSlug}
-		<span class="text-2xl font-semibold">Save an expression</span>
-		<span>{presaveExpression.raw_expression}</span>
+		<span class="text-2xl font-semibold"
+			>{#if forking}Fork this expression{:else}Save this expression{/if}</span
+		>
 		<ProjectTag
 			name={presaveExpression.contract.project.name}
 			logoUrl={presaveExpression.contract.project.logo_url}
 		/>
 		<Pills><span class="text-sm">{presaveExpression.interpreter.metadata.name}</span></Pills>
+		<Formatter raw={presaveExpression.raw_expression} />
 		<Input bind:value={presaveExpression.name}>
 			<svelte:fragment slot="label">Name</svelte:fragment>
 		</Input>

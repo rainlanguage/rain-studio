@@ -6,6 +6,7 @@
 	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
+	import Auth from '$lib/Auth.svelte';
 
 	export let metadata: ContractMetadata, abi: any, contract: any;
 
@@ -13,7 +14,8 @@
 	let result: any = []; // the state of the the form
 	let contractAddress: string | -1; // the selected contract address
 
-	let openNewExpModal: boolean = false;
+	let openNewExpModal: boolean = false,
+		openSignInModal: boolean = false;
 	let expressionToSave: string;
 	let presaveExpression: PresaveExpression;
 
@@ -107,3 +109,5 @@
 <Modal bind:open={openNewExpModal}>
 	<SaveExpression {presaveExpression} />
 </Modal>
+
+<Modal bind:open={openSignInModal}><Auth /></Modal>

@@ -37,7 +37,7 @@
 					</div>
 					<div class="flex">
 						<div class="w-96">filters</div>
-						<div class="flex-grow">
+						<div class="flex-grow gap-y-4 flex-col flex">
 							{#each draftExpressions as expression}
 								<ExpressionSummaryRow {expression} />
 							{/each}

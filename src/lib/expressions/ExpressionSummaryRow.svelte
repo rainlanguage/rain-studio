@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import ProjectTag from '$lib/ProjectTag.svelte';
-	import TimeAgo from '$lib/TimeAgo.svelte';
+	// import TimeAgo from '$lib/TimeAgo.svelte';
 	import { DocumentDuplicate, PaperAirplane, Trash } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
+	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
 
 	export let expression: any;
@@ -12,7 +13,7 @@
 <div class="flex flex-col xl:flex-row border border-gray-200 p-5 rounded-lg gap-x-4 gap-y-4">
 	<div class="w-96 flex flex-col gap-y-3">
 		<span class="text-xl font-medium">{expression.name}</span>
-		<TimeAgo dateString={expression.created_at} />
+		<!-- <TimeAgo dateString={expression.created_at} /> -->
 		<span>{expression.notes}</span>
 		<div class="flex gap-x-2 items-center text-sm">
 			<ProjectTag
@@ -35,7 +36,7 @@
 			<Button size="small" variant="transparent" icon={Trash}>Delete</Button>
 		</div>
 	</div>
-	<div class="font-mono bg-gray-100 rounded-md p-2 text-sm flex-grow">
-		{expression.raw_expression}
+	<div class="w-full h-full">
+		<Formatter raw={expression.raw_expression} />
 	</div>
 </div>
