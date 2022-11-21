@@ -26,8 +26,6 @@
 			openSignInModal = true;
 		}
 	};
-
-	$: console.log(user);
 </script>
 
 <PageHeader>
@@ -36,7 +34,8 @@
 			<span class="text-sm text-gray-500">Draft expression</span>
 			<span class="text-2xl font-medium">{expression.name}</span>
 			<div class="flex items-center gap-x-2">
-				<span>Created by</span><img class="w-6 rounded-full inline" src={user.avatar_url} />
+				<span>Created by</span>
+				<img alt="user avatar" class="w-6 rounded-full inline" src={user.avatar_url} />
 				<span>{user.username}</span>
 			</div>
 			<TimeAgo dateString={expression.created_at} />

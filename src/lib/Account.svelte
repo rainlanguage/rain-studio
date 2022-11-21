@@ -93,7 +93,7 @@
 	<div class="w-full border-b-2 border-double border-gray-300 pb-4">
 		<a
 			class="flex w-5/6 py-1 mx-auto text-white rounded-[10px] border border-neutral-300 bg-blue-500 hover:bg-blue-400"
-			href={`/user/${session.user.id}/expressions`}
+			href={`/user/${username}/expressions`}
 		>
 			<Icon class="h-6 w-4/12" src={TableCells} />
 			Expressions

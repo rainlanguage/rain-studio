@@ -15,12 +15,15 @@
 	import { Button, Input } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	export let presaveExpression: PresaveExpression;
 	export let forking: boolean = false;
 
 	let error: string | null;
 	let newSlug: string;
+
+	const dispatch = createEventDispatcher();
 
 	const saveExpression = async () => {
 		error = null;
@@ -33,7 +36,10 @@
 		};
 		const response = await supabaseClient.from('draft_expressions').insert(expression).select();
 		if (response.status == 400) error = 'Something went wrong';
-		if (response.status == 201 && response.data) newSlug = response.data[0].sharable_slug;
+		if (response.status == 201 && response.data) {
+			newSlug = response.data[0].sharable_slug;
+			dispatch('saved');
+		}
 	};
 </script>
 
