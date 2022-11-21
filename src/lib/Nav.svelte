@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="flex justify-between px-4 py-3 sticky top-0 bg-white bg-opacity-70 backdrop-blur-md border-b border-gray-200"
+	class="flex justify-between px-4 py-3 sticky top-0 bg-white bg-opacity-70 backdrop-blur-md border-b border-gray-200 z-20"
 >
 	<div class="flex items-center gap-x-2">
 		<img alt="Rain Studio lgoo" class="w-7" src={logo} />

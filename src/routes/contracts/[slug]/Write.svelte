@@ -1,12 +1,13 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { Button, Select, Modal } from 'rain-svelte-components/package';
 	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
 	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { ethers } from 'ethers';
 	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';
-	import { supabaseClient } from '$lib/supabaseClient';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
 	import Auth from '$lib/Auth.svelte';
+	import LoadExpressionModal from '$lib/expressions/LoadExpressionModal.svelte';
 
 	export let metadata: ContractMetadata, abi: any, contract: any;
 
@@ -15,9 +16,12 @@
 	let contractAddress: string | -1; // the selected contract address
 
 	let openNewExpModal: boolean = false,
-		openSignInModal: boolean = false;
+		openSignInModal: boolean = false,
+		loadExpressionModal: boolean = false;
 	let expressionToSave: string;
 	let presaveExpression: PresaveExpression;
+
+	let loadRaw: Function;
 
 	// getting all of the state changing methods for this abi
 	$: writeMethods = abi.abi
@@ -59,6 +63,17 @@
 		openNewExpModal = true;
 	};
 
+	const loadExpression = async ({ detail }: { detail: any }) => {
+		loadRaw = detail.loadRaw;
+		loadExpressionModal = true;
+	};
+
+	const loadSelectedExpression = async ({ detail }: { detail: any }) => {
+		loadExpressionModal = false;
+		console.log(detail);
+		loadRaw(detail.expression.raw_expression);
+	};
+
 	const connect = () => {
 		defaultEvmStores.setProvider();
 	};
@@ -98,6 +113,7 @@
 				{methodName}
 				bind:result
 				on:save={saveExpression}
+				on:load={loadExpression}
 			/>
 		{/key}
 		<div class="self-start">
@@ -107,7 +123,17 @@
 {/key}
 
 <Modal bind:open={openNewExpModal}>
-	<SaveExpression {presaveExpression} />
+	{#if $page.data.session}
+		<SaveExpression {presaveExpression} />
+	{:else}
+		<Auth />
+	{/if}
 </Modal>
 
-<Modal bind:open={openSignInModal}><Auth /></Modal>
+<Modal bind:open={loadExpressionModal}>
+	{#if $page.data.session}
+		<LoadExpressionModal on:select={loadSelectedExpression} />
+	{:else}
+		<Auth />
+	{/if}
+</Modal>
