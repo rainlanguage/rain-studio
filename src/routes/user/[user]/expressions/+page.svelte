@@ -51,8 +51,8 @@
 						</div>
 					</div>
 					<div class="flex flex-row">
-						<div class="w-96">filters</div>
-						<div use:autoAnimate class="w-full gap-y-4 flex-col flex">
+						<div class="w-1/5">filters</div>
+						<div use:autoAnimate class="w-4/5 gap-y-4 flex-col flex">
 							{#each draftExpressions as expression (expression.id)}
 								<ExpressionSummaryRow
 									{expression}

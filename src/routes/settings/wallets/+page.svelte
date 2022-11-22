@@ -114,31 +114,27 @@
 	}
 </script>
 
-<Background>
-	<Account session={$page.data.session} />
+<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3 ml-5">
+	{#if !$signerAddress}
+		<Button disabled={!!$signerAddress} on:click={connectWallet}>Connect wallet</Button>
+	{:else}
+		<Button variant="primary" on:click={linkAddress}>Link you address</Button>
 
-	<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3 ml-5">
-		{#if !$signerAddress}
-			<Button disabled={!!$signerAddress} on:click={connectWallet}>Connect wallet</Button>
-		{:else}
-			<Button variant="primary" on:click={linkAddress}>Link you address</Button>
-
-			<div>
-				<Button disabled={!$signerAddress} on:click={disconectWallet}>Disconnect</Button>
-			</div>
-		{/if}
-	</div>
-
-	{#if $signerAddress}
-		<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3 ml-5">
-			<div class="space-y-2">
-				<p>
-					Address connected: {$signerAddress}
-				</p>
-				<p class="border-t-2 border-double border-gray-300 pt-1.5">
-					{loading ? 'Loading...' : message}
-				</p>
-			</div>
+		<div>
+			<Button disabled={!$signerAddress} on:click={disconectWallet}>Disconnect</Button>
 		</div>
 	{/if}
-</Background>
+</div>
+
+{#if $signerAddress}
+	<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3 ml-5">
+		<div class="space-y-2">
+			<p>
+				Address connected: {$signerAddress}
+			</p>
+			<p class="border-t-2 border-double border-gray-300 pt-1.5">
+				{loading ? 'Loading...' : message}
+			</p>
+		</div>
+	</div>
+{/if}

@@ -1,48 +1,114 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition';
 	import logo from './assets/rain-logo.svg';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { supabaseClient } from '$lib/supabaseClient';
+	import UserAvatar from '$lib/UserAvatar.svelte';
+
+	let profileMenu: any;
+	let profileMenuOpen: boolean = false;
+	let bodyRef: HTMLDivElement;
+
+	const openProfileMenu = () => {
+		profileMenuOpen = !profileMenuOpen;
+	};
+
+	const handleDropdownFocusLoss = ({ relatedTarget, currentTarget }) => {
+		// use "focusout" event to ensure that we can close the dropdown when clicking outside or when we leave the dropdown with the "Tab" button
+		// check if the new focus target doesn't present in the dropdown tree (exclude ul\li padding area because relatedTarget, in this case, will be null)
+		if (relatedTarget instanceof HTMLElement && currentTarget.contains(relatedTarget)) return;
+		profileMenuOpen = false;
+	};
+
+	async function signOut() {
+		try {
+			let { error } = await supabaseClient.auth.signOut();
+			if (error) throw error;
+			goto('/');
+		} catch (error) {
+			if (error instanceof Error) {
+				alert(error.message);
+			}
+		} finally {
+		}
+	}
 </script>
 
 <div
 	class="flex justify-between px-4 py-3 sticky top-0 bg-white bg-opacity-70 backdrop-blur-md border-b border-gray-200 z-20"
 >
 	<div class="flex items-center gap-x-2">
-		<img alt="Rain Studio lgoo" class="w-7" src={logo} />
-		<span class="text-xl font-medium">Rain Studio</span>
+		<img alt="Rain Studio logo" class="w-7" src={logo} />
+		<span class="font-medium mr-2">Rain Studio</span>
+		<div class="flex gap-x-4">
+			<a
+				href="/contracts"
+				class="nav-link"
+				on:click|preventDefault={() => {
+					goto('/contracts');
+				}}>Contracts</a
+			>
+			<span class="nav-link">Expressions</span>
+			<span class="nav-link">Docs</span>
+		</div>
 	</div>
 	<div class="flex gap-x-5 items-center">
-		<a
-			href="/contracts"
-			on:click|preventDefault={() => {
-				goto('/contracts');
-			}}>Contracts</a
-		>
-		<span>Expressions</span>
-		<span>Docs</span>
-		<span>Dashboard</span>
 		{#if !$page.data.session}
 			<a
-				href="/login"
+				href="/sign-in"
 				on:click={() => {
-					goto('/login');
+					goto('/sign-in');
 				}}
-				class="p-1 px-2 -mr-2 bg-gray-700 rounded-lg text-white">Log in</a
+				class="text-black nav-link">Sign in</a
 			>
 			<a
-				href="/signup"
+				href="/sign-up"
 				on:click={() => {
-					goto('/signup');
+					goto('/sign-up');
 				}}
-				class="p-1 px-2 -ml-2 bg-gray-700 rounded-lg text-white">Sign Up</a
+				class="p-1 px-2 -ml-2 border border-black rounded-lg text-black">Sign Up</a
 			>
 		{:else}
 			<a
-				href="/profile"
+				href="/dashboard"
+				class="nav-link"
 				on:click|preventDefault={() => {
-					goto('/profile');
-				}}>Profile</a
+					goto('/dashboard');
+				}}>Dashboard</a
 			>
+			<div class="relative flex flex-col items-center" on:focusout={handleDropdownFocusLoss}>
+				<button on:click={openProfileMenu}>
+					<UserAvatar url={$page.data.profile.avatar_url} />
+				</button>
+				{#if profileMenuOpen}
+					<div
+						transition:fly={{ duration: 300, y: 10 }}
+						class="absolute right-0 -bottom-4 bg-white flex flex-col gap-y-2 translate-y-full w-56 rounded-xl py-3 border border-gray-100 shadow-md"
+					>
+						<a href="/settings/profile" class="profile-link">Profile</a>
+						<div class="border-t border-gray-200" />
+						<a href={`/user/${$page.data.profile.username}/expressions`} class="profile-link"
+							>Expressions</a
+						>
+						<a class="profile-link">Deployments</a>
+						<div class="border-t border-gray-200" />
+						<a class="profile-link">Connected</a>
+						<div class="border-t border-gray-200" />
+
+						<div on:click={signOut} class="profile-link">Sign out</div>
+					</div>
+				{/if}
+			</div>
 		{/if}
 	</div>
 </div>
+
+<style>
+	.nav-link {
+		@apply text-gray-500;
+	}
+	.profile-link {
+		@apply px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg mx-2;
+	}
+</style>
