@@ -5,6 +5,7 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import TimeAgo from '$lib/TimeAgo.svelte';
+	import UserAvatar from '$lib/UserAvatar.svelte';
 	import { DocumentDuplicate, PaperAirplane, Trash } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
@@ -35,7 +36,7 @@
 			<span class="text-2xl font-medium">{expression.name}</span>
 			<div class="flex items-center gap-x-2">
 				<span>Created by</span>
-				<img alt="user avatar" class="w-6 rounded-full inline" src={user.avatar_url} />
+				<UserAvatar url={user.avatar_url} />
 				<span>{user.username}</span>
 			</div>
 			<TimeAgo dateString={expression.created_at} />

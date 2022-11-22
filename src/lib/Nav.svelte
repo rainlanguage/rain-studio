@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import UserAvatar from '$lib/UserAvatar.svelte';
+	import { Input } from 'rain-svelte-components/package';
 
 	let profileMenu: any;
 	let profileMenuOpen: boolean = false;
@@ -41,7 +42,7 @@
 	<div class="flex items-center gap-x-2">
 		<img alt="Rain Studio logo" class="w-7" src={logo} />
 		<span class="font-medium mr-2">Rain Studio</span>
-		<div class="flex gap-x-4">
+		<div class="flex gap-x-4 items-center">
 			<a
 				href="/contracts"
 				class="nav-link"
@@ -93,7 +94,7 @@
 						>
 						<a class="profile-link">Deployments</a>
 						<div class="border-t border-gray-200" />
-						<a class="profile-link">Connected</a>
+						<a class="profile-link">Connect Wallet</a>
 						<div class="border-t border-gray-200" />
 
 						<div on:click={signOut} class="profile-link">Sign out</div>
