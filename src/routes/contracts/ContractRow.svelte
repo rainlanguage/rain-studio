@@ -8,7 +8,7 @@
 
 <a
 	href={`/contracts/${contract.slug}`}
-	class="p-4 rounded-2xl border-gray-200 border w-full hover:scale-105 transition-transform cursor-pointer"
+	class="p-4 rounded-2xl border-gray-200 border w-full hover:scale-105 transition-transform cursor-pointer bg-white"
 >
 	<div class="flex flex-col gap-y-2">
 		<ProjectTag logoUrl={contract.project.logo_url} name={contract.project.name} />

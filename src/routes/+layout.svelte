@@ -18,7 +18,7 @@
 	});
 </script>
 
-<div data-sveltekit-prefetch class="min-h-screen flex flex-col pb-24">
+<div data-sveltekit-prefetch class="min-h-screen flex flex-col">
 	<Nav />
 	<slot />
 </div>

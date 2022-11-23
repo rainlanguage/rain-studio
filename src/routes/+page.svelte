@@ -10,8 +10,4 @@
 	};
 </script>
 
-{#if !$page.data.session}
-	<Auth />
-{:else}
-	<Account session={$page.data.session} />
-{/if}
+Homepage

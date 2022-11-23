@@ -12,7 +12,7 @@
 </script>
 
 <Background>
-	<div class="w-96 bg-white rounded-lg">
+	<div class="bg-white rounded-xl p-8 border border-gray-200 -mt-20 space-y-4">
 		<span>Reset your password</span>
 		<Input bind:value={email} />
 		<Button on:click={requestReset}>Request reset</Button>
