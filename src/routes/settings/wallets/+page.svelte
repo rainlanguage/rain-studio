@@ -7,8 +7,6 @@
 	import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min';
 
 	import { page } from '$app/stores';
-	import Account from '$lib/Account.svelte';
-	import Background from '$lib/Background.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { createMessage, postRequest } from '$lib/utils';
 

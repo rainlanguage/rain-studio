@@ -4,14 +4,14 @@ import { supabaseClient } from '$lib/supabaseClient';
 
 export const load: LayoutLoad = async (event) => {
 	const { session } = await getSupabase(event);
-	let profile: any
+	let profile: any;
 	if (session) {
 		const { data } = await supabaseClient
 			.from('profiles')
 			.select(`username, full_name, website, avatar_url`)
 			.eq('id', session.user.id)
 			.single();
-		profile = data
+		profile = data;
 	}
 	return { session, profile };
 };
