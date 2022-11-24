@@ -4,6 +4,7 @@
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Nav from '$lib/Nav.svelte';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	onMount(() => {
 		const {
@@ -22,3 +23,5 @@
 	<Nav />
 	<slot />
 </div>
+
+<SvelteToast />

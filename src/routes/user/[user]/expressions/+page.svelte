@@ -5,6 +5,7 @@
 	import { Plus } from '@steeze-ui/heroicons';
 	import { Button, Select, Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components/package';
 	import autoAnimate from '@formkit/auto-animate';
+	import { goto } from '$app/navigation';
 
 	$: draftExpressions = $page.data?.draft_expressions;
 
@@ -13,14 +14,17 @@
 	};
 
 	const refresh = async () => {
-		const resp = await fetch(`/user/${$page.data.session.id}/expressions`, { method: 'POST' });
-		if (resp.ok) {
-			const { draft_expressions } = await resp.json();
-			draftExpressions = draft_expressions;
+		console.log($page.data.session?.user.id);
+		if ($page.data.session && 'id' in $page.data.session.user) {
+			const resp = await fetch(`/user/${$page.data.session.user.id}/expressions`, {
+				method: 'POST'
+			});
+			if (resp.ok) {
+				const { draft_expressions } = await resp.json();
+				draftExpressions = draft_expressions;
+			}
 		}
 	};
-
-	$: console.log(draftExpressions);
 </script>
 
 <PageHeader>
@@ -45,7 +49,12 @@
 			<TabPanel>
 				<div class="container mx-auto gap-y-4 flex flex-col">
 					<div class="flex justify-between w-full mt-6">
-						<Button icon={Plus}>New expression</Button>
+						<Button
+							on:click={() => {
+								goto('/expression/new');
+							}}
+							icon={Plus}>New expression</Button
+						>
 						<div>
 							<Select />
 						</div>
