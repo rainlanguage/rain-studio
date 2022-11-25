@@ -6,8 +6,8 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 export const load: PageServerLoad = async (event) => {
 	const { fetch, params } = event;
 	const { supabaseClient, session } = await getSupabase(event);
-	const userQuery = await supabaseClient.from('profiles').select('*').eq('username', params.user);
-	if (!userQuery?.data?.[0]) throw error(404, 'Not found');
+	const userQuery = await supabaseClient.from('profiles').select('*').eq('username', params.user).single()
+	if (!userQuery?.data) throw error(404, 'Not found');
 
 	// using an endpoint here to get the current users expressions
 	// note that this endpoint takes the user id, not the username,
@@ -17,5 +17,5 @@ export const load: PageServerLoad = async (event) => {
 	let draft_expressions;
 	if (resp.ok) ({ draft_expressions } = await resp.json());
 
-	return { draft_expressions };
-};
+	return { draft_expressions, currentUser: session?.user.id == userQuery.data.id };
+}

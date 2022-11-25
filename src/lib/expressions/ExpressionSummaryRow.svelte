@@ -3,10 +3,11 @@
 	import { page } from '$app/stores';
 	import Auth from '$lib/Auth.svelte';
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
+	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import SaveExpression from '$lib/expressions/SaveExpression.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { DocumentDuplicate, PaperAirplane, Trash } from '@steeze-ui/heroicons';
+	import { DocumentDuplicate, PaperAirplane, Pencil, Trash } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
@@ -40,15 +41,15 @@
 			on:click={() => (newExpModal = true)}
 			size="small"
 			variant="transparent"
-			icon={DocumentDuplicate}>Fork</Button
+			icon={DocumentDuplicate}>Duplicate</Button
 		>
 		<Button
 			on:click={() => {
-				goto(`/expression/draft/${expression.sharable_slug}`);
+				goto(`/expression/draft/${expression.sharable_slug}/edit`);
 			}}
 			size="small"
 			variant="transparent"
-			icon={PaperAirplane}>Share</Button
+			icon={Pencil}>Edit</Button
 		>
 		<Button on:click={deleteExp} size="small" variant="transparent" icon={Trash}>Delete</Button>
 	</div>
@@ -70,20 +71,7 @@
 
 <Modal bind:open={newExpModal}>
 	{#if $page.data.session}
-		<SaveExpression
-			forking
-			presaveExpression={{
-				raw_expression: expression.raw_expression,
-				contract: expression.contract,
-				interpreter: {
-					id: '761f3744-fe08-4e71-b38c-faaf7b447455',
-					metadata: { name: 'Rainterpreter' }
-				},
-				name: expression.name,
-				notes: expression.notes
-			}}
-			on:saved
-		/>
+		<ForkExpression {expression} on:saved />
 	{:else}
 		<Auth />
 	{/if}

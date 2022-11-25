@@ -6,8 +6,6 @@
 
 	let draftExpressions: any;
 
-	$: console.log(draftExpressions);
-
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {

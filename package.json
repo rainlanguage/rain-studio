@@ -1,5 +1,5 @@
 {
-	"name": "brainscan",
+	"name": "rain-studio",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -9,13 +9,15 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"types": "supabase gen types typescript --project-id wjjqadgrfglmanlweats > ./src/lib/types/generated-db-types.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
+		"@zerodevx/svelte-toast": "^0.8.2",
 		"autoprefixer": "^10.4.7",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
@@ -39,12 +41,15 @@
 		"@steeze-ui/svelte-icon": "^1.3.2",
 		"@supabase/auth-helpers-sveltekit": "0.8.3",
 		"@supabase/supabase-js": "^2.0.4",
+		"@types/lodash-es": "^4.17.6",
 		"@walletconnect/web3-provider": "^1.8.0",
+		"abitype": "^0.2.3",
 		"ethers": "^5.7.2",
 		"install": "^0.13.0",
 		"javascript-time-ago": "^2.5.9",
 		"rain-metadata": "https://github.com/beehive-innovation/rain-metadata",
-		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#6b5edcac550287b46bd98bd1404ae91646187d31",
+		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#faf131cc79bffdc05e82cc8ab68dd6cbca4698c1",
+		"supabase": "^1.15.0",
 		"svelte-ethers-store": "^2.5.8",
 		"web3modal": "^1.9.9"
 	}

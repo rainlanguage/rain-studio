@@ -1,0 +1,29 @@
+import type { Database } from "$lib/types/generated-db-types";
+import type { ContractMetadata } from "rain-metadata/metadata-types/contract"
+import type { InterpreterMetadata } from "rain-metadata/metadata-types/interpreter"
+import type { Abi } from 'abitype'
+
+export type ExpressionRow = Database['public']['Tables']['draft_expressions']['Row']
+export type ProjectRow = Database['public']['Tables']['projects']['Row']
+export type ContractRow = Database['public']['Tables']['contracts']['Row']
+export type ProfileRow = Database['public']['Tables']['profiles']['Row']
+export type InterpreterRow = Database['public']['Tables']['interpreters']['Row']
+
+export type ContractRowFull = Nest<Nest<Nest<ContractRow, 'project', ProjectRow>, 'metadata', ContractMetadata>, 'abi', { abi: Abi }>
+export type ExpressionRowFull = Nest<Nest<Nest<ExpressionRow, 'contract', ContractRowFull>, 'user_id', ProfileRow>, 'interpreter', InterpreterRow>
+export type InterpreterRowFull = Nest<InterpreterRow, 'metadata', InterpreterMetadata>
+//ExpressionRow & { contract: ContractRowFull, user_id: ProfileRow, interpreter: InterpreterRow }
+
+/**
+ * Change the type of Keys of T from NewType
+ */
+export type Nest<
+    T extends object, // original type
+    Keys extends keyof T, // the keys to change, as a union type
+    NewType // include the keys to override in a new type
+> = {
+        // Loop to every key. We gonna check if the key
+        // is assignable to Keys. If yes, change the type.
+        // Else, retain the type.
+        [key in keyof T]: key extends Keys ? NewType : T[key]
+    }
