@@ -1,21 +1,23 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Auth from '$lib/Auth.svelte';
+	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import SaveExpression from '$lib/expressions/SaveExpression.svelte';
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { DocumentDuplicate, PaperAirplane, Trash } from '@steeze-ui/heroicons';
+	import { DocumentDuplicate, PaperAirplane, Pencil, Trash } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
 
 	$: expression = $page.data.expression;
-	$: user = $page.data.user;
-	$: contract = $page.data.contract;
-	$: interpreter = $page.data.interpreter;
+	$: user = $page.data.expression.user_id;
+	$: contract = $page.data.expression.contract;
+	$: interpreter = $page.data.expression.interpreter;
 
 	let openNewExpModal: boolean = false;
 	let openSignInModal: boolean = false;
@@ -45,6 +47,16 @@
 			<Button on:click={fork} size="small" variant="transparent" icon={DocumentDuplicate}
 				>Fork</Button
 			>
+			{#if user.id == expression.user_id.id}
+				<Button
+					on:click={() => {
+						goto(`/expression/draft/${expression.sharable_slug}/edit`);
+					}}
+					size="small"
+					variant="transparent"
+					icon={Pencil}>Edit</Button
+				>
+			{/if}
 		</div>
 	</div>
 </PageHeader>
@@ -72,19 +84,7 @@
 </div>
 
 <Modal bind:open={openNewExpModal}>
-	<SaveExpression
-		forking
-		presaveExpression={{
-			raw_expression: expression.raw_expression,
-			contract,
-			interpreter: {
-				id: '761f3744-fe08-4e71-b38c-faaf7b447455',
-				metadata: { name: 'Rainterpreter' }
-			},
-			name: expression.name,
-			notes: expression.notes
-		}}
-	/>
+	<ForkExpression {expression} />
 </Modal>
 
 <Modal bind:open={openSignInModal}><Auth /></Modal>

@@ -5,6 +5,7 @@
 	import { Plus } from '@steeze-ui/heroicons';
 	import { Button, Select, Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components/package';
 	import autoAnimate from '@formkit/auto-animate';
+	import { goto } from '$app/navigation';
 
 	$: draftExpressions = $page.data?.draft_expressions;
 
@@ -13,19 +14,31 @@
 	};
 
 	const refresh = async () => {
-		const resp = await fetch(`/user/${$page.data.session.id}/expressions`, { method: 'POST' });
-		if (resp.ok) {
-			const { draft_expressions } = await resp.json();
-			draftExpressions = draft_expressions;
+		console.log($page.data.session?.user.id);
+		if ($page.data.session && 'id' in $page.data.session.user) {
+			const resp = await fetch(`/user/${$page.data.session.user.id}/expressions`, {
+				method: 'POST'
+			});
+			if (resp.ok) {
+				const { draft_expressions } = await resp.json();
+				draftExpressions = draft_expressions;
+			}
 		}
 	};
 
-	$: console.log(draftExpressions);
+	$: console.log($page);
 </script>
 
 <PageHeader>
-	<div class="h-full flex flex-col justify-center container mx-auto">
+	<div class="h-full flex flex-row justify-between items-center container mx-auto">
 		<span class="text-2xl font-semibold">Expressions</span>
+		<Button
+			variant="primary"
+			on:click={() => {
+				goto('/expression/new');
+			}}
+			icon={Plus}>New expression</Button
+		>
 	</div>
 </PageHeader>
 
@@ -33,7 +46,7 @@
 	<div class="bg-gray-100 w-full">
 		<div class="container mx-auto ">
 			<TabList>
-				{#if draftExpressions?.length}
+				{#if $page.data.currentUser}
 					<Tab>Draft</Tab>
 				{/if}
 				<Tab>Deployed</Tab>
@@ -41,17 +54,16 @@
 		</div>
 	</div>
 	<div class="container flex mx-auto justify-stretch">
-		{#if draftExpressions?.length}
+		{#if $page.data.currentUser}
 			<TabPanel>
 				<div class="container mx-auto gap-y-4 flex flex-col">
 					<div class="flex justify-between w-full mt-6">
-						<Button icon={Plus}>New expression</Button>
 						<div>
 							<Select />
 						</div>
 					</div>
 					<div class="flex flex-row">
-						<div class="w-1/5">filters</div>
+						<div class="w-1/5" />
 						<div use:autoAnimate class="w-4/5 gap-y-4 flex-col flex">
 							{#each draftExpressions as expression (expression.id)}
 								<ExpressionSummaryRow
@@ -62,6 +74,11 @@
 									on:saved={refresh}
 								/>
 							{/each}
+							{#if !draftExpressions.length}
+								<span class="text-xl text-gray-600 w-full text-center pt-8"
+									>No saved expressions yet 🙁</span
+								>
+							{/if}
 						</div>
 					</div>
 				</div>

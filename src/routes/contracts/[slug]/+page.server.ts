@@ -3,8 +3,6 @@ import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
-	console.log(params);
-
 	const query = await supabaseClient
 		.from('contracts')
 		.select('project ( name, logo_url ), metadata, abi, id')

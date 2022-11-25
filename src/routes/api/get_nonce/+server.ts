@@ -14,7 +14,6 @@ export async function POST(event) {
 
 	if (error) {
 		const message = `Something happened whe trying to generate the nonce id to the address ${address}. ERROR: ${error.message}`;
-		console.log(message);
 		return json({ success: false, error: { message } });
 	}
 

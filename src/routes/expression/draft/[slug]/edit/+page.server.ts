@@ -1,15 +1,22 @@
-import type { ContractRowFull, ExpressionRow } from '$lib/types/types';
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
+import { error, redirect } from '@sveltejs/kit';
+import type { ExpressionRowFull, ExpressionRow, ContractRowFull } from '$lib/types/types';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
-import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load(event) {
-    const { supabaseClient } = await getSupabase(event)
+export async function load(event): Promise<{ expression: ExpressionRowFull }> {
+    const { supabaseClient, session } = await getSupabase(event)
+
+    // if there's no session at all, have them sign in
+    if (!session) redirect(307, '/sign-in')
+
     const slug = event.params.slug
     let userQuery, contractQuery, interpreterQuery
 
     const query = await supabaseClient.rpc('get_expression_by_slug', { slug }) as PostgrestSingleResponse<ExpressionRow[]>
+
+    // if this isn't their expression, they can't access the edit page
+    if (query?.data?.[0].user_id !== session?.user.id) throw error(404, 'Not found')
 
     if (query?.data?.[0]) {
         userQuery = await supabaseClient.from('profiles').select('*').filter('id', 'eq', query.data[0].user_id).single()
@@ -26,4 +33,4 @@ export async function load(event) {
     return {
         expression: { ...query.data[0], user_id: userQuery.data, contract: contractQuery.data as unknown as ContractRowFull, interpreter: interpreterQuery.data }
     }
-};
+}
