@@ -6,10 +6,18 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import { Input } from 'rain-svelte-components/package';
+	import { postRequest } from '$lib/utils';
 
 	let profileMenu: any;
 	let profileMenuOpen: boolean = false;
 	let bodyRef: HTMLDivElement;
+	let addressOrText = '';
+
+	const searchAddressOrText = async () => {
+		// TODO: Redirect to the page based on type response (?)
+		const response = await (await postRequest('/api/search', { address: addressOrText })).json();
+		console.log(response);
+	};
 
 	const openProfileMenu = () => {
 		profileMenuOpen = !profileMenuOpen;
@@ -39,9 +47,14 @@
 <div
 	class="flex justify-between px-4 py-3 sticky top-0 bg-white bg-opacity-70 backdrop-blur-md border-b border-gray-200 z-20"
 >
-	<div class="flex items-center gap-x-2">
-		<img alt="Rain Studio logo" class="w-7" src={logo} />
-		<span class="font-medium mr-2">Rain Studio</span>
+	<div class="flex items-center gap-x-2.5 w-max">
+		<div class="flex flex-row w-max">
+			<img alt="Rain Studio logo" class="w-7" src={logo} />
+			<span class="font-medium mr-2 ml-2.5">Rain Studio</span>
+		</div>
+		<div class="w-[345px]">
+			<Input placeholder="Search rain" on:input={searchAddressOrText} bind:value={addressOrText} />
+		</div>
 		<div class="flex gap-x-4 items-center">
 			<a
 				href="/contracts"
@@ -105,7 +118,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.nav-link {
 		@apply text-gray-500;
 	}
