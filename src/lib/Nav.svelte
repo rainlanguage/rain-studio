@@ -5,18 +5,21 @@
 	import { goto } from '$app/navigation';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { Input } from 'rain-svelte-components/package';
-	import { postRequest } from '$lib/utils';
+	import { Button, Input } from 'rain-svelte-components/package';
+	import { onMount } from 'svelte';
 
 	let profileMenu: any;
 	let profileMenuOpen: boolean = false;
 	let bodyRef: HTMLDivElement;
 	let addressOrText = '';
+	let newAddressOrText = '';
 
-	const searchAddressOrText = async () => {
-		// TODO: Redirect to the page based on type response (?)
-		const response = await (await postRequest('/api/search', { address: addressOrText })).json();
-		console.log(response);
+	onMount(() => (addressOrText = ''));
+
+	// TODO: Redirect first to the page based on type response (?)
+	const searchAddressOrText = async (event) => {
+		event?.target?.reset();
+		goto(`/search/${addressOrText.toLowerCase()}`);
 	};
 
 	const openProfileMenu = () => {
@@ -53,7 +56,10 @@
 			<span class="font-medium mr-2 ml-2.5">Rain Studio</span>
 		</div>
 		<div class="w-[345px]">
-			<Input placeholder="Search rain" on:input={searchAddressOrText} bind:value={addressOrText} />
+			<form on:submit|preventDefault={searchAddressOrText}>
+				<Input placeholder="Search rain" bind:value={addressOrText} />
+				<button hidden />
+			</form>
 		</div>
 		<div class="flex gap-x-4 items-center">
 			<a
