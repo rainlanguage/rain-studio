@@ -3848,12 +3848,11 @@ quick-lru@^5.1.1:
 
 "rain-metadata@git+https://github.com/beehive-innovation/rain-metadata.git":
   version "0.0.0"
-  uid "4e28496bf530ce6a90bbade74dbfc6df6a8aa20e"
   resolved "git+https://github.com/beehive-innovation/rain-metadata.git#4e28496bf530ce6a90bbade74dbfc6df6a8aa20e"
 
-"rain-metadata@https://github.com/beehive-innovation/rain-metadata":
+"rain-metadata@https://github.com/beehive-innovation/rain-metadata#566809d2b8312ddaceb23a03f1bf4312f32aba19":
   version "0.0.0"
-  resolved "https://github.com/beehive-innovation/rain-metadata#4e28496bf530ce6a90bbade74dbfc6df6a8aa20e"
+  resolved "https://github.com/beehive-innovation/rain-metadata#566809d2b8312ddaceb23a03f1bf4312f32aba19"
 
 "rain-sdk@git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a":
   version "2.1.2-beta"
