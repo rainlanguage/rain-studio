@@ -3,23 +3,31 @@
 	import { Button, Select, Modal } from 'rain-svelte-components/package';
 	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
 	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
-	import { ethers, logger } from 'ethers';
+	import { ethers } from 'ethers';
 	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
 	import Auth from '$lib/Auth.svelte';
 	import LoadExpressionModal from '$lib/expressions/LoadExpressionModal.svelte';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import { fade } from 'svelte/transition';
-	import type { InterpreterRowFull } from '$lib/types/types';
-	import { get, set } from 'lodash-es';
+	import { get } from 'lodash-es';
+	import type { Abi, AbiFunction } from 'abitype';
+	import {
+		getCommonChains,
+		getInterpretersForChain,
+		getKnownContractAddressesForChain,
+		getNameFromChainId,
+		getWriteMethods
+	} from './write';
 
-	export let metadata: ContractMetadata, abi: any, contract: any;
+	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: any;
 
-	let methodName: string | number; // the selected method
 	let result: any = []; // the state of the the form
+
+	let selectedMethod: { name: string; def: AbiFunction } | -1; // the selected method
 	let selectedChain: number;
 	let selectedInterpreter: { id: string; interpreter: string; deployer: string } | -1;
-	let contractAddress: string | -1; // the selected contract address
+	let selectedContract: string | -1; // the selected contract address
 
 	let openNewExpModal: boolean = false,
 		loadExpressionModal: boolean = false;
@@ -28,93 +36,50 @@
 
 	let loadRaw: Function;
 
-	// getting all of the state changing methods for this abi
-	$: writeMethods = abi.abi
-		.filter(
-			(def: any) =>
-				def.type == 'function' &&
-				def.inputs.length &&
-				def.name !== 'createChild' &&
-				def.stateMutability !== 'view'
-		)
-		.map((def: any) => ({ label: def.name, value: def.name }));
-
-	// filtering to the known addresses for the connected chain
-	$: knownAddresses = metadata.addresses
-		.filter((chain) => chain.chainId == $chainId)[0]
-		?.knownAddresses.map((address) => {
-			return { label: address, value: address };
-		});
-
-	const getNameFromChainId = (id: number): string => {
-		const name = allChainsData.find((chain) => chain.chainId == id)?.name;
-		if (!name) throw Error('Unknown chainId');
-		return name;
-	};
-
-	// getting the chains for which there's both a known address for contract and interpreter
-	const getCommonChains = (
-		interpreters: InterpreterRowFull[],
-		metadata: ContractMetadata
-	): number[] => {
-		// will only include unique chains
-		const chains: Set<number> = new Set();
-		interpreters.forEach((interpreter) => {
-			interpreter.metadata.addresses.forEach((address) => {
-				chains.add(address.chainId);
-			});
-		});
-		metadata.addresses.forEach((address) => {
-			chains.add(address.chainId);
-		});
-		return Array.from(chains.values());
-	};
-
-	const getInterpretersForChain = (
-		interpreters: InterpreterRowFull[],
-		chainId: number
-	): { label: string; value: { interpreter: string; deployer: string } }[] => {
-		let interpretersForSelect: {
-			label: string;
-			value: { id: string; interpreter: string; deployer: string };
-		}[] = [];
-		interpreters.forEach((interpreter) => {
-			interpreter.metadata.addresses.forEach((address) => {
-				if (address.chainId == chainId) {
-					address.knownAddresses.forEach((address) =>
-						interpretersForSelect.push({
-							label: `${interpreter.metadata.name}: ${address.interpreter}`,
-							value: {
-								id: interpreter.id,
-								interpreter: address.interpreter,
-								deployer: address.deployer
-							}
-						})
-					);
-				}
-			});
-		});
-		return interpretersForSelect;
-	};
-
 	$: availableChains = getCommonChains($page.data.interpreters, metadata);
-
-	// creating an ethers contract instance with the selected known address
-	$: if (typeof contractAddress == 'string' && ethers.utils.isAddress(contractAddress))
-		defaultEvmStores.attachContract('selectedContract', contractAddress, abi.abi);
+	$: writeMethods = getWriteMethods(abi.abi);
 
 	// submit the transaction
 	const submit = async () => {
+		// creating an ethers contract instance with the selected known address
+		if (typeof selectedContract == 'string' && ethers.utils.isAddress(selectedContract))
+			defaultEvmStores.attachContract(
+				'selectedContract',
+				selectedContract,
+				abi.abi as unknown as string
+			);
+
+		// handling error cases
 		if (selectedInterpreter == -1) throw Error('No interpreter selected');
+		if (selectedMethod == -1) throw Error('No method selected');
 		if (!metadata.interpreterFields)
 			throw Error('Interpreter and deploy fields not defined in metadata');
-		console.log(get(abi.abi, metadata.interpreterFields.deployerFieldPath));
-		result[0][get(abi.abi, metadata.interpreterFields.deployerFieldPath).name] =
-			selectedInterpreter.deployer;
-		result[0][get(abi.abi, metadata.interpreterFields.interpreterFieldPath).name] =
-			selectedInterpreter.interpreter;
-		console.log(result);
-		await $contracts.selectedContract[methodName](...result);
+
+		// we need to fill out the interpreter/deployer fields for the user based on what they selected
+		// get the method that the deployer field is for
+		const deployerFieldMethod = get(
+			abi.abi,
+			metadata.interpreterFields.deployerFieldPath.split('.')[0]
+		);
+		if (deployerFieldMethod.type == 'function' && deployerFieldMethod.name == selectedMethod.name) {
+			// if the method requires a deployer, set it
+			result[0][get(abi.abi, metadata.interpreterFields.deployerFieldPath).name] =
+				selectedInterpreter.deployer;
+		}
+		// get the method that the interpreter field is for
+		const interpreterFieldMethod = get(
+			abi.abi,
+			metadata.interpreterFields.interpreterFieldPath.split('.')[0]
+		);
+		if (
+			interpreterFieldMethod.type == 'function' &&
+			interpreterFieldMethod.name == selectedMethod.name
+		) {
+			// if the method requires an interpreter, set it
+			result[0][get(abi.abi, metadata.interpreterFields.interpreterFieldPath).name] =
+				selectedInterpreter.interpreter;
+		}
+		await $contracts.selectedContract[selectedMethod.name](...result);
 	};
 
 	const saveExpression = async ({ detail: { raw } }: { detail: { raw: string } }) => {
@@ -140,8 +105,6 @@
 	};
 
 	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
-
-	$: console.log(availableChains, selectedChain);
 </script>
 
 <div class="flex flex-col gap-y-4">
@@ -162,17 +125,17 @@
 	{/if}
 	{#if selectedInterpreter && selectedInterpreter !== -1}
 		<span>Select a method to write</span>
-		<Select items={writeMethods} bind:value={methodName} />
+		<Select items={writeMethods} bind:value={selectedMethod} />
 	{/if}
 </div>
-{#key methodName}
-	{#if typeof methodName == 'string'}
+{#key selectedMethod}
+	{#if selectedMethod && selectedMethod !== -1}
 		<div in:fade class="mb-12">
-			{#key methodName}
+			{#key selectedMethod}
 				<AutoAbiFormSeparated
 					abi={abi.abi}
 					{metadata}
-					{methodName}
+					methodName={selectedMethod.name}
 					bind:result
 					on:save={saveExpression}
 					on:load={loadExpression}
@@ -190,19 +153,22 @@
 						<span>Connected to {connectedChainName}</span>
 					</div>
 					<div class="flex flex-col gap-y-2">
-						{#if knownAddresses?.length}
+						{#if getKnownContractAddressesForChain(metadata, selectedChain)?.length}
 							<span
 								>Select from known addresses for this contract on {allChainsData.find(
 									(chain) => chain.chainId == $chainId
 								)?.name}</span
 							>
-							<Select items={knownAddresses} bind:value={contractAddress} />
+							<Select
+								items={getKnownContractAddressesForChain(metadata, selectedChain)}
+								bind:value={selectedContract}
+							/>
 						{:else}
 							<span class="text-gray-500">No known deployments for this chain.</span>
 						{/if}
 					</div>
 					<div class="self-start">
-						<Button disabled={contractAddress == -1} on:click={submit} variant="primary"
+						<Button disabled={selectedContract == -1} on:click={submit} variant="primary"
 							>Submit</Button
 						>
 					</div>
