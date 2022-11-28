@@ -178,9 +178,9 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@beehiveinnovation/rainlang@https://github.com/beehive-innovation/rainlang#1fbc88718fedb87aa2a332f532c2a50b214275e7":
+"@beehiveinnovation/rainlang@https://github.com/beehive-innovation/rainlang#d68a70cf0c16e94cd335030f01c8d5a833f5e916":
   version "1.0.0"
-  resolved "https://github.com/beehive-innovation/rainlang#1fbc88718fedb87aa2a332f532c2a50b214275e7"
+  resolved "https://github.com/beehive-innovation/rainlang#d68a70cf0c16e94cd335030f01c8d5a833f5e916"
   dependencies:
     ethers "^5.7.2"
     prettier "^2.7.1"
@@ -3850,7 +3850,7 @@ quick-lru@^5.1.1:
   version "0.0.0"
   resolved "git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
 
-"rain-metadata@https://github.com/beehive-innovation/rain-metadata#566809d2b8312ddaceb23a03f1bf4312f32aba19":
+"rain-metadata@https://github.com/beehive-innovation/rain-metadata":
   version "0.0.0"
   resolved "https://github.com/beehive-innovation/rain-metadata#566809d2b8312ddaceb23a03f1bf4312f32aba19"
 
@@ -3861,9 +3861,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#f5b7315520491a5b32ab37a0f088154e1459cb5a":
+"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#380e1ccfde2509d85693325af6cd0cf067628a01":
   version "0.0.1"
-  resolved "https://github.com/beehive-innovation/rain-svelte-components#f5b7315520491a5b32ab37a0f088154e1459cb5a"
+  resolved "https://github.com/beehive-innovation/rain-svelte-components#faf131cc79bffdc05e82cc8ab68dd6cbca4698c1"
   dependencies:
     "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#1fbc88718fedb87aa2a332f532c2a50b214275e7"
     "@formkit/auto-animate" "^1.0.0-beta.3"
@@ -3875,7 +3875,7 @@ quick-lru@^5.1.1:
     ajv "^8.11.0"
     ethers "^5.7.1"
     lodash-es "^4.17.21"
-    rain-metadata "git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
+    rain-metadata "git+https://github.com/beehive-innovation/rain-metadata.git"
     rain-sdk "git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
     slate "^0.85.0"
     svelte-ethers-store "^2.5.8"
