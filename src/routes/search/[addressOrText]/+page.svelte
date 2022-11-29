@@ -3,7 +3,9 @@
 	import Background from '$lib/Background.svelte';
 	import { fly } from 'svelte/transition';
 
-	$: dataResult = $page.data.result;
+	$: resultSG = $page.data.resultSG;
+	$: resultDB = $page.data.resultDB;
+	$: resultText = $page.data.resultText;
 </script>
 
 <Background>
@@ -11,8 +13,8 @@
 		class="bg-white rounded-xl p-8 border border-gray-200 -mt-20"
 		in:fly={{ y: 20, duration: 1000 }}
 	>
-		{#if dataResult}
-			The result is: {dataResult.__typename}
+		{#if resultSG}
+			The result is: {resultSG.__typename}
 		{:else}
 			There is no result from this search
 		{/if}
