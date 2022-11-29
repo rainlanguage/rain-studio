@@ -20,6 +20,7 @@
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { goto } from '$app/navigation';
+	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 
 	export let expression: ExpressionRowFull;
 
@@ -143,12 +144,19 @@
 	<div class="flex flex-col w-3/12">
 		<div class="flex flex-col gap-y-2 py-4 px-2 border-b border-gray-300">
 			<span class="text-gray-600 text-[10px] uppercase">Writing for</span>
-			<ProjectTag
-				name={expression.contract.project.name}
-				logoUrl={expression.contract.project.logo_url}
+			<ExpressionEnv
+				contract={expression?.contract}
+				interpreter={expression.interpreter}
+				{expression}
 			/>
-			<span class="text-xl font-semibold">{expression.contract.metadata?.name}</span>
-			<InterpreterTag name="Rainterpreter" address="0xa921Cf2cDf267C7a3659c0F0dB2ff0Dec070375F" />
+			<!-- {#if expression.contract}
+				<ProjectTag
+					name={expression.contract.project.name}
+					logoUrl={expression.contract.project.logo_url}
+				/>
+				<span class="text-xl font-semibold">{expression.contract.metadata?.name}</span>
+			{/if}
+			<InterpreterTag name="Rainterpreter" address="0xa921Cf2cDf267C7a3659c0F0dB2ff0Dec070375F" /> -->
 		</div>
 		<div class="flex flex-col gap-y-2 px-2 py-4">
 			<span class="font-semibold">Contract</span>

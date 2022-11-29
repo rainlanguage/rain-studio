@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Auth from '$lib/Auth.svelte';
+	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import SaveExpression from '$lib/expressions/SaveExpression.svelte';
 	import PageHeader from '$lib/PageHeader.svelte';
@@ -67,11 +68,8 @@
 			<div class="flex flex-col gap-y-4">
 				<div class="font-semibold text-xl">Writer's notes</div>
 				<div class="whitespace-pre-line">{expression.notes}</div>
-				<div class="flex gap-x-4 border-t border-gray-200 pt-4 mt-4 items-center">
-					<span>Project:</span>
-					<ProjectTag name={contract.project.name} logoUrl={contract.project.logo_url} />
-					<span>{contract.metadata.name}</span>
-					<Pills><span class="text-sm">{interpreter?.metadata?.name}</span></Pills>
+				<div class="flex flex-col gap-y-2 border-t border-gray-200 pt-4 mt-4 items-start">
+					<ExpressionEnv {expression} />
 				</div>
 			</div>
 			<div>

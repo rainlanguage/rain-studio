@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
@@ -11,16 +12,7 @@
 		<span class="text-xl font-medium">{expression.name}</span>
 		<!-- <TimeAgo dateString={expression.created_at} /> -->
 		<span>{expression.notes}</span>
-		{#if expression.contract}
-			<div class="flex gap-x-2 items-center text-sm">
-				<ProjectTag
-					name={expression.contract.project.name}
-					logoUrl={expression.contract.project.logo_url}
-				/>
-				<span>{expression.contract.metadata.name}</span>
-			</div>
-		{/if}
-		<Pills><span class="text-sm">{expression.interpreter.metadata.name}</span></Pills>
+		<ExpressionEnv {expression} />
 		<slot />
 	</div>
 	<div class="flex-grow h-full w-2/3">

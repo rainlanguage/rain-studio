@@ -1,55 +1,13 @@
 <script lang="ts">
-	import { providers } from 'ethers';
-	import { onMount } from 'svelte';
 	import { Button } from 'rain-svelte-components/package';
-	import { defaultEvmStores, signerAddress, connected, signer } from 'svelte-ethers-store';
-	import Web3Modal from 'web3modal';
-	import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min';
-
+	import { signerAddress, connected, signer } from 'svelte-ethers-store';
 	import { page } from '$app/stores';
-	import Account from '$lib/Account.svelte';
-	import Background from '$lib/Background.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { createMessage, postRequest } from '$lib/utils';
-
-	let web3Modal: Web3Modal;
-	let ethersProvider: providers.Web3Provider;
+	import { connectWallet, disconectWallet } from '$lib/connect-wallet';
 
 	let loading = false;
 	let message = '';
-
-	const providerOptions = {
-		injected: {
-			display: {
-				name: 'Metamask',
-				description: 'Connect with the provider in your Browser'
-			},
-			package: null
-		},
-		walletconnect: {
-			package: WalletConnectProvider,
-			options: {
-				infuraId: '0f270373e0934beda174c537257386b0'
-			}
-		}
-	};
-
-	onMount(() => {
-		web3Modal = new Web3Modal({
-			cacheProvider: true,
-			providerOptions
-		});
-	});
-
-	const connectWallet = async () => {
-		const provider = await web3Modal.connect();
-		ethersProvider = new providers.Web3Provider(provider);
-		defaultEvmStores.setProvider(provider);
-	};
-
-	const disconectWallet = async () => {
-		defaultEvmStores.disconnect();
-	};
 
 	const linkAddress = async () => {
 		message = 'Waiting for sign...';
@@ -119,7 +77,6 @@
 		<Button disabled={!!$signerAddress} on:click={connectWallet}>Connect wallet</Button>
 	{:else}
 		<Button variant="primary" on:click={linkAddress}>Link you address</Button>
-
 		<div>
 			<Button disabled={!$signerAddress} on:click={disconectWallet}>Disconnect</Button>
 		</div>

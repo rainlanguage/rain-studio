@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Section, SectionBody, SectionHeading } from 'rain-svelte-components/package/section';
 	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
+	import { allChainsData } from 'svelte-ethers-store';
 	export let abi: any, metadata: ContractMetadata;
 </script>
 
@@ -21,7 +22,9 @@
 					{#each metadata.addresses as chain}
 						{#each chain.knownAddresses as knownAddress}
 							<tr>
-								<td class="pt-3">{chain.chainId}</td>
+								<td class="pt-3"
+									>{allChainsData.find((_chain) => _chain.chainId == chain.chainId)?.name}</td
+								>
 								<td class="pt-3">{chain.chainId}</td>
 								<td class="truncate pt-3">{knownAddress}</td>
 							</tr>

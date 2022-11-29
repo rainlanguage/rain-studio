@@ -39,52 +39,55 @@ export interface Database {
         Row: {
           id: string
           created_at: string | null
-          contract: string
+          contract: string | null
           user_id: string
           raw_expression: string
           sharable_slug: string
           interpreter: string
           name: string
           notes: string
+          contract_expression: string | null
         }
         Insert: {
           id?: string
           created_at?: string | null
-          contract: string
+          contract?: string | null
           user_id?: string
           raw_expression: string
           sharable_slug?: string
           interpreter: string
           name: string
           notes: string
+          contract_expression?: string | null
         }
         Update: {
           id?: string
           created_at?: string | null
-          contract?: string
+          contract?: string | null
           user_id?: string
           raw_expression?: string
           sharable_slug?: string
           interpreter?: string
           name?: string
           notes?: string
+          contract_expression?: string | null
         }
       }
       interpreters: {
         Row: {
           id: string
           created_at: string | null
-          metadata: Json | null
+          metadata: Json
         }
         Insert: {
           id?: string
           created_at?: string | null
-          metadata?: Json | null
+          metadata: Json
         }
         Update: {
           id?: string
           created_at?: string | null
-          metadata?: Json | null
+          metadata?: Json
         }
       }
       profiles: {
