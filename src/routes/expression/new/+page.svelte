@@ -59,7 +59,7 @@
 		const _expression = {
 			contract: chosenContract?.id,
 			interpreter: chosenInterpreter.id,
-			contract_expression: chosenExpression.name
+			contract_expression: chosenExpression?.name
 		};
 		const newExpression = await createNewExpression(_expression);
 		goto(`/expression/draft/${newExpression.data?.sharable_slug}/edit`);
