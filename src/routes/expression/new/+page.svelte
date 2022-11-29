@@ -9,7 +9,7 @@
 	import { ArrowUturnLeft, PlusCircle } from '@steeze-ui/heroicons';
 	import { createNewExpression } from '$lib/expressions/expressions';
 	import { goto } from '$app/navigation';
-	import { Icon } from '@steeze-ui/svelte-icon';
+	// import { Icon } from '@steeze-ui/svelte-icon';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 
 	let contracts: ContractRowFull[];
@@ -79,7 +79,7 @@
 							class="flex flex-col gap-y-2 p-4 rounded-2xl border-gray-200 border w-full hover:scale-105 transition-transform cursor-pointer bg-white"
 						>
 							<span class="w-7 text-gray-400">
-								<Icon src={PlusCircle} />
+								<!-- <Icon src={PlusCircle} /> -->
 							</span>
 							<span class="font-semibold">No contract</span>
 							<span>Write a standlone expression</span>
