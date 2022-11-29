@@ -1,4 +1,3 @@
-import { error, json } from '@sveltejs/kit';
 import { createClient } from '@urql/core';
 import { ethers } from 'ethers';
 import { supabaseClient } from '$lib/supabaseClient';
