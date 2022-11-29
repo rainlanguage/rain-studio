@@ -1,14 +1,19 @@
 import { supabaseClient } from '$lib/supabaseClient';
 import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types'
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
-	const query = await supabaseClient
+export const load: PageServerLoad = async ({ params }) => {
+	const contractQuery = await supabaseClient
 		.from('contracts')
-		.select('project ( name, logo_url ), metadata, abi, id')
-		.eq('slug', params.slug);
+		.select('project ( * ), *')
+		.eq('slug', params.slug).single();
 
-	if (query.error) throw error(404, 'Not found');
+	if (contractQuery.error) throw error(404, 'Not found');
 
-	return { contract: query.data[0] };
+	const interpretersQuery = await supabaseClient.from('interpreters').select('*')
+
+	if (interpretersQuery.error) throw error(500, 'Something went wrong :(');
+
+
+	return { contract: contractQuery.data, interpreters: interpretersQuery.data };
 }
