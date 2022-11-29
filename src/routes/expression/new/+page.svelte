@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import Background from '$lib/Background.svelte';
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
@@ -9,7 +10,7 @@
 	import { ArrowUturnLeft, PlusCircle } from '@steeze-ui/heroicons';
 	import { createNewExpression } from '$lib/expressions/expressions';
 	import { goto } from '$app/navigation';
-	// import { Icon } from '@steeze-ui/svelte-icon';
+	import { Icon } from '@steeze-ui/svelte-icon';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 
 	let contracts: ContractRowFull[];
@@ -58,7 +59,7 @@
 		const _expression = {
 			contract: chosenContract?.id,
 			interpreter: chosenInterpreter.id,
-			contract_expression: chosenExpression?.name
+			contract_expression: chosenExpression.name
 		};
 		const newExpression = await createNewExpression(_expression);
 		goto(`/expression/draft/${newExpression.data?.sharable_slug}/edit`);
@@ -69,7 +70,7 @@
 	<div class="pt-28 flex flex-col items-center max-w-5xl gap-y-6">
 		<h1 class="text-4xl font-semibold">Start writing a new expression</h1>
 		{#if step == ExpressionSteps.Contract}
-			<div class="step-wrapper">
+			<div in:fade class="step-wrapper">
 				<h2>Choose a contract to write for</h2>
 				{#if contracts.length}
 					<div class="grid grid-cols-3 gap-4">
@@ -79,7 +80,7 @@
 							class="flex flex-col gap-y-2 p-4 rounded-2xl border-gray-200 border w-full hover:scale-105 transition-transform cursor-pointer bg-white"
 						>
 							<span class="w-7 text-gray-400">
-								<!-- <Icon src={PlusCircle} /> -->
+								<Icon src={PlusCircle} />
 							</span>
 							<span class="font-semibold">No contract</span>
 							<span>Write a standlone expression</span>
@@ -98,7 +99,7 @@
 				{/if}
 			</div>
 		{:else if step == ExpressionSteps.Expression}
-			<div class="step-wrapper">
+			<div in:fade class="step-wrapper">
 				<div class="header">
 					<h2>Choose an expression to write for</h2>
 				</div>
@@ -124,7 +125,7 @@
 				{/if}
 			</div>
 		{:else if step == ExpressionSteps.Interpreter}
-			<div class="step-wrapper">
+			<div in:fade class="step-wrapper">
 				<div class="header">
 					<h2>Choose an interpreter</h2>
 				</div>
@@ -146,7 +147,7 @@
 				</div>
 			</div>
 		{:else if step == ExpressionSteps.Confirm}
-			<div class="step-wrapper">
+			<div in:fade class="step-wrapper">
 				<div class="header">
 					<h2>Confirm and start writing</h2>
 				</div>
