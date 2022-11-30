@@ -13,14 +13,18 @@ export async function load(event) {
     console.log(query)
     if (query?.data?.[0]) {
         userQuery = await supabaseClient.from('profiles').select('*').filter('id', 'eq', query.data[0].user_id).single()
+        console.log(userQuery)
         if (query.data[0]?.contract) contractQuery = await supabaseClient.from('contracts').select('*, project (*)').filter('id', 'eq', query.data[0].contract).single()
         interpreterQuery = await supabaseClient.from('interpreters').select('*').filter('id', 'eq', query.data[0].interpreter).single()
+        console.log(interpreterQuery)
     }
 
     // catch all the errors
     if (query.error || userQuery?.error || contractQuery?.error || interpreterQuery?.error) throw error(404, 'Not found');
     // and make sure there's data for everything
     if (!query.data.length || !userQuery?.data || !interpreterQuery?.data) throw error(404, 'Not found');
+    console.log("got to return")
+    console.log({ ...query.data[0], user_id: userQuery.data, contract: contractQuery?.data as unknown as ContractRowFull, interpreter: interpreterQuery.data })
     return {
         expression: { ...query.data[0], user_id: userQuery.data, contract: contractQuery?.data as unknown as ContractRowFull, interpreter: interpreterQuery.data }
     }

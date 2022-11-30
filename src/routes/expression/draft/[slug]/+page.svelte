@@ -4,21 +4,16 @@
 	import Auth from '$lib/Auth.svelte';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
-	import SaveExpression from '$lib/expressions/SaveExpression.svelte';
 	import PageHeader from '$lib/PageHeader.svelte';
-	import ProjectTag from '$lib/ProjectTag.svelte';
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { DocumentDuplicate, PaperAirplane, Pencil, Trash } from '@steeze-ui/heroicons';
+	import { DocumentDuplicate, Pencil } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
-	import Pills from 'rain-svelte-components/package/Pills.svelte';
 
 	$: expression = $page.data.expression;
 	$: user = $page.data.expression.user_id;
-	$: contract = $page.data.expression.contract;
-	$: interpreter = $page.data.expression.interpreter;
 
 	let openNewExpModal: boolean = false;
 	let openSignInModal: boolean = false;
