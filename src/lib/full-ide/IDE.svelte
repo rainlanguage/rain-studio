@@ -21,6 +21,7 @@
 	import { toast } from '@zerodevx/svelte-toast';
 	import { goto } from '$app/navigation';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
+	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
 
 	export let expression: ExpressionRowFull;
 
@@ -28,9 +29,9 @@
 	let notes = expression.notes || '';
 	let name = expression.name || '';
 
-	$: contextColumns = expression.contract.metadata.expressions?.find(
-		(exp) => exp.name == 'Order'
-	).contextColumns;
+	// $: contextColumns = expression.contract.metadata.expressions?.find(
+	// 	(exp) => exp.name == 'Order'
+	// ).contextColumns;
 
 	// for saving the exression and notes - this happens automatically as the user edits
 	let saving: boolean; // track saving state
@@ -149,41 +150,12 @@
 				interpreter={expression.interpreter}
 				{expression}
 			/>
-			<!-- {#if expression.contract}
-				<ProjectTag
-					name={expression.contract.project.name}
-					logoUrl={expression.contract.project.logo_url}
-				/>
-				<span class="text-xl font-semibold">{expression.contract.metadata?.name}</span>
-			{/if}
-			<InterpreterTag name="Rainterpreter" address="0xa921Cf2cDf267C7a3659c0F0dB2ff0Dec070375F" /> -->
 		</div>
-		<div class="flex flex-col gap-y-2 px-2 py-4">
+		<!-- <div class="flex flex-col gap-y-2 px-2 py-4">
 			<span class="font-semibold">Contract</span>
 			<div>{expression.contract.metadata?.description}</div>
 			<span class="font-semibold">Expression</span>
-			<div class="fixed bg-white">
-				{#if contextColumns}
-					<div
-						class={`text-sm border border-gray-300 rounded-lg grid gap-2 p-2 auto-cols-fr grid-rows-${
-							contextColumns[0].cells.length + 1
-						} grid-flow-col`}
-					>
-						{#each contextColumns as column}
-							<div class="">{column.name}</div>
-							{#if column?.cells}
-								{#each column.cells as cell}
-									<div class="flex flex-col">
-										<span class="font-medium">{cell.name || ''}</span>
-										<span>{cell.description || ''}</span>
-									</div>
-								{/each}
-							{/if}
-						{/each}
-					</div>
-				{/if}
-			</div>
-		</div>
+		</div> -->
 	</div>
 	<div class="flex flex-col w-5/12 border-x border-gray-300">
 		<div class="flex flex-col flex-grow h-[400px] border-b border-gray-300">
@@ -204,7 +176,9 @@
 	<div class="flex flex-col w-4/12">
 		<div class="h-96 border-b border-gray-300">
 			<PanelHeader>Mock data</PanelHeader>
-			<div class="p-2">Mocking goes here</div>
+			<div class="p-2">
+				<!-- <ContextGrid {contextColumns} /> -->
+			</div>
 		</div>
 		<div class="flex-col flex flex-grow">
 			<div class="flex-shrink">
