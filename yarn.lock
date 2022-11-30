@@ -3,9 +3,9 @@
 
 
 "@aicacia/debounce@0":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@aicacia/debounce/-/debounce-0.1.18.tgz#175247af7f9d53b11b7d7e99a182139c378928c5"
-  integrity sha512-QbWHDAuHqNIRY5MxSohtjVs4zNBAyCgAckUQF9OVBquQDFCKgIeOubVLLhqxdTwfOSDcIf7WJ++28oaw+qETWg==
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@aicacia/debounce/-/debounce-0.1.19.tgz#107678b420985856ab1a1c0e1096f53a90865eaf"
+  integrity sha512-GU9J0A2wQ1jEOocazGrEOYTocASfKuX0CRvahVCUk+Z6NTz2gG2gRtlGr2dUUe7dIh/fSJywVQVuH0YSR0syeg==
 
 "@babel/code-frame@^7.18.6":
   version "7.18.6"
@@ -178,9 +178,9 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@beehiveinnovation/rainlang@https://github.com/beehive-innovation/rainlang#1fbc88718fedb87aa2a332f532c2a50b214275e7":
+"@beehiveinnovation/rainlang@https://github.com/beehive-innovation/rainlang#fe7b9e65545738974627395f68ac1abc98ed9568":
   version "1.0.0"
-  resolved "https://github.com/beehive-innovation/rainlang#1fbc88718fedb87aa2a332f532c2a50b214275e7"
+  resolved "https://github.com/beehive-innovation/rainlang#fe7b9e65545738974627395f68ac1abc98ed9568"
   dependencies:
     ethers "^5.7.2"
     prettier "^2.7.1"
@@ -838,15 +838,10 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash@*":
+"@types/lodash@*", "@types/lodash@^4.14.186":
   version "4.14.190"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.190.tgz#d8e99647af141c63902d0ca53cf2b34d2df33545"
   integrity sha512-5iJ3FBJBvQHQ8sFhEhJfjUP+G+LalhavTkYyrAYqz5MEJG+erSv0k9KJLb6q7++17Lafk1scaTIFXcMJlwK8Mw==
-
-"@types/lodash@^4.14.186":
-  version "4.14.189"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.189.tgz#975ff8c38da5ae58b751127b19ad5e44b5b7f6d2"
-  integrity sha512-kb9/98N6X8gyME9Cf7YaqIMvYGnBSWqEci6tiettE6iJWH1XdJz/PO8LB0GtLCG7x8dU3KWhZT+lA1a35127tA==
 
 "@types/node@*":
   version "18.11.9"
@@ -971,18 +966,6 @@
   dependencies:
     "@typescript-eslint/types" "5.44.0"
     eslint-visitor-keys "^3.3.0"
-
-"@use-gesture/core@10.2.22":
-  version "10.2.22"
-  resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.2.22.tgz#90bd543b042e6c3a40a69ce8c2c38ecb67f43a2f"
-  integrity sha512-Ek0JZFYfk+hicLmoG094gm3YOuDMBNckHb988e59YOZoAkETT8dQSzT+g3QkSHSiP1m5wFXAGPSgxvOuwvGKHQ==
-
-"@use-gesture/vanilla@^10.2.22":
-  version "10.2.22"
-  resolved "https://registry.yarnpkg.com/@use-gesture/vanilla/-/vanilla-10.2.22.tgz#784dfca07af0f35d480fa15a0f56c5d6a561dc34"
-  integrity sha512-K/wzEYmvTlAhhuaOaOYmNYYzlrHfT53bMe07g1KFz611GdWXORePYFeMnVTrrwuryZCdiD1dSlaAmry+UhCCYQ==
-  dependencies:
-    "@use-gesture/core" "10.2.22"
 
 "@vercel/nft@^0.22.1":
   version "0.22.1"
@@ -1785,10 +1768,10 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-compute-scroll-into-view@^1.0.17:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.17.tgz#6a88f18acd9d42e9cf4baa6bec7e0522607ab7ab"
-  integrity sha512-j4dx+Fb0URmzbwwMUrhqWM2BEWHdFGx+qZ9qqASHRPqvTYdqvWnHg0H1hIbcyLnvgnoNAVMlwkepyqM3DaIFUg==
+compute-scroll-into-view@^1.0.20:
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.20.tgz#1768b5522d1172754f5d0c9b02de3af6be506a43"
+  integrity sha512-UCB0ioiyj8CRjtrvaceBLqqhZCVP+1B8+NWQhmdsm0VXOJtobBCf1dBQmebCCo34qZmUwZfIH2MZLqNHazrfjg==
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -4074,10 +4057,15 @@ prettier-plugin-svelte@^2.7.0:
   resolved "https://registry.yarnpkg.com/prettier-plugin-svelte/-/prettier-plugin-svelte-2.8.1.tgz#5b7df5bd0d953b133281607295a3e5131052bb8b"
   integrity sha512-KA3K1J3/wKDnCxW7ZDRA/QL2Q67N7Xs3gOERqJ5X1qFjq1DdnN3K1R29scSKwh+kA8FF67pXbYytUpvN/i3iQw==
 
-prettier@^2.6.2, prettier@^2.7.1:
+prettier@^2.6.2:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
   integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
+
+prettier@^2.7.1:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.0.tgz#c7df58393c9ba77d6fba3921ae01faf994fb9dc9"
+  integrity sha512-9Lmg8hTFZKG0Asr/kW9Bp8tJjRVluO8EJQVfY2T7FMw9T5jy4I/Uvx0Rca/XWf50QQ1/SS48+6IJWnrb+2yemA==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
@@ -4158,10 +4146,9 @@ quick-lru@^5.1.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-"rain-metadata@git+https://github.com/beehive-innovation/rain-metadata.git":
+"rain-metadata@git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228":
   version "0.0.0"
-  uid "566809d2b8312ddaceb23a03f1bf4312f32aba19"
-  resolved "git+https://github.com/beehive-innovation/rain-metadata.git#566809d2b8312ddaceb23a03f1bf4312f32aba19"
+  resolved "git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
 
 "rain-metadata@https://github.com/beehive-innovation/rain-metadata":
   version "0.0.0"
@@ -4174,11 +4161,11 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#380e1ccfde2509d85693325af6cd0cf067628a01":
+"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#b7d9735da2c3abaa5beeded3e6e7155131bfbe17":
   version "0.0.1"
-  resolved "https://github.com/beehive-innovation/rain-svelte-components#faf131cc79bffdc05e82cc8ab68dd6cbca4698c1"
+  resolved "https://github.com/beehive-innovation/rain-svelte-components#b7d9735da2c3abaa5beeded3e6e7155131bfbe17"
   dependencies:
-    "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#1fbc88718fedb87aa2a332f532c2a50b214275e7"
+    "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#fe7b9e65545738974627395f68ac1abc98ed9568"
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
     "@steeze-ui/heroicons" "^2.1.0"
@@ -4188,7 +4175,7 @@ quick-lru@^5.1.1:
     ajv "^8.11.0"
     ethers "^5.7.1"
     lodash-es "^4.17.21"
-    rain-metadata "git+https://github.com/beehive-innovation/rain-metadata.git"
+    rain-metadata "git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
     rain-sdk "git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
     slate "^0.85.0"
     svelte-ethers-store "^2.5.8"
@@ -4464,11 +4451,11 @@ scheduler@^0.19.1:
     object-assign "^4.1.1"
 
 scroll-into-view-if-needed@2:
-  version "2.2.29"
-  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.29.tgz#551791a84b7e2287706511f8c68161e4990ab885"
-  integrity sha512-hxpAR6AN+Gh53AdAimHM6C8oTN1ppwVZITihix+WqalywBeFcQ6LdQP5ABNl26nX8GTEL7VT+b8lKpdqq65wXg==
+  version "2.2.31"
+  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.31.tgz#d3c482959dc483e37962d1521254e3295d0d1587"
+  integrity sha512-dGCXy99wZQivjmjIqihaBQNjryrz5rueJY7eHfTdyWEiR4ttYpsajb14rn9s5d4DY4EcY6+4+U/maARBXJedkA==
   dependencies:
-    compute-scroll-into-view "^1.0.17"
+    compute-scroll-into-view "^1.0.20"
 
 scrypt-js@3.0.1, scrypt-js@^3.0.0:
   version "3.0.1"
@@ -4790,13 +4777,12 @@ svelte-proxied-store@^1.1.4:
   integrity sha512-Vz8egScKBx3Ve1+MlaX0D6hEgYgtIQzpZx4HtzI6+J0mJiVgfaxnEdvSVGDWNb5E+zGzGGXdmzxqjfOIyNEswQ==
 
 svelte-slate@^0.1.62:
-  version "0.1.68"
-  resolved "https://registry.yarnpkg.com/svelte-slate/-/svelte-slate-0.1.68.tgz#a1a21682de80ffba05aaf3f82a6aadb89900d7ea"
-  integrity sha512-jtoXBQIlHP4v6aIktLdY1p8IrnyM9nihoYOl3IYliUFa6LhpFtDTtLejtFlFPi0mJpiFPHWu30u6OfG7716DIg==
+  version "0.1.74"
+  resolved "https://registry.yarnpkg.com/svelte-slate/-/svelte-slate-0.1.74.tgz#57e66e8d9be1b20009a9558e0b31bd78cfa1668d"
+  integrity sha512-4RsNjhZoamKIbyk9Vp0X2KAk3Cq639k+tLhkW4Bg+Kl7cPbkDfda0BGahR8K9KgC21uAWUnZyZRiesSkrFJzAA==
   dependencies:
     "@aicacia/debounce" "0"
     "@svelte-put/clickoutside" "1"
-    "@use-gesture/vanilla" "^10.2.22"
     fast-equals "4"
     scroll-into-view-if-needed "2"
 
