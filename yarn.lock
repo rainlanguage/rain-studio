@@ -178,9 +178,9 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@beehiveinnovation/rainlang@https://github.com/beehive-innovation/rainlang#fe7b9e65545738974627395f68ac1abc98ed9568":
+"@beehiveinnovation/rainlang@https://github.com/beehive-innovation/rainlang#d68a70cf0c16e94cd335030f01c8d5a833f5e916":
   version "1.0.0"
-  resolved "https://github.com/beehive-innovation/rainlang#fe7b9e65545738974627395f68ac1abc98ed9568"
+  resolved "https://github.com/beehive-innovation/rainlang#d68a70cf0c16e94cd335030f01c8d5a833f5e916"
   dependencies:
     ethers "^5.7.2"
     prettier "^2.7.1"
@@ -4161,11 +4161,11 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#b7d9735da2c3abaa5beeded3e6e7155131bfbe17":
+"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#380e1ccfde2509d85693325af6cd0cf067628a01":
   version "0.0.1"
-  resolved "https://github.com/beehive-innovation/rain-svelte-components#b7d9735da2c3abaa5beeded3e6e7155131bfbe17"
+  resolved "https://github.com/beehive-innovation/rain-svelte-components#380e1ccfde2509d85693325af6cd0cf067628a01"
   dependencies:
-    "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#fe7b9e65545738974627395f68ac1abc98ed9568"
+    "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#d68a70cf0c16e94cd335030f01c8d5a833f5e916"
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
     "@steeze-ui/heroicons" "^2.1.0"
