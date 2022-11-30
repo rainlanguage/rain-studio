@@ -9,7 +9,7 @@
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import { DocumentDuplicate, Pencil } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	// import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
 
 	$: expression = $page.data.expression;
@@ -69,7 +69,7 @@
 			</div>
 			<div>
 				<div class="w-full flex flex-col gap-y-4">
-					<Formatter raw={expression.raw_expression} />
+					<!-- <Formatter raw={expression.raw_expression} /> -->
 				</div>
 			</div>
 		</div>
