@@ -5,9 +5,9 @@ import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load(event) {
-    const { supabaseClient } = await getSupabase(event)
-    const slug = event.params.slug
-    let userQuery, contractQuery, interpreterQuery
+	const { supabaseClient } = await getSupabase(event);
+	const slug = event.params.slug;
+	let userQuery, contractQuery, interpreterQuery;
 
     const query = await supabaseClient.rpc('get_expression_by_slug', { slug }) as PostgrestSingleResponse<ExpressionRow[]>
     if (query?.data?.[0]) {

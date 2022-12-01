@@ -3,6 +3,25 @@
 	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { allChainsData } from 'svelte-ethers-store';
 	export let abi: any, metadata: ContractMetadata;
+
+	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import { json, redirect } from '@sveltejs/kit';
+
+	// Mock Data
+	const recentlyDeployed: any[] = [];
+	const name = 'EmissionsTKN (eTKN)';
+	const user = '0xabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd';
+	const time = '3 sec';
+	const expression = '_: add(2 3)';
+	for (let i = 0; i < 5; i++) {
+		recentlyDeployed.push({
+			name,
+			user,
+			time,
+			expression
+		});
+	}
+
 </script>
 
 <div>
@@ -33,5 +52,25 @@
 				{/if}
 			</table>
 		</div>
+	</SectionBody>
+</Section>
+
+<Section>
+	<SectionHeading>Recently deployed</SectionHeading>
+	<SectionBody>
+		{#each recentlyDeployed as deployedElement}
+			<div class="border-b border-slate-300 pb-[10px]">
+				<div class="text-[13px] mb-1">
+					{deployedElement.name}
+				</div>
+				<div class="font-mono text-[12px] leading-[15.62px] bg-neutral-100 rounded-[5px]">
+					<Formatter raw={deployedElement.expression} />
+				</div>
+				<div class="flex">
+					<p>{deployedElement.time}</p>
+					<p>{deployedElement.user}</p>
+				</div>
+			</div>
+		{/each}
 	</SectionBody>
 </Section>

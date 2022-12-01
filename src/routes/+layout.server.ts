@@ -4,7 +4,7 @@ import { supabaseClient } from '$lib/supabaseClient';
 
 export const load: LayoutServerLoad = async (event) => {
 	const session = await getServerSession(event);
-	let profile: any
+	let profile: any;
 	if (session) {
 		const { data } = await supabaseClient
 			.from('profiles')
@@ -14,6 +14,7 @@ export const load: LayoutServerLoad = async (event) => {
 		profile = data
 	}
 	return {
-		session, profile
+		session,
+		profile
 	};
 };
