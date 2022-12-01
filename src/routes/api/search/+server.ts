@@ -13,8 +13,8 @@ import {
 	expresionQuery
 } from './constants';
 
-// TODO: Support to search transactions
 // TODO: Improve to search multi chain
+// TODO: Improve the format of the data response (?)
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST(event) {
@@ -37,23 +37,23 @@ export async function POST(event) {
 		const address = addressOrText.toLowerCase();
 
 		const query = `
-		query ($address: ID!) {
-			account(id: $address) {
-				${accountQuery}
+			query ($address: ID!) {
+				account(id: $address) {
+					${accountQuery}
+				}
+				factory(id: $address) {
+					${factoryQuery}
+				}
+				contract(id: $address) {
+					${contractQuery}
+				}
+				interpreter(id: $address) {
+					${interpreterQuery}
+				}
+				expression(id: $address) {
+					${expresionQuery}
+				}
 			}
-			factory(id: $address) {
-				${factoryQuery}
-			}
-			contract(id: $address) {
-				${contractQuery}
-			}
-			interpreter(id: $address) {
-				${interpreterQuery}
-			}
-			expression(id: $address) {
-				${expresionQuery}
-			}
-		}
 		`;
 
 		const { data, error } = await client.query(query, { address }).toPromise();
@@ -68,6 +68,7 @@ export async function POST(event) {
 
 		if (resultSG) {
 			// Found something on sg
+			resultSG = { data: resultSG };
 			resultDB = await queryToDatabase(address, resultSG.__typename, supabaseClient);
 			//
 		} else {
@@ -75,8 +76,35 @@ export async function POST(event) {
 			resultDB = await queryToDatabase(address, 'All', supabaseClient);
 		}
 
-		// TODO: Function to normalise the data according to the "__typename" of the result on `result`
 		return json({ success: true, result: { resultSG: resultSG.data, resultDB: resultDB.data } });
+	} else if (ethers.utils.isHexString(addressOrText.toLowerCase())) {
+		// Search a transaction
+		const hash = addressOrText.toLowerCase();
+		const query = `
+			query ($hash: ID!) {
+				transaction (id: $hash) {
+					id
+					timestamp
+					blockNumber
+					events {
+						id
+						timestamp
+						emitter {
+							id
+						}
+					}
+				}
+			}
+		`;
+
+		const { data, error } = await client.query(query, { hash }).toPromise();
+
+		if (error) {
+			console.log(error);
+			return json({ success: false, result: null });
+		}
+
+		return json({ success: true, result: { resultSG: data.transaction } });
 	} else {
 		const text = addressOrText.toLowerCase();
 		const nameExpreResult = await queryNameExpressionDB(text, supabaseClient);

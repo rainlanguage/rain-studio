@@ -14,7 +14,6 @@
 			name_type = result.resultSG?.__typename || result.resultDB?.type;
 		}
 		loading = false;
-		console.log(result);
 	});
 </script>
 
