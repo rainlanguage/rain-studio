@@ -16,6 +16,8 @@
 </script>
 
 {#if contextColumns}
+	<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Context</div>
+
 	<table class={`text-sm border border-gray-300`}>
 		<tr class="border-gray-300 border-b">
 			{#each Array(columns) as col, y}

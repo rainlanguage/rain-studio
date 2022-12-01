@@ -169,9 +169,7 @@
 		<div class="h-96 border-b border-gray-300">
 			<PanelHeader>Mock data</PanelHeader>
 			<div class="p-2 overflow-scroll h-full">
-				<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Context</div>
 				<ContextGrid {contextColumns} bind:mockContext />
-				<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Signed context</div>
 				<SignedContext bind:signedContext />
 			</div>
 		</div>
