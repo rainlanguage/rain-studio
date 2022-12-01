@@ -17,7 +17,8 @@
 		const expressionCopy = {
 			name: expression.name,
 			notes: expression.notes,
-			contract: expression.contract.id,
+			contract: expression.contract?.id,
+			contract_expression: null,
 			interpreter: expression.interpreter.id,
 			raw_expression: expression.raw_expression
 		};

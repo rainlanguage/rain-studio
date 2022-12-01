@@ -7,11 +7,11 @@
 	import type { Database } from '$lib/types/generated-db-types';
 	import type { ExpressionMetadata } from 'rain-metadata/metadata-types/expression';
 	import { Button } from 'rain-svelte-components/package';
-	import { ArrowUturnLeft } from '@steeze-ui/heroicons';
-	import ProjectTag from '$lib/ProjectTag.svelte';
-	import InterpreterTag from '$lib/InterpreterTag.svelte';
+	import { ArrowUturnLeft, PlusCircle } from '@steeze-ui/heroicons';
 	import { createNewExpression } from '$lib/expressions/expressions';
 	import { goto } from '$app/navigation';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 
 	let contracts: ContractRowFull[];
 	let interpreters: InterpreterRowFull[];
@@ -21,7 +21,7 @@
 
 	enum ExpressionSteps {
 		Contract,
-		Method,
+		Expression,
 		Interpreter,
 		Confirm
 	}
@@ -29,14 +29,18 @@
 	let newExpression: Database['public']['Tables']['draft_expressions']['Insert'];
 	let step: ExpressionSteps = ExpressionSteps.Contract;
 
-	let chosenContract: ContractRowFull,
+	let chosenContract: ContractRowFull | null,
 		chosenExpression: ExpressionMetadata,
 		chosenInterpreter: InterpreterRowFull;
 
 	let inserting: boolean;
 
-	const chooseContract = (contract: ContractRowFull) => {
-		step = ExpressionSteps.Method;
+	const chooseContract = (contract: ContractRowFull | null) => {
+		if (contract) {
+			step = ExpressionSteps.Expression;
+		} else {
+			step = ExpressionSteps.Interpreter;
+		}
 		chosenContract = contract;
 	};
 
@@ -52,7 +56,11 @@
 
 	const confirmCreate = async () => {
 		inserting = true;
-		const _expression = { contract: chosenContract.id, interpreter: chosenInterpreter.id };
+		const _expression = {
+			contract: chosenContract?.id,
+			interpreter: chosenInterpreter.id,
+			contract_expression: chosenExpression?.name
+		};
 		const newExpression = await createNewExpression(_expression);
 		goto(`/expression/draft/${newExpression.data?.sharable_slug}/edit`);
 	};
@@ -66,6 +74,17 @@
 				<h2>Choose a contract to write for</h2>
 				{#if contracts.length}
 					<div class="grid grid-cols-3 gap-4">
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<div
+							on:click={() => chooseContract(null)}
+							class="flex flex-col gap-y-2 p-4 rounded-2xl border-gray-200 border w-full hover:scale-105 transition-transform cursor-pointer bg-white"
+						>
+							<span class="w-7 text-gray-400">
+								<Icon src={PlusCircle} />
+							</span>
+							<span class="font-semibold">No contract</span>
+							<span>Write a standlone expression</span>
+						</div>
 						{#each contracts as contract}
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<div
@@ -79,12 +98,12 @@
 					</div>
 				{/if}
 			</div>
-		{:else if step == ExpressionSteps.Method}
+		{:else if step == ExpressionSteps.Expression}
 			<div in:fade class="step-wrapper">
 				<div class="header">
 					<h2>Choose an expression to write for</h2>
 				</div>
-				{#if chosenContract.metadata.expressions}
+				{#if chosenContract && chosenContract?.metadata.expressions}
 					<div class="flex flex-col gap-y-4 w-full max-w-4xl">
 						{#each chosenContract.metadata.expressions as expression}
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -134,18 +153,12 @@
 				</div>
 				<div class="flex flex-col gap-y-4">
 					<span class="text-gray-600 text-xs uppercase">Writing for</span>
-					<ProjectTag
-						name={chosenContract.project.name}
-						logoUrl={chosenContract.project.logo_url}
-					/>
-					<div class="text-xl flex items-center gap-x-2">
-						<span class="font-semibold">{chosenContract.metadata.name}</span>
-						<div class="h-8 border-l-2 border-gray-300 -rotate-12" />
-						<span>{chosenExpression.name}</span>
-					</div>
-					<InterpreterTag
-						name={chosenInterpreter.metadata.name}
-						address="0xf6CF014a3e92f214a3332F0d379aD32bf0Fae929"
+					<ExpressionEnv
+						expression={{
+							contract: chosenContract,
+							interpreter: chosenInterpreter,
+							contract_expression: chosenExpression?.name
+						}}
 					/>
 				</div>
 				<div class="flex gap-x-2">
