@@ -100,7 +100,6 @@
 
 	const loadSelectedExpression = async ({ detail }: { detail: any }) => {
 		loadExpressionModal = false;
-		console.log(detail);
 		loadRaw(detail.expression.raw_expression);
 	};
 

@@ -74,7 +74,6 @@
 
 	// handling sharing a link
 	const copyShareLink = async () => {
-		console.log($page);
 		await navigator.clipboard.writeText(
 			`${$page.url.origin}/expression/draft/${expression.sharable_slug}`
 		);
