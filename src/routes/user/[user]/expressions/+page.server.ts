@@ -4,7 +4,7 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 
 // /** @type {import('./$types').PageServerLoad} */
 export const load: PageServerLoad = async (event) => {
-	const { fetch, params } = event
+	const { fetch, params } = event;
 	const { supabaseClient, session } = await getSupabase(event);
 	const userQuery = await supabaseClient.from('profiles').select('*').eq('username', params.user).single()
 	if (!userQuery?.data) throw error(404, 'Not found');
@@ -13,9 +13,9 @@ export const load: PageServerLoad = async (event) => {
 	// note that this endpoint takes the user id, not the username,
 	// as the user id is generally more readily available in the app
 	// as part of the session
-	const resp = await fetch(`/user/${session?.user.id}/expressions`, { method: 'POST' })
-	let draft_expressions
-	if (resp.ok) ({ draft_expressions } = await resp.json())
+	const resp = await fetch(`/user/${session?.user.id}/expressions`, { method: 'POST' });
+	let draft_expressions;
+	if (resp.ok) ({ draft_expressions } = await resp.json());
 
 	return { draft_expressions, currentUser: session?.user.id == userQuery.data.id };
 }

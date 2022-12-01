@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { Button, Input } from 'rain-svelte-components/package';
 	import UserAvatar from '$lib/UserAvatar.svelte';

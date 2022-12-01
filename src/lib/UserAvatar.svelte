@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let url: string;
-	export let size: number = 0;
+	export let size = 0;
 </script>
 
 {#if url}

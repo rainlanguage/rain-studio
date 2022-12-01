@@ -9,7 +9,6 @@
 	let email: string;
 	let password: string;
 	let username: string;
-	let message = '';
 	let errors: boolean;
 	let errorMessage: string | null;
 	let confirmedMessage: string | null;
@@ -19,9 +18,12 @@
 	$: type = show_password ? 'text' : 'password';
 	$: hideIcon = show_password ? EyeSlash : Eye;
 
-	const usernameValidate = async (value: any) => {
+	const usernameValidate = async (value: string) => {
 		errors = false;
-		const { data, error } = await supabaseClient.from('profiles').select('*').eq('username', value);
+		const { data, error } = await supabaseClient
+			.from('profiles')
+			.select('*')
+			.eq('username', value.toLowerCase());
 		if (error) {
 			errors = true;
 			return { error: 'Something went wrong' };
@@ -52,6 +54,7 @@
 	const handleResgister = async () => {
 		try {
 			await usernameInput.validate();
+			const _username = username.toLowerCase();
 			loading = true;
 			errorMessage = null;
 			const { data, error } = await supabaseClient.auth.signUp({
@@ -59,7 +62,7 @@
 				password,
 				options: {
 					data: {
-						username
+						username: _username
 					}
 				}
 			});
