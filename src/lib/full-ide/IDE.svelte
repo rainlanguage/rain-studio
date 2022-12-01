@@ -2,8 +2,6 @@
 	import { page } from '$app/stores';
 	import { fade } from 'svelte/transition';
 	import PanelHeader from '$lib/full-ide/PanelHeader.svelte';
-	import InterpreterTag from '$lib/InterpreterTag.svelte';
-	import ProjectTag from '$lib/ProjectTag.svelte';
 	import {
 		ArrowPath,
 		ArrowUturnLeft,
@@ -22,16 +20,20 @@
 	import { goto } from '$app/navigation';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
-
+	import SignedContext from '$lib/full-ide/SignedContext.svelte';
 	export let expression: ExpressionRowFull;
 
 	let raw_expression = expression.raw_expression || '';
 	let notes = expression.notes || '';
 	let name = expression.name || '';
 
-	// $: contextColumns = expression.contract.metadata.expressions?.find(
-	// 	(exp) => exp.name == 'Order'
-	// ).contextColumns;
+	$: contextColumns = expression.contract?.metadata.expressions?.find(
+		(exp) => exp.name == expression.contract_expression
+	)?.contextColumns;
+
+	// merging contract base context and dynamic signed context
+	let mockContext: any, signedContext: any;
+	$: context = mockContext && signedContext ? [...mockContext, ...signedContext] : 0;
 
 	// for saving the exression and notes - this happens automatically as the user edits
 	let saving: boolean; // track saving state
@@ -144,17 +146,8 @@
 	<div class="flex flex-col w-3/12">
 		<div class="flex flex-col gap-y-2 py-4 px-2 border-b border-gray-300">
 			<span class="text-gray-600 text-[10px] uppercase">Writing for</span>
-			<ExpressionEnv
-				contract={expression?.contract}
-				interpreter={expression.interpreter}
-				{expression}
-			/>
+			<ExpressionEnv {expression} />
 		</div>
-		<!-- <div class="flex flex-col gap-y-2 px-2 py-4">
-			<span class="font-semibold">Contract</span>
-			<div>{expression.contract.metadata?.description}</div>
-			<span class="font-semibold">Expression</span>
-		</div> -->
 	</div>
 	<div class="flex flex-col w-5/12 border-x border-gray-300">
 		<div class="flex flex-col flex-grow h-[400px] border-b border-gray-300">
@@ -175,8 +168,11 @@
 	<div class="flex flex-col w-4/12">
 		<div class="h-96 border-b border-gray-300">
 			<PanelHeader>Mock data</PanelHeader>
-			<div class="p-2">
-				<!-- <ContextGrid {contextColumns} /> -->
+			<div class="p-2 overflow-scroll h-full">
+				<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Context</div>
+				<ContextGrid {contextColumns} bind:mockContext />
+				<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Signed context</div>
+				<SignedContext bind:signedContext />
 			</div>
 		</div>
 		<div class="flex-col flex flex-grow">
