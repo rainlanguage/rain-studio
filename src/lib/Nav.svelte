@@ -16,7 +16,6 @@
 
 	onMount(() => (addressOrText = ''));
 
-	// TODO: Redirect first to the page based on type response (?)
 	const searchAddressOrText = async (event) => {
 		event?.target?.reset();
 		goto(`/search/${addressOrText.toLowerCase()}`);
