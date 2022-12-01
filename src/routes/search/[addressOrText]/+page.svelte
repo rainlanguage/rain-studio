@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Background from '$lib/Background.svelte';
-	import { onMount } from 'svelte';
+	import { afterUpdate } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { Ring } from 'rain-svelte-components/package';
 
@@ -9,7 +9,8 @@
 	let loading = true;
 
 	$: result = $page.data.result;
-	onMount(() => {
+
+	afterUpdate(() => {
 		if (result) {
 			name_type = result.resultSG?.__typename || result.resultDB?.type;
 		}
