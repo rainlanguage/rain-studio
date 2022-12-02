@@ -165,6 +165,14 @@ export interface Database {
         Args: { slug: string }
         Returns: unknown
       }
+      match_contracts_by_address: {
+        Args: { contracts_array: unknown }
+        Returns: Record<string, unknown>[]
+      }
+      match_interpreters_by_address: {
+        Args: { interpreters_array: unknown }
+        Returns: Record<string, unknown>[]
+      }
     }
     Enums: {
       [_ in never]: never

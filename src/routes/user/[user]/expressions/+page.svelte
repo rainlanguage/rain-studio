@@ -6,8 +6,11 @@
 	import { Button, Select, Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components/package';
 	import autoAnimate from '@formkit/auto-animate';
 	import { goto } from '$app/navigation';
+	import DeployedExpressionSummaryRow from '$lib/expressions/DeployedExpressionSummaryRow.svelte';
 
 	$: draftExpressions = $page.data?.draft_expressions;
+	$: deployedExpressions = $page.data?.deployedExpressions;
+	// $: console.log($page.data.deployedExpressions);
 
 	const removeExpression = (id: string) => {
 		draftExpressions = draftExpressions.filter((expression: any) => expression.id !== id);
@@ -25,8 +28,6 @@
 			}
 		}
 	};
-
-	$: console.log($page);
 </script>
 
 <PageHeader>
@@ -59,7 +60,7 @@
 				<div class="container mx-auto gap-y-4 flex flex-col">
 					<div class="flex justify-between w-full mt-6">
 						<div>
-							<Select />
+							<!-- <Select /> -->
 						</div>
 					</div>
 					<div class="flex flex-row">
@@ -84,6 +85,20 @@
 				</div>
 			</TabPanel>
 		{/if}
-		<TabPanel />
+		<TabPanel>
+			<div class="container mx-auto gap-y-4 flex flex-col">
+				<div class="flex justify-between w-full mt-6">
+					<div />
+				</div>
+				<div class="flex flex-row">
+					<div class="w-1/5" />
+					<div use:autoAnimate class="w-4/5 gap-y-4 flex-col flex">
+						{#each deployedExpressions as expression}
+							<DeployedExpressionSummaryRow {expression} />
+						{/each}
+					</div>
+				</div>
+			</div>
+		</TabPanel>
 	</div>
 </Tabs>

@@ -13,10 +13,14 @@
 	/>
 	<div class="text-xl flex items-center gap-x-2 flex-wrap">
 		<span class="font-semibold">{expression.contract.metadata.name}</span>
-		<div class="h-8 border-l-2 border-gray-300 -rotate-12" />
-		<span>{expression.contract_expression}</span>
+		{#if expression.contract_expression}
+			<div class="h-8 border-l-2 border-gray-300 -rotate-12" />
+			<span>{expression.contract_expression}</span>
+		{/if}
 	</div>
 {:else}
 	<div class="text-xl flex items-center gap-x-2 font-semibold">No contract</div>
 {/if}
-<InterpreterTag interpreter={expression.interpreter} />
+{#if expression.interpreter}
+	<InterpreterTag interpreter={expression.interpreter} />
+{/if}
