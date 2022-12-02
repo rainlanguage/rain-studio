@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
+	import { DisplayAddress } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 
 	export let expression: any;
@@ -7,7 +8,11 @@
 
 <div class="flex flex-col xl:flex-row border border-gray-200 p-5 rounded-lg gap-x-4 gap-y-4 w-full">
 	<div class="w-1/3 flex flex-col gap-y-3">
-		<span class="text-xl font-medium">{expression?.name || 'Untitled'}</span>
+		{#if expression?.name}
+			<span class="text-xl font-medium">{expression?.name || 'Untitled'}</span>
+		{:else if expression?.sg?.id}
+			<span class="text-xl"><DisplayAddress address={expression.sg.id} /></span>
+		{/if}
 		<!-- <TimeAgo dateString={expression.created_at} /> -->
 		<span>{expression?.notes || 'No notes'}</span>
 		<ExpressionEnv {expression} />

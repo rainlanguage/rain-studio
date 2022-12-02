@@ -262,6 +262,7 @@ export const QueryAccountsFromArray = `
         id
       }
       expressions {
+        id
         contextScratch
         sender {
           id
