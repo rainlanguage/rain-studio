@@ -12,7 +12,7 @@
 	$: result = $page.data.result;
 
 	afterUpdate(() => {
-		if (result.resultSG || result.resultDB) {
+		if (result?.resultSG || result?.resultDB) {
 			showResult = true;
 			name_type = result.resultSG?.__typename || result.resultDB?.type;
 		}
