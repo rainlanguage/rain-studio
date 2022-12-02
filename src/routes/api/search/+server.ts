@@ -4,15 +4,7 @@ import { createClient } from '@urql/core';
 import { json } from '@sveltejs/kit';
 import { ethers } from 'ethers';
 import { matchInterpreters } from '$lib/match-addresses';
-
-import {
-	subgraphs,
-	accountQuery,
-	factoryQuery,
-	contractQuery,
-	interpreterQuery,
-	expresionQuery
-} from './constants';
+import { QueryAddress, QueryTrasnsaction, Subgraphs } from '$lib/utils';
 
 // TODO: Improve to search multi chain
 // TODO: Improve the format of the data response (?)
@@ -26,7 +18,7 @@ export async function POST(event) {
 
 	//	Only mumbai at the moment
 	const client = createClient({
-		url: subgraphs[0].url
+		url: Subgraphs[0].url
 	});
 
 	if (!addressOrText) {
@@ -37,27 +29,7 @@ export async function POST(event) {
 		// Search address
 		const address = addressOrText.toLowerCase();
 
-		const query = `
-			query ($address: ID!) {
-				account(id: $address) {
-					${accountQuery}
-				}
-				factory(id: $address) {
-					${factoryQuery}
-				}
-				contract(id: $address) {
-					${contractQuery}
-				}
-				interpreter(id: $address) {
-					${interpreterQuery}
-				}
-				expression(id: $address) {
-					${expresionQuery}
-				}
-			}
-		`;
-
-		const { data, error } = await client.query(query, { address }).toPromise();
+		const { data, error } = await client.query(QueryAddress, { address }).toPromise();
 
 		if (error) {
 			console.log(error);
@@ -88,24 +60,8 @@ export async function POST(event) {
 	} else if (ethers.utils.isHexString(addressOrText.toLowerCase())) {
 		// Search a transaction
 		const hash = addressOrText.toLowerCase();
-		const query = `
-			query ($hash: ID!) {
-				transaction (id: $hash) {
-					id
-					timestamp
-					blockNumber
-					events {
-						id
-						timestamp
-						emitter {
-							id
-						}
-					}
-				}
-			}
-		`;
 
-		const { data, error } = await client.query(query, { hash }).toPromise();
+		const { data, error } = await client.query(QueryTrasnsaction, { hash }).toPromise();
 
 		if (error) {
 			console.log(error);

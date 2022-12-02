@@ -5,6 +5,7 @@ import { createClient } from '@urql/core';
 import type { TypedSupabaseClient } from '@supabase/auth-helpers-sveltekit/dist/types';
 import type { Database } from '$lib/types/generated-db-types';
 import { matchContracts, matchInterpreters } from '$lib/match-addresses';
+import { QueryAccountsFromArray, Subgraphs } from '$lib/utils';
 
 // /** @type {import('./$types').PageServerLoad} */
 export const load: PageServerLoad = async (event) => {
@@ -45,10 +46,10 @@ const getDeployedUserExpressions = async (
 
 	//	Only mumbai at the moment
 	const client = createClient({
-		url: subgraphs[0].url
+		url: Subgraphs[0].url
 	});
 
-	const { data, error } = await client.query(query, { wallets }).toPromise();
+	const { data, error } = await client.query(QueryAccountsFromArray, { wallets }).toPromise();
 
 	if (error || data.accounts.length == 0) return null;
 	const sgUserExpressions = data.accounts[0].expressions;
@@ -84,39 +85,3 @@ const getDeployedUserExpressions = async (
 
 	return deployedExpressions;
 };
-
-const subgraphs = [
-	{
-		/**
-		 * 	Only mumbai at the moment
-		 */
-		chain: 80001,
-		url: 'https://api.thegraph.com/subgraphs/name/beehive-innovation/rain-expressions'
-	}
-];
-
-const query = `query MyQuery($wallets: [ID!] = "") {
-	accounts(where: {id_in: $wallets}) {
-	  events {
-		id
-	  }
-	  expressions {
-		contextScratch
-		sender {
-			id
-		}
-		event {
-		  expression {
-			config {
-			  constants
-			  sources
-			}
-			interpreterInstance {
-			  id
-			}
-		  }
-		  timestamp
-		}
-	  }
-	}
-  }`;
