@@ -15,11 +15,11 @@
 	const saveExpression = async () => {
 		error = null;
 		const expressionCopy = {
-			name: expression.name,
-			notes: expression.notes,
-			contract: expression.contract?.id,
+			name: expression?.name || 'Untitled',
+			notes: expression?.notes || '',
+			contract: expression?.contract?.id,
 			contract_expression: null,
-			interpreter: expression.interpreter.id,
+			interpreter: expression?.interpreter?.id,
 			raw_expression: expression.raw_expression
 		};
 		const response = await saveExpressionCopy(expressionCopy);
