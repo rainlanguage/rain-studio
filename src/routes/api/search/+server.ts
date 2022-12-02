@@ -3,15 +3,8 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { createClient } from '@urql/core';
 import { json } from '@sveltejs/kit';
 import { ethers } from 'ethers';
-
-import {
-	subgraphs,
-	accountQuery,
-	factoryQuery,
-	contractQuery,
-	interpreterQuery,
-	expresionQuery
-} from './constants';
+import { matchInterpreters } from '$lib/match-addresses';
+import { QueryAddress, QueryTrasnsaction, Subgraphs } from '$lib/utils';
 
 // TODO: Improve to search multi chain
 // TODO: Improve the format of the data response (?)
@@ -25,7 +18,7 @@ export async function POST(event) {
 
 	//	Only mumbai at the moment
 	const client = createClient({
-		url: subgraphs[0].url
+		url: Subgraphs[0].url
 	});
 
 	if (!addressOrText) {
@@ -36,27 +29,7 @@ export async function POST(event) {
 		// Search address
 		const address = addressOrText.toLowerCase();
 
-		const query = `
-			query ($address: ID!) {
-				account(id: $address) {
-					${accountQuery}
-				}
-				factory(id: $address) {
-					${factoryQuery}
-				}
-				contract(id: $address) {
-					${contractQuery}
-				}
-				interpreter(id: $address) {
-					${interpreterQuery}
-				}
-				expression(id: $address) {
-					${expresionQuery}
-				}
-			}
-		`;
-
-		const { data, error } = await client.query(query, { address }).toPromise();
+		const { data, error } = await client.query(QueryAddress, { address }).toPromise();
 
 		if (error) {
 			console.log(error);
@@ -68,9 +41,16 @@ export async function POST(event) {
 
 		if (resultSG) {
 			// Found something on sg
-			resultSG = { data: resultSG };
 			resultDB = await queryToDatabase(address, resultSG.__typename, supabaseClient);
-			//
+
+			if (resultSG.__typename.match(/^(Contract|Factory|Expression)$/) && resultDB.data == null) {
+				// Does not found anything on DB
+				return json({
+					success: true,
+					result: { resultSG: null, resultDB: null }
+				});
+			}
+			resultSG = { data: resultSG };
 		} else {
 			resultSG = { data: null };
 			resultDB = await queryToDatabase(address, 'All', supabaseClient);
@@ -80,24 +60,8 @@ export async function POST(event) {
 	} else if (ethers.utils.isHexString(addressOrText.toLowerCase())) {
 		// Search a transaction
 		const hash = addressOrText.toLowerCase();
-		const query = `
-			query ($hash: ID!) {
-				transaction (id: $hash) {
-					id
-					timestamp
-					blockNumber
-					events {
-						id
-						timestamp
-						emitter {
-							id
-						}
-					}
-				}
-			}
-		`;
 
-		const { data, error } = await client.query(query, { hash }).toPromise();
+		const { data, error } = await client.query(QueryTrasnsaction, { hash }).toPromise();
 
 		if (error) {
 			console.log(error);
@@ -182,10 +146,12 @@ const queryContractDB = async (
 		return { data: null };
 	}
 
-	// Could be Contract or Factory (?)
-	data.type = 'Contract';
+	const dataResp = data[0];
 
-	return { data };
+	// Could be Contract or Factory (?)
+	dataResp.type = 'Contract';
+
+	return { data: dataResp };
 };
 
 const queryAccountDB = async (
@@ -210,21 +176,7 @@ const queryInterpreterDB = async (
 	address: string,
 	supabaseClient_: any
 ): Promise<{ data: ContractDBResponse | null }> => {
-	const { error, data: dataDB } = await supabaseClient_.from('interpreters').select('*');
-
-	if (error || dataDB.length == 0) {
-		return { data: null };
-	}
-
-	// TODO: Improve to use deep queries from DB with JSONB (arrays of objects with arrays) or maybe required improve with a RPC query to supabase
-	const data = dataDB.find((ele) => {
-		return ele.metadata.addresses.find((addresses) => {
-			return addresses.knownAddresses.find((knownAddresses) => {
-				if (knownAddresses.interpreter.toLowerCase() == address.toLowerCase()) return true;
-			});
-		});
-	});
-
+	const data = (await matchInterpreters([address.toLowerCase()], supabaseClient_))[0];
 	data.type = 'Interpreter';
 
 	return { data };
