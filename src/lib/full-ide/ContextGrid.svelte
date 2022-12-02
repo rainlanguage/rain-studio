@@ -29,28 +29,33 @@
 				{#each Array(columns) as col, x}
 					<td class="p-2 border-gray-300 border-r">
 						<HoverTooltip width="w-48" class="bg-white flex flex-col">
-							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<div class="flex flex-col">
 								<span class="font-mono text-gray-400 text-xs">{`<${x} ${y}>`}</span>
 								{#if contextColumns?.[x]?.cells?.[y].alias}
 									<span class="font-mono whitespace-nowrap"
 										>{contextColumns[x]?.cells?.[y].alias}</span
 									>
-									<input
-										class="text-gray-700 bg-gray-100 p-1"
-										placeholder="..."
-										bind:value={mockContext[x][y]}
-									/>
-								{:else}
-									<span class="text-gray-300">empty</span>
 								{/if}
 							</div>
+
 							<span slot="tip"
 								>{contextColumns?.[x]?.cells?.[y].description ||
 									contextColumns?.[x]?.cells?.[y].name ||
 									'Empty'}</span
 							>
 						</HoverTooltip>
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<div class="flex flex-col mt-0.5">
+							{#if contextColumns?.[x]?.cells?.[y].alias}
+								<input
+									class="text-gray-700 bg-gray-100 p-1"
+									placeholder="..."
+									bind:value={mockContext[x][y]}
+								/>
+							{:else}
+								<span class="text-gray-300">empty</span>
+							{/if}
+						</div>
 					</td>
 				{/each}
 			</tr>
