@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {
 	const { fetch, params } = event;
@@ -13,7 +14,18 @@ export const load: PageServerLoad = async (event) => {
 
 	const { success, result } = await resp.json();
 
-	if (success) return { result };
+	if (success) {
+		const typenameDB = result.resultDB?.type;
+		if (typenameDB == 'Contract') {
+			// Redirect to contracts
+			throw redirect(307, `/contracts/${result.resultDB.slug}`);
+		}
+
+		if (typenameDB == 'Expression') {
+			// TODO: Redirect to Expressions
+		}
+		return { result };
+	}
 
 	return { result: null };
 };

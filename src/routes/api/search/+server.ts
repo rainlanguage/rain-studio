@@ -3,6 +3,7 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { createClient } from '@urql/core';
 import { json } from '@sveltejs/kit';
 import { ethers } from 'ethers';
+import { matchInterpreters } from '$lib/match-addresses';
 
 import {
 	subgraphs,
@@ -68,9 +69,16 @@ export async function POST(event) {
 
 		if (resultSG) {
 			// Found something on sg
-			resultSG = { data: resultSG };
 			resultDB = await queryToDatabase(address, resultSG.__typename, supabaseClient);
-			//
+
+			if (resultSG.__typename.match(/^(Contract|Factory|Expression)$/) && resultDB.data == null) {
+				// Does not found anything on DB
+				return json({
+					success: true,
+					result: { resultSG: null, resultDB: null }
+				});
+			}
+			resultSG = { data: resultSG };
 		} else {
 			resultSG = { data: null };
 			resultDB = await queryToDatabase(address, 'All', supabaseClient);
@@ -182,10 +190,12 @@ const queryContractDB = async (
 		return { data: null };
 	}
 
-	// Could be Contract or Factory (?)
-	data.type = 'Contract';
+	const dataResp = data[0];
 
-	return { data };
+	// Could be Contract or Factory (?)
+	dataResp.type = 'Contract';
+
+	return { data: dataResp };
 };
 
 const queryAccountDB = async (
@@ -210,21 +220,7 @@ const queryInterpreterDB = async (
 	address: string,
 	supabaseClient_: any
 ): Promise<{ data: ContractDBResponse | null }> => {
-	const { error, data: dataDB } = await supabaseClient_.from('interpreters').select('*');
-
-	if (error || dataDB.length == 0) {
-		return { data: null };
-	}
-
-	// TODO: Improve to use deep queries from DB with JSONB (arrays of objects with arrays) or maybe required improve with a RPC query to supabase
-	const data = dataDB.find((ele) => {
-		return ele.metadata.addresses.find((addresses) => {
-			return addresses.knownAddresses.find((knownAddresses) => {
-				if (knownAddresses.interpreter.toLowerCase() == address.toLowerCase()) return true;
-			});
-		});
-	});
-
+	const data = (await matchInterpreters([address.toLowerCase()], supabaseClient_))[0];
 	data.type = 'Interpreter';
 
 	return { data };

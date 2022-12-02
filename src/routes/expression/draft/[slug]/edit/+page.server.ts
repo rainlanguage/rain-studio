@@ -8,7 +8,7 @@ export async function load(event): Promise<{ expression: ExpressionRowFull }> {
     const { supabaseClient, session } = await getSupabase(event)
 
     // if there's no session at all, have them sign in
-    if (!session) redirect(307, '/sign-in')
+    if (!session) throw redirect(307, '/sign-in')
 
     const slug = event.params.slug
     let userQuery, contractQuery, interpreterQuery

@@ -7,11 +7,13 @@
 
 	let name_type = '';
 	let loading = true;
+	let showResult = false;
 
 	$: result = $page.data.result;
 
 	afterUpdate(() => {
-		if (result) {
+		if (result.resultSG || result.resultDB) {
+			showResult = true;
 			name_type = result.resultSG?.__typename || result.resultDB?.type;
 		}
 		loading = false;
@@ -25,7 +27,7 @@
 	>
 		{#if loading}
 			<Ring size="30px" color="#000" />
-		{:else if result}
+		{:else if showResult}
 			The search is {'AEIOU'.indexOf(name_type[0]) !== -1 ? `an ${name_type}` : `a ${name_type}`}
 		{:else}
 			There is no result from this search
