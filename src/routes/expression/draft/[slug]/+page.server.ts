@@ -10,7 +10,6 @@ export async function load(event) {
 	let userQuery, contractQuery, interpreterQuery;
 
     const query = await supabaseClient.rpc('get_expression_by_slug', { slug }) as PostgrestSingleResponse<ExpressionRow[]>
-    console.log(query)
     if (query?.data?.[0]) {
         userQuery = await supabaseClient.from('profiles').select('*').filter('id', 'eq', query.data[0].user_id).single()
         if (query.data[0]?.contract) contractQuery = await supabaseClient.from('contracts').select('*, project (*)').filter('id', 'eq', query.data[0].contract).single()

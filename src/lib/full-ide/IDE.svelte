@@ -2,8 +2,6 @@
 	import { page } from '$app/stores';
 	import { fade } from 'svelte/transition';
 	import PanelHeader from '$lib/full-ide/PanelHeader.svelte';
-	import InterpreterTag from '$lib/InterpreterTag.svelte';
-	import ProjectTag from '$lib/ProjectTag.svelte';
 	import {
 		ArrowPath,
 		ArrowUturnLeft,
@@ -21,12 +19,21 @@
 	import { toast } from '@zerodevx/svelte-toast';
 	import { goto } from '$app/navigation';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
-
+	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
+	import SignedContext from '$lib/full-ide/SignedContext.svelte';
 	export let expression: ExpressionRowFull;
 
 	let raw_expression = expression.raw_expression || '';
 	let notes = expression.notes || '';
 	let name = expression.name || '';
+
+	$: contextColumns = expression.contract?.metadata.expressions?.find(
+		(exp) => exp.name == expression.contract_expression
+	)?.contextColumns;
+
+	// merging contract base context and dynamic signed context
+	let mockContext: any, signedContext: any;
+	$: context = mockContext && signedContext ? [...mockContext, ...signedContext] : 0;
 
 	// for saving the exression and notes - this happens automatically as the user edits
 	let saving: boolean; // track saving state
@@ -69,7 +76,6 @@
 
 	// handling sharing a link
 	const copyShareLink = async () => {
-		console.log($page);
 		await navigator.clipboard.writeText(
 			`${$page.url.origin}/expression/draft/${expression.sharable_slug}`
 		);
@@ -140,26 +146,7 @@
 	<div class="flex flex-col w-3/12">
 		<div class="flex flex-col gap-y-2 py-4 px-2 border-b border-gray-300">
 			<span class="text-gray-600 text-[10px] uppercase">Writing for</span>
-			<ExpressionEnv
-				contract={expression?.contract}
-				interpreter={expression.interpreter}
-				{expression}
-			/>
-			<!-- {#if expression.contract}
-				<ProjectTag
-					name={expression.contract.project.name}
-					logoUrl={expression.contract.project.logo_url}
-				/>
-				<span class="text-xl font-semibold">{expression.contract.metadata?.name}</span>
-			{/if}
-			<InterpreterTag name="Rainterpreter" address="0xa921Cf2cDf267C7a3659c0F0dB2ff0Dec070375F" /> -->
-		</div>
-		<div class="flex flex-col gap-y-2 px-2 py-4">
-			{#if expression.contract}
-				<span class="font-semibold">Contract</span>
-				<div>{expression.contract.metadata?.description}</div>
-				<span class="font-semibold">Expression</span>
-			{/if}
+			<ExpressionEnv {expression} />
 		</div>
 	</div>
 	<div class="flex flex-col w-5/12 border-x border-gray-300">
@@ -181,7 +168,10 @@
 	<div class="flex flex-col w-4/12">
 		<div class="h-96 border-b border-gray-300">
 			<PanelHeader>Mock data</PanelHeader>
-			<div class="p-2">Mocking goes here</div>
+			<div class="p-2 overflow-scroll h-full">
+				<ContextGrid {contextColumns} bind:mockContext />
+				<SignedContext bind:signedContext />
+			</div>
 		</div>
 		<div class="flex-col flex flex-grow">
 			<div class="flex-shrink">

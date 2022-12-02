@@ -17,7 +17,6 @@
 	};
 
 	const refresh = async () => {
-		console.log($page.data.session?.user.id);
 		if ($page.data.session && 'id' in $page.data.session.user) {
 			const resp = await fetch(`/user/${$page.data.session.user.id}/expressions`, {
 				method: 'POST'

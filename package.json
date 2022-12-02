@@ -50,8 +50,8 @@
 		"graphql": "^16.6.0",
 		"install": "^0.13.0",
 		"javascript-time-ago": "^2.5.9",
-		"rain-metadata": "https://github.com/beehive-innovation/rain-metadata",
-		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#b7d9735da2c3abaa5beeded3e6e7155131bfbe17",
+		"rain-metadata": "https://github.com/beehive-innovation/rain-metadata#566809d2b8312ddaceb23a03f1bf4312f32aba19",
+		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#8e84082acd00feca3d8fc57f19caaa07845cc24e",
 		"supabase": "^1.15.0",
 		"svelte-ethers-store": "^2.5.8",
 		"web3modal": "^1.9.9"
