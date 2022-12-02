@@ -6,7 +6,6 @@
 	import { saveExpressionCopy } from '$lib/expressions/expressions';
 
 	export let expression: ExpressionRowFull;
-
 	let error: string | null;
 	let newSlug: string;
 

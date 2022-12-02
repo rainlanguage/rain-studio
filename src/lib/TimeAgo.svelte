@@ -5,7 +5,7 @@
 	// English.
 	TimeAgo.addDefaultLocale(en);
 
-	export let dateString = '';
+	export let dateString: string | number = '';
 	export let date: Date | null = null;
 
 	// Create formatter (English).
