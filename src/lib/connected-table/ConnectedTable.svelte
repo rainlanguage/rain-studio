@@ -46,13 +46,13 @@
 
 <ModalLinkAddress bind:openedModal={openedModalLink} address={$signerAddress} />
 
-<div class="flex flex-col items-start gap-y-2.5 ">
+<div class="flex flex-col items-start gap-y-2.5 w-full">
 	<p class="small-regular text-gray-600">
 		{$connected ? 'Connected' : 'Not connected'}
 		<span class={$connected ? 'green' : 'red'}>•</span>
 	</p>
 	{#if $connected}
-		<div class="border-[1px] border-gray-300 rounded-[10px] p-[10px]">
+		<div class="border-[1px] border-gray-300 rounded-[10px] p-[10px] w-full">
 			<p class="leading-[21px] tracking-[-0.01em] text-gray-500">
 				{networkName}
 			</p>
