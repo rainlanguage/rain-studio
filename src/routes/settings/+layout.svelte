@@ -22,7 +22,7 @@
 				class:active={$page.url.pathname === '/settings/wallets'}>Linked wallets</a
 			>
 		</div>
-		<div class="w-2/3">
+		<div class="w-2/5">
 			<slot />
 		</div>
 	</div>

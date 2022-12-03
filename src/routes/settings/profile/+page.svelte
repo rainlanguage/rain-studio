@@ -3,6 +3,7 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { Button, Input } from 'rain-svelte-components/package';
 	import UserAvatar from '$lib/UserAvatar.svelte';
+	import { goto } from '$app/navigation';
 
 	let session = $page.data.session;
 	let profile = $page.data.profile;
@@ -48,7 +49,16 @@
 		<Input bind:value={username}>
 			<svelte:fragment slot="label">Username</svelte:fragment>
 		</Input>
-		<Button classes="self-start" disabled={loading}>{loading ? 'Loading...' : 'Update'}</Button>
-		<a class="text-sm underline text-gray-500" href="/request-reset">Reset password</a>
+		<Button variant="black" classes="self-start" disabled={loading}
+			>{loading ? 'Loading...' : 'Update'}</Button
+		>
 	</form>
+	<Button
+		variant="transparent"
+		size="small"
+		classes="self-start"
+		on:click={() => {
+			goto('/request-reset');
+		}}>Reset password</Button
+	>
 </div>

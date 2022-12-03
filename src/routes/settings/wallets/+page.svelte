@@ -1,97 +1,73 @@
 <script lang="ts">
-	import { Button } from 'rain-svelte-components/package';
-	import { signerAddress, connected, signer } from 'svelte-ethers-store';
+	import { signerAddress } from 'svelte-ethers-store';
 	import { page } from '$app/stores';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { createMessage, postRequest } from '$lib/utils';
-	import { connectWallet, disconectWallet } from '$lib/connect-wallet';
+	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
+	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
+	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
+	import { isLinked } from '$lib/connected-table';
 
-	let loading = false;
-	let message = '';
+	let linkedAddresses: string[] = [];
+	let openedModal = false;
+	let addressToUnlink = '';
 
-	const linkAddress = async () => {
-		message = 'Waiting for sign...';
-
-		const address = $signerAddress;
-
-		// Get the nonce with the current address to sign the message
-		const nonceResp = await (await postRequest('/api/get_nonce', { address })).json();
-		if (!nonceResp.success) {
-			const error = nonceResp.error.message;
-			message = error;
-			alert(error);
-			return;
-		}
-
-		// Sign the message
-		const messageToSign = createMessage(address, nonceResp.id);
-		const signedMessage = await $signer.signMessage(messageToSign);
-
-		message = 'Linking the address...';
-
-		// Request to link address
-		const linkResp = await (
-			await postRequest('/api/link_address', { address, signedMessage })
-		).json();
-		if (!linkResp.success) {
-			message = 'The address could not be linked to your account.';
-			alert(message);
-			return;
-		}
-
-		message = 'Address linked to this account.';
-		alert('Address linked to this account.');
-	};
-
-	const searchAddress = async () => {
-		loading = true;
+	const searchAddresses = async () => {
 		const user = $page.data.session.user;
-
-		console.log('here1');
 
 		let { data, error } = await supabaseClient
 			.from('wallets')
-			.select('user_id')
-			.eq('address', $signerAddress)
-			.single();
+			.select('user_id, address')
+			.eq('user_id', user.id);
 
-		if (error) {
-			message = 'The address is not linked to your account';
-		} else if (user.id === data?.user_id) {
-			message = 'This address is linked to your account';
-		} else {
-			message = 'This address is linked to other account';
-		}
-
-		loading = false;
+		if (!error && data?.length > 0) linkedAddresses = data?.map((wallet) => wallet.address);
 	};
 
-	// Only search if connected
-	$: if ($connected) {
-		searchAddress();
+	searchAddresses();
+
+	$: if ($signerAddress || $isLinked || !openedModal) {
+		searchAddresses();
 	}
 </script>
 
-<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3 ml-5">
-	{#if !$signerAddress}
-		<Button disabled={!!$signerAddress} on:click={connectWallet}>Connect wallet</Button>
-	{:else}
-		<Button variant="primary" on:click={linkAddress}>Link you address</Button>
-		<div>
-			<Button disabled={!$signerAddress} on:click={disconectWallet}>Disconnect</Button>
-		</div>
-	{/if}
-</div>
+<ModalUnlinkAddress bind:openedModal address={addressToUnlink} />
 
-{#if $signerAddress}
-	<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3 ml-5">
-		<div class="space-y-2">
-			<p>
-				Address connected: {$signerAddress}
-			</p>
-			<p class="border-t-2 border-double border-gray-300 pt-1.5">
-				{loading ? 'Loading...' : message}
-			</p>
+<div class="flex flex-col gap-y-[30px]">
+	<div class="flex flex-col gap-y-2.5">
+		<ConnectedTable />
+		{#if !$signerAddress}
+			<div>
+				<ConnectWallet variant="black" />
+			</div>
+		{/if}
+	</div>
+	<div
+		class="flex flex-col items-start rounded-[10px] border-neutral-300 border-[1px] items-stretch"
+	>
+		<span
+			class="py-[15px] pl-[10px] border-b-[1px] border-neutral-300 text-[18px] font-medium leading-[23px] tracking-[-0.01em]"
+			>Linked wallets</span
+		>
+		<div class="w-full flex flex-col items-start px-[10px]">
+			{#if linkedAddresses.length > 0}
+				{#each linkedAddresses as addressElement}
+					<div
+						class="w-full flex flex-row justify-between items-center py-[10px] gap-[10px] border-b-[1px] last:border-0"
+					>
+						<p class="font-mono text-xs tracking-[-0.01em] text-black">
+							{addressElement}
+						</p>
+						<button
+							class="text-[13px] leading-[17px] text-right tracking-[-0.01em] text-neutral-500"
+							on:click={() => {
+								openedModal = true;
+								addressToUnlink = addressElement;
+							}}
+						>
+							unlink
+						</button>
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
-{/if}
+</div>
