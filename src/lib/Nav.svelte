@@ -8,6 +8,11 @@
 	import { Button, Input } from 'rain-svelte-components/package';
 	import { onMount } from 'svelte';
 
+	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
+	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
+
+	import { signerAddress, connected, allChainsData, chainId } from 'svelte-ethers-store';
+
 	let profileMenu: any;
 	let profileMenuOpen: boolean = false;
 	let bodyRef: HTMLDivElement;
@@ -112,7 +117,16 @@
 						>
 						<a class="profile-link">Deployments</a>
 						<div class="border-t border-gray-200" />
-						<a class="profile-link">Connect Wallet</a>
+						{#if !$connected}
+							<div class="self-center">
+								<ConnectWallet variant="black" />
+							</div>
+							<!-- <button class="profile-link text-red-500">Connect Wallet</button> -->
+						{:else}
+							<div class="p-5">
+								<ConnectedTable size="small" />
+							</div>
+						{/if}
 						<div class="border-t border-gray-200" />
 
 						<div on:click={signOut} class="profile-link">Sign out</div>
