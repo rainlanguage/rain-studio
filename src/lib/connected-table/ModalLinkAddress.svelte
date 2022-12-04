@@ -59,10 +59,8 @@
 <Modal bind:open={openedModal}>
 	<div class="flex flex-col gap-5 w-min">
 		<div class="flex flex-col gap-2.5 w-fit">
-			<p class="text-[25px]">
-				The connected wallet address {address} is not linked to your account.
-			</p>
-			<p>If you change your mind, you will be able to relink it again.</p>
+			<p class="text-[25px]">The connected wallet is not linked to your account.</p>
+			<p class="font-mono">{address}</p>
 		</div>
 		<div class="flex gap-3.5">
 			<Button variant="primary" on:click={linkAddress}>Link wallet</Button>
