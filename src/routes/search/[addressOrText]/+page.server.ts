@@ -13,16 +13,19 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	const { success, result } = await resp.json();
+	console.log(result);
 
 	if (success) {
 		const typenameDB = result.resultDB?.type;
+		const typenameSG = result.resultSG?.__typename;
 		if (typenameDB == 'Contract') {
 			// Redirect to contracts
 			throw redirect(307, `/contracts/${result.resultDB.slug}`);
 		}
 
-		if (typenameDB == 'Expression') {
-			// TODO: Redirect to Expressions
+		if (typenameSG == 'Expression') {
+			//  Redirect to Expressions
+			throw redirect(307, `/expression/${result.resultSG.id}`);
 		}
 		return { result };
 	}

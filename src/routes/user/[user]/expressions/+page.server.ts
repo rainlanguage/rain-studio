@@ -1,11 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
-import { createClient } from '@urql/core';
-import type { TypedSupabaseClient } from '@supabase/auth-helpers-sveltekit/dist/types';
-import type { Database } from '$lib/types/generated-db-types';
-import { matchContracts, matchInterpreters } from '$lib/match-addresses';
-import { QueryAccountsFromArray, Subgraphs } from '$lib/utils';
+import { getDeployedExpressionsForUser } from '$lib/expressions/expressions';
 
 // /** @type {import('./$types').PageServerLoad} */
 export const load: PageServerLoad = async (event) => {
@@ -25,63 +21,11 @@ export const load: PageServerLoad = async (event) => {
 	const resp = await fetch(`/user/${session?.user.id}/expressions`, { method: 'POST' });
 	let draft_expressions;
 	if (resp.ok) ({ draft_expressions } = await resp.json());
-	const deployedExpressions = await getDeployedUserExpressions(supabaseClient, userQuery.data);
+	const deployedExpressions = await getDeployedExpressionsForUser(userQuery.data, supabaseClient);
 
 	return {
 		deployedExpressions,
 		draft_expressions,
 		currentUser: session?.user.id == userQuery.data.id
 	};
-};
-
-const getDeployedUserExpressions = async (
-	supabaseClient: TypedSupabaseClient,
-	user: Database['public']['Tables']['profiles']['Row']
-) => {
-	const walletsQuery = await supabaseClient.from('wallets').select('*').eq('user_id', user.id);
-
-	if (!walletsQuery.data) return null;
-
-	const wallets = walletsQuery.data.map((wallet) => wallet.address?.toLowerCase());
-
-	//	Only mumbai at the moment
-	const client = createClient({
-		url: Subgraphs[0].url
-	});
-
-	const { data, error } = await client.query(QueryAccountsFromArray, { wallets }).toPromise();
-
-	if (error || data.accounts.length == 0) return null;
-	const sgUserExpressions = data.accounts[0].expressions;
-
-	// get all the interpreters in the db that match any of the interpreters used by the user's deployed expressions
-	const matchedInterpreters = await matchInterpreters(
-		sgUserExpressions.map((expression) =>
-			expression.event.expression.interpreterInstance.id.toLowerCase()
-		),
-		supabaseClient
-	);
-	// console.log(matchedInterpreters)
-
-	// get all the contracts in the db that match any of the senders for the expressions
-	const matchedContracts = await matchContracts(
-		sgUserExpressions.map((expression) => expression.sender.id),
-		supabaseClient
-	);
-
-	// create the final object to return
-	const deployedExpressions = sgUserExpressions.map((expression: any) => ({
-		stateConfig: expression?.event?.expression?.config,
-		interpreter: matchedInterpreters.find(
-			(interpreter: any) =>
-				interpreter.interpreteraddress.toLowerCase() ==
-				expression.event.expression.interpreterInstance.id.toLowerCase()
-		),
-		contract: matchedContracts.find(
-			(contract: any) =>
-				contract.contract_address.toLowerCase() == expression.sender.id.toLowerCase()
-		)
-	}));
-
-	return deployedExpressions;
 };

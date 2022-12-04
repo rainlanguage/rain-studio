@@ -3,14 +3,14 @@
 	import Auth from '$lib/Auth.svelte';
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
-	import { DocumentDuplicate } from '@steeze-ui/heroicons';
+	import { DocumentDuplicate, Eye } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
 	import { Formatter } from '@beehiveinnovation/rainlang';
+	import { goto } from '$app/navigation';
 
 	export let expression: any;
 	$: expressionToFork = { ...expression, raw_expression: Formatter.get(expression.stateConfig) };
-
 	let newExpModal: boolean = false;
 </script>
 
@@ -21,6 +21,14 @@
 			size="small"
 			variant="transparent"
 			icon={DocumentDuplicate}>Fork</Button
+		>
+		<Button
+			on:click={() => {
+				goto(`/expression/${expression.sg.id}`);
+			}}
+			size="small"
+			variant="transparent"
+			icon={Eye}>View</Button
 		>
 	</div>
 </ExpressionRow>

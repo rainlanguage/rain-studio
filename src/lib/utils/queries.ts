@@ -204,7 +204,6 @@ const expresionQuery = `
    id
  }
  config {
-   id
    sources
    constants
  }
@@ -263,6 +262,7 @@ export const QueryAccountsFromArray = `
         id
       }
       expressions {
+        id
         contextScratch
         sender {
           id
@@ -283,3 +283,14 @@ export const QueryAccountsFromArray = `
     }
   }
 `;
+
+/**
+ * Query to search an Expression
+ */
+export const QueryExpression = `
+ query ($address: ID!) {
+   expression(id: $address) {
+     ${expresionQuery}
+   }
+ }
+`
