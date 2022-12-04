@@ -5,14 +5,14 @@
 	import { goto } from '$app/navigation';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { Button, Input } from 'rain-svelte-components/package';
+	import { Input } from 'rain-svelte-components/package';
 	import { onMount } from 'svelte';
+	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
+	import { connected } from 'svelte-ethers-store';
+	import { connectWallet } from '$lib/connect-wallet';
 
-	let profileMenu: any;
 	let profileMenuOpen: boolean = false;
-	let bodyRef: HTMLDivElement;
 	let addressOrText = '';
-	let newAddressOrText = '';
 
 	onMount(() => (addressOrText = ''));
 
@@ -112,7 +112,17 @@
 						>
 						<a class="profile-link">Deployments</a>
 						<div class="border-t border-gray-200" />
-						<a class="profile-link">Connect Wallet</a>
+						{#if !$connected}
+							<!-- <div class="self-start p-4">
+								<ConnectWallet variant="black" />
+							</div> -->
+							<button on:click={connectWallet} class="profile-link text-left">Connect Wallet</button
+							>
+						{:else}
+							<div class="px-5 py-3 w-full">
+								<ConnectedTable size="small" />
+							</div>
+						{/if}
 						<div class="border-t border-gray-200" />
 
 						<div on:click={signOut} class="profile-link">Sign out</div>
