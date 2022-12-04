@@ -5,7 +5,7 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
 	import ModalLinkAddress from '$lib/connected-table/ModalLinkAddress.svelte';
-	import { isLinked } from './';
+	import { isLinked, SearchStatus, currentSearchStatus } from './';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowUpRight } from '@steeze-ui/heroicons';
 
@@ -18,6 +18,8 @@
 
 	const searchAddress = async () => {
 		loading = true;
+		currentSearchStatus.set(SearchStatus.Searching);
+
 		const user = $page.data?.session?.user;
 
 		let { data, error } = await supabaseClient
@@ -33,6 +35,7 @@
 		}
 
 		loading = false;
+		currentSearchStatus.set(SearchStatus.Finished);
 	};
 
 	$: networkName = allChainsData.find((_chain) => _chain.chainId == $chainId)?.name;

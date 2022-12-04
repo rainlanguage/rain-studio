@@ -2,7 +2,7 @@
 	import { Button, Modal } from 'rain-svelte-components/package';
 	import { createMessage, postRequest } from '$lib/utils';
 	import { signer } from 'svelte-ethers-store';
-	import { isLinked } from '.';
+	import { isLinked, unwantedWallets } from '.';
 
 	export let openedModal = false;
 	export let address = '';
@@ -35,6 +35,14 @@
 
 		openedModal = false;
 	};
+
+	const closeModal = () => {
+		if (!$unwantedWallets.includes(address)) {
+			$unwantedWallets.push(address);
+		}
+
+		openedModal = false;
+	};
 </script>
 
 <Modal bind:open={openedModal}>
@@ -47,7 +55,7 @@
 		</div>
 		<div class="flex gap-3.5">
 			<Button variant="primary" on:click={() => linkAddress(address)}>Link wallet</Button>
-			<Button variant="black" on:click={() => (openedModal = false)}>Cancel</Button>
+			<Button variant="black" on:click={closeModal}>Cancel</Button>
 		</div>
 	</div>
 </Modal>

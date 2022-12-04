@@ -2,7 +2,7 @@
 	import { Button, Modal } from 'rain-svelte-components/package';
 	import { signerAddress } from 'svelte-ethers-store';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { isLinked } from './';
+	import { isLinked, unwantedWallets } from './';
 
 	export let openedModal = false;
 	export let address = '';
@@ -14,6 +14,11 @@
 			alert('The address could not be deleted from your profile.');
 		} else if ($signerAddress == address) {
 			isLinked.set(false);
+
+			// Since was recently unlinked, this avoit show the link modal with this address until the session finish
+			if (!$unwantedWallets.includes(address)) {
+				$unwantedWallets.push(address);
+			}
 		}
 
 		openedModal = false;
