@@ -5,7 +5,7 @@
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
 	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
-	import { isLinked } from '$lib/connected-table';
+	import { isLinked, linkedWalllets } from '$lib/connected-table';
 
 	let linkedAddresses: string[] = [];
 	let openedModal = false;
@@ -19,7 +19,10 @@
 			.select('user_id, address')
 			.eq('user_id', user.id);
 
-		if (!error) linkedAddresses = data?.map((wallet) => wallet.address);
+		if (!error) {
+			linkedAddresses = data?.map((wallet) => wallet.address);
+			linkedWalllets.set(linkedAddresses);
+		}
 	};
 
 	searchAddresses();

@@ -2,7 +2,7 @@
 	import '../app.postcss';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { invalidate } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { afterUpdate, onMount } from 'svelte';
 	import Nav from '$lib/Nav.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 
@@ -12,10 +12,19 @@
 		isLinked,
 		unwantedWallets,
 		SearchStatus,
-		currentSearchStatus
+		currentSearchStatus,
+		isLinkedToOther,
+		linkedWalllets
 	} from '$lib/connected-table';
 
 	let openedModalLink = false;
+	let _address = '';
+
+	afterUpdate(() => {
+		if (_address != $signerAddress) {
+			_address = $signerAddress;
+		}
+	});
 
 	onMount(() => {
 		const {
@@ -33,7 +42,10 @@
 		$connected &&
 		!$isLinked &&
 		!$unwantedWallets.includes($signerAddress) &&
-		$currentSearchStatus === SearchStatus.Finished
+		$currentSearchStatus === SearchStatus.Finished &&
+		!$isLinkedToOther &&
+		!$linkedWalllets.includes($signerAddress) &&
+		_address == $signerAddress
 	) {
 		openedModalLink = true;
 	}

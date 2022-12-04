@@ -5,7 +5,7 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
 	import ModalLinkAddress from '$lib/connected-table/ModalLinkAddress.svelte';
-	import { isLinked, SearchStatus, currentSearchStatus } from './';
+	import { isLinked, isLinkedToOther, SearchStatus, currentSearchStatus } from './';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowUpRight } from '@steeze-ui/heroicons';
 
@@ -28,10 +28,15 @@
 			.eq('address', $signerAddress)
 			.single();
 
-		if (error || user?.id !== data?.user_id) {
+		if (error) {
 			isLinked.set(false);
+			isLinkedToOther.set(false);
+		} else if (user?.id !== data?.user_id) {
+			isLinked.set(false);
+			isLinkedToOther.set(true);
 		} else {
 			isLinked.set(true);
+			isLinkedToOther.set(false);
 		}
 
 		loading = false;
