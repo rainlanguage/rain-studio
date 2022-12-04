@@ -30,8 +30,8 @@
 			<span class="font-mono text-xl">{sgQuery.id}</span>
 			<div class="flex items-center gap-x-2">
 				<span>Created by</span>
-				<UserAvatar url={user.avatar_url} />
-				<span>{user.username}</span>
+				<UserAvatar url={user?.avatar_url} />
+				<span>{user?.username}</span>
 			</div>
 			<TimeAgo dateString={parseInt(sgQuery.event.timestamp) * 1000} />
 		</div>

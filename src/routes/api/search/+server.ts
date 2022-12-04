@@ -43,7 +43,7 @@ export async function POST(event) {
 			// Found something on sg
 			resultDB = await queryToDatabase(address, resultSG.__typename, supabaseClient);
 
-			if (resultSG.__typename.match(/^(Contract|Factory|Expression)$/) && resultDB.data == null) {
+			if (resultSG.__typename.match(/^(Contract|Factory)$/) && resultDB.data == null) {
 				// Does not found anything on DB
 				return json({
 					success: true,
