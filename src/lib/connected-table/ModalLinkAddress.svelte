@@ -4,15 +4,21 @@
 	import { signer } from 'svelte-ethers-store';
 	import { isLinked, unwantedWallets } from '.';
 
+	import CommonModal from '$lib/CommonModal.svelte';
+	import { ExclamationTriangle, CheckCircle } from '@steeze-ui/heroicons';
+
 	export let openedModal = false;
 	export let address = '';
 
-	const linkAddress = async (address_: string) => {
+	let modalSuccess = false;
+	let modalError = false;
+	let messageError = '';
+
+	const linkAddress = async () => {
 		// Get the nonce with the current address to sign the message
 		const nonceResp = await (await postRequest('/api/get_nonce', { address })).json();
 		if (!nonceResp.success) {
-			const error = nonceResp.error.message;
-			alert(error);
+			openErrorModal(nonceResp.error.message);
 			return;
 		}
 
@@ -26,22 +32,27 @@
 		).json();
 
 		if (!linkResp.success) {
-			alert('The address could not be linked to your account.');
+			openErrorModal('The address could not be linked to your account.');
 			return;
 		}
 
 		isLinked.set(true);
-		alert('Address linked to this account.');
-
 		openedModal = false;
+		modalSuccess = true;
 	};
 
-	const closeModal = () => {
+	const closeMainModal = () => {
 		if (!$unwantedWallets.includes(address)) {
 			$unwantedWallets.push(address);
 		}
 
 		openedModal = false;
+	};
+
+	const openErrorModal = (errorMessag_: string) => {
+		messageError = errorMessag_;
+		openedModal = false;
+		modalError = true;
 	};
 </script>
 
@@ -54,8 +65,24 @@
 			<p>If you change your mind, you will be able to relink it again.</p>
 		</div>
 		<div class="flex gap-3.5">
-			<Button variant="primary" on:click={() => linkAddress(address)}>Link wallet</Button>
-			<Button variant="black" on:click={closeModal}>Cancel</Button>
+			<Button variant="primary" on:click={linkAddress}>Link wallet</Button>
+			<Button variant="black" on:click={closeMainModal}>Cancel</Button>
 		</div>
 	</div>
 </Modal>
+
+<!-- Modal success -->
+<CommonModal
+	bind:open={modalSuccess}
+	message="The address has been linked to this account."
+	icon={CheckCircle}
+	iconColor="text-green-500"
+/>
+
+<!-- Modal error -->
+<CommonModal
+	bind:open={modalError}
+	message={messageError}
+	icon={ExclamationTriangle}
+	iconColor="text-red-600"
+/>

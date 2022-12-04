@@ -4,14 +4,22 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { isLinked, unwantedWallets } from './';
 
+	import CommonModal from '$lib/CommonModal.svelte';
+	import { ExclamationCircle, CheckCircle } from '@steeze-ui/heroicons';
+
 	export let openedModal = false;
 	export let address = '';
+
+	let modalSuccess = false;
+	let modalError = false;
+	let messageError = '';
 
 	const unlinkAddress = async (address: string) => {
 		let resp = await supabaseClient.from('wallets').delete().eq('address', address);
 
 		if (resp?.error) {
-			alert('The address could not be deleted from your profile.');
+			openErrorModal('The address could not be deleted from your profile.');
+			// alert('The address could not be deleted from your profile.');
 		} else if ($signerAddress == address) {
 			isLinked.set(false);
 
@@ -22,6 +30,13 @@
 		}
 
 		openedModal = false;
+		modalSuccess = true;
+	};
+
+	const openErrorModal = (errorMessag_: string) => {
+		messageError = errorMessag_;
+		openedModal = false;
+		modalError = true;
 	};
 </script>
 
@@ -37,3 +52,19 @@
 		</div>
 	</div>
 </Modal>
+
+<!-- Modal success -->
+<CommonModal
+	bind:open={modalSuccess}
+	message="The address has been removed from this account."
+	icon={CheckCircle}
+	iconColor="text-green-500"
+/>
+
+<!-- Modal error -->
+<CommonModal
+	bind:open={modalError}
+	message={messageError}
+	icon={ExclamationCircle}
+	iconColor="text-yellow-500"
+/>
