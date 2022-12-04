@@ -19,7 +19,7 @@
 			.select('user_id, address')
 			.eq('user_id', user.id);
 
-		if (!error && data?.length > 0) linkedAddresses = data?.map((wallet) => wallet.address);
+		if (!error) linkedAddresses = data?.map((wallet) => wallet.address);
 	};
 
 	searchAddresses();
@@ -67,6 +67,14 @@
 						</button>
 					</div>
 				{/each}
+			{:else}
+				<div
+					class="w-full flex flex-row justify-between items-center py-[10px] gap-[10px] border-b-[1px] last:border-0"
+				>
+					<p class="font-mono text-xs tracking-[-0.01em] text-black">
+						There is no wallets linked to this account
+					</p>
+				</div>
 			{/if}
 		</div>
 	</div>
