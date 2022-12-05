@@ -7,10 +7,66 @@
 	import autoAnimate from '@formkit/auto-animate';
 	import { goto } from '$app/navigation';
 	import DeployedExpressionSummaryRow from '$lib/expressions/DeployedExpressionSummaryRow.svelte';
+	import FilterGroup from 'rain-svelte-components/package/filter/FilterGroup.svelte';
+	import FilterSet from 'rain-svelte-components/package/filter/FilterSet.svelte';
+	import type { ContractRowFull, InterpreterRowFull } from '$lib/types/types';
 
-	$: draftExpressions = $page.data?.draft_expressions;
-	$: deployedExpressions = $page.data?.deployedExpressions;
-	// $: console.log($page.data.deployedExpressions);
+	let draftExpressions = $page.data?.draft_expressions;
+	let deployedExpressions = $page.data?.deployedExpressions;
+	const contracts: ContractRowFull[] = $page.data.contracts;
+	const interpreters: InterpreterRowFull[] = $page.data.interpreters;
+
+	$: console.log($page.data);
+
+	// sorting
+	enum SortOptions {
+		ByNewest,
+		ByOldest
+	}
+
+	const sortOptions = [
+		{ label: 'Newest first', value: SortOptions.ByNewest },
+		{ label: 'Oldest first', value: SortOptions.ByOldest }
+	];
+
+	let selectedSortOption = SortOptions.ByNewest;
+
+	// contract filters
+	const contractOptions = contracts.map((contract) => ({
+		label: contract.metadata.name,
+		value: contract.id
+	}));
+	let selectedContract: string[] = contractOptions.map((contract) => contract.value);
+
+	// interpreter filters
+	const interpreterOptions = interpreters.map((interpreter) => ({
+		label: interpreter.metadata.name,
+		value: interpreter.id
+	}));
+	let selectedInterpreter: string[] = interpreterOptions.map((interpreter) => interpreter.value);
+
+	$: getDeployedExpressions(selectedSortOption, selectedContract, selectedInterpreter);
+
+	const getDeployedExpressions = async (
+		selectedSortOption: SortOptions,
+		selectedContract: string[],
+		selectedInterpreter: string[]
+	) => {
+		const order = selectedSortOption === SortOptions.ByOldest ? true : false;
+		console.log(order, 'order');
+		const resp = await fetch(
+			`${$page.url.origin}/user/${$page.data.session?.user.id}/expressions`,
+			{
+				method: 'POST',
+				body: JSON.stringify({
+					order: ['created_at', { ascending: order }],
+					selectedContract,
+					selectedInterpreter
+				})
+			}
+		);
+		if (resp.ok) ({ draft_expressions: draftExpressions } = await resp.json());
+	};
 
 	const removeExpression = (id: string) => {
 		draftExpressions = draftExpressions.filter((expression: any) => expression.id !== id);
@@ -32,13 +88,6 @@
 <PageHeader>
 	<div class="h-full flex flex-row justify-between items-center container mx-auto">
 		<span class="text-2xl font-semibold">Expressions</span>
-		<Button
-			variant="primary"
-			on:click={() => {
-				goto('/expression/new');
-			}}
-			icon={Plus}>New expression</Button
-		>
 	</div>
 </PageHeader>
 
@@ -58,13 +107,31 @@
 			<TabPanel>
 				<div class="container mx-auto gap-y-4 flex flex-col">
 					<div class="flex justify-between w-full mt-6">
+						<Button
+							variant="primary"
+							on:click={() => {
+								goto('/expression/new');
+							}}
+							icon={Plus}>New expression</Button
+						>
 						<div>
-							<!-- <Select /> -->
+							<Select items={sortOptions} bind:value={selectedSortOption} />
 						</div>
 					</div>
-					<div class="flex flex-row">
-						<div class="w-1/5" />
-						<div use:autoAnimate class="w-4/5 gap-y-4 flex-col flex">
+					<div class="flex flex-row gap-x-4">
+						<div class="w-1/4">
+							<FilterGroup name="Contract">
+								<FilterSet exclusive options={contractOptions} bind:value={selectedContract} />
+							</FilterGroup>
+							<FilterGroup name="Interpreter">
+								<FilterSet
+									exclusive
+									options={interpreterOptions}
+									bind:value={selectedInterpreter}
+								/>
+							</FilterGroup>
+						</div>
+						<div use:autoAnimate class="w-3/4 gap-y-4 flex-col flex">
 							{#each draftExpressions as expression (expression.id)}
 								<ExpressionSummaryRow
 									{expression}

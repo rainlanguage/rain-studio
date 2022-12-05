@@ -8,6 +8,7 @@ import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { createClient } from "@urql/core";
 import { error as sveltekitError } from '@sveltejs/kit';
 import { ethers } from "ethers";
+import { toast } from "@zerodevx/svelte-toast";
 
 export const createNewExpression = async (expression: Omit<Database['public']['Tables']['draft_expressions']['Insert'], 'raw_expression' | 'notes' | 'name'>) => {
     const _expression = { ...expression, notes: '', raw_expression: '', name: 'Untitled expression' }
@@ -116,3 +117,16 @@ export const getDeployedExpressionByAddress = async (address: string, supabaseCl
 
     return { sg: data.expression, user: userQuery?.data?.user_id, expression: { contract, interpreter, stateConfig: data.expression.config } }
 }
+
+/**
+ * Copy a value to the clipboard and emit a toast message.
+ * 
+ * @param value - the value to copy to the clipboard
+ * @param message - the message to emit in the toast
+ */
+export const copyAndEmit = async (value: string, message: string) => {
+    await navigator.clipboard.writeText(
+        value
+    );
+    toast.push(message);
+};

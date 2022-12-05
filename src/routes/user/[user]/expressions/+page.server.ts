@@ -14,18 +14,37 @@ export const load: PageServerLoad = async (event) => {
 		.single();
 	if (!userQuery?.data) throw error(404, 'Not found');
 
+	// getting all contracts
+	const contractsQuery = await supabaseClient
+		.from('contracts')
+		.select('*')
+
+	// getting all interpreters
+	const interpretersQuery = await supabaseClient
+		.from('interpreters')
+		.select('*')
+
+
 	// using an endpoint here to get the current users expressions
 	// note that this endpoint takes the user id, not the username,
 	// as the user id is generally more readily available in the app
 	// as part of the session
-	const resp = await fetch(`/user/${session?.user.id}/expressions`, { method: 'POST' });
+	const resp = await fetch(`/user/${session?.user.id}/expressions`, {
+		method: 'POST',
+		body: JSON.stringify(
+			{ order: ['created_at', { ascending: false }] }
+		)
+	});
 	let draft_expressions;
 	if (resp.ok) ({ draft_expressions } = await resp.json());
 	const deployedExpressions = await getDeployedExpressionsForUser(userQuery.data, supabaseClient);
 
 	return {
 		deployedExpressions,
+		user: userQuery.data,
 		draft_expressions,
-		currentUser: session?.user.id == userQuery.data.id
+		currentUser: session?.user.id == userQuery.data.id,
+		contracts: contractsQuery.data,
+		interpreters: interpretersQuery.data
 	};
 };
