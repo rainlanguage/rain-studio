@@ -73,7 +73,7 @@
 			</OverflowMenuItem>
 			<OverflowMenuItem>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div class="flex gap-x-2" on:click={deleteExp}>
+				<div class="flex gap-x-2 text-red-700" on:click={deleteExp}>
 					<span class="w-4">
 						<Icon src={Trash} />
 					</span>

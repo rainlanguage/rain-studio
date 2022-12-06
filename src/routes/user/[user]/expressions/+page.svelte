@@ -1,9 +1,18 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import ExpressionSummaryRow from '$lib/expressions/ExpressionSummaryRow.svelte';
 	import PageHeader from '$lib/PageHeader.svelte';
-	import { Plus } from '@steeze-ui/heroicons';
-	import { Button, Select, Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components/package';
+	import { MagnifyingGlass, Plus } from '@steeze-ui/heroicons';
+	import {
+		Button,
+		Input,
+		Select,
+		Tab,
+		TabList,
+		TabPanel,
+		Tabs
+	} from 'rain-svelte-components/package';
 	import autoAnimate from '@formkit/auto-animate';
 	import { goto } from '$app/navigation';
 	import DeployedExpressionSummaryRow from '$lib/expressions/DeployedExpressionSummaryRow.svelte';
@@ -15,8 +24,6 @@
 	let deployedExpressions = $page.data?.deployedExpressions;
 	const contracts: ContractRowFull[] = $page.data.contracts;
 	const interpreters: InterpreterRowFull[] = $page.data.interpreters;
-
-	$: console.log($page.data);
 
 	// sorting
 	enum SortOptions {
@@ -32,11 +39,15 @@
 	let selectedSortOption = SortOptions.ByNewest;
 
 	// contract filters
-	const contractOptions = contracts.map((contract) => ({
-		label: contract.metadata.name,
-		value: contract.id
-	}));
-	let selectedContract: string[] = contractOptions.map((contract) => contract.value);
+	const contractOptions = [
+		{ label: 'All', value: 'all' },
+		{ label: 'No contract', value: 'no-contract' },
+		...contracts.map((contract) => ({
+			label: contract.metadata.name,
+			value: contract.id
+		}))
+	];
+	let selectedContract: string;
 
 	// interpreter filters
 	const interpreterOptions = interpreters.map((interpreter) => ({
@@ -45,15 +56,18 @@
 	}));
 	let selectedInterpreter: string[] = interpreterOptions.map((interpreter) => interpreter.value);
 
-	$: getDeployedExpressions(selectedSortOption, selectedContract, selectedInterpreter);
+	// search value
+	let searchValue: string;
 
-	const getDeployedExpressions = async (
+	$: getDraftExpressions(selectedSortOption, selectedContract, selectedInterpreter, searchValue);
+
+	const getDraftExpressions = async (
 		selectedSortOption: SortOptions,
-		selectedContract: string[],
-		selectedInterpreter: string[]
+		selectedContract: string,
+		selectedInterpreter: string[],
+		searchValue: string
 	) => {
 		const order = selectedSortOption === SortOptions.ByOldest ? true : false;
-		console.log(order, 'order');
 		const resp = await fetch(
 			`${$page.url.origin}/user/${$page.data.session?.user.id}/expressions`,
 			{
@@ -61,7 +75,8 @@
 				body: JSON.stringify({
 					order: ['created_at', { ascending: order }],
 					selectedContract,
-					selectedInterpreter
+					selectedInterpreter,
+					searchValue
 				})
 			}
 		);
@@ -108,7 +123,6 @@
 				<div class="container mx-auto gap-y-4 flex flex-col">
 					<div class="flex justify-between w-full mt-6">
 						<Button
-							variant="primary"
 							on:click={() => {
 								goto('/expression/new');
 							}}
@@ -130,6 +144,25 @@
 									bind:value={selectedInterpreter}
 								/>
 							</FilterGroup>
+							<div class="mt-6 flex flex-col gap-y-2">
+								<Input
+									bind:value={searchValue}
+									debounce
+									debounceTime={100}
+									icon={MagnifyingGlass}
+									placeholder="Search your expressions"
+								/>
+								{#if searchValue}
+									<!-- svelte-ignore a11y-click-events-have-key-events -->
+									<span
+										transition:fade
+										on:click={() => {
+											searchValue = '';
+										}}
+										class="underline self-end text-sm cursor-pointer">Clear search</span
+									>
+								{/if}
+							</div>
 						</div>
 						<div use:autoAnimate class="w-3/4 gap-y-4 flex-col flex">
 							{#each draftExpressions as expression (expression.id)}
@@ -142,9 +175,7 @@
 								/>
 							{/each}
 							{#if !draftExpressions.length}
-								<span class="text-xl text-gray-600 w-full text-center pt-8"
-									>No saved expressions yet 🙁</span
-								>
+								<span class="text-xl text-gray-600 w-full text-center pt-8">None found 🙁</span>
 							{/if}
 						</div>
 					</div>
