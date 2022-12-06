@@ -293,4 +293,13 @@ export const QueryExpression = `
      ${expresionQuery}
    }
  }
-`
+`;
+
+
+export const QueryGetKnowContracts = `
+  query GetKnowContracts($knowAddresses: [ID!]) {
+    contracts(where: {id_in: $knowAddresses}) {
+      ${contractQuery}
+    }
+  }
+`;
