@@ -16,6 +16,7 @@
 	$: user = $page.data.expression.user_id;
 	$: contract = $page.data.expression.contract;
 	$: interpreter = $page.data.expression.interpreter;
+	$: tags = $page.data.expression?.tags;
 
 	let openNewExpModal: boolean = false;
 	let openSignInModal: boolean = false;
@@ -65,6 +66,14 @@
 			<div class="flex flex-col gap-y-4">
 				<div class="font-semibold text-xl">Writer's notes</div>
 				<div class="whitespace-pre-line">{expression.notes}</div>
+				<span class="font-semibold">Tags</span>
+				<div class="flex flex-wrap gap-2">
+					{#each tags as tag}
+						<span class="bg-gray-100 rounded-md px-2 py-1 leading-none">
+							{tag}
+						</span>
+					{/each}
+				</div>
 				<div class="flex flex-col gap-y-2 border-t border-gray-200 pt-4 mt-4 items-start">
 					<ExpressionEnv {expression} />
 				</div>

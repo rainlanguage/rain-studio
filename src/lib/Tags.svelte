@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
+	import autoAnimate from '@formkit/auto-animate';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 	let tag = '';
@@ -387,11 +389,7 @@
 		background: #fff;
 		@apply border border-gray-200 rounded-lg;
 	}
-	.svelte-tags-input-layout:focus {
-		@apply outline-none;
-	}
 	.svelte-tags-input-layout:focus-within {
-		outline: 5px auto -webkit-focus-ring-color;
 	}
 	/* svelte-tags-input */
 	.svelte-tags-input {
@@ -421,6 +419,7 @@
     }*/
 	.svelte-tags-input-tag-remove {
 		cursor: pointer;
+		@apply ml-1;
 	}
 	/* svelte-tags-input-matchs */
 	.svelte-tags-input-matchs-parent {

@@ -48,6 +48,7 @@ export interface Database {
           notes: string
           contract_expression: string | null
           saved_context: Json | null
+          tags: string[] | null
         }
         Insert: {
           id?: string
@@ -61,6 +62,7 @@ export interface Database {
           notes: string
           contract_expression?: string | null
           saved_context?: Json | null
+          tags?: string[] | null
         }
         Update: {
           id?: string
@@ -74,6 +76,7 @@ export interface Database {
           notes?: string
           contract_expression?: string | null
           saved_context?: Json | null
+          tags?: string[] | null
         }
       }
       interpreters: {
