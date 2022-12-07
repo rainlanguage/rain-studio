@@ -5,6 +5,7 @@
 	import {
 		ArrowPath,
 		ArrowUturnLeft,
+		Eye,
 		PaperAirplane,
 		Pencil,
 		QuestionMarkCircle
@@ -22,6 +23,7 @@
 	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
 	import SignedContext from '$lib/full-ide/SignedContext.svelte';
 	import Tags from '$lib/Tags.svelte';
+	import { copyAndEmit } from '$lib/expressions/expressions';
 	export let expression: ExpressionRowFull;
 
 	let raw_expression = expression.raw_expression || '';
@@ -93,14 +95,6 @@
 	};
 
 	let saveACopy: boolean = false;
-
-	// handling sharing a link
-	const copyShareLink = async () => {
-		await navigator.clipboard.writeText(
-			`${$page.url.origin}/expression/draft/${expression.sharable_slug}`
-		);
-		toast.push('Link copied to clipboard');
-	};
 </script>
 
 <div class="flex justify-between border-b border-gray-300">
@@ -155,8 +149,22 @@
 			variant="transparent"
 			size="small">Save a copy</Button
 		>
-		<Button on:click={copyShareLink} variant="transparent" icon={PaperAirplane} size="small"
-			>Share</Button
+		<Button
+			on:click={() => goto(`/expression/draft/${expression.sharable_slug}`)}
+			size="small"
+			variant="transparent"
+			icon={Eye}>View</Button
+		>
+		<Button
+			on:click={() => {
+				copyAndEmit(
+					`${$page.url.origin}/expression/draft/${expression.sharable_slug}`,
+					'Link copied to clipboard'
+				);
+			}}
+			variant="transparent"
+			icon={PaperAirplane}
+			size="small">Share</Button
 		>
 		<Button variant="transparent" icon={QuestionMarkCircle} size="small">Help</Button>
 	</div>

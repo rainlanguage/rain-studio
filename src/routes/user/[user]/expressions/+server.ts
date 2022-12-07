@@ -1,17 +1,26 @@
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
-import { error } from '@sveltejs/kit';
+import { error as kitError } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async (event) => {
+	const { order, selectedContract, selectedInterpreter, searchValue } = await event.request.json()
 	const { supabaseClient } = await getSupabase(event);
-	const query = await supabaseClient
+	let query = supabaseClient
 		.from('draft_expressions')
 		.select('*, contract ( metadata, project (name, logo_url), id ), interpreter ( metadata, id )')
-		.order('created_at', { ascending: false });
 
-	if (query?.error) throw error(404, 'Not found');
+	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract') query = query.eq('contract', selectedContract)
+	if (selectedContract === 'no-contract') query = query.is('contract', null)
+	if (selectedInterpreter) query = query.eq('interpreter', selectedInterpreter)
+	if (searchValue) query = query.textSearch('name', searchValue, {
+		type: "websearch",
+		config: "english",
+	})
 
-	const draft_expressions = query.data;
+	const { data, error } = await query.order(...order);
+	if (error) throw kitError(404, 'Not found');
+
+	const draft_expressions = data;
 
 	return new Response(JSON.stringify({ draft_expressions }));
 };

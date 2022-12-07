@@ -62,8 +62,8 @@
 
 <div class="container mx-auto">
 	<div class="mt-8">
-		<div class="gap-y-4 grid grid-cols-2 gap-8">
-			<div class="flex flex-col gap-y-4">
+		<div class="gap-y-4 grid grid-cols-7 gap-8">
+			<div class="flex flex-col gap-y-4 col-span-3">
 				<div class="font-semibold text-xl">Writer's notes</div>
 				<div class="whitespace-pre-line">{expression.notes}</div>
 				<span class="font-semibold">Tags</span>
@@ -78,7 +78,7 @@
 					<ExpressionEnv {expression} />
 				</div>
 			</div>
-			<div>
+			<div class="col-span-4">
 				<div class="w-full flex flex-col gap-y-4">
 					<Formatter raw={expression.raw_expression} />
 				</div>
