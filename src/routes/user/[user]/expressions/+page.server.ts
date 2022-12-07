@@ -35,6 +35,12 @@ export const load: PageServerLoad = async (event) => {
 			{ order: ['created_at', { ascending: false }] }
 		)
 	});
+
+	const tagResp = await supabaseClient.rpc('get_unique_tags_for_user')
+	if (tagResp.error) throw error(404, 'Not found');
+	const tags = tagResp.data[0].tags.slice(1, -1).split(',')
+	console.log('resp', tags);
+
 	let draft_expressions;
 	if (resp.ok) ({ draft_expressions } = await resp.json());
 	const deployedExpressions = await getDeployedExpressionsForUser(userQuery.data, supabaseClient);
@@ -45,6 +51,7 @@ export const load: PageServerLoad = async (event) => {
 		draft_expressions,
 		currentUser: session?.user.id == userQuery.data.id,
 		contracts: contractsQuery.data,
-		interpreters: interpretersQuery.data
+		interpreters: interpretersQuery.data,
+		tags
 	};
 };

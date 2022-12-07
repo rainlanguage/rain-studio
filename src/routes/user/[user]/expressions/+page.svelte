@@ -22,6 +22,8 @@
 
 	let draftExpressions = $page.data?.draft_expressions;
 	let deployedExpressions = $page.data?.deployedExpressions;
+	let tags = $page.data?.tags;
+
 	const contracts: ContractRowFull[] = $page.data.contracts;
 	const interpreters: InterpreterRowFull[] = $page.data.interpreters;
 
@@ -56,15 +58,29 @@
 	}));
 	let selectedInterpreter: string[] = interpreterOptions.map((interpreter) => interpreter.value);
 
+	// tag filters
+	const tagOptions = [
+		{ label: 'All', value: 'all-tags' },
+		...tags.map((tag: string) => ({ label: tag, value: tag }))
+	];
+	let selectedTags: string[] = [];
+
 	// search value
 	let searchValue: string;
 
-	$: getDraftExpressions(selectedSortOption, selectedContract, selectedInterpreter, searchValue);
+	$: getDraftExpressions(
+		selectedSortOption,
+		selectedContract,
+		selectedInterpreter,
+		selectedTags,
+		searchValue
+	);
 
 	const getDraftExpressions = async (
 		selectedSortOption: SortOptions,
 		selectedContract: string,
 		selectedInterpreter: string[],
+		selectedTags: string[],
 		searchValue: string
 	) => {
 		const order = selectedSortOption === SortOptions.ByOldest ? true : false;
@@ -76,7 +92,8 @@
 					order: ['created_at', { ascending: order }],
 					selectedContract,
 					selectedInterpreter,
-					searchValue
+					searchValue,
+					selectedTags
 				})
 			}
 		);
@@ -143,6 +160,9 @@
 									options={interpreterOptions}
 									bind:value={selectedInterpreter}
 								/>
+							</FilterGroup>
+							<FilterGroup name="Tags">
+								<FilterSet options={tagOptions} bind:value={selectedTags} exclusiveOptions={[0]} />
 							</FilterGroup>
 							<div class="mt-6 flex flex-col gap-y-2">
 								<Input

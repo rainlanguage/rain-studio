@@ -191,7 +191,7 @@
 		<div class="flex flex-col flex-grow h-1/3">
 			<PanelHeader>Notes</PanelHeader>
 			<div class="p-2 flex-col flex flex-grow gap-y-2">
-				<Tags bind:tags onlyUnique labelShow labelText="Tags" />
+				<Tags bind:tags onlyUnique labelShow allowBlur labelText="Tags" />
 				<textarea
 					class="flex-grow self-stretch justify-self-stretch whitespace-pre-wrap outline-0"
 					bind:value={notes}
