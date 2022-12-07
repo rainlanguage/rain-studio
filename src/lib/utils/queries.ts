@@ -4,209 +4,218 @@
  * Hold all the info/keys that will be queried with Account entities
  */
 const accountQuery = `
- id
- events {
-   id
-   timestamp
-   transaction {
-     id
-     timestamp
-     blockNumber
-   }
- }
- expressions {
-   id
-   contextScratch
-   config {
-     id
-     sources
-     constants
-   }
-   event {
-     id
-     transaction {
-       id
-       timestamp
-       blockNumber
-     }
-   }
-   sender {
-     id
-     deployTransaction {
-       id
-       timestamp
-       blockNumber
-     }
-   }
-   interpreter {
-     id
-   }
-   interpreterInstance {
-     id
-   }
- }
+  id
+  events {
+    id
+    timestamp
+    transaction {
+      id
+      timestamp
+      blockNumber
+    }
+  }
+  expressions {
+    id
+    contextScratch
+    config {
+      id
+      sources
+      constants
+    }
+    event {
+      id
+      transaction {
+        id
+        timestamp
+        blockNumber
+      }
+    }
+    sender {
+      id
+      deployTransaction {
+        id
+        timestamp
+        blockNumber
+      }
+    }
+    interpreter {
+      id
+    }
+    interpreterInstance {
+      id
+    }
+  }
 `;
 
 /**
  * Hold all the info/keys that will be queried with Factory entities
  */
 const factoryQuery = `
- id
- children {
-   deployTransaction {
-     id
-     timestamp
-     blockNumber
-   }
-   expressions {
-     id
-     contextScratch
-     config {
-       id
-       sources
-       constants
-     }
-     event {
-       id
-       transaction {
-         id
-         timestamp
-         blockNumber
-       }
-     }
-     sender {
-       id
-       deployTransaction {
-         id
-         timestamp
-         blockNumber
-       }
-     }
-     interpreter {
-       id
-     }
-     interpreterInstance {
-       id
-     }
-   }
- }
+  id
+  children {
+    deployTransaction {
+      id
+      timestamp
+      blockNumber
+    }
+    expressions {
+      id
+      contextScratch
+      config {
+        id
+        sources
+        constants
+      }
+      event {
+        id
+        transaction {
+          id
+          timestamp
+          blockNumber
+        }
+      }
+      account {
+        id
+      }
+      sender {
+        id
+        deployTransaction {
+          id
+          timestamp
+          blockNumber
+        }
+      }
+      interpreter {
+        id
+      }
+      interpreterInstance {
+        id
+      }
+    }
+  }
 `;
 
 /**
  * Hold all the info/keys that will be queried with Contract entities
  */
 const contractQuery = `
- id
- deployTransaction {
-   id
-   timestamp
-   blockNumber
- }
- expressions {
-   id
-   contextScratch
-   config {
-     id
-     sources
-     constants
-   }
-   event {
-     id
-     transaction {
-       id
-       timestamp
-       blockNumber
-     }
-   }
-   sender {
-     id
-     deployTransaction {
-       id
-       timestamp
-       blockNumber
-     }
-   }
-   interpreter {
-     id
-   }
-   interpreterInstance {
-     id
-   }
- }
+  id
+  deployTransaction {
+    id
+    timestamp
+    blockNumber
+  }
+  expressions {
+    id
+    contextScratch
+    config {
+      id
+      sources
+      constants
+    }
+    event {
+      id
+      transaction {
+        id
+        timestamp
+        blockNumber
+      }
+    }
+    account {
+      id
+    }
+    sender {
+      id
+      deployTransaction {
+        id
+        timestamp
+        blockNumber
+      }
+    }
+    interpreter {
+      id
+    }
+    interpreterInstance {
+      id
+    }
+  }
 `;
 
 /**
  * Hold all the info/keys that will be queried with Interpreter entities
  */
 const interpreterQuery = `
- id
- instances {
-   id
- }
- expressions {
-   id
-   contextScratch
-   config {
-     id
-     sources
-     constants
-   }
-   event {
-     id
-     transaction {
-       id
-       timestamp
-       blockNumber
-     }
-   }
-   sender {
-     id
-     deployTransaction {
-       id
-       timestamp
-       blockNumber
-     }
-   }
-   interpreter {
-     id
-   }
-   interpreterInstance {
-     id
-   }
- }
+  id
+  instances {
+    id
+  }
+  expressions {
+    id
+    contextScratch
+    config {
+      id
+      sources
+      constants
+    }
+    event {
+      id
+      transaction {
+        id
+        timestamp
+        blockNumber
+      }
+    }
+    account {
+      id
+    }
+    sender {
+      id
+      deployTransaction {
+        id
+        timestamp
+        blockNumber
+      }
+    }
+    interpreter {
+      id
+    }
+    interpreterInstance {
+      id
+    }
+  }
 `;
 
 /**
  * Hold all the info/keys that will be queried with Expresion entities
  */
 const expresionQuery = `
- id
- event {
-   id
-   timestamp
-   transaction {
-     id
-     timestamp
-     blockNumber
-   }
- }
- account {
-   id
- }
- sender {
-   id
- }
- contextScratch
- interpreter {
-   id
- }
- interpreterInstance {
-   id
- }
- config {
-   sources
-   constants
- }
+  id
+  event {
+    id
+    timestamp
+    transaction {
+      id
+      timestamp
+      blockNumber
+    }
+  }
+  account {
+    id
+  }
+  sender {
+    id
+  }
+  contextScratch
+  interpreter {
+    id
+  }
+  interpreterInstance {
+    id
+  }
+  config {
+    sources
+    constants
+  }
 `;
 
 /**
@@ -264,6 +273,9 @@ export const QueryAccountsFromArray = `
       expressions {
         id
         contextScratch
+        account {
+          id
+        }
         sender {
           id
         }
@@ -294,7 +306,6 @@ export const QueryExpression = `
    }
  }
 `;
-
 
 export const QueryGetKnowContracts = `
   query GetKnowContracts($knowAddresses: [ID!]) {

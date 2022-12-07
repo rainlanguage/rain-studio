@@ -54,6 +54,7 @@
 		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#5fbe7c4e08f2b06f7813750c5e1a46331dcb4b57",
 		"supabase": "^1.15.0",
 		"svelte-ethers-store": "^2.5.8",
+		"tailwind-gradient-mask-image": "^1.0.0",
 		"web3modal": "^1.9.9"
 	},
 	"resolutions": {

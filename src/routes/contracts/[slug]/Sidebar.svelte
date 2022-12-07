@@ -1,44 +1,43 @@
 <script lang="ts">
 	import { Section, SectionBody, SectionHeading } from 'rain-svelte-components/package/section';
 	import SidebarHeading from '$lib/SidebarHeading.svelte';
+	import TimeAgo from '$lib/TimeAgo.svelte';
+	import UserAvatar from '$lib/UserAvatar.svelte';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
-	import { DisplayAddress, ParserInput } from 'rain-svelte-components/package';
+	import { DisplayAddress } from 'rain-svelte-components/package';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { User } from '@steeze-ui/heroicons';
-	import { timeSince } from '$lib/utils';
-
-	import { Formatter as rainLangFormatter, rainterpreterOpMeta } from '@beehiveinnovation/rainlang';
-	import type { StateConfig } from '@beehiveinnovation/rainlang';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
-	let expressionToShow = 5;
-	let expressions: any[];
+	let amountToShow = 5;
 	let showMore = false;
+	let expressionsToShow: any[] = [];
+	let _expressionSG: any[];
 
 	const seeAll = () => {
-		if (showMore) expressionToShow = 5;
-		else expressionToShow = expressionSG.length;
+		if (showMore) amountToShow = 5;
+		else amountToShow = _expressionSG.length;
 
 		showMore = !showMore;
+		expressionsToShow = _expressionSG?.slice(0, amountToShow);
 	};
 
-	$: expressionSG = $page.data.expressionSG;
-
-	$: if (expressionSG) {
-		expressions = expressionSG?.slice(0, expressionToShow);
-	}
+	onMount(() => {
+		_expressionSG = $page.data.expressionSG;
+		expressionsToShow = _expressionSG?.slice(0, amountToShow);
+	});
 </script>
 
-<div class="flex flex-col">
+<div class="w-full">
 	<Section>
 		<SidebarHeading>Recently deployed</SidebarHeading>
 		<SectionBody>
-			{#each expressions as { name, config, event, sender }}
+			{#each expressionsToShow as { name, config, event, account }}
 				<div class="border-b border-slate-200 pb-[10px] flex flex-col gap-y-2.5">
-					<div class="text-[13px] leading-[17px] tracking-[-0.01em] text-black mb-1">
-						{name ?? 'Expression name'}
-					</div>
-					<div class="font-mono text-[12px] leading-[15.62px] bg-neutral-100 rounded-[5px]">
+					<div
+						class="font-mono text-[12px] leading-4 bg-neutral-100 tracking-[-0.01em] rounded-[5px] max-h-[89px] overflow-hidden gradient-mask-b-70"
+					>
 						<Formatter
 							stateConfig={{
 								sources: config.sources,
@@ -47,12 +46,12 @@
 						/>
 					</div>
 					<div class="flex gap-x-3.5 text-neutral-500 text-[13px]">
-						<p>{timeSince(new Date(Date.now() - event.transaction.timestamp))} ago</p>
+						<TimeAgo dateString={event.transaction.timestamp * 1000} />
 						<div class="flex gap-x-0.5">
 							<div class="mt-[3px]">
 								<Icon src={User} size="12px" />
 							</div>
-							<DisplayAddress address={sender.id} />
+							<DisplayAddress address={account.id} />
 						</div>
 					</div>
 				</div>

@@ -61,6 +61,9 @@ export const load: PageServerLoad = async ({ params }) => {
 					sources
 					constants
 				}
+				account {
+					id
+				}
 				event {
 					id
 					transaction {
