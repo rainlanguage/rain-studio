@@ -51,7 +51,7 @@
 		"install": "^0.13.0",
 		"javascript-time-ago": "^2.5.9",
 		"rain-metadata": "https://github.com/beehive-innovation/rain-metadata#4b12016b9c512279846ff8c5311ac1e5b6fbe32c",
-		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#ebdf66d93c9cda575a37abbc3467a470fc656e69",
+		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#73b0e9ee40f191b046fa2c49b391982f2b0c3848",
 		"supabase": "^1.15.0",
 		"svelte-ethers-store": "^2.5.8",
 		"web3modal": "^1.9.9"
