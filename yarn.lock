@@ -4060,9 +4060,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#ebdf66d93c9cda575a37abbc3467a470fc656e69":
+"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#5fbe7c4e08f2b06f7813750c5e1a46331dcb4b57":
   version "0.0.1"
-  resolved "https://github.com/beehive-innovation/rain-svelte-components#ebdf66d93c9cda575a37abbc3467a470fc656e69"
+  resolved "https://github.com/beehive-innovation/rain-svelte-components#5fbe7c4e08f2b06f7813750c5e1a46331dcb4b57"
   dependencies:
     "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#55528a90ea95c280ab01f56f08c49674bb8f021e"
     "@formkit/auto-animate" "^1.0.0-beta.3"
@@ -4679,9 +4679,9 @@ svelte-slate@^0.1.62:
     scroll-into-view-if-needed "2"
 
 svelte@^3.0.0, svelte@^3.44.0:
-  version "3.53.1"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.53.1.tgz#db9d7df7a8f570e8e22547444c149208b1914442"
-  integrity sha512-Q4/hHkktZogGhN5iqxqSi9sjEVoe/NbIxX4hXEHoasTxj+TxEQVAq66LnDMdAZxjmsodkoI5F3slqsS68U7FNw==
+  version "3.54.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.54.0.tgz#b4bcd865bd9e927f9f7b76563288ef5f4d72867a"
+  integrity sha512-tdrgeJU0hob0ZWAMoKXkhcxXA7dpTg6lZGxUeko5YqvPdJBiyRspGsCwV27kIrbrqPP2WUoSV9ca0gnLlw8YzQ==
 
 tailwindcss@^3.1.5:
   version "3.2.4"

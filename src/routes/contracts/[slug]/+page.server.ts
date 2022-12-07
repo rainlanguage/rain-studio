@@ -51,23 +51,9 @@ export const load: PageServerLoad = async ({ params }) => {
 	/**
 	 * Expression from SG to obtain values
 	 */
-	const addressess2 = [
-		'0x0965e93d173f81adc40639c157c8068cb643dc06',
-		'0x0d5ae7a921afff72caa42355df1c406ba58b1e4d',
-		'0x0e09db16ab0efd7697686d796c777af71e095aba',
-		'0x1d0ba8ce6bdb11a75e0f73120df6c0321bdeb045',
-		'0x1e9f8ef0788dd9ca3ce5bd26e956ea873dd8f19b',
-		'0x24189c368aa49c121d46441011641308b0f7dd9b',
-		'0x59f871ba7bdf91549982f6ab2a6e311e68fe34c4',
-		'0x5c39eb1ff92842055a4f0631d2ae2a4b97c900a1',
-		'0x9e5853d7c7814443b3cfe93fbddb1bd7b9953d3e',
-		'0xa1f97170d37c5b87e68c0917598fa5aa08de7ea9',
-		'0xa9c163abc6df1587b59b137b51af0e07761d0aee',
-	];
-
 	const query = `
-		query MyQuery($addresses: [ID!]) {
-			expressions(where: {id_in: $addresses}) {
+		query GetAllExpressions {
+			expressions {
 				id
 				contextScratch
 				config {
@@ -101,7 +87,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		}
 	`;
 
-	const testQuery = await client.query(query, { addresses: addressess2 }).toPromise();
+	const testQuery = await client.query(query, {}).toPromise();
 
 	const expressions = testQuery.data.expressions;
 	expressions.sort(sortExpressions);

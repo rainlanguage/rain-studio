@@ -2,10 +2,9 @@
 	import { Section, SectionBody, SectionHeading } from 'rain-svelte-components/package/section';
 	import SidebarHeading from '$lib/SidebarHeading.svelte';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
-	import { DisplayAddress } from 'rain-svelte-components/package';
+	import { DisplayAddress, ParserInput } from 'rain-svelte-components/package';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { User } from '@steeze-ui/heroicons';
-
 	import { timeSince } from '$lib/utils';
 
 	import { Formatter as rainLangFormatter, rainterpreterOpMeta } from '@beehiveinnovation/rainlang';
@@ -39,17 +38,13 @@
 					<div class="text-[13px] leading-[17px] tracking-[-0.01em] text-black mb-1">
 						{name ?? 'Expression name'}
 					</div>
-					<div
-						class="font-mono text-[12px] leading-[15.62px] bg-neutral-100 rounded-[5px] overflow-hidden"
-					>
-						<div class="overflow-y-scroll max-h-[100px]">
-							<Formatter
-								stateConfig={{
-									sources: config.sources,
-									constants: config.constants
-								}}
-							/>
-						</div>
+					<div class="font-mono text-[12px] leading-[15.62px] bg-neutral-100 rounded-[5px]">
+						<Formatter
+							stateConfig={{
+								sources: config.sources,
+								constants: config.constants
+							}}
+						/>
 					</div>
 					<div class="flex gap-x-3.5 text-neutral-500 text-[13px]">
 						<p>{timeSince(new Date(Date.now() - event.transaction.timestamp))} ago</p>
