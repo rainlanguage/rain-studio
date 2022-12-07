@@ -4191,9 +4191,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#73b0e9ee40f191b046fa2c49b391982f2b0c3848":
+"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#ebdf66d93c9cda575a37abbc3467a470fc656e69":
   version "0.0.1"
-  resolved "https://github.com/beehive-innovation/rain-svelte-components#73b0e9ee40f191b046fa2c49b391982f2b0c3848"
+  resolved "https://github.com/beehive-innovation/rain-svelte-components#ebdf66d93c9cda575a37abbc3467a470fc656e69"
   dependencies:
     "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#55528a90ea95c280ab01f56f08c49674bb8f021e"
     "@formkit/auto-animate" "^1.0.0-beta.3"
@@ -4816,6 +4816,11 @@ svelte-slate@^0.1.62:
     "@use-gesture/vanilla" "^10.2.22"
     fast-equals "4"
     scroll-into-view-if-needed "2"
+
+svelte-tags-input@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-tags-input/-/svelte-tags-input-3.0.0.tgz#c9b99fe1a460fa3dda9444ada54203e1ac823989"
+  integrity sha512-6BvVyzP2aQ1G+twW1H30wKFQDQxQuupBzMXxQ46inPcNbkl3oTSIMqptPqzslH3ytyOepgv6Q6k5wsgj4GNesA==
 
 svelte@^3.0.0, svelte@^3.44.0:
   version "3.53.1"

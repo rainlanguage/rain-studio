@@ -10,7 +10,6 @@
 
 	$: draftExpressions = $page.data?.draft_expressions;
 	$: deployedExpressions = $page.data?.deployedExpressions;
-	// $: console.log($page.data.deployedExpressions);
 
 	const removeExpression = (id: string) => {
 		draftExpressions = draftExpressions.filter((expression: any) => expression.id !== id);

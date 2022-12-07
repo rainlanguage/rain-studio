@@ -21,6 +21,7 @@
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
 	import SignedContext from '$lib/full-ide/SignedContext.svelte';
+	import Tags from '$lib/Tags.svelte';
 	export let expression: ExpressionRowFull;
 
 	let raw_expression = expression.raw_expression || '';
@@ -175,7 +176,14 @@
 		</div>
 		<div class="flex flex-col flex-grow h-1/3">
 			<PanelHeader>Notes</PanelHeader>
-			<textarea class="flex-grow p-2 whitespace-pre-wrap outline-0" bind:value={notes} />
+			<div class="p-2 flex-col flex">
+				<span class="text-xs mb-2">Tags</span>
+				<Tags onlyUnique />
+				<textarea
+					class="flex-grow self-stretch justify-self-stretch whitespace-pre-wrap outline-0"
+					bind:value={notes}
+				/>
+			</div>
 		</div>
 	</div>
 	<div class="flex flex-col w-4/12">
