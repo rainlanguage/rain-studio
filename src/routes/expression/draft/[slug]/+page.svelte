@@ -7,6 +7,7 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import UserAvatar from '$lib/UserAvatar.svelte';
+	import ViewTags from '$lib/ViewTags.svelte';
 	import { DocumentDuplicate, Pencil } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
@@ -67,13 +68,7 @@
 				<div class="font-semibold text-xl">Writer's notes</div>
 				<div class="whitespace-pre-line">{expression.notes}</div>
 				<span class="font-semibold">Tags</span>
-				<div class="flex flex-wrap gap-2">
-					{#each tags as tag}
-						<span class="bg-gray-100 rounded-md px-2 py-1 leading-none">
-							{tag}
-						</span>
-					{/each}
-				</div>
+				<ViewTags {tags} />
 				<div class="flex flex-col gap-y-2 border-t border-gray-200 pt-4 mt-4 items-start">
 					<ExpressionEnv {expression} />
 				</div>

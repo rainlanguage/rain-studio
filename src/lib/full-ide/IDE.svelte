@@ -30,7 +30,7 @@
 	let notes = expression.notes || '';
 	let name = expression.name || '';
 	let contract_expression = expression?.contract_expression;
-	let tags: string[] = expression?.tags || [''];
+	let tags: string[] = expression?.tags || [];
 
 	// get from the metadata whether the expression type has a signed context
 	$: hasSignedContext = expression.contract?.metadata.expressions?.find(
