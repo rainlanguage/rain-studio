@@ -90,7 +90,8 @@
 	const refresh = async () => {
 		if ($page.data.session && 'id' in $page.data.session.user) {
 			const resp = await fetch(`/user/${$page.data.session.user.id}/expressions`, {
-				method: 'POST'
+				method: 'POST',
+				body: JSON.stringify({ order: ['created_at', { ascending: false }] })
 			});
 			if (resp.ok) {
 				const { draft_expressions } = await resp.json();
