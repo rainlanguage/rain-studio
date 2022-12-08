@@ -7,6 +7,7 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import UserAvatar from '$lib/UserAvatar.svelte';
+	import ViewTags from '$lib/ViewTags.svelte';
 	import { DocumentDuplicate, Pencil } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
@@ -16,6 +17,7 @@
 	$: user = $page.data.expression.user_id;
 	$: contract = $page.data.expression.contract;
 	$: interpreter = $page.data.expression.interpreter;
+	$: tags = $page.data.expression?.tags;
 
 	let openNewExpModal: boolean = false;
 	let openSignInModal: boolean = false;
@@ -65,6 +67,8 @@
 			<div class="flex flex-col gap-y-4 col-span-3">
 				<div class="font-semibold text-xl">Writer's notes</div>
 				<div class="whitespace-pre-line">{expression.notes}</div>
+				<span class="font-semibold">Tags</span>
+				<ViewTags {tags} />
 				<div class="flex flex-col gap-y-2 border-t border-gray-200 pt-4 mt-4 items-start">
 					<ExpressionEnv {expression} />
 				</div>

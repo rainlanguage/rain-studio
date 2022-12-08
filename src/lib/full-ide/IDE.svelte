@@ -22,6 +22,7 @@
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
 	import SignedContext from '$lib/full-ide/SignedContext.svelte';
+	import Tags from '$lib/Tags.svelte';
 	import { copyAndEmit } from '$lib/expressions/expressions';
 	export let expression: ExpressionRowFull;
 
@@ -29,6 +30,7 @@
 	let notes = expression.notes || '';
 	let name = expression.name || '';
 	let contract_expression = expression?.contract_expression;
+	let tags: string[] = expression?.tags || [];
 
 	// get from the metadata whether the expression type has a signed context
 	$: hasSignedContext = expression.contract?.metadata.expressions?.find(
@@ -52,11 +54,16 @@
 	// for saving the exression and notes - this happens automatically as the user edits
 	let saving: boolean; // track saving state
 
-	const save = async (raw_expression: string, notes: string, saved_context: any) => {
+	const save = async (
+		raw_expression: string,
+		notes: string,
+		saved_context: any,
+		tags: string[]
+	) => {
 		saving = true;
 		await supabaseClient
 			.from('draft_expressions')
-			.update({ raw_expression, notes, saved_context })
+			.update({ raw_expression, notes, saved_context, tags })
 			.eq('id', expression.id);
 
 		setTimeout(() => {
@@ -65,8 +72,8 @@
 	};
 
 	const throttledSave = throttle(save, 2000);
-	$: if (raw_expression || notes || saved_context)
-		throttledSave(raw_expression, notes, saved_context);
+	$: if (raw_expression || notes || saved_context || tags)
+		throttledSave(raw_expression, notes, saved_context, tags);
 
 	// for saving the expression name - this happens when they blur focus on the name input
 	let editingName: boolean;
@@ -183,7 +190,13 @@
 		</div>
 		<div class="flex flex-col flex-grow h-1/3">
 			<PanelHeader>Notes</PanelHeader>
-			<textarea class="flex-grow p-2 whitespace-pre-wrap outline-0" bind:value={notes} />
+			<div class="p-2 flex-col flex flex-grow gap-y-2">
+				<Tags bind:tags onlyUnique labelShow allowBlur labelText="Tags" />
+				<textarea
+					class="flex-grow self-stretch justify-self-stretch whitespace-pre-wrap outline-0"
+					bind:value={notes}
+				/>
+			</div>
 		</div>
 	</div>
 	<div class="flex flex-col w-4/12">
