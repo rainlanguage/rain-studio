@@ -3,7 +3,7 @@
 	import en from '$lib/assets/en.json';
 
 	// English.
-	TimeAgo.addDefaultLocale(en);
+	TimeAgo.addLocale(en);
 
 	export let dateString: string | number = '';
 	export let date: Date | null = null;
