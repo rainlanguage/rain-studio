@@ -17,7 +17,7 @@
 			name: expression?.name || 'Untitled',
 			notes: expression?.notes || '',
 			contract: expression?.contract?.id,
-			contract_expression: null,
+			contract_expression: expression?.contract_expression,
 			interpreter: expression?.interpreter?.id,
 			raw_expression: expression.raw_expression
 		};

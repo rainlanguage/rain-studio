@@ -1,8 +1,5 @@
 <script lang="ts">
-	export let signedContext = [
-		['', ''],
-		['', '']
-	];
+	export let signedContext: any;
 
 	let columns = signedContext.length;
 	let rows = signedContext[0].length;

@@ -47,6 +47,7 @@ export interface Database {
           name: string
           notes: string
           contract_expression: string | null
+          saved_context: Json | null
         }
         Insert: {
           id?: string
@@ -59,6 +60,7 @@ export interface Database {
           name: string
           notes: string
           contract_expression?: string | null
+          saved_context?: Json | null
         }
         Update: {
           id?: string
@@ -71,6 +73,7 @@ export interface Database {
           name?: string
           notes?: string
           contract_expression?: string | null
+          saved_context?: Json | null
         }
       }
       interpreters: {
@@ -140,19 +143,19 @@ export interface Database {
         Row: {
           id: string
           linked_at: string | null
-          address: string | null
+          address: string
           user_id: string | null
         }
         Insert: {
           id: string
           linked_at?: string | null
-          address?: string | null
+          address: string
           user_id?: string | null
         }
         Update: {
           id?: string
           linked_at?: string | null
-          address?: string | null
+          address?: string
           user_id?: string | null
         }
       }
@@ -166,12 +169,19 @@ export interface Database {
         Returns: unknown
       }
       match_contracts_by_address: {
-        Args: { contracts_array: unknown }
-        Returns: Record<string, unknown>[]
+        Args: { contracts_array: string[] }
+        Returns: {
+          id: string
+          metadata: Json
+          contract_address: string
+          name: string
+          logo_url: string
+          project_id: string
+        }[]
       }
       match_interpreters_by_address: {
-        Args: { interpreters_array: unknown }
-        Returns: Record<string, unknown>[]
+        Args: { interpreters_array: string[] }
+        Returns: { id: string; metadata: Json; interpreteraddress: string }[]
       }
     }
     Enums: {

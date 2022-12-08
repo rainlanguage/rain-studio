@@ -3591,7 +3591,7 @@ minipass@^3.0.0:
   integrity sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw==
   dependencies:
     yallist "^4.0.0"
-
+    
 minipass@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/minipass/-/minipass-4.0.0.tgz#7cebb0f9fa7d56f0c5b17853cbe28838a8dbbd3b"
@@ -4056,9 +4056,9 @@ quick-lru@^5.1.1:
   version "0.0.0"
   resolved "git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
 
-"rain-metadata@https://github.com/beehive-innovation/rain-metadata#566809d2b8312ddaceb23a03f1bf4312f32aba19":
+"rain-metadata@https://github.com/beehive-innovation/rain-metadata#4b12016b9c512279846ff8c5311ac1e5b6fbe32c":
   version "0.0.0"
-  resolved "https://github.com/beehive-innovation/rain-metadata#566809d2b8312ddaceb23a03f1bf4312f32aba19"
+  resolved "https://github.com/beehive-innovation/rain-metadata#4b12016b9c512279846ff8c5311ac1e5b6fbe32c"
 
 "rain-sdk@git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a":
   version "2.1.2-beta"
