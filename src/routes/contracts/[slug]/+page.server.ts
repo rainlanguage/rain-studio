@@ -1,5 +1,6 @@
 import { supabaseClient } from '$lib/supabaseClient';
 import { error } from '@sveltejs/kit';
+import { ethers } from 'ethers';
 import type { PageServerLoad } from './$types';
 
 import { createClient } from '@urql/core';
@@ -89,17 +90,39 @@ export const load: PageServerLoad = async ({ params }) => {
 			}
 		}
 	`;
-
 	const testQuery = await client.query(query, {}).toPromise();
 
-	const expressions = testQuery.data.expressions;
-	expressions.sort(sortExpressions);
+	recentExpressions = testQuery.data.expressions;
+	recentExpressions.sort(sortExpressions);
 	///////////////////////////////////////////////////////////////////////
+
+	// Query to supabase DB if the account.id is an registered user
+	const _accounts = recentExpressions.map((expression_) =>
+		// Checksum the address since it's stored on this form in DB
+		ethers.utils.getAddress(expression_.account.id)
+	);
+
+	const accountsQuery = await supabaseClient
+		.from('wallets')
+		.select('address, profiles(username, avatar_url)')
+		.in('address', _accounts);
+
+	if (accountsQuery.error) throw error(500, 'Something went wrong :(');
+
+	const _accountsData = {};
+
+	accountsQuery.data.forEach((account_) => {
+		_accountsData[account_.address.toLowerCase()] = {
+			username: account_.profiles.username,
+			avatar_url: account_.profiles.avatar_url
+		};
+	});
 
 	return {
 		contract: contractQuery.data,
 		interpreters: interpretersQuery.data,
-		expressionSG: testQuery.data.expressions
+		expressionSG: testQuery.data.expressions,
+		accountsData: _accountsData
 		// expressionSG: recentExpressions,
 	};
 };

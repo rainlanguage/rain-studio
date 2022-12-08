@@ -49,6 +49,6 @@
 				<Write {abi} {metadata} {contract} {project} />
 			</TabPanel>
 		</div>
-		<div class="w-1/3"><Sidebar /></div>
+		<div class="w-1/3 pb-1.5"><Sidebar /></div>
 	</div>
 </Tabs>
