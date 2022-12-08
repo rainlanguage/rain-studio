@@ -1,5 +1,5 @@
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
-import { error as kitError } from '@sveltejs/kit';
+import { error as kitError, json as jsonResponse } from '@sveltejs/kit';
 import { isEqual } from 'lodash-es';
 import type { RequestHandler } from './$types';
 
@@ -8,9 +8,18 @@ export const POST: RequestHandler = async (event) => {
 	const { supabaseClient } = await getSupabase(event);
 	let query = supabaseClient
 		.from('draft_expressions')
-		.select('*, contract ( metadata, project (name, logo_url), id ), interpreter ( metadata, id )')
-	console.log(selectedTags)
-	console.log(selectedTags && !isEqual(selectedTags, ['all-tags']))
+		.select('*, contract ( metadata, project (name, logo_url), id ), interpreter ( metadata, id )');
+
+	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract')
+		query = query.eq('contract', selectedContract);
+	if (selectedContract === 'no-contract') query = query.is('contract', null);
+	if (selectedInterpreter) query = query.eq('interpreter', selectedInterpreter);
+	if (searchValue)
+		query = query.textSearch('name', searchValue, {
+			type: 'websearch',
+			config: 'english'
+		});
+
 	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract') query = query.eq('contract', selectedContract)
 	if (selectedContract === 'no-contract') query = query.is('contract', null)
 	if (selectedInterpreter) query = query.eq('interpreter', selectedInterpreter)
@@ -25,5 +34,5 @@ export const POST: RequestHandler = async (event) => {
 
 	const draft_expressions = data;
 
-	return new Response(JSON.stringify({ draft_expressions }));
+	return jsonResponse({ draft_expressions });
 };
