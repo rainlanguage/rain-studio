@@ -3,16 +3,15 @@
 	import { page } from '$app/stores';
 	import Auth from '$lib/Auth.svelte';
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
+	import { copyAndEmit } from '$lib/expressions/expressions';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
-	import SaveExpression from '$lib/expressions/SaveExpression.svelte';
-	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { DocumentDuplicate, PaperAirplane, Pencil, Trash } from '@steeze-ui/heroicons';
+	import { DocumentDuplicate, Eye, PaperAirplane, Pencil, Trash } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
-	import Pills from 'rain-svelte-components/package/Pills.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components/package/overflow-menu';
+	import { Icon } from '@steeze-ui/svelte-icon';
 
 	export let expression: any;
 	const dispatch = createEventDispatcher();
@@ -38,10 +37,10 @@
 <ExpressionRow {expression}>
 	<div class="mt-4 flex gap-x-2">
 		<Button
-			on:click={() => (newExpModal = true)}
+			on:click={() => goto(`/expression/draft/${expression.sharable_slug}`)}
 			size="small"
 			variant="transparent"
-			icon={DocumentDuplicate}>Duplicate</Button
+			icon={Eye}>View</Button
 		>
 		<Button
 			on:click={() => {
@@ -51,7 +50,37 @@
 			variant="transparent"
 			icon={Pencil}>Edit</Button
 		>
-		<Button on:click={deleteExp} size="small" variant="transparent" icon={Trash}>Delete</Button>
+		<Button
+			on:click={() => {
+				copyAndEmit(
+					`${$page.url.origin}/expression/draft/${expression.sharable_slug}/`,
+					'Link copied to clipboard'
+				);
+			}}
+			size="small"
+			variant="transparent"
+			icon={PaperAirplane}>Share</Button
+		>
+		<OverflowMenu>
+			<OverflowMenuItem>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div class="flex gap-x-2" on:click={() => (newExpModal = true)}>
+					<span class="w-4">
+						<Icon src={DocumentDuplicate} />
+					</span>
+					<span> Duplicate </span>
+				</div>
+			</OverflowMenuItem>
+			<OverflowMenuItem>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div class="flex gap-x-2 text-red-700" on:click={deleteExp}>
+					<span class="w-4">
+						<Icon src={Trash} />
+					</span>
+					<span>Delete</span>
+				</div>
+			</OverflowMenuItem>
+		</OverflowMenu>
 	</div>
 </ExpressionRow>
 

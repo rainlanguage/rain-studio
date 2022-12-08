@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
+	import TimeAgo from '$lib/TimeAgo.svelte';
 	import { DisplayAddress } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 
@@ -13,7 +14,7 @@
 		{:else if expression?.sg?.id}
 			<span class="text-xl"><DisplayAddress address={expression.sg.id} /></span>
 		{/if}
-		<!-- <TimeAgo dateString={expression.created_at} /> -->
+		<TimeAgo dateString={expression.created_at} />
 		<span>{expression?.notes || 'No notes'}</span>
 		<ExpressionEnv {expression} />
 		<slot />
