@@ -3591,7 +3591,7 @@ minipass@^3.0.0:
   integrity sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw==
   dependencies:
     yallist "^4.0.0"
-    
+
 minipass@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/minipass/-/minipass-4.0.0.tgz#7cebb0f9fa7d56f0c5b17853cbe28838a8dbbd3b"
@@ -4056,9 +4056,9 @@ quick-lru@^5.1.1:
   version "0.0.0"
   resolved "git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
 
-"rain-metadata@https://github.com/beehive-innovation/rain-metadata#4b12016b9c512279846ff8c5311ac1e5b6fbe32c":
+"rain-metadata@https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383":
   version "0.0.0"
-  resolved "https://github.com/beehive-innovation/rain-metadata#4b12016b9c512279846ff8c5311ac1e5b6fbe32c"
+  resolved "https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383"
 
 "rain-sdk@git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a":
   version "2.1.2-beta"
@@ -4684,11 +4684,6 @@ svelte-slate@^0.1.62:
     "@svelte-put/clickoutside" "1"
     fast-equals "4"
     scroll-into-view-if-needed "2"
-
-svelte-tags-input@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/svelte-tags-input/-/svelte-tags-input-3.0.0.tgz#c9b99fe1a460fa3dda9444ada54203e1ac823989"
-  integrity sha512-6BvVyzP2aQ1G+twW1H30wKFQDQxQuupBzMXxQ46inPcNbkl3oTSIMqptPqzslH3ytyOepgv6Q6k5wsgj4GNesA==
 
 svelte@^3.0.0, svelte@^3.44.0:
   version "3.54.0"
