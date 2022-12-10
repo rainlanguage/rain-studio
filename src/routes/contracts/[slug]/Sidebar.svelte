@@ -15,11 +15,8 @@
 	import SocialButton from '$lib/SocialButton.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
 
-	type UserLikes = { [key: string]: boolean };
-	type ExpressionLikes = { [key: string]: number };
-	type AccountData = {
-		[key: string]: { username: string; avatar_url: string | null };
-	};
+	import type { UserLikes, ExpressionLikes, AccountData } from './types';
+
 
 	let expressionsToShow: any[] = [];
 	let isLoading = true;
@@ -122,7 +119,6 @@
 				<div in:fade class="flex flex-col gap-y-4">
 					{#if expressionsToShow && expressionsToShow.length > 0}
 						{#each expressionsToShow as { id, name, config, event, account }, index}
-							{id}
 							<div class="flex flex-col gap-y-2.5 border-b border-slate-200 pb-[10px]">
 								<div
 									class="font-mono text-[12px] leading-4 bg-neutral-100 tracking-[-0.01em] rounded-[5px] max-h-[89px] overflow-hidden gradient-mask-b-70"

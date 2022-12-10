@@ -1,14 +1,44 @@
 import { supabaseClient } from '$lib/supabaseClient';
 import { ethers } from 'ethers';
-import type { PageServerLoad } from './$types';
 import { getServerSession } from '@supabase/auth-helpers-sveltekit';
+
+import type { PageServerLoad } from './$types';
+import type { UserLikes, ExpressionLikes, AccountData } from './types';
 
 import { createClient } from '@urql/core';
 import { Subgraphs, QueryGetKnowContracts } from '$lib/utils';
 
+//  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai.
+
+/**
+ * ChainID to filter. This could be use later to specify which subgraph use
+ */
+const chainId = 80001;
+
+/**
+ * Sort expression from recents to olders
+ */
+const sortExpressions = (a, b) => {
+	const timeA = a.event.transaction.timestamp;
+	const timeB = b.event.transaction.timestamp;
+	if (timeA > timeB) {
+		return -1;
+	}
+	if (timeA < timeB) {
+		return 1;
+	}
+	return 0;
+};
+
+/** @type {import('./$types').PageServerLoad} */
 export const load: PageServerLoad = async (event) => {
 	const { params } = event;
 	const session = await getServerSession(event);
+
+	const _userLikes: UserLikes = {};
+	const _expressionLikes: ExpressionLikes = {};
+	const _accountsData: AccountData = {};
+	let recentExpressions = [];
 
 	const contractQuery = await supabaseClient
 		.from('contracts')
@@ -19,18 +49,9 @@ export const load: PageServerLoad = async (event) => {
 	if (contractQuery.error) throw error(404, 'Not found');
 
 	const interpretersQuery = await supabaseClient.from('interpreters').select('*');
-
 	if (interpretersQuery.error) throw error(500, 'Something went wrong :(');
 
-	/**
-	 * ChainID to filter. This could be use later to specify which subgraph use
-	 */
-	//  TODO: Only supporting Mumbai by now
-	const chainId = 80001;
-
-	/**
-	 * Aaddresses filtered with the proper chain ID in an array
-	 */
+	// Aaddresses filtered with the proper chain ID in an array
 	const addresses = contractQuery.data.metadata.addresses
 		.filter((element) => element.chainId == chainId)
 		.map((element) => element.knownAddresses)
@@ -41,20 +62,18 @@ export const load: PageServerLoad = async (event) => {
 		url: Subgraphs[0].url
 	});
 
-	let recentExpressions = [];
-	const { data, error } = await client
+	const knowContractsQuery = await client
 		.query(QueryGetKnowContracts, { knowAddresses: addresses })
 		.toPromise();
 
-	if (data) {
-		recentExpressions = data.contracts.map((ele) => ele.expressions).flat();
+	if (knowContractsQuery.data) {
+		recentExpressions = knowContractsQuery.data.contracts.map((ele) => ele.expressions).flat();
 		recentExpressions.sort(sortExpressions);
 	}
 
 	///////////////////////////////////////////// Test design data
-	/**
-	 * Expression from SG to obtain values
-	 */
+
+	// Expression from SG to obtain values
 	const query = `
 		query GetAllExpressions {
 			expressions {
@@ -99,20 +118,14 @@ export const load: PageServerLoad = async (event) => {
 	recentExpressions.sort(sortExpressions);
 	///////////////////////////////////////////////////////////////////////
 
-	// Query to supabase DB if the account.id is an registered user
-	const _accountsData = {};
-
+	// Check on DB if the expression_.account.id is an regirtered user, saving the username and avatar.
 	const _accounts = recentExpressions.map((expression_) =>
-		// Checksum the address since it's stored on this form in DB
 		ethers.utils.getAddress(expression_.account.id)
 	);
-
 	const accountsQuery = await supabaseClient
 		.from('wallets')
 		.select('address, profiles(username, avatar_url)')
 		.in('address', _accounts);
-
-	if (accountsQuery.error) throw error(500, 'Something went wrong :(');
 
 	accountsQuery.data.forEach((account_) => {
 		_accountsData[account_.address.toLowerCase()] = {
@@ -121,9 +134,7 @@ export const load: PageServerLoad = async (event) => {
 		};
 	});
 
-	const _userLikes = {};
-	const _expressionLikes = {};
-
+	// If the user session is active, get all the user's likes related to the recent expression obtained
 	if (session) {
 		const likesQuery = await supabaseClient
 			.from('starred')
@@ -142,6 +153,7 @@ export const load: PageServerLoad = async (event) => {
 		}
 	}
 
+	// Get all the total likes of each expression
 	const expressionLikesQuery = await supabaseClient
 		.from('starred')
 		.select(`id, address`)
@@ -150,7 +162,6 @@ export const load: PageServerLoad = async (event) => {
 			'address',
 			recentExpressions.map((element) => element.id)
 		);
-
 	if (!expressionLikesQuery.error) {
 		//
 		expressionLikesQuery.data.forEach((element_) => {
@@ -168,21 +179,5 @@ export const load: PageServerLoad = async (event) => {
 		accountsData: _accountsData,
 		userLikes: _userLikes,
 		expressionLikes: _expressionLikes
-		// expressionSG: recentExpressions,
 	};
 };
-
-/**
- * Sort expression from recents to olders
- */
-function sortExpressions(a, b) {
-	const timeA = a.event.transaction.timestamp;
-	const timeB = b.event.transaction.timestamp;
-	if (timeA > timeB) {
-		return -1;
-	}
-	if (timeA < timeB) {
-		return 1;
-	}
-	return 0;
-}
