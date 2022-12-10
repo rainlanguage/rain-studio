@@ -13,7 +13,6 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	const { success, result } = await resp.json();
-	console.log(result);
 
 	if (success) {
 		const typenameDB = result.resultDB?.type;
