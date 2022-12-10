@@ -4,27 +4,56 @@
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import { DisplayAddress, Ring, Button } from 'rain-svelte-components/package';
 
-	import SidebarHeading from '$lib/SidebarHeading.svelte';
-	import TimeAgo from '$lib/TimeAgo.svelte';
-	import UserAvatar from '$lib/UserAvatar.svelte';
-	import SocialButton from '$lib/SocialButton.svelte';
-
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
+	import SidebarHeading from '$lib/SidebarHeading.svelte';
+	import TimeAgo from '$lib/TimeAgo.svelte';
+	import UserAvatar from '$lib/UserAvatar.svelte';
+	import SocialButton from '$lib/SocialButton.svelte';
+	import { supabaseClient } from '$lib/supabaseClient';
+
+	let session = $page.data.session;
 	let amountToShow = 5;
 	let showMore = false;
 	let expressionsToShow: any[] = [];
-	let _expressionSG: any[];
-	let _accountsData: { [key: string]: { username: string; avatar_url: string | null } };
+	let _expressionSG: any[] = $page.data.expressionSG;
+	let _accountsData: { [key: string]: { username: string; avatar_url: string | null } } =
+		$page.data.accountsData;
+	let _userLikes: { [key: string]: boolean } = $page.data.userLikes;
+	let _expressionLikes: { [key: string]: number } = $page.data.expressionLikes;
+
 	let _loading = true;
 
-	////////////////////////////////////////
-	// TODO: Use data to social numbers like UpVotes/DownVotes, Likes, Comments
-	let _votes: { [key: number]: { upVote?: boolean; downVote?: boolean } } = {};
-	let _likes: { [key: number]: boolean } = {};
-	let _comments: { [key: number]: boolean } = {};
+	const clickLike = async (address: string) => {
+		if (!session) {
+			// Ask to login
+		} else {
+			if (_userLikes[address]) {
+				const { error } = await supabaseClient
+					.from('starred')
+					.delete()
+					.eq('user_id', session.user.id)
+					.eq('address', address);
+
+				if (!error) {
+					_expressionLikes[address] -= 1;
+					_userLikes[address] = !_userLikes[address];
+				}
+			} else {
+				const { error } = await supabaseClient.from('starred').insert({
+					starred: 'expression',
+					address: address
+				});
+
+				if (!error) {
+					_expressionLikes[address] = (_expressionLikes[address] ?? 0) + 1;
+					_userLikes[address] = !_userLikes[address];
+				}
+			}
+		}
+	};
 
 	const seeAll = () => {
 		if (showMore) amountToShow = 5;
@@ -33,6 +62,11 @@
 		showMore = !showMore;
 		expressionsToShow = _expressionSG?.slice(0, amountToShow);
 	};
+
+	////////////////////////////////////////
+	// TODO: Use data to social numbers like UpVotes/DownVotes, Likes, Comments
+	let _votes: { [key: number]: { upVote?: boolean; downVote?: boolean } } = {};
+	let _comments: { [key: number]: boolean } = {};
 
 	const upVote = (id_: number) => {
 		if (_votes[id_] === undefined) {
@@ -62,20 +96,13 @@
 		_votes[id_].upVote = false;
 	};
 
-	const like = (id_: number) => {
-		_likes[id_] = !_likes[id_];
-	};
-
 	const comments = (id_: number) => {
 		_comments[id_] = !_comments[id_];
 	};
-
 	//////////////////////////////////////////
 
 	onMount(() => {
-		_expressionSG = $page.data.expressionSG;
 		expressionsToShow = _expressionSG?.slice(0, amountToShow);
-		_accountsData = $page.data.accountsData;
 		_loading = false;
 	});
 </script>
@@ -87,7 +114,8 @@
 			{#if !_loading}
 				<div in:fade class="flex flex-col gap-y-4">
 					{#if expressionsToShow && expressionsToShow.length > 0}
-						{#each expressionsToShow as { name, config, event, account }, index}
+						{#each expressionsToShow as { id, name, config, event, account }, index}
+							{id}
 							<div class="flex flex-col gap-y-2.5 border-b border-slate-200 pb-[10px]">
 								<div
 									class="font-mono text-[12px] leading-4 bg-neutral-100 tracking-[-0.01em] rounded-[5px] max-h-[89px] overflow-hidden gradient-mask-b-70"
@@ -131,14 +159,14 @@
 									</div>
 									<div>
 										<SocialButton
-											on:click={() => like(index)}
-											isActived={_likes[index]}
+											on:click={() => clickLike(id)}
+											isActived={_userLikes[id]}
 											colorActive="red"
 											icon={Heart}
-											iconTheme={_likes[index] ? 'solid' : ''}
+											iconTheme={_userLikes[id] ? 'solid' : ''}
 											iconSize="13"
 										>
-											{43}
+											{_expressionLikes[id] ?? 0}
 										</SocialButton>
 									</div>
 									<div>

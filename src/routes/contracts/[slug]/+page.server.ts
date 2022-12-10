@@ -1,12 +1,15 @@
 import { supabaseClient } from '$lib/supabaseClient';
-import { error } from '@sveltejs/kit';
 import { ethers } from 'ethers';
 import type { PageServerLoad } from './$types';
+import { getServerSession } from '@supabase/auth-helpers-sveltekit';
 
 import { createClient } from '@urql/core';
 import { Subgraphs, QueryGetKnowContracts } from '$lib/utils';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async (event) => {
+	const { params } = event;
+	const session = await getServerSession(event);
+
 	const contractQuery = await supabaseClient
 		.from('contracts')
 		.select('project ( * ), *')
@@ -97,6 +100,8 @@ export const load: PageServerLoad = async ({ params }) => {
 	///////////////////////////////////////////////////////////////////////
 
 	// Query to supabase DB if the account.id is an registered user
+	const _accountsData = {};
+
 	const _accounts = recentExpressions.map((expression_) =>
 		// Checksum the address since it's stored on this form in DB
 		ethers.utils.getAddress(expression_.account.id)
@@ -109,8 +114,6 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	if (accountsQuery.error) throw error(500, 'Something went wrong :(');
 
-	const _accountsData = {};
-
 	accountsQuery.data.forEach((account_) => {
 		_accountsData[account_.address.toLowerCase()] = {
 			username: account_.profiles.username,
@@ -118,11 +121,53 @@ export const load: PageServerLoad = async ({ params }) => {
 		};
 	});
 
+	const _userLikes = {};
+	const _expressionLikes = {};
+
+	if (session) {
+		const likesQuery = await supabaseClient
+			.from('starred')
+			.select(`id, address`)
+			.eq('starred', 'expression')
+			.eq('user_id', session.user?.id)
+			.in(
+				'address',
+				recentExpressions.map((element) => element.id)
+			);
+		if (!likesQuery.error) {
+			//
+			likesQuery.data.forEach((element_) => {
+				_userLikes[element_.address] = true;
+			});
+		}
+	}
+
+	const expressionLikesQuery = await supabaseClient
+		.from('starred')
+		.select(`id, address`)
+		.eq('starred', 'expression')
+		.in(
+			'address',
+			recentExpressions.map((element) => element.id)
+		);
+
+	if (!expressionLikesQuery.error) {
+		//
+		expressionLikesQuery.data.forEach((element_) => {
+			if (!_expressionLikes[element_.address]) {
+				_expressionLikes[element_.address] = 0;
+			}
+			_expressionLikes[element_.address] += 1;
+		});
+	}
+
 	return {
 		contract: contractQuery.data,
 		interpreters: interpretersQuery.data,
-		expressionSG: testQuery.data.expressions,
-		accountsData: _accountsData
+		expressionSG: recentExpressions,
+		accountsData: _accountsData,
+		userLikes: _userLikes,
+		expressionLikes: _expressionLikes
 		// expressionSG: recentExpressions,
 	};
 };
