@@ -5,9 +5,9 @@ import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load(event) {
-	const { supabaseClient } = await getSupabase(event);
-	const slug = event.params.slug;
-	let userQuery, contractQuery, interpreterQuery;
+    const { supabaseClient } = await getSupabase(event);
+    const slug = event.params.slug;
+    let userQuery, contractQuery, interpreterQuery;
 
     const query = await supabaseClient.rpc('get_expression_by_slug', { slug }) as PostgrestSingleResponse<ExpressionRow[]>
     if (query?.data?.[0]) {
@@ -17,9 +17,9 @@ export async function load(event) {
     }
 
     // catch all the errors
-    if (query.error || userQuery?.error || contractQuery?.error || interpreterQuery?.error) throw error(404, 'Not found');
+    if (query?.error || userQuery?.error || contractQuery?.error || interpreterQuery?.error) throw error(404, 'Not found');
     // and make sure there's data for everything
-    if (!query.data.length || !userQuery?.data || !interpreterQuery?.data) throw error(404, 'Not found');
+    if (!query.data?.length || !userQuery?.data || !interpreterQuery?.data) throw error(404, 'Not found');
     return {
         expression: { ...query.data[0], user_id: userQuery.data, contract: contractQuery?.data as unknown as ContractRowFull, interpreter: interpreterQuery.data }
     }
