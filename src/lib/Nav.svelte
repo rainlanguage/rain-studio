@@ -102,6 +102,7 @@
 					goto('/dashboard');
 				}}>Dashboard</a
 			> -->
+			<span class="text-red-400">[Alpha version]</span>
 			<div class="relative flex flex-col items-center" on:focusout={handleDropdownFocusLoss}>
 				<button on:click={openProfileMenu}>
 					<UserAvatar url={$page.data.profile.avatar_url} />
