@@ -51,7 +51,7 @@
 		"install": "^0.13.0",
 		"javascript-time-ago": "^2.5.9",
 		"rain-metadata": "https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383",
-		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#8a1102a295393b0b7331e2175c58fd1ee78b23db",
+		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#d0ee1bb73d3dfcebc2cf1ef4d0d9d4c3d697f260",
 		"supabase": "^1.15.0",
 		"svelte-ethers-store": "^2.5.8",
 		"tailwind-gradient-mask-image": "^1.0.0",
