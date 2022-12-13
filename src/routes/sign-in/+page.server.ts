@@ -8,3 +8,11 @@ export async function load(event) {
 		throw redirect(307, '/profile');
 	}
 }
+
+/** @type {import('./$types').Actions} */
+export const actions = {
+	default: async (event) => {
+		// TODO log the user in
+		console.log('Action called');
+	}
+};

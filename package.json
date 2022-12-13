@@ -50,6 +50,8 @@
 		"graphql": "^16.6.0",
 		"install": "^0.13.0",
 		"javascript-time-ago": "^2.5.9",
+		"jsonwebtoken": "^8.5.1",
+		"moralis": "^2.9.0",
 		"rain-metadata": "https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383",
 		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#8a1102a295393b0b7331e2175c58fd1ee78b23db",
 		"supabase": "^1.15.0",
