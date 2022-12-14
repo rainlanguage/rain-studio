@@ -4,7 +4,7 @@ import { isEqual } from 'lodash-es';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async (event) => {
-	const { order, selectedContract, selectedInterpreter, selectedTags, searchValue } = await event.request.json()
+	const { order, selectedContract, selectedInterpreter, selectedTags, searchValue, expressionComponentName } = await event.request.json()
 	const { supabaseClient } = await getSupabase(event);
 	let query = supabaseClient
 		.from('draft_expressions')
@@ -14,24 +14,18 @@ export const POST: RequestHandler = async (event) => {
 		query = query.eq('contract', selectedContract);
 	if (selectedContract === 'no-contract') query = query.is('contract', null);
 	if (selectedInterpreter) query = query.eq('interpreter', selectedInterpreter);
+	if (expressionComponentName) query = query.eq('contract_expression', expressionComponentName);
 	if (searchValue)
 		query = query.textSearch('name', searchValue, {
 			type: 'websearch',
 			config: 'english'
 		});
 
-	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract') query = query.eq('contract', selectedContract)
-	if (selectedContract === 'no-contract') query = query.is('contract', null)
-	if (selectedInterpreter) query = query.eq('interpreter', selectedInterpreter)
 	if (selectedTags?.length && !isEqual(selectedTags, ['all-tags'])) query = query.overlaps('tags', selectedTags)
-	if (searchValue) query = query.textSearch('name', searchValue, {
-		type: "websearch",
-		config: "english",
-	})
+	if (order) query = query.order(...order)
 
-	const { data, error } = await query.order(...order);
+	const { data, error } = await query;
 	if (error) throw kitError(404, 'Not found');
-
 	const draft_expressions = data;
 
 	return jsonResponse({ draft_expressions });

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ModalIDE from './../../../lib/full-ide/ModalIDE.svelte';
 	import { page } from '$app/stores';
 	import { Button, Select, Modal } from 'rain-svelte-components/package';
 	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
@@ -19,6 +20,7 @@
 		getNameFromChainId,
 		getWriteMethods
 	} from './write';
+	import type { ExpressionRowFull, InterpreterRowFull } from '$lib/types/types';
 
 	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: any;
 
@@ -26,15 +28,26 @@
 
 	let selectedMethod: { name: string; def: AbiFunction } | -1; // the selected method
 	let selectedChain: number;
-	let selectedInterpreter: { id: string; interpreter: string; deployer: string } | -1;
+	let selectedInterpreter:
+		| {
+				id: string;
+				interpreterAddress: string;
+				deployerAddress: string;
+				interpreter: InterpreterRowFull;
+		  }
+		| -1;
 	let selectedContract: string | -1; // the selected contract address
 
-	let openNewExpModal: boolean = false,
-		loadExpressionModal: boolean = false;
-	let expressionToSave: string;
+	let openNewExpModal: boolean = false;
 	let presaveExpression: PresaveExpression;
+	let expressionToSave: string;
 
+	let openIDEModal: boolean = false;
+	let expressionForIDE: ExpressionRowFull;
+
+	let loadExpressionModal: boolean = false;
 	let loadRaw: Function;
+	let expressionComponentName: string;
 
 	$: availableChains = getCommonChains($page.data.interpreters, metadata);
 	$: writeMethods = getWriteMethods(abi.abi);
@@ -104,7 +117,7 @@
 			selectedMethod.name
 		);
 		// set it
-		if (deployerPath) set(result, deployerPath, selectedInterpreter.deployer);
+		if (deployerPath) set(result, deployerPath, selectedInterpreter.deployerAddress);
 
 		// get the path of the deployer field in the result
 		const interpreterPath = constructPath(
@@ -113,7 +126,7 @@
 			selectedMethod.name
 		);
 		// set it
-		if (interpreterPath) set(result, interpreterPath, selectedInterpreter.interpreter);
+		if (interpreterPath) set(result, interpreterPath, selectedInterpreter.interpreterAddress);
 		console.log(result);
 		await $contracts.selectedContract[selectedMethod.name](...result);
 	};
@@ -123,7 +136,7 @@
 		presaveExpression = {
 			raw_expression: raw,
 			contract,
-			interpreter: selectedInterpreter?.id
+			interpreter: selectedInterpreter?.interpreter
 		};
 		expressionToSave = raw;
 		openNewExpModal = true;
@@ -131,12 +144,24 @@
 
 	const loadExpression = async ({ detail }: { detail: any }) => {
 		loadRaw = detail.loadRaw;
+		expressionComponentName = detail.componentName;
 		loadExpressionModal = true;
 	};
 
 	const loadSelectedExpression = async ({ detail }: { detail: any }) => {
 		loadExpressionModal = false;
 		loadRaw(detail.expression.raw_expression);
+	};
+
+	const expandExpression = async ({ detail }: { detail: any }) => {
+		expressionForIDE = {
+			id: '',
+			contract_expression: detail.componentName,
+			contract: contract,
+			raw_expression: detail.raw
+		};
+		loadRaw = detail.loadRaw;
+		openIDEModal = true;
 	};
 
 	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
@@ -174,6 +199,7 @@
 					bind:result
 					on:save={saveExpression}
 					on:load={loadExpression}
+					on:expand={expandExpression}
 					showInterpreterFields={false}
 				/>
 			{/key}
@@ -223,8 +249,10 @@
 
 <Modal bind:open={loadExpressionModal}>
 	{#if $page.data.session}
-		<LoadExpressionModal on:select={loadSelectedExpression} />
+		<LoadExpressionModal on:select={loadSelectedExpression} {contract} {expressionComponentName} />
 	{:else}
 		<Auth />
 	{/if}
 </Modal>
+
+<ModalIDE bind:open={openIDEModal} expression={expressionForIDE} {loadRaw} />

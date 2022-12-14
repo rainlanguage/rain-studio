@@ -53,7 +53,7 @@ export const getInterpretersForChain = (
 ): { label: string; value: { interpreter: string; deployer: string } }[] => {
     const interpretersForSelect: {
         label: string;
-        value: { id: string; interpreter: string; deployer: string };
+        value: { id: string; interpreterAddress: string; deployerAddress: string, interpreter: InterpreterRowFull };
     }[] = [];
     interpreters.forEach((interpreter) => {
         interpreter.metadata.addresses.forEach((address) => {
@@ -63,8 +63,9 @@ export const getInterpretersForChain = (
                         label: `${interpreter.metadata.name}: ${address.interpreter}`,
                         value: {
                             id: interpreter.id,
-                            interpreter: address.interpreter,
-                            deployer: address.deployer
+                            interpreter,
+                            interpreterAddress: address.interpreter,
+                            deployerAddress: address.deployer
                         }
                     })
                 );
