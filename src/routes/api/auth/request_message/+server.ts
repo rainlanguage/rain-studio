@@ -1,42 +1,44 @@
-import { json } from '@sveltejs/kit';
-import Moralis from 'moralis';
+import { HASH_KEY } from '$env/static/private';
+import { json, error as sveltekitError } from '@sveltejs/kit';
+import { utils } from 'ethers';
 
-export async function requestMessage({
+/**
+ * Generate the sign message from an address and an id nonce
+ */
+const createMessage = ({
 	address,
-	chain,
-	network
+	nonce,
+	url
 }: {
 	address: string;
-	chain: string;
-	network: 'evm';
-}) {
-	const result = await Moralis.Auth.requestMessage({
-		address,
-		chain,
-		network,
-		domain: 'rain-studio.vercel.app',
-		statement: 'Please sign this message to confirm your identity.',
-		uri: 'https://rain-studio.vercel.app',
-		expirationTime: '2023-01-01T00:00:00.000Z',
-		timeout: 15
-	});
+	nonce: string;
+	url?: string;
+}): string => {
+	const url_ = url ? `site ${url}` : 'site';
+	const address_ = utils.getAddress(address);
 
-	const { message } = result.toJSON();
+	return `The ${url_} need you to sign this message to verify your identity with this wallet address.
+	- NonceID: ${nonce}
+	- Adress: ${address_.slice(0, 8) + '...' + address_.slice(address_.length - 6, address_.length)}`;
+};
 
-	return message;
+async function requestMessage(address: string) {
+	const nonce = utils.hexDataSlice(utils.computeHmac('sha256', HASH_KEY, address), 0, 8);
+
+	return createMessage({ address, nonce });
 }
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST(event) {
 	const { request } = event;
 
-	const { address, chain, network } = await request.json();
+	const { address } = await request.json();
 
-	const message = await requestMessage({
-		address,
-		chain,
-		network
+	if (!address || !utils.isAddress(address)) {
+		throw sveltekitError(400, 'Address value missing or invalid format');
+	}
+
+	return json({
+		message: await requestMessage(address)
 	});
-
-	return json({ message });
 }
