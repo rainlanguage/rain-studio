@@ -50,10 +50,10 @@
 	class="flex justify-between px-4 py-3 sticky top-0 bg-white bg-opacity-70 backdrop-blur-md border-b border-gray-200 z-20"
 >
 	<div class="flex items-center gap-x-2.5 w-max">
-		<a href="/" class="flex flex-row w-max">
+		<div class="flex flex-row w-max">
 			<img alt="Rain Studio logo" class="w-7" src={logo} />
 			<span class="font-medium mr-2 ml-2.5">Rain Studio</span>
-		</a>
+		</div>
 		<div class="w-[345px]">
 			<form on:submit|preventDefault={searchAddressOrText}>
 				<Input placeholder="Search rain" bind:value={addressOrText} />
@@ -68,14 +68,8 @@
 					goto('/contracts');
 				}}>Contracts</a
 			>
-			<a
-				href="/expressions"
-				class="nav-link"
-				on:click|preventDefault={() => {
-					goto('/expressions');
-				}}>Expressions</a
-			>
-			<!-- <span class="nav-link">Docs</span> -->
+			<span class="nav-link">Expressions</span>
+			<span class="nav-link">Docs</span>
 		</div>
 	</div>
 	<div class="flex gap-x-5 items-center">
@@ -95,14 +89,13 @@
 				class="p-1 px-2 -ml-2 border border-black rounded-lg text-black">Sign Up</a
 			>
 		{:else}
-			<!-- <a
+			<a
 				href="/dashboard"
 				class="nav-link"
 				on:click|preventDefault={() => {
 					goto('/dashboard');
 				}}>Dashboard</a
-			> -->
-			<span class="text-red-400">[Alpha version]</span>
+			>
 			<div class="relative flex flex-col items-center" on:focusout={handleDropdownFocusLoss}>
 				<button on:click={openProfileMenu}>
 					<UserAvatar url={$page.data.profile.avatar_url} />
@@ -117,7 +110,7 @@
 						<a href={`/user/${$page.data.profile.username}/expressions`} class="profile-link"
 							>Expressions</a
 						>
-						<!-- <a class="profile-link">Deployments</a> -->
+						<a class="profile-link">Deployments</a>
 						<div class="border-t border-gray-200" />
 						{#if !$connected}
 							<!-- <div class="self-start p-4">

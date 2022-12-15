@@ -19,7 +19,7 @@
 			loading = true;
 			const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 			if (error) throw error;
-			goto('/');
+			goto('/dashboard');
 		} catch (error) {
 			if (error instanceof Error) {
 				errorMessage = error.message;

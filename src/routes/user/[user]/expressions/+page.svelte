@@ -59,12 +59,10 @@
 	}));
 	let selectedInterpreter: string = null;
 	// tag filters
-	const tagOptions = tags
-		? [
-				{ label: 'All', value: 'all-tags' },
-				...tags?.map((tag: string) => ({ label: tag, value: tag }))
-		  ]
-		: '';
+	const tagOptions = [
+		{ label: 'All', value: 'all-tags' },
+		...tags.map((tag: string) => ({ label: tag, value: tag }))
+	];
 	let selectedTags: string[] = [];
 
 	// search value
@@ -166,15 +164,9 @@
 									bind:value={selectedInterpreter}
 								/>
 							</FilterGroup>
-							{#if tags}
-								<FilterGroup name="Tags">
-									<FilterSet
-										options={tagOptions}
-										bind:value={selectedTags}
-										exclusiveOptions={[0]}
-									/>
-								</FilterGroup>
-							{/if}
+							<FilterGroup name="Tags">
+								<FilterSet options={tagOptions} bind:value={selectedTags} exclusiveOptions={[0]} />
+							</FilterGroup>
 							<div class="mt-6 flex flex-col gap-y-2">
 								<Input
 									bind:value={searchValue}
@@ -223,11 +215,9 @@
 				<div class="flex flex-row">
 					<div class="w-1/5" />
 					<div use:autoAnimate class="w-4/5 gap-y-4 flex-col flex">
-						{#if deployedExpressions}
-							{#each deployedExpressions as expression}
-								<DeployedExpressionSummaryRow {expression} />
-							{/each}
-						{/if}
+						{#each deployedExpressions as expression}
+							<DeployedExpressionSummaryRow {expression} />
+						{/each}
 					</div>
 				</div>
 			</div>
