@@ -82,9 +82,9 @@
 				class="text-black nav-link">Sign in</a
 			>
 			<a
-				href="/sign-up"
+				href="/sign-in"
 				on:click={() => {
-					goto('/sign-up');
+					goto('/sign-in');
 				}}
 				class="p-1 px-2 -ml-2 border border-black rounded-lg text-black">Sign Up</a
 			>
@@ -98,7 +98,7 @@
 			>
 			<div class="relative flex flex-col items-center" on:focusout={handleDropdownFocusLoss}>
 				<button on:click={openProfileMenu}>
-					<UserAvatar url={$page.data.profile.avatar_url} />
+					<UserAvatar url={$page.data.profile?.avatar_url} />
 				</button>
 				{#if profileMenuOpen}
 					<div
@@ -107,7 +107,7 @@
 					>
 						<a href="/settings/profile" class="profile-link">Profile</a>
 						<div class="border-t border-gray-200" />
-						<a href={`/user/${$page.data.profile.username}/expressions`} class="profile-link"
+						<a href={`/user/${$page.data.profile?.username}/expressions`} class="profile-link"
 							>Expressions</a
 						>
 						<a class="profile-link">Deployments</a>
