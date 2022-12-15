@@ -31,19 +31,6 @@
 		if (relatedTarget instanceof HTMLElement && currentTarget.contains(relatedTarget)) return;
 		profileMenuOpen = false;
 	};
-
-	async function signOut() {
-		try {
-			let { error } = await supabaseClient.auth.signOut();
-			if (error) throw error;
-			goto('/');
-		} catch (error) {
-			if (error instanceof Error) {
-				alert(error.message);
-			}
-		} finally {
-		}
-	}
 </script>
 
 <div
@@ -124,8 +111,18 @@
 							</div>
 						{/if}
 						<div class="border-t border-gray-200" />
+						<a
+							href="/sign-out"
+							class="profile-link"
+							on:click|preventDefault={() => {
+								// @ts-ignore
+								window.location = '/sign-out';
 
-						<div on:click={signOut} class="profile-link">Sign out</div>
+								// goto() function does not work. The cookies are deleted, but the session still there in $page.data
+								// goto('/sign-out');
+							}}
+							>Sign out
+						</a>
 					</div>
 				{/if}
 			</div>
