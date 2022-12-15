@@ -15,7 +15,9 @@
 		{:else if expression?.sg?.id}
 			<span class="text-xl"><DisplayAddress address={expression.sg.id} /></span>
 		{/if}
-		<TimeAgo dateString={expression.created_at} />
+		{#if expression?.created_at}
+			<TimeAgo dateString={expression.created_at} />
+		{/if}
 		{#if expression?.tags}
 			<ViewTags tags={expression.tags} />
 		{/if}
