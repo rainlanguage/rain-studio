@@ -1,6 +1,5 @@
 import { json, redirect } from '@sveltejs/kit';
 import { SUPABASE_JWT } from '$env/static/private';
-import Moralis from 'moralis';
 import { getServerSession } from '@supabase/auth-helpers-sveltekit';
 import jwt from 'jsonwebtoken';
 import type { TypedSupabaseClient } from '@supabase/auth-helpers-sveltekit/dist/types';
