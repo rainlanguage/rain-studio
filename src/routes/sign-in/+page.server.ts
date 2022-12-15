@@ -68,7 +68,7 @@ async function sign(address_: string, supabase_: TypedSupabaseClient) {
 
 	const resp = await supabase_
 		.from('wallets_linked')
-		.select('id, user:user_id(*)')
+		.select('id, user:user_id(id, created_at)')
 		.eq('address', address_)
 		.single();
 
@@ -76,7 +76,7 @@ async function sign(address_: string, supabase_: TypedSupabaseClient) {
 
 	if (resp.error) {
 		// Since it's sign in - Create a new user with this wallet and a random Username
-		const username_ = generateUsername('', 6);
+		const username_ = generateUsername('', 6).toLowerCase();
 		const respNewUser = await supabase_.rpc('new_user_from_address', {
 			address_,
 			username_

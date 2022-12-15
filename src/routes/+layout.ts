@@ -2,5 +2,6 @@ import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async (event) => {
 	const { data } = event;
-	return { session: data.session };
+
+	return { session: data.session, profile: data.profile };
 };
