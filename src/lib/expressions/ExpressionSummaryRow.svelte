@@ -5,6 +5,7 @@
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
 	import { copyAndEmit } from '$lib/expressions/expressions';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
+	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import {
 		DocumentDuplicate,
@@ -42,19 +43,6 @@
 		}
 	};
 
-	const changeVisibility = async () => {
-		const action = await supabaseClient
-			.from('draft_expressions')
-			.update({ public: !expression.public })
-			.eq('id', expression.id);
-
-		if (action?.error) {
-			alert(action.error);
-		} else {
-			changeVisiblityModal = false;
-			dispatch('visibilyChanged');
-		}
-	};
 </script>
 
 <ExpressionRow {expression}>
@@ -118,28 +106,7 @@
 	</div>
 </ExpressionRow>
 
-<Modal bind:open={changeVisiblityModal}>
-	<div class="flex flex-col gap-y-2">
-		<span class="text-2xl">Make {expression.public ? 'private' : 'public'}</span>
-		{#if expression.public}
-			<span> Are you sure you want to make private this expression? </span>
-			<span> Other users will no longer be able to view or interact with it. </span>
-		{:else}
-			<span>Are you sure you want to make public this expression? </span>
-			<span>
-				It will become fully visible to other users and they will be able to interact with it.
-			</span>
-		{/if}
-		<div class="flex gap-x-2 mt-4">
-			<Button variant="primary" on:click={changeVisibility}>Change visibility</Button>
-			<Button
-				on:click={() => {
-					changeVisiblityModal = false;
-				}}>Cancel</Button
-			>
-		</div>
-	</div>
-</Modal>
+<ModalChangeVisibilty on:visibilyChanged {expression} bind:isOpen={changeVisiblityModal} />
 
 <Modal bind:open={deleteExpressionModal}>
 	<div class="flex flex-col gap-y-2">

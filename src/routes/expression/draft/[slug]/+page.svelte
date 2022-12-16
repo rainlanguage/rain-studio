@@ -8,10 +8,12 @@
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import ViewTags from '$lib/ViewTags.svelte';
-	import { DocumentDuplicate, Pencil } from '@steeze-ui/heroicons';
-	import { Button } from 'rain-svelte-components/package';
+	import { DocumentDuplicate, Pencil, LockOpen, LockClosed } from '@steeze-ui/heroicons';
+	import { Button, HoverTooltip } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
+	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
+	import { Icon } from '@steeze-ui/svelte-icon';
 
 	$: expression = $page.data.expression;
 	$: user = $page.data.expression.user_id;
@@ -21,6 +23,7 @@
 
 	let openNewExpModal: boolean = false;
 	let openSignInModal: boolean = false;
+	let changeVisiblityModal: boolean = false;
 
 	const fork = () => {
 		if ($page.data.session) {
@@ -29,13 +32,26 @@
 			openSignInModal = true;
 		}
 	};
+
+	console.log($page.data.session?.user.id);
 </script>
 
 <PageHeader>
 	<div class="w-full flex justify-between items-center container mx-auto">
 		<div class="flex flex-col gap-y-2">
 			<span class="text-sm text-gray-500">Draft expression</span>
-			<span class="text-2xl font-medium">{expression.name}</span>
+			<div class="flex gap-x-1.5">
+				<span class="text-2xl font-medium">{expression.name}</span>
+				{#if $page.data.session?.user.id == expression.user_id.id}
+					<div class="w-5">
+						<HoverTooltip
+							placeHolder={`This expression is ${expression.public ? 'public' : 'private'}`}
+						>
+							<Icon src={expression.public ? LockOpen : LockClosed} />
+						</HoverTooltip>
+					</div>
+				{/if}
+			</div>
 			<div class="flex items-center gap-x-2">
 				<span>Created by</span>
 				<UserAvatar url={user.avatar_url} />
@@ -56,6 +72,17 @@
 					variant="transparent"
 					icon={Pencil}>Edit</Button
 				>
+			{/if}
+			{#if $page.data.session?.user.id == expression.user_id.id}
+				<Button
+					on:click={() => {
+						changeVisiblityModal = true;
+					}}
+					size="small"
+					variant="transparent"
+					icon={expression.public ? LockClosed : LockOpen}
+					>Make {expression.public ? 'private' : 'public'}
+				</Button>
 			{/if}
 		</div>
 	</div>
@@ -81,6 +108,14 @@
 		</div>
 	</div>
 </div>
+
+<ModalChangeVisibilty
+	{expression}
+	bind:isOpen={changeVisiblityModal}
+	on:visibilyChanged={() => {
+		expression.public = !expression.public;
+	}}
+/>
 
 <Modal bind:open={openNewExpModal}>
 	<ForkExpression {expression} />
