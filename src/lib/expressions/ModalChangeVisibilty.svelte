@@ -3,10 +3,14 @@
 	import { Button } from 'rain-svelte-components/package';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { CheckCircle, ExclamationCircle } from '@steeze-ui/heroicons';
+	import { Icon } from '@steeze-ui/svelte-icon';
 
 	const dispatch = createEventDispatcher();
 	export let expression: any;
-	export let isOpen: boolean = false;
+	export let isOpen: boolean = false,
+		isSuccess: boolean = false,
+		isFailure: boolean = false;
 
 	const changeVisibility = async () => {
 		const action = await supabaseClient
@@ -15,14 +19,17 @@
 			.eq('id', expression.id);
 
 		if (action?.error) {
-			alert(action.error);
+			isFailure = true;
 		} else {
-			isOpen = false;
+			isSuccess = true;
 			dispatch('visibilyChanged');
 		}
+
+		isOpen = false;
 	};
 </script>
 
+<!-- Modal to confirm modify visibility -->
 <Modal bind:open={isOpen}>
 	<div class="flex flex-col gap-y-2">
 		<span class="text-2xl">Make {expression.public ? 'private' : 'public'}</span>
@@ -41,6 +48,48 @@
 				on:click={() => {
 					isOpen = false;
 				}}>Cancel</Button
+			>
+		</div>
+	</div>
+</Modal>
+
+<!-- Modal on success -->
+<Modal bind:open={isSuccess}>
+	<div class="flex flex-col gap-y-3 items-center">
+		<span class="text-2xl">Visibility changed</span>
+
+		<div class="w-16 mb-2 text-green-500">
+			<Icon src={CheckCircle} />
+		</div>
+
+		<span>
+			Now your expression is {expression.public ? 'public' : 'private'}
+		</span>
+
+		<div>
+			<Button
+				on:click={() => {
+					isSuccess = false;
+				}}>Continue</Button
+			>
+		</div>
+	</div>
+</Modal>
+
+<!-- Modal on failure -->
+<Modal bind:open={isFailure}>
+	<div class="flex flex-col gap-y-3 items-center">
+		<span class="text-2xl">The visibility was not changed</span>
+
+		<div class="w-16 mb-2 text-red-500">
+			<Icon src={ExclamationCircle} />
+		</div>
+
+		<div>
+			<Button
+				on:click={() => {
+					isFailure = false;
+				}}>Continue</Button
 			>
 		</div>
 	</div>
