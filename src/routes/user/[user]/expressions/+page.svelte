@@ -193,6 +193,7 @@
 										removeExpression(expression.id);
 									}}
 									on:saved={refresh}
+									on:visibilyChanged={refresh}
 								/>
 							{/each}
 							{#if !draftExpressions.length}

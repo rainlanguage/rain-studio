@@ -6,7 +6,15 @@
 	import { copyAndEmit } from '$lib/expressions/expressions';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { DocumentDuplicate, Eye, PaperAirplane, Pencil, Trash } from '@steeze-ui/heroicons';
+	import {
+		DocumentDuplicate,
+		Eye,
+		PaperAirplane,
+		Pencil,
+		Trash,
+		LockOpen,
+		LockClosed
+	} from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -17,7 +25,8 @@
 	const dispatch = createEventDispatcher();
 
 	let deleteExpressionModal: boolean = false,
-		newExpModal: boolean = false;
+		newExpModal: boolean = false,
+		changeVisiblityModal: boolean = false;
 
 	const deleteExp = () => {
 		deleteExpressionModal = true;
@@ -30,6 +39,20 @@
 		} else {
 			deleteExpressionModal = false;
 			dispatch('deleted');
+		}
+	};
+
+	const changeVisibility = async () => {
+		const action = await supabaseClient
+			.from('draft_expressions')
+			.update({ public: !expression.public })
+			.eq('id', expression.id);
+
+		if (action?.error) {
+			alert(action.error);
+		} else {
+			changeVisiblityModal = false;
+			dispatch('visibilyChanged');
 		}
 	};
 </script>
@@ -62,6 +85,17 @@
 			icon={PaperAirplane}>Share</Button
 		>
 		<OverflowMenu>
+			{#if $page.data.session?.user?.id}
+				<OverflowMenuItem>
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<div class="flex gap-x-2" on:click={() => (changeVisiblityModal = true)}>
+						<span class="w-4">
+							<Icon src={expression.public ? LockClosed : LockOpen} />
+						</span>
+						<span> Make {expression.public ? 'private' : 'public'} </span>
+					</div>
+				</OverflowMenuItem>
+			{/if}
 			<OverflowMenuItem>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div class="flex gap-x-2" on:click={() => (newExpModal = true)}>
@@ -83,6 +117,29 @@
 		</OverflowMenu>
 	</div>
 </ExpressionRow>
+
+<Modal bind:open={changeVisiblityModal}>
+	<div class="flex flex-col gap-y-2">
+		<span class="text-2xl">Make {expression.public ? 'private' : 'public'}</span>
+		{#if expression.public}
+			<span> Are you sure you want to make private this expression? </span>
+			<span> Other users will no longer be able to view or interact with it. </span>
+		{:else}
+			<span>Are you sure you want to make public this expression? </span>
+			<span>
+				It will become fully visible to other users and they will be able to interact with it.
+			</span>
+		{/if}
+		<div class="flex gap-x-2 mt-4">
+			<Button variant="primary" on:click={changeVisibility}>Change visibility</Button>
+			<Button
+				on:click={() => {
+					changeVisiblityModal = false;
+				}}>Cancel</Button
+			>
+		</div>
+	</div>
+</Modal>
 
 <Modal bind:open={deleteExpressionModal}>
 	<div class="flex flex-col gap-y-2">
