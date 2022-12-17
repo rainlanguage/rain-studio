@@ -5,22 +5,51 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { DocumentDuplicate } from '@steeze-ui/heroicons';
+	import { DocumentDuplicate, Heart } from '@steeze-ui/heroicons';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Auth from '$lib/Auth.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
+	import SocialButton from '$lib/SocialButton.svelte';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { supabaseClient } from '$lib/supabaseClient';
 
 	$: expression = $page.data.expression;
 	$: user = $page.data.user;
 	$: sgQuery = $page.data.sg;
+	$: userLike = $page.data.userLike;
 
 	$: expressionToFork = {
 		...expression,
 		raw_expression: RainlangFormatter.get(expression.stateConfig)
 	};
+	$: session = $page.data.session;
 
-	let openNewExpModal: boolean = false;
+	const clickLike = async () => {
+		if (session) {
+			if (userLike) {
+				const { error } = await supabaseClient
+					.from('starred')
+					.delete()
+					.eq('user_id', session.user.id)
+					.eq('address', sgQuery.id);
+
+				if (!error) userLike = false;
+			} else {
+				const { error } = await supabaseClient.from('starred').insert({
+					starred: 'address',
+					address: sgQuery.id
+				});
+
+				if (!error) userLike = true;
+			}
+		} else {
+			openSignInModal = true;
+		}
+	};
+
+	let openNewExpModal: boolean = false,
+		openSignInModal: boolean = false;
 </script>
 
 <PageHeader>
@@ -36,6 +65,15 @@
 			<TimeAgo dateString={parseInt(sgQuery.event.timestamp) * 1000} />
 		</div>
 		<div class="flex gap-x-2">
+			<SocialButton
+				icon={Heart}
+				iconSize={'16'}
+				classes={'border rounded-[10px] border-neutral-300 px-2'}
+				isActived={userLike}
+				iconTheme={userLike ? 'solid' : ''}
+				colorActive="red"
+				on:click={clickLike}
+			/>
 			<Button
 				on:click={() => {
 					openNewExpModal = true;
@@ -76,3 +114,5 @@
 		<Auth />
 	{/if}
 </Modal>
+
+<Modal bind:open={openSignInModal}><Auth /></Modal>
