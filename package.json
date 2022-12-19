@@ -13,6 +13,7 @@
 		"types": "supabase gen types typescript --project-id wjjqadgrfglmanlweats > ./src/lib/types/generated-db-types.ts"
 	},
 	"devDependencies": {
+		"@sentry/vite-plugin": "^0.3.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-vercel": "^1.0.0-next.84",
 		"@sveltejs/kit": "next",
@@ -38,6 +39,9 @@
 	"type": "module",
 	"dependencies": {
 		"@formkit/auto-animate": "^1.0.0-beta.5",
+		"@sentry/node": "^7.27.0",
+		"@sentry/svelte": "^7.26.0",
+		"@sentry/tracing": "^7.26.0",
 		"@steeze-ui/heroicons": "^2.1.0",
 		"@steeze-ui/svelte-icon": "^1.3.2",
 		"@supabase/auth-helpers-sveltekit": "0.8.3",
@@ -52,7 +56,7 @@
 		"javascript-time-ago": "^2.5.9",
 		"jsonwebtoken": "^8.5.1",
 		"rain-metadata": "https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383",
-		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#8a1102a295393b0b7331e2175c58fd1ee78b23db",
+		"rain-svelte-components": "https://github.com/beehive-innovation/rain-svelte-components#c6ddf08099cade8c4bfd943f712e5c069d663699",
 		"supabase": "^1.15.0",
 		"svelte-ethers-store": "^2.5.8",
 		"tailwind-gradient-mask-image": "^1.0.0",

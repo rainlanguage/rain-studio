@@ -5,8 +5,17 @@
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
 	import { copyAndEmit } from '$lib/expressions/expressions';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
+	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { DocumentDuplicate, Eye, PaperAirplane, Pencil, Trash } from '@steeze-ui/heroicons';
+	import {
+		DocumentDuplicate,
+		Eye,
+		PaperAirplane,
+		Pencil,
+		Trash,
+		LockOpen,
+		LockClosed
+	} from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -17,7 +26,8 @@
 	const dispatch = createEventDispatcher();
 
 	let deleteExpressionModal: boolean = false,
-		newExpModal: boolean = false;
+		newExpModal: boolean = false,
+		changeVisiblityModal: boolean = false;
 
 	const deleteExp = () => {
 		deleteExpressionModal = true;
@@ -32,6 +42,7 @@
 			dispatch('deleted');
 		}
 	};
+
 </script>
 
 <ExpressionRow {expression}>
@@ -62,6 +73,17 @@
 			icon={PaperAirplane}>Share</Button
 		>
 		<OverflowMenu>
+			{#if $page.data.session?.user?.id}
+				<OverflowMenuItem>
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<div class="flex gap-x-2" on:click={() => (changeVisiblityModal = true)}>
+						<span class="w-4">
+							<Icon src={expression.public ? LockClosed : LockOpen} />
+						</span>
+						<span> Make {expression.public ? 'private' : 'public'} </span>
+					</div>
+				</OverflowMenuItem>
+			{/if}
 			<OverflowMenuItem>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div class="flex gap-x-2" on:click={() => (newExpModal = true)}>
@@ -83,6 +105,8 @@
 		</OverflowMenu>
 	</div>
 </ExpressionRow>
+
+<ModalChangeVisibilty on:visibilyChanged {expression} bind:isOpen={changeVisiblityModal} />
 
 <Modal bind:open={deleteExpressionModal}>
 	<div class="flex flex-col gap-y-2">

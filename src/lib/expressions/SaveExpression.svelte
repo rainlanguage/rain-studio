@@ -53,7 +53,9 @@
 			logoUrl={presaveExpression.contract.project.logo_url}
 		/>
 		<Pills><span class="text-sm">{presaveExpression.interpreter.metadata.name}</span></Pills>
-		<Formatter raw={presaveExpression.raw_expression} />
+		<div class="max-h-80 overflow-y-scroll">
+			<Formatter raw={presaveExpression.raw_expression} />
+		</div>
 		<Input bind:value={presaveExpression.name}>
 			<svelte:fragment slot="label">Name</svelte:fragment>
 		</Input>
