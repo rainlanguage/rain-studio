@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ModalIDE from './../../../lib/full-ide/ModalIDE.svelte';
 	import { page } from '$app/stores';
 	import { Button, Select, Modal } from 'rain-svelte-components/package';
 	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
@@ -10,7 +11,7 @@
 	import LoadExpressionModal from '$lib/expressions/LoadExpressionModal.svelte';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import { fade } from 'svelte/transition';
-	import { get } from 'lodash-es';
+	import { get, set } from 'lodash-es';
 	import type { Abi, AbiFunction } from 'abitype';
 	import {
 		getCommonChains,
@@ -19,6 +20,7 @@
 		getNameFromChainId,
 		getWriteMethods
 	} from './write';
+	import type { ExpressionRowFull, InterpreterRowFull } from '$lib/types/types';
 
 	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: any;
 
@@ -26,18 +28,69 @@
 
 	let selectedMethod: { name: string; def: AbiFunction } | -1; // the selected method
 	let selectedChain: number;
-	let selectedInterpreter: { id: string; interpreter: string; deployer: string } | -1;
+	let selectedInterpreter:
+		| {
+				id: string;
+				interpreterAddress: string;
+				deployerAddress: string;
+				interpreter: InterpreterRowFull;
+		  }
+		| -1;
 	let selectedContract: string | -1; // the selected contract address
 
-	let openNewExpModal: boolean = false,
-		loadExpressionModal: boolean = false;
-	let expressionToSave: string;
+	let openNewExpModal: boolean = false;
 	let presaveExpression: PresaveExpression;
+	let expressionToSave: string;
 
+	let openIDEModal: boolean = false;
+	let expressionForIDE: ExpressionRowFull;
+
+	let loadExpressionModal: boolean = false;
 	let loadRaw: Function;
+	let expressionComponentName: string;
 
 	$: availableChains = getCommonChains($page.data.interpreters, metadata);
 	$: writeMethods = getWriteMethods(abi.abi);
+
+	/**
+	 * Function for converting an abi path to a path that can be used to set the path
+	 * in the object required for the ABI method args array.
+	 *
+	 * Returns null if the `path` is not a child of `methodName` in the `abi`.
+	 *
+	 * @param path - the full path in the abi (including the method), e.g. '[5].inputs[0].components[3].components[0]'
+	 * @param abi - the abi
+	 * @param methodName - the method name the path should be a child of
+	 */
+	const constructPath = (path: string | undefined, abi: Abi, methodName: string) => {
+		// return if no path
+		if (!path) return;
+
+		const splitPath = path.split('.');
+
+		// get the path for the method (the array index of the method is always first in the path)
+		const methodPath = splitPath.shift();
+		// return if no method path can be extracted
+		if (!methodPath) return;
+
+		// get the part of the abi for the method
+		const method = get(abi, methodPath);
+
+		// ensure this part of the abi is function and the the methodName matches
+		if (!(method.type == 'function' && method.name == methodName)) return;
+
+		// using reduce to create the fully named path we can use to set a value in the final method args array
+		const namedPath = splitPath.reduce(
+			(acc, curr) => {
+				const o = get(acc[0], curr);
+				const namedPathSegment: string = curr.includes('input') ? '[' + curr.split('[')[1] : o.name;
+				const accumulatedNamedPath = acc[1] ? acc[1] + '.' + namedPathSegment : namedPathSegment;
+				return [o, accumulatedNamedPath];
+			},
+			[get(abi, methodPath), null]
+		);
+		return namedPath[1];
+	};
 
 	// submit the transaction
 	const submit = async () => {
@@ -56,29 +109,25 @@
 			throw Error('Interpreter and deploy fields not defined in metadata');
 
 		// we need to fill out the interpreter/deployer fields for the user based on what they selected
-		// get the method that the deployer field is for
-		const deployerFieldMethod = get(
+
+		// get the path of the deployer field in the result
+		const deployerPath = constructPath(
+			metadata.interpreterFields?.deployerFieldPath,
 			abi.abi,
-			metadata.interpreterFields.deployerFieldPath.split('.')[0]
+			selectedMethod.name
 		);
-		if (deployerFieldMethod.type == 'function' && deployerFieldMethod.name == selectedMethod.name) {
-			// if the method requires a deployer, set it
-			result[0][get(abi.abi, metadata.interpreterFields.deployerFieldPath).name] =
-				selectedInterpreter.deployer;
-		}
-		// get the method that the interpreter field is for
-		const interpreterFieldMethod = get(
+		// set it
+		if (deployerPath) set(result, deployerPath, selectedInterpreter.deployerAddress);
+
+		// get the path of the deployer field in the result
+		const interpreterPath = constructPath(
+			metadata.interpreterFields?.interpreterFieldPath,
 			abi.abi,
-			metadata.interpreterFields.interpreterFieldPath.split('.')[0]
+			selectedMethod.name
 		);
-		if (
-			interpreterFieldMethod.type == 'function' &&
-			interpreterFieldMethod.name == selectedMethod.name
-		) {
-			// if the method requires an interpreter, set it
-			result[0][get(abi.abi, metadata.interpreterFields.interpreterFieldPath).name] =
-				selectedInterpreter.interpreter;
-		}
+		// set it
+		if (interpreterPath) set(result, interpreterPath, selectedInterpreter.interpreterAddress);
+		console.log(result);
 		await $contracts.selectedContract[selectedMethod.name](...result);
 	};
 
@@ -87,7 +136,7 @@
 		presaveExpression = {
 			raw_expression: raw,
 			contract,
-			interpreter: selectedInterpreter?.id
+			interpreter: selectedInterpreter?.interpreter
 		};
 		expressionToSave = raw;
 		openNewExpModal = true;
@@ -95,12 +144,24 @@
 
 	const loadExpression = async ({ detail }: { detail: any }) => {
 		loadRaw = detail.loadRaw;
+		expressionComponentName = detail.componentName;
 		loadExpressionModal = true;
 	};
 
 	const loadSelectedExpression = async ({ detail }: { detail: any }) => {
 		loadExpressionModal = false;
 		loadRaw(detail.expression.raw_expression);
+	};
+
+	const expandExpression = async ({ detail }: { detail: any }) => {
+		expressionForIDE = {
+			id: '',
+			contract_expression: detail.componentName,
+			contract: contract,
+			raw_expression: detail.raw
+		};
+		loadRaw = detail.loadRaw;
+		openIDEModal = true;
 	};
 
 	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
@@ -138,6 +199,7 @@
 					bind:result
 					on:save={saveExpression}
 					on:load={loadExpression}
+					on:expand={expandExpression}
 					showInterpreterFields={false}
 				/>
 			{/key}
@@ -187,8 +249,10 @@
 
 <Modal bind:open={loadExpressionModal}>
 	{#if $page.data.session}
-		<LoadExpressionModal on:select={loadSelectedExpression} />
+		<LoadExpressionModal on:select={loadSelectedExpression} {contract} {expressionComponentName} />
 	{:else}
 		<Auth />
 	{/if}
 </Modal>
+
+<ModalIDE bind:open={openIDEModal} expression={expressionForIDE} {loadRaw} />

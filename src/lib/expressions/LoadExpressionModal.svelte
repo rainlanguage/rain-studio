@@ -1,15 +1,20 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
-	import ExpressionSummaryRow from '$lib/expressions/ExpressionSummaryRow.svelte';
+	import type { ContractRowFull } from '$lib/types/types';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	let draftExpressions: any;
+	export let contract: ContractRowFull;
+	export let expressionComponentName: string;
 
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-		const resp = await fetch(`/user/${$page.data.session.id}/expressions`, { method: 'POST' });
+		const resp = await fetch(`/user/${$page.data.profile.username}/expressions`, {
+			method: 'POST',
+			body: JSON.stringify({ selectedContract: contract.id, expressionComponentName })
+		});
 		if (resp.ok) {
 			const { draft_expressions } = await resp.json();
 			draftExpressions = draft_expressions;

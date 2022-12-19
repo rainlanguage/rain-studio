@@ -4059,7 +4059,7 @@ quick-lru@^5.1.1:
 "rain-metadata@https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383":
   version "0.0.0"
   resolved "https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383"
-  
+
 "rain-sdk@git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a":
   version "2.1.2-beta"
   resolved "git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
@@ -4067,9 +4067,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#d0ee1bb73d3dfcebc2cf1ef4d0d9d4c3d697f260":
+"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#c6ddf08099cade8c4bfd943f712e5c069d663699":
   version "0.0.1"
-  resolved "https://github.com/beehive-innovation/rain-svelte-components#d0ee1bb73d3dfcebc2cf1ef4d0d9d4c3d697f260"
+  resolved "https://github.com/beehive-innovation/rain-svelte-components#c6ddf08099cade8c4bfd943f712e5c069d663699"
   dependencies:
     "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#e17dc1d8a0b19c43be59907f6b02bccd51acf707"
     "@formkit/auto-animate" "^1.0.0-beta.3"
