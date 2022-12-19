@@ -5,7 +5,8 @@
 	import { afterUpdate, onMount } from 'svelte';
 	import Nav from '$lib/Nav.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
-
+	import * as Sentry from '@sentry/svelte';
+	import { BrowserTracing } from '@sentry/tracing';
 	import ModalLinkAddress from '$lib/connected-table/ModalLinkAddress.svelte';
 	import { signerAddress, connected } from 'svelte-ethers-store';
 	import {
@@ -27,6 +28,17 @@
 	});
 
 	onMount(() => {
+		// Initialize the Sentry SDK here
+		Sentry.init({
+			dsn: 'https://e384ab07b25a4be9afb4ed541f52c95a@o4504335130689536.ingest.sentry.io/4504335132393472',
+			integrations: [new BrowserTracing()],
+
+			// Set tracesSampleRate to 1.0 to capture 100%
+			// of transactions for performance monitoring.
+			// We recommend adjusting this value in production
+			tracesSampleRate: 1.0
+		});
+
 		const {
 			data: { subscription }
 		} = supabaseClient.auth.onAuthStateChange(() => {
