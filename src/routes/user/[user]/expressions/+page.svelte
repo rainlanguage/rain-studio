@@ -204,6 +204,7 @@
 											removeExpression(expression.id);
 										}}
 										on:saved={refresh}
+										on:visibilyChanged={refresh}
 									/>
 								</div>
 							{/each}

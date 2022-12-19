@@ -8,23 +8,53 @@
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import ViewTags from '$lib/ViewTags.svelte';
-	import { DocumentDuplicate, Pencil } from '@steeze-ui/heroicons';
-	import { Button } from 'rain-svelte-components/package';
+	import { DocumentDuplicate, Pencil, LockOpen, LockClosed, Heart } from '@steeze-ui/heroicons';
+	import { Button, HoverTooltip } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
+	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import SocialButton from '$lib/SocialButton.svelte';
+	import { supabaseClient } from '$lib/supabaseClient';
 
 	$: expression = $page.data.expression;
 	$: user = $page.data.expression.user_id;
 	$: contract = $page.data.expression.contract;
 	$: interpreter = $page.data.expression.interpreter;
 	$: tags = $page.data.expression?.tags;
+	$: userLike = $page.data.expression?.userLike;
 
+	let session = $page.data.session;
 	let openNewExpModal: boolean = false;
 	let openSignInModal: boolean = false;
+	let changeVisiblityModal: boolean = false;
 
 	const fork = () => {
-		if ($page.data.session) {
+		if (session) {
 			openNewExpModal = true;
+		} else {
+			openSignInModal = true;
+		}
+	};
+
+	const clickLike = async () => {
+		if (session) {
+			if (userLike) {
+				const { error } = await supabaseClient
+					.from('starred')
+					.delete()
+					.eq('user_id', session.user.id)
+					.eq('foreign_key', expression.id);
+
+				if (!error) userLike = false;
+			} else {
+				const { error } = await supabaseClient.from('starred').insert({
+					starred: 'draft_expression',
+					foreign_key: expression.id
+				});
+
+				if (!error) userLike = true;
+			}
 		} else {
 			openSignInModal = true;
 		}
@@ -35,7 +65,18 @@
 	<div class="w-full flex justify-between items-center container mx-auto">
 		<div class="flex flex-col gap-y-2">
 			<span class="text-sm text-gray-500">Draft expression</span>
-			<span class="text-2xl font-medium">{expression.name}</span>
+			<div class="flex gap-x-1.5">
+				<span class="text-2xl font-medium">{expression.name}</span>
+				{#if session?.user.id == expression.user_id.id}
+					<div class="w-5">
+						<HoverTooltip
+							placeHolder={`This expression is ${expression.public ? 'public' : 'private'}`}
+						>
+							<Icon src={expression.public ? LockOpen : LockClosed} />
+						</HoverTooltip>
+					</div>
+				{/if}
+			</div>
 			<div class="flex items-center gap-x-2">
 				<span>Created by</span>
 				<UserAvatar url={user.avatar_url} />
@@ -44,6 +85,17 @@
 			<TimeAgo dateString={expression.created_at} />
 		</div>
 		<div class="flex gap-x-2">
+			{#if expression.public && expression.user_id.id != session?.user.id}
+				<SocialButton
+					icon={Heart}
+					iconSize={'16'}
+					classes={'border rounded-[10px] border-neutral-300 px-2'}
+					isActived={userLike}
+					iconTheme={userLike ? 'solid' : ''}
+					colorActive="red"
+					on:click={clickLike}
+				/>
+			{/if}
 			<Button on:click={fork} size="small" variant="transparent" icon={DocumentDuplicate}
 				>Fork</Button
 			>
@@ -56,6 +108,17 @@
 					variant="transparent"
 					icon={Pencil}>Edit</Button
 				>
+			{/if}
+			{#if $page.data.session?.user.id == expression.user_id.id}
+				<Button
+					on:click={() => {
+						changeVisiblityModal = true;
+					}}
+					size="small"
+					variant="transparent"
+					icon={expression.public ? LockClosed : LockOpen}
+					>Make {expression.public ? 'private' : 'public'}
+				</Button>
 			{/if}
 		</div>
 	</div>
@@ -81,6 +144,14 @@
 		</div>
 	</div>
 </div>
+
+<ModalChangeVisibilty
+	{expression}
+	bind:isOpen={changeVisiblityModal}
+	on:visibilyChanged={() => {
+		expression.public = !expression.public;
+	}}
+/>
 
 <Modal bind:open={openNewExpModal}>
 	<ForkExpression {expression} />

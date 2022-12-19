@@ -8,10 +8,12 @@
 		Eye,
 		PaperAirplane,
 		Pencil,
-		QuestionMarkCircle
+		QuestionMarkCircle,
+		LockClosed,
+		LockOpen
 	} from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { Button, Modal, OpDocs, ParserInput } from 'rain-svelte-components/package';
+	import { Button, Modal, OpDocs, ParserInput, HoverTooltip } from 'rain-svelte-components/package';
 	import { throttle } from 'lodash-es';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { tick } from 'svelte';
@@ -24,6 +26,7 @@
 	import SignedContext from '$lib/full-ide/SignedContext.svelte';
 	import Tags from '$lib/Tags.svelte';
 	import { copyAndEmit } from '$lib/expressions/expressions';
+	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
 
 	export let expression: ExpressionRowFull;
 	export let closeCallback: Function;
@@ -34,6 +37,7 @@
 	let name = expression.name || '';
 	let contract_expression = expression?.contract_expression;
 	let tags: string[] = expression?.tags || [];
+	let changeVisiblityModal: boolean = false;
 
 	// get from the metadata whether the expression type has a signed context
 	$: hasSignedContext = expression.contract?.metadata.expressions?.find(
@@ -134,6 +138,14 @@
 				{/if}
 			</div>
 		{/if}
+		<div class="flex gap-x-1">
+			<span class="text-gray-600 text-[14px]">
+				{expression.public ? 'Public' : 'Private'}
+			</span>
+			<div class="w-3.5 mr-3 pb-0.5">
+				<Icon src={expression.public ? LockOpen : LockClosed} />
+			</div>
+		</div>
 		{#if saving}
 			<div
 				transition:fade={{ duration: 100 }}
@@ -172,7 +184,14 @@
 				icon={PaperAirplane}
 				size="small">Share</Button
 			>
+			<Button
+				on:click={() => (changeVisiblityModal = true)}
+				variant="transparent"
+				icon={expression.public ? LockClosed : LockOpen}
+				size="small">Make {expression.public ? 'private' : 'public'}</Button
+			>
 		{/if}
+
 		<Button variant="transparent" icon={QuestionMarkCircle} size="small">Help</Button>
 	</div>
 </div>
@@ -244,3 +263,9 @@
 		}}
 	/>
 </Modal>
+
+<ModalChangeVisibilty
+	on:visibilyChanged={() => (expression.public = !expression.public)}
+	{expression}
+	bind:isOpen={changeVisiblityModal}
+/>
