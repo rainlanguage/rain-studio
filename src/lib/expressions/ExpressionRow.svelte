@@ -29,7 +29,6 @@
 				</HoverTooltip>
 			</div>
 		</div>
-
 		<TimeAgo dateString={expression.created_at} />
 		{#if expression?.tags}
 			<ViewTags tags={expression.tags} />

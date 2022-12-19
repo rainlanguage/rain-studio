@@ -19,6 +19,7 @@
 	import FilterGroup from 'rain-svelte-components/package/filter/FilterGroup.svelte';
 	import FilterSet from 'rain-svelte-components/package/filter/FilterSet.svelte';
 	import type { ContractRowFull, InterpreterRowFull } from '$lib/types/types';
+	import { everyAfter } from '$lib/utils/everyAfter';
 
 	let draftExpressions = $page.data?.draft_expressions;
 	let deployedExpressions = $page.data?.deployedExpressions;
@@ -56,17 +57,18 @@
 		label: interpreter.metadata.name,
 		value: interpreter.id
 	}));
-	let selectedInterpreter: string[] = interpreterOptions.map((interpreter) => interpreter.value);
-
+	let selectedInterpreter: string = null;
 	// tag filters
-	const tagOptions = [
-		{ label: 'All', value: 'all-tags' },
-		...tags.map((tag: string) => ({ label: tag, value: tag }))
-	];
+	const tagOptions = tags
+		? [
+				{ label: 'All', value: 'all-tags' },
+				...tags?.map((tag: string) => ({ label: tag, value: tag }))
+		  ]
+		: '';
 	let selectedTags: string[] = [];
 
 	// search value
-	let searchValue: string;
+	let searchValue: string = '';
 
 	$: getDraftExpressions(
 		selectedSortOption,
@@ -76,29 +78,31 @@
 		searchValue
 	);
 
-	const getDraftExpressions = async (
-		selectedSortOption: SortOptions,
-		selectedContract: string,
-		selectedInterpreter: string[],
-		selectedTags: string[],
-		searchValue: string
-	) => {
-		const order = selectedSortOption === SortOptions.ByOldest ? true : false;
-		const resp = await fetch(
-			`${$page.url.origin}/user/${$page.data.session?.user.id}/expressions`,
-			{
-				method: 'POST',
-				body: JSON.stringify({
-					order: ['created_at', { ascending: order }],
-					selectedContract,
-					selectedInterpreter,
-					searchValue,
-					selectedTags
-				})
-			}
-		);
-		if (resp.ok) ({ draft_expressions: draftExpressions } = await resp.json());
-	};
+	const getDraftExpressions = everyAfter(
+		async (
+			selectedSortOption: SortOptions,
+			selectedContract: string,
+			selectedInterpreter: string,
+			selectedTags: string[],
+			searchValue: string
+		) => {
+			const order = selectedSortOption === SortOptions.ByOldest ? true : false;
+			const resp = await fetch(
+				`${$page.url.origin}/user/${$page.data.session?.user.id}/expressions`,
+				{
+					method: 'POST',
+					body: JSON.stringify({
+						order: ['created_at', { ascending: order }],
+						selectedContract,
+						selectedInterpreter,
+						searchValue,
+						selectedTags
+					})
+				}
+			);
+			if (resp.ok) ({ draft_expressions: draftExpressions } = await resp.json());
+		}
+	);
 
 	const removeExpression = (id: string) => {
 		draftExpressions = draftExpressions.filter((expression: any) => expression.id !== id);
@@ -162,9 +166,15 @@
 									bind:value={selectedInterpreter}
 								/>
 							</FilterGroup>
-							<FilterGroup name="Tags">
-								<FilterSet options={tagOptions} bind:value={selectedTags} exclusiveOptions={[0]} />
-							</FilterGroup>
+							{#if tags}
+								<FilterGroup name="Tags">
+									<FilterSet
+										options={tagOptions}
+										bind:value={selectedTags}
+										exclusiveOptions={[0]}
+									/>
+								</FilterGroup>
+							{/if}
 							<div class="mt-6 flex flex-col gap-y-2">
 								<Input
 									bind:value={searchValue}
@@ -185,16 +195,18 @@
 								{/if}
 							</div>
 						</div>
-						<div use:autoAnimate class="w-3/4 gap-y-4 flex-col flex">
+						<div class="w-3/4 gap-y-4 flex-col flex">
 							{#each draftExpressions as expression (expression.id)}
-								<ExpressionSummaryRow
-									{expression}
-									on:deleted={() => {
-										removeExpression(expression.id);
-									}}
-									on:saved={refresh}
-									on:visibilyChanged={refresh}
-								/>
+								<div in:fade>
+									<ExpressionSummaryRow
+										{expression}
+										on:deleted={() => {
+											removeExpression(expression.id);
+										}}
+										on:saved={refresh}
+										on:visibilyChanged={refresh}
+									/>
+								</div>
 							{/each}
 							{#if !draftExpressions.length}
 								<span class="text-xl text-gray-600 w-full text-center pt-8">None found 🙁</span>
@@ -212,9 +224,11 @@
 				<div class="flex flex-row">
 					<div class="w-1/5" />
 					<div use:autoAnimate class="w-4/5 gap-y-4 flex-col flex">
-						{#each deployedExpressions as expression}
-							<DeployedExpressionSummaryRow {expression} />
-						{/each}
+						{#if deployedExpressions}
+							{#each deployedExpressions as expression}
+								<DeployedExpressionSummaryRow {expression} />
+							{/each}
+						{/if}
 					</div>
 				</div>
 			</div>

@@ -10,16 +10,6 @@ export const POST: RequestHandler = async (event) => {
 		.from('draft_expressions')
 		.select('*, contract ( metadata, project (name, logo_url), id ), interpreter ( metadata, id )');
 
-	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract')
-		query = query.eq('contract', selectedContract);
-	if (selectedContract === 'no-contract') query = query.is('contract', null);
-	if (selectedInterpreter) query = query.eq('interpreter', selectedInterpreter);
-	if (searchValue)
-		query = query.textSearch('name', searchValue, {
-			type: 'websearch',
-			config: 'english'
-		});
-
 	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract') query = query.eq('contract', selectedContract)
 	if (selectedContract === 'no-contract') query = query.is('contract', null)
 	if (selectedInterpreter) query = query.eq('interpreter', selectedInterpreter)
