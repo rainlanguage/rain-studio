@@ -3592,7 +3592,6 @@ minipass@^3.0.0:
   dependencies:
     yallist "^4.0.0"
 
-
 minipass@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/minipass/-/minipass-4.0.0.tgz#7cebb0f9fa7d56f0c5b17853cbe28838a8dbbd3b"
@@ -4068,9 +4067,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#c6ddf08099cade8c4bfd943f712e5c069d663699":
+"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#d0ee1bb73d3dfcebc2cf1ef4d0d9d4c3d697f260":
   version "0.0.1"
-  resolved "https://github.com/beehive-innovation/rain-svelte-components#c6ddf08099cade8c4bfd943f712e5c069d663699"
+  resolved "https://github.com/beehive-innovation/rain-svelte-components#d0ee1bb73d3dfcebc2cf1ef4d0d9d4c3d697f260"
   dependencies:
     "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#e17dc1d8a0b19c43be59907f6b02bccd51acf707"
     "@formkit/auto-animate" "^1.0.0-beta.3"
