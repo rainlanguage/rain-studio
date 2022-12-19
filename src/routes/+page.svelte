@@ -16,12 +16,6 @@
 			href="https://drive.google.com/drive/u/1/folders/1P9v5amWWPr3Pf-La9Umbfrc1OlEkqYaT"
 			>Guides for the alpha testing phase</a
 		>
-		<Button
-			on:click={() => {
-				throw new Error('errrorrrrrr');
-			}}
-			variant="primary">Make error</Button
-		>
 		{#if !$page.data.session}
 			<div class="flex gap-x-2 items-center">
 				<Button
