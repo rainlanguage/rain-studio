@@ -4,7 +4,6 @@ import { isEqual } from 'lodash-es';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async (event) => {
-	console.log(event)
 	const { order, selectedContract, selectedInterpreter, selectedTags, searchValue, expressionComponentName } = await event.request.json()
 	const { supabaseClient } = await getSupabase(event);
 	let query = supabaseClient
