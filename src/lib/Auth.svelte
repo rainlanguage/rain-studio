@@ -3,7 +3,6 @@
 	import { fly } from 'svelte/transition';
 	import { enhance } from '$app/forms';
 	import { Button } from 'rain-svelte-components/package';
-	import { refreshClient } from '$lib/supabaseClient';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import Background from '$lib/Background.svelte';
 
@@ -39,19 +38,16 @@
 
 		return async ({ result, update }) => {
 			if (result.type == 'success') {
-				// Is there a way to trigger this refreshClient (or similar) front the server? Anyway the JWT will be on visible on cookies.
-				refreshClient(result.data?._token);
+				// Update() or goto() functions does not work to the main goal here. The user had to refresh the page to be fully "logged".
+				//
+				// -- update(): This update the page and the server will be able to get the session, but the nav is not updated.
+				// -- goto('/dashboard'): This redirect to the route and update the nav only in that route. When changed to another route,
+				// the nav is not updated again.
+				//
+				// The only way that work is set directly the location
+				// @ts-ignore
+				window.location = '/dashboard';
 			}
-
-			// Update() or goto() functions does not work to the main goal here. The user had to refresh the page to be fully "logged".
-			//
-			// -- update(): This update the page and the server will be able to get the session, but the nav is not updated.
-			// -- goto('/dashboard'): This redirect to the route and update the nav only in that route. When changed to another route,
-			// the nav is not updated again.
-			//
-			// The only way that work is set directly the location
-			// @ts-ignore
-			window.location = '/dashboard';
 		};
 	};
 </script>
