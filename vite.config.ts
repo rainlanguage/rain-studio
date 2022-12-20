@@ -24,7 +24,7 @@ const config: UserConfig = {
 		deploy: {
 			env: process.env.VERCEL_ENV || 'local',
 			name: process.env.VERCEL_URL || 'local',
-			url: process.env.VERCEL_URL || 'http://localhost:8080'
+			url: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:8080'
 		}
 	}),
 	],
