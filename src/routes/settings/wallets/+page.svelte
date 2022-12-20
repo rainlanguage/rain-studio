@@ -1,38 +1,11 @@
 <script lang="ts">
 	import { signerAddress } from 'svelte-ethers-store';
 	import { page } from '$app/stores';
-	import { supabaseClient } from '$lib/supabaseClient';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
-	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
-	import { isLinked, linkedWalllets } from '$lib/connected-table';
 
-	let linkedAddresses: string[] = [];
-	let openedModal = false;
-	let addressToUnlink = '';
-
-	const searchAddresses = async () => {
-		const user = $page.data.session.user;
-
-		let { data, error } = await supabaseClient
-			.from('wallets')
-			.select('user_id, address')
-			.eq('user_id', user.id);
-
-		if (!error) {
-			linkedAddresses = data?.map((wallet) => wallet.address);
-			linkedWalllets.set(linkedAddresses);
-		}
-	};
-
-	searchAddresses();
-
-	$: if ($signerAddress || $isLinked || !openedModal) {
-		searchAddresses();
-	}
+	let linkedAddresses: string[] = $page.data.wallets_linked;
 </script>
-
-<ModalUnlinkAddress bind:openedModal address={addressToUnlink} />
 
 <div class="flex flex-col gap-y-[30px]">
 	<div class="flex flex-col gap-y-2.5">
@@ -59,15 +32,6 @@
 						<p class="font-mono text-xs tracking-[-0.01em] text-black">
 							{addressElement}
 						</p>
-						<button
-							class="text-[13px] leading-[17px] text-right tracking-[-0.01em] text-neutral-500"
-							on:click={() => {
-								openedModal = true;
-								addressToUnlink = addressElement;
-							}}
-						>
-							unlink
-						</button>
 					</div>
 				{/each}
 			{:else}

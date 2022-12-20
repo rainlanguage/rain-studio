@@ -1,9 +1,28 @@
+import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import type { LayoutServerLoad } from './$types';
-import { getServerSession } from '@supabase/auth-helpers-sveltekit';
 
 export const load: LayoutServerLoad = async (event) => {
-	const session = await getServerSession(event);
+	const { supabaseClient, session } = await getSupabase(event);
+
+	let profile = null;
+	let wallets_linked = [];
+
+	if (session) {
+		const { data } = await supabaseClient
+			.from('wallet_users')
+			.select(`*, wallets_linked(*)`)
+			.eq('id', session.user.id)
+			.single();
+
+		const { wallets_linked: wallets, ...user } = data;
+
+		profile = user;
+		wallets_linked = wallets.map((wallet_) => wallet_.address);
+	}
+
 	return {
-		session
+		session,
+		profile,
+		wallets_linked
 	};
 };
