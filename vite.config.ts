@@ -21,11 +21,11 @@ const config: UserConfig = {
 		// Optionally uncomment the line below to override automatic release name detection
 		// release: process.env.VERCEL_URL,
 
-		deploy: {
-			env: process.env.VERCEL_ENV || 'local',
-			// name: process.env.VERCEL_URL || 'local',
-			url: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:8080'
-		}
+		// deploy: {
+		// 	env: process.env.VERCEL_ENV || 'local',
+		// 	// name: process.env.VERCEL_URL || 'local',
+		// 	url: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:8080'
+		// }
 	}),
 	],
 	optimizeDeps: {
