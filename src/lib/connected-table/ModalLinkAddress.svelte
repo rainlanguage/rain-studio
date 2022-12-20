@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button, Modal } from 'rain-svelte-components/package';
-	import { createMessage, postRequest } from '$lib/utils';
+	import { createMessage, postRequest, getMessage } from '$lib/utils';
 	import { signer } from 'svelte-ethers-store';
 	import { isLinked, unwantedWallets } from '.';
 
@@ -15,28 +15,23 @@
 	let messageError = '';
 
 	const linkAddress = async () => {
-		// Get the nonce with the current address to sign the message
-		const nonceResp = await (await postRequest('/api/get_nonce', { address })).json();
-		if (!nonceResp.success) {
-			openErrorModal(nonceResp.error.message);
-			return;
-		}
+		const messageToSign = await getMessage(address);
 
-		// Sign the message
-		const messageToSign = createMessage(address, nonceResp.id);
 		const signedMessage = await $signer.signMessage(messageToSign);
 
-		// Request to link address
-		const linkResp = await (
-			await postRequest('/api/link_address', { address, signedMessage })
-		).json();
+		// TODO: Use the new way to link with form actions and allow to cancel the link (the submit) using the same form enhance
 
-		if (!linkResp.success) {
-			openErrorModal('The address could not be linked to your account.');
-			return;
-		}
+		// // Request to link address
+		// const linkResp = await (
+		// 	await postRequest('/api/link_address', { address, signedMessage })
+		// ).json();
 
-		isLinked.set(true);
+		// if (!linkResp.success) {
+		// 	openErrorModal('The address could not be linked to your account.');
+		// 	return;
+		// }
+
+		// isLinked.set(true);
 		openedModal = false;
 		modalSuccess = true;
 	};

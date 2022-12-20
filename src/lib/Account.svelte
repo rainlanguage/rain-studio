@@ -25,7 +25,7 @@
 			const { user } = session;
 
 			const { data, error, status } = await supabaseClient
-				.from('profiles')
+				.from('wallet_users')
 				.select(`username, full_name, website, avatar_url`)
 				.eq('id', user.id)
 				.single();
@@ -61,7 +61,7 @@
 				full_name: fullname
 			};
 
-			let { error } = await supabaseClient.from('profiles').upsert(updates);
+			let { error } = await supabaseClient.from('wallet_users').upsert(updates);
 
 			if (error) throw error;
 		} catch (error) {

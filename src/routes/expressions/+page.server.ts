@@ -3,12 +3,11 @@ import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-    console.log(event)
     const { supabaseClient, session } = await getSupabase(event)
     if (!session) throw redirect(307, '/sign-in')
     else {
         const { data } = await supabaseClient
-            .from('profiles')
+            .from('wallet_users')
             .select(`username`)
             .eq('id', session.user.id)
             .single();

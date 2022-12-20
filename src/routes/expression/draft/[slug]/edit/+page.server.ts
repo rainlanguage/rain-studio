@@ -19,7 +19,7 @@ export async function load(event): Promise<{ expression: ExpressionRowFull }> {
     if (query?.data?.[0].user_id !== session?.user.id) throw error(404, 'Not found')
 
     if (query?.data?.[0]) {
-        userQuery = await supabaseClient.from('profiles').select('*').filter('id', 'eq', query.data[0].user_id).single()
+        userQuery = await supabaseClient.from('wallet_users').select('*').filter('id', 'eq', query.data[0].user_id).single()
         if (query.data[0]?.contract) contractQuery = await supabaseClient.from('contracts').select('*, project (*)').filter('id', 'eq', query.data[0].contract).single()
         interpreterQuery = await supabaseClient.from('interpreters').select('*').filter('id', 'eq', query.data[0].interpreter).single()
     }

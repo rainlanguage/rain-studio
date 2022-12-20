@@ -15,7 +15,7 @@ export async function load(event) {
 
 	if (query?.data?.[0]) {
 		userQuery = await supabaseClient
-			.from('profiles')
+			.from('wallet_users')
 			.select('*')
 			.filter('id', 'eq', query.data[0].user_id)
 			.single();

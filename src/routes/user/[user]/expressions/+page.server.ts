@@ -8,7 +8,7 @@ export const load: PageServerLoad = async (event) => {
 	const { fetch, params } = event;
 	const { supabaseClient, session } = await getSupabase(event);
 	const userQuery = await supabaseClient
-		.from('profiles')
+		.from('wallet_users')
 		.select('*')
 		.eq('username', params.user)
 		.single();
