@@ -36,7 +36,7 @@ export const load: PageServerLoad = async (event) => {
 		)
 	});
 
-	const tagResp = await supabaseClient.rpc('get_unique_tags_for_user')
+	const tagResp = await supabaseClient.rpc('get_unique_tags_for_user_w')
 	if (tagResp.error) throw error(404, 'Not found');
 	const tags = tagResp.data[0]?.tags?.slice(1, -1)?.split(',')
 
