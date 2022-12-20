@@ -69,7 +69,7 @@
 	) => {
 		saving = true;
 		await supabaseClient
-			.from('draft_expressions')
+			.from('draft_expressions_w')
 			.update({ raw_expression, notes, saved_context, tags })
 			.eq('id', expression.id);
 
@@ -95,7 +95,7 @@
 	const saveName = async () => {
 		editingName = false;
 		saving = true;
-		await supabaseClient.from('draft_expressions').update({ name }).eq('id', expression.id);
+		await supabaseClient.from('draft_expressions_w').update({ name }).eq('id', expression.id);
 		setTimeout(() => {
 			saving = false;
 		}, 400);

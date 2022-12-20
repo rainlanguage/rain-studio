@@ -34,7 +34,7 @@
 			interpreter: presaveExpression.interpreter.id,
 			raw_expression: presaveExpression.raw_expression
 		};
-		const response = await supabaseClient.from('draft_expressions').insert(expression).select();
+		const response = await supabaseClient.from('draft_expressions_w').insert(expression).select();
 		if (response.status == 400) error = 'Something went wrong';
 		if (response.status == 201 && response.data) {
 			newSlug = response.data[0].sharable_slug;

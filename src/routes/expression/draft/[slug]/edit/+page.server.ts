@@ -13,7 +13,7 @@ export async function load(event): Promise<{ expression: ExpressionRowFull }> {
     const slug = event.params.slug
     let userQuery, contractQuery, interpreterQuery
 
-    const query = await supabaseClient.rpc('get_expression_by_slug', { slug }) as PostgrestSingleResponse<ExpressionRow[]>
+    const query = await supabaseClient.rpc('get_expression_by_slug_w', { slug }) as PostgrestSingleResponse<ExpressionRow[]>
 
     // if this isn't their expression, they can't access the edit page
     if (query?.data?.[0].user_id !== session?.user.id) throw error(404, 'Not found')

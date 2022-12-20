@@ -29,11 +29,11 @@ export const actions = {
 		await verifySignature(address, signature, fetch);
 		const { newCookie } = await sign(address, supabaseClient);
 
-cookies.set('supabase-auth-token', JSON.stringify(newCookie), {
-	path: '/',
-	maxAge: newCookie.expires_at,
-	httpOnly: false
-});
+		cookies.set('supabase-auth-token', JSON.stringify(newCookie), {
+			path: '/',
+			maxAge: newCookie.expires_at,
+			httpOnly: false
+		});
 
 		return { _token: newCookie.access_token };
 	}

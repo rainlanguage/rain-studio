@@ -34,7 +34,7 @@
 	};
 
 	const confirmDelete = async () => {
-		const action = await supabaseClient.from('draft_expressions').delete().eq('id', expression.id);
+		const action = await supabaseClient.from('draft_expressions_w').delete().eq('id', expression.id);
 		if (action?.error) {
 			alert(action.error);
 		} else {

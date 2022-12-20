@@ -9,7 +9,7 @@ export async function load(event) {
 	const slug = event.params.slug;
 	let userQuery, contractQuery, interpreterQuery, userLike;
 
-	const query = (await supabaseClient.rpc('get_expression_by_slug', {
+	const query = (await supabaseClient.rpc('get_expression_by_slug_w', {
 		slug
 	})) as PostgrestSingleResponse<ExpressionRow[]>;
 
