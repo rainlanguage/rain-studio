@@ -99,7 +99,7 @@
 			<Button on:click={fork} size="small" variant="transparent" icon={DocumentDuplicate}
 				>Fork</Button
 			>
-			{#if user.id == expression.user_id.id}
+			{#if session?.user.id == expression.user_id.id}
 				<Button
 					on:click={() => {
 						goto(`/expression/draft/${expression.sharable_slug}/edit`);

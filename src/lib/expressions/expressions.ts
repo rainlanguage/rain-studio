@@ -75,6 +75,7 @@ export const getDeployedExpressionsForUser = async (
     // create the final object to return
     const deployedExpressions = sgUserExpressions.map((expression: any) => ({
         sg: { ...expression },
+        created_at: expression.event.timestamp * 1000,
         stateConfig: expression?.event?.expression?.config,
         interpreter: matchedInterpreters.find(
             (interpreter: any) =>
