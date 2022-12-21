@@ -8,7 +8,8 @@ export const POST: RequestHandler = async (event) => {
 	const { supabaseClient } = await getSupabase(event);
 	let query = supabaseClient
 		.from('draft_expressions')
-		.select('*, contract ( metadata, project (name, logo_url), id ), interpreter ( metadata, id )');
+		.select('*, contract ( metadata, project (name, logo_url), id ), interpreter ( metadata, id )')
+		.eq('user_id', event.params.user);
 
 	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract')
 		query = query.eq('contract', selectedContract);
