@@ -1,35 +1,15 @@
 <script lang="ts">
 	import { signerAddress } from 'svelte-ethers-store';
 	import { page } from '$app/stores';
-	import { supabaseClient } from '$lib/supabaseClient';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
 	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
-	import { isLinked, linkedWalllets } from '$lib/connected-table';
+	import { HoverTooltip } from 'rain-svelte-components/package';
 
-	let linkedAddresses: string[] = [];
 	let openedModal = false;
 	let addressToUnlink = '';
 
-	const searchAddresses = async () => {
-		const user = $page.data.session.user;
-
-		let { data, error } = await supabaseClient
-			.from('wallets')
-			.select('user_id, address')
-			.eq('user_id', user.id);
-
-		if (!error) {
-			linkedAddresses = data?.map((wallet) => wallet.address);
-			linkedWalllets.set(linkedAddresses);
-		}
-	};
-
-	searchAddresses();
-
-	$: if ($signerAddress || $isLinked || !openedModal) {
-		searchAddresses();
-	}
+	$: linkedAddresses = $page.data.wallets_linked;
 </script>
 
 <ModalUnlinkAddress bind:openedModal address={addressToUnlink} />
@@ -51,7 +31,7 @@
 			>Linked wallets</span
 		>
 		<div class="w-full flex flex-col items-start px-[10px]">
-			{#if linkedAddresses.length > 0}
+			{#if linkedAddresses?.length > 0}
 				{#each linkedAddresses as addressElement}
 					<div
 						class="w-full flex flex-row justify-between items-center py-[10px] gap-[10px] border-b-[1px] last:border-0"
@@ -59,15 +39,26 @@
 						<p class="font-mono text-xs tracking-[-0.01em] text-black">
 							{addressElement}
 						</p>
-						<button
-							class="text-[13px] leading-[17px] text-right tracking-[-0.01em] text-neutral-500"
-							on:click={() => {
-								openedModal = true;
-								addressToUnlink = addressElement;
-							}}
-						>
-							unlink
-						</button>
+						{#if linkedAddresses?.length > 1}
+							<button
+								class="text-[13px] leading-[17px] text-right tracking-[-0.01em] text-neutral-500"
+								on:click={() => {
+									openedModal = true;
+									addressToUnlink = addressElement;
+								}}
+							>
+								unlink
+							</button>
+						{:else}
+							<HoverTooltip placeHolder="Cannot delete last address">
+								<button
+									class="text-[13px] leading-[17px] text-right tracking-[-0.01em] text-neutral-500"
+									disabled
+								>
+									unlink
+								</button>
+							</HoverTooltip>
+						{/if}
 					</div>
 				{/each}
 			{:else}

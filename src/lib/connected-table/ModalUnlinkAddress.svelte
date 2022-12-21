@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { Button, Modal } from 'rain-svelte-components/package';
 	import { signerAddress } from 'svelte-ethers-store';
-	import { supabaseClient } from '$lib/supabaseClient';
-	import { isLinked, unwantedWallets } from './';
-
+	import { isLinked, unwantedWallets } from '$lib/connected-table';
+	import { enhance } from '$app/forms';
 	import CommonModal from '$lib/CommonModal.svelte';
 	import { ExclamationCircle, CheckCircle } from '@steeze-ui/heroicons';
+
+	// Types
+	import type { SubmitFunction } from '@sveltejs/kit/types';
 
 	export let openedModal = false;
 	export let address = '';
@@ -14,49 +16,52 @@
 	let modalError = false;
 	let messageError = '';
 
-	const unlinkAddress = async (address: string) => {
-		let resp = await supabaseClient.from('wallets').delete().eq('address', address);
-
-		if (resp?.error) {
-			openErrorModal('The address could not be deleted from your profile.');
-			// alert('The address could not be deleted from your profile.');
-		} else if ($signerAddress == address) {
-			isLinked.set(false);
-
-			// Since was recently unlinked, this avoit show the link modal with this address until the session finish
-			if (!$unwantedWallets.includes(address)) {
-				$unwantedWallets.push(address);
+	const submitFunction: SubmitFunction = async () => {
+		return async ({ result, update }) => {
+			openedModal = false;
+			if (result.type == 'success') {
+				// Since was recently unlinked, this avoit show the link modal with this address until the session finish
+				if (!$unwantedWallets.includes(address)) $unwantedWallets.push(address);
+				if ($signerAddress == address) isLinked.set(false);
+				modalSuccess = true;
+			} else if (result.type == 'failure') {
+				modalError = true;
+				messageError = result.data?.message ?? 'Something happened, try again';
+			} else if (result.type == 'error') {
+				// An unexpected error happened
+				console.log(result.error);
 			}
-		}
-
-		openedModal = false;
-		modalSuccess = true;
-	};
-
-	const openErrorModal = (errorMessag_: string) => {
-		messageError = errorMessag_;
-		openedModal = false;
-		modalError = true;
+			update();
+		};
 	};
 </script>
 
 <Modal bind:open={openedModal}>
-	<div class="flex flex-col gap-5">
+	<form
+		method="POST"
+		action="/settings/wallets?/unlinkAddress"
+		class="flex flex-col gap-5"
+		use:enhance={submitFunction}
+	>
 		<div class="flex flex-col gap-2.5">
 			<p class="text-[25px]">Are you sure you want to unlink this wallet?</p>
 			<p>If you change your mind, you will be able to relink it again.</p>
 		</div>
+
 		<div class="flex gap-3.5">
-			<Button variant="primary" on:click={() => unlinkAddress(address)}>Unlink</Button>
-			<Button variant="black" on:click={() => (openedModal = false)}>Cancel</Button>
+			<input hidden name="address" bind:value={address} class="p-2 bg-gray-300 rounded-[10px]" />
+			<div class="flex gap-3.5">
+				<Button type="submit" variant="primary">Unlink</Button>
+				<Button type="button" variant="black" on:click={() => (openedModal = false)}>Cancel</Button>
+			</div>
 		</div>
-	</div>
+	</form>
 </Modal>
 
 <!-- Modal success -->
 <CommonModal
 	bind:open={modalSuccess}
-	message="The address has been removed from this account."
+	message="The address has been removed from this account"
 	icon={CheckCircle}
 	iconColor="text-green-500"
 />

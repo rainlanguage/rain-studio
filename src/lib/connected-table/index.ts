@@ -8,6 +8,11 @@ export enum SearchStatus {
 }
 
 /**
+ * Save if an address that was already use to find a match (the latest address used)
+ */
+export const alreadySearched: Writable<string> = writable();
+
+/**
  * Flag that represent the current status of the search address.
  * NOTE: It will be reset after sign out.
  */

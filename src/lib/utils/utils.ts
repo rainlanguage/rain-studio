@@ -19,3 +19,20 @@ export const postRequest = (url_: string, data_: Record<string, unknown> = {}) =
 		}
 	});
 };
+
+/**
+ * Function that wrap the fetch to only ask for the message based on the address.
+ */
+export const getMessage = async (address_: string) => {
+	const resp = await fetch(`/api/auth/request_message`, {
+		method: 'POST',
+		body: JSON.stringify({
+			address: address_
+		})
+	});
+
+	if (!resp.ok) {
+		throw new Error('It was not possible to create the message');
+	}
+	return (await resp.json()).message;
+};

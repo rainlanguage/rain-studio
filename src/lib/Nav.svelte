@@ -31,19 +31,6 @@
 		if (relatedTarget instanceof HTMLElement && currentTarget.contains(relatedTarget)) return;
 		profileMenuOpen = false;
 	};
-
-	async function signOut() {
-		try {
-			let { error } = await supabaseClient.auth.signOut();
-			if (error) throw error;
-			goto('/');
-		} catch (error) {
-			if (error instanceof Error) {
-				alert(error.message);
-			}
-		} finally {
-		}
-	}
 </script>
 
 <div
@@ -88,9 +75,9 @@
 				class="text-black nav-link">Sign in</a
 			>
 			<a
-				href="/sign-up"
+				href="/sign-in"
 				on:click={() => {
-					goto('/sign-up');
+					goto('/sign-in');
 				}}
 				class="p-1 px-2 -ml-2 border border-black rounded-lg text-black">Sign Up</a
 			>
@@ -105,7 +92,7 @@
 			<span class="text-red-400">[Alpha version]</span>
 			<div class="relative flex flex-col items-center" on:focusout={handleDropdownFocusLoss}>
 				<button on:click={openProfileMenu}>
-					<UserAvatar url={$page.data.profile.avatar_url} />
+					<UserAvatar url={$page.data.profile?.avatar_url} />
 				</button>
 				{#if profileMenuOpen}
 					<div
@@ -114,7 +101,7 @@
 					>
 						<a href="/settings/profile" class="profile-link">Profile</a>
 						<div class="border-t border-gray-200" />
-						<a href={`/user/${$page.data.profile.username}/expressions`} class="profile-link"
+						<a href={`/user/${$page.data.profile?.username}/expressions`} class="profile-link"
 							>Expressions</a
 						>
 						<!-- <a class="profile-link">Deployments</a> -->
@@ -131,8 +118,18 @@
 							</div>
 						{/if}
 						<div class="border-t border-gray-200" />
+						<a
+							href="/sign-out"
+							class="profile-link"
+							on:click|preventDefault={() => {
+								// @ts-ignore
+								window.location = '/sign-out';
 
-						<div on:click={signOut} class="profile-link">Sign out</div>
+								// goto() function does not work. The cookies are deleted, but the session still there in $page.data
+								// goto('/sign-out');
+							}}
+							>Sign out
+						</a>
 					</div>
 				{/if}
 			</div>

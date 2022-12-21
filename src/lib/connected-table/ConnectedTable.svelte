@@ -1,14 +1,19 @@
 <script lang="ts">
-	import { Button, Ring, DisplayAddress } from 'rain-svelte-components/package';
+	import { Button, Ring, DisplayAddress, HoverTooltip } from 'rain-svelte-components/package';
 	import { signerAddress, connected, allChainsData, chainId } from 'svelte-ethers-store';
 	import { page } from '$app/stores';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
 	import ModalLinkAddress from '$lib/connected-table/ModalLinkAddress.svelte';
-	import { isLinked, isLinkedToOther, SearchStatus, currentSearchStatus } from './';
+	import {
+		isLinked,
+		isLinkedToOther,
+		SearchStatus,
+		currentSearchStatus,
+		alreadySearched
+	} from './';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowUpRight } from '@steeze-ui/heroicons';
-
 	// When size is small, hide the Connect Button/Unlink
 	export let size: 'normal' | 'small' = 'normal';
 
@@ -17,30 +22,40 @@
 	let openedModalLink = false;
 
 	const searchAddress = async () => {
-		loading = true;
-		currentSearchStatus.set(SearchStatus.Searching);
+		if ($alreadySearched !== $signerAddress) {
+			// Save the address to avoid researching same address. Allow to search again when the account is changed.
+			alreadySearched.set($signerAddress);
 
-		const user = $page.data?.session?.user;
+			if ($page.data.wallets_linked.includes($signerAddress)) {
+				// It's linked to his account
+				isLinked.set(true);
+				isLinkedToOther.set(false);
+			} else {
+				// Search if it's linked to another account or it's available to link this to this acc
+				currentSearchStatus.set(SearchStatus.Searching);
+				loading = true;
 
-		let { data, error } = await supabaseClient
-			.from('wallets')
-			.select('user_id')
-			.eq('address', $signerAddress)
-			.single();
+				let { data, error } = await supabaseClient
+					.from('wallets_linked')
+					.select('user_id')
+					.eq('address', $signerAddress);
 
-		if (error) {
-			isLinked.set(false);
-			isLinkedToOther.set(false);
-		} else if (user?.id !== data?.user_id) {
-			isLinked.set(false);
-			isLinkedToOther.set(true);
-		} else {
-			isLinked.set(true);
-			isLinkedToOther.set(false);
+				if (error || (data && !data.length)) {
+					isLinked.set(false);
+					isLinkedToOther.set(false);
+				} else {
+					isLinked.set(false);
+					isLinkedToOther.set(true);
+				}
+
+				loading = false;
+				currentSearchStatus.set(SearchStatus.Finished);
+			}
 		}
+	};
 
-		loading = false;
-		currentSearchStatus.set(SearchStatus.Finished);
+	const openLinkModal = () => {
+		openedModalLink = true;
 	};
 
 	$: networkName = allChainsData.find((_chain) => _chain.chainId == $chainId)?.name;
@@ -79,19 +94,29 @@
 				{#if loading}
 					<Ring size="44px" color="#cbd5e1" />
 				{:else if $isLinked}
-					<Button variant="black" on:click={() => (openedModalUnlink = true)}
-						>Unlink this wallet</Button
-					>
+					{#if $page.data.wallets_linked?.length > 1}
+						<Button variant="black" on:click={() => (openedModalUnlink = true)}
+							>Unlink this wallet</Button
+						>
+					{:else}
+						<HoverTooltip placeHolder="Cannot delete last address">
+							<Button variant="black" disabled>Unlink this wallet</Button>
+						</HoverTooltip>
+					{/if}
+				{:else if $isLinkedToOther}
+					<HoverTooltip placeHolder="This wallet is linked to other account">
+						<div>
+							<Button variant="black" disabled on:click={openLinkModal}>Link this wallet</Button>
+						</div>
+					</HoverTooltip>
 				{:else}
 					<div>
-						<Button variant="black" on:click={() => (openedModalLink = true)}
-							>Link this wallet</Button
-						>
+						<Button variant="black" on:click={openLinkModal}>Link this wallet</Button>
 					</div>
 				{/if}
 			</div>
-		{:else if !$isLinked && !loading}
-			<button class="flex items-center gap-x-1" on:click={() => (openedModalLink = true)}>
+		{:else if !$isLinked && !$isLinkedToOther && !loading}
+			<button class="flex items-center gap-x-1" on:click={openLinkModal}>
 				<p class="text-[13px] leading-[17px] tracking-[-0.01em] text-neutral-600">
 					Link this wallet
 				</p>

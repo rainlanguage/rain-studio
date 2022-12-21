@@ -9,13 +9,13 @@ export async function load(event) {
 	const slug = event.params.slug;
 	let userQuery, contractQuery, interpreterQuery, userLike;
 
-	const query = (await supabaseClient.rpc('get_expression_by_slug', {
+	const query = (await supabaseClient.rpc('get_expression_by_slug_w', {
 		slug
 	})) as PostgrestSingleResponse<ExpressionRow[]>;
 
 	if (query?.data?.[0]) {
 		userQuery = await supabaseClient
-			.from('profiles')
+			.from('wallet_users')
 			.select('*')
 			.filter('id', 'eq', query.data[0].user_id)
 			.single();

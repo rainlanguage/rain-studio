@@ -14,7 +14,7 @@
 
 	const changeVisibility = async () => {
 		const action = await supabaseClient
-			.from('draft_expressions')
+			.from('draft_expressions_w')
 			.update({ public: !expression.public })
 			.eq('id', expression.id);
 

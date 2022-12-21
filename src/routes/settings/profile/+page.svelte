@@ -3,62 +3,87 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { Button, Input } from 'rain-svelte-components/package';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { goto } from '$app/navigation';
 
-	let session = $page.data.session;
-	let profile = $page.data.profile;
+	let user = $page.data.profile;
 
-	let loading = false;
-	let username: string | null = profile.username;
-	let avatarUrl: string | null = profile.avatar_url;
+	let username: string = user?.username;
+	let avatarUrl: string | null = user?.avatar_url;
+	let fullName: string | null = user?.full_name;
+	let website: string | null = user?.website;
+
+	let updating = false;
+	let usernameInput: Input;
+
+	const usernameValidate = async (value: string) => {
+		if (user?.username.toLowerCase() == username.toLowerCase()) {
+			return;
+		}
+
+		const { data, error } = await supabaseClient
+			.from('wallet_users')
+			.select('*')
+			.eq('username', value.toLowerCase());
+
+		if (error) {
+			return { error: 'Something went wrong' };
+		}
+
+		if (data && data.length) {
+			return { error: "Username isn't available" };
+		}
+	};
 
 	async function updateProfile() {
 		try {
-			loading = true;
-			const { user } = session;
+			updating = true;
+
+			await usernameInput.validate();
+			const _username = username.toLowerCase();
 
 			const updates = {
-				id: user.id,
-				username,
+				id: user?.id,
+				username: _username,
 				avatar_url: avatarUrl,
-				updated_at: new Date()
+				full_name: fullName,
+				website: website
 			};
 
-			let { error } = await supabaseClient.from('profiles').upsert(updates);
+			let { error } = await supabaseClient.from('wallet_users').upsert(updates);
 
 			if (error) throw error;
+
+			// Update the data in the component
+			user.username = updates.username;
+			user.avatar_url = updates.avatar_url;
+			user.full_name = updates.full_name;
+			user.website = updates.website;
 		} catch (error) {
 			if (error instanceof Error) {
 				alert(error.message);
 			}
 		} finally {
-			loading = false;
+			updating = false;
 		}
 	}
 </script>
 
 <div class="flex flex-col w-max gap-y-6">
-	<form class="flex flex-col gap-y-8 w-96" on:submit|preventDefault={updateProfile}>
+	<form class="flex flex-col gap-y-4 w-96" on:submit|preventDefault={updateProfile}>
 		<div class="flex items-center gap-x-3">
 			<UserAvatar url={avatarUrl} size={70} />
 			<span>Change profile image</span>
 		</div>
-		<Input value={session.user.email} disabled>
-			<span slot="label">Email</span>
-		</Input>
-		<Input bind:value={username}>
+		<Input bind:this={usernameInput} bind:value={username} validator={usernameValidate}>
 			<svelte:fragment slot="label">Username</svelte:fragment>
 		</Input>
-		<Button variant="black" classes="self-start" disabled={loading}
-			>{loading ? 'Loading...' : 'Update'}</Button
-		>
+
+		<Input bind:value={fullName}>
+			<span slot="label">Full name</span>
+		</Input>
+		<Input bind:value={website}>
+			<span slot="label">Website</span>
+		</Input>
+
+		<Button variant="black" classes="self-start">{updating ? 'Updating...' : 'Update'}</Button>
 	</form>
-	<Button
-		variant="transparent"
-		size="small"
-		classes="self-start"
-		on:click={() => {
-			goto('/request-reset');
-		}}>Reset password</Button
-	>
 </div>

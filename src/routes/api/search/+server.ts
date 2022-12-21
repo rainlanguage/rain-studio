@@ -199,7 +199,7 @@ const queryNameContractDB = async (name: string, supabaseClient_: any) => {
 
 const queryNameExpressionDB = async (name: string, supabaseClient_: any) => {
 	const { error, data } = await supabaseClient_
-		.from('draft_expressions')
+		.from('draft_expressions_w')
 		.select('id, name')
 		// .select('*, user_id(*), interpreter(*)')
 		.textSearch('name', name);

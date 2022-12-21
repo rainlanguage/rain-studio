@@ -16,7 +16,7 @@ export const createNewExpression = async (expression: Omit<Database['public']['T
 }
 export const saveExpression = async (expression: Database['public']['Tables']['draft_expressions']['Insert']): Promise<PostgrestSingleResponse<ExpressionRow>> => {
     const newExpression = await _supabaseClient
-        .from('draft_expressions')
+        .from('draft_expressions_w')
         .insert(expression)
         .select('*').single();
     return newExpression;
