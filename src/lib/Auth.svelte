@@ -38,15 +38,7 @@
 
 		return async ({ result, update }) => {
 			if (result.type == 'success') {
-				// Update() or goto() functions does not work to the main goal here. The user had to refresh the page to be fully "logged".
-				//
-				// -- update(): This update the page and the server will be able to get the session, but the nav is not updated.
-				// -- goto('/dashboard'): This redirect to the route and update the nav only in that route. When changed to another route,
-				// the nav is not updated again.
-				//
-				// The only way that work is set directly the location
-				// @ts-ignore
-				window.location = '/dashboard';
+				update();
 			}
 		};
 	};
