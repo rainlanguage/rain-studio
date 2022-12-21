@@ -76,7 +76,7 @@ async function sign(address_: string, supabase_: TypedSupabaseClient) {
 	user = resp.data?.user;
 
 	if (resp.error) {
-		// Since it's sign in - Create a new user with this wallet and a random Username
+		// Since it's sign up - Create a new user with this wallet and a random Username
 		const username_ = generateUsername('', 6).toLowerCase();
 		const respNewUser = await supabase_.rpc('new_user_from_address', {
 			address_,
