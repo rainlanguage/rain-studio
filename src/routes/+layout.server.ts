@@ -14,10 +14,12 @@ export const load: LayoutServerLoad = async (event) => {
 			.eq('id', session.user.id)
 			.single();
 
-		const { wallets_linked: wallets, ...user } = data;
-
-		profile = user;
-		wallets_linked = wallets.map((wallet_) => wallet_.address);
+		if (data) {
+			const { wallets_linked: wallets, ...user } = data;
+			profile = user;
+			wallets_linked = wallets.map((wallet_) => wallet_.address);
+			_session = session;
+		}
 	}
 
 	return {

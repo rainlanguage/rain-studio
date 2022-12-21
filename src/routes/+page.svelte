@@ -20,11 +20,6 @@
 			<div class="flex gap-x-2 items-center">
 				<Button
 					on:click={() => {
-						goto('/sign-up');
-					}}
-					variant="primary">Sign Up</Button
-				> or <Button
-					on:click={() => {
 						goto('/sign-in');
 					}}
 					variant="primary">Sign In</Button

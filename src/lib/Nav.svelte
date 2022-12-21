@@ -72,14 +72,7 @@
 				on:click={() => {
 					goto('/sign-in');
 				}}
-				class="text-black nav-link">Sign in</a
-			>
-			<a
-				href="/sign-in"
-				on:click={() => {
-					goto('/sign-in');
-				}}
-				class="p-1 px-2 -ml-2 border border-black rounded-lg text-black">Sign Up</a
+				class="p-1 px-2 -ml-2 border border-black rounded-lg text-black">Sign In</a
 			>
 		{:else}
 			<!-- <a
