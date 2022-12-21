@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { Button, Modal } from 'rain-svelte-components/package';
-	import { createMessage, postRequest, getMessage } from '$lib/utils';
+	import { getMessage } from '$lib/utils';
 	import { signer } from 'svelte-ethers-store';
-	import { isLinked, unwantedWallets } from '.';
-
-	import CommonModal from '$lib/CommonModal.svelte';
+	import { isLinked, unwantedWallets } from '$lib/connected-table';
+	import { enhance } from '$app/forms';
 	import { ExclamationTriangle, CheckCircle } from '@steeze-ui/heroicons';
+	import CommonModal from '$lib/CommonModal.svelte';
+
+	// Types
+	import type { SubmitFunction } from '@sveltejs/kit/types';
 
 	export let openedModal = false;
 	export let address = '';
@@ -14,26 +17,39 @@
 	let modalError = false;
 	let messageError = '';
 
-	const linkAddress = async () => {
+	const submitFunction: SubmitFunction = async ({ data, cancel }) => {
 		const messageToSign = await getMessage(address);
+		let signedMessage = '';
+		try {
+			signedMessage = await $signer.signMessage(messageToSign);
+		} catch (error) {
+			// Search for this error instances (?).
+			//@ts-expect-error
+			if (error.code == 'ACTION_REJECTED') {
+				openedModal = false;
+				modalError = true;
+				messageError = 'Request cancelled: It is necessary to sign with the address';
+			}
+			cancel();
+		}
 
-		const signedMessage = await $signer.signMessage(messageToSign);
+		data.set('signature', signedMessage);
 
-		// TODO: Use the new way to link with form actions and allow to cancel the link (the submit) using the same form enhance
-
-		// // Request to link address
-		// const linkResp = await (
-		// 	await postRequest('/api/link_address', { address, signedMessage })
-		// ).json();
-
-		// if (!linkResp.success) {
-		// 	openErrorModal('The address could not be linked to your account.');
-		// 	return;
-		// }
-
-		// isLinked.set(true);
-		openedModal = false;
-		modalSuccess = true;
+		return async ({ result, update }) => {
+			openedModal = false;
+			if (result.type == 'success') {
+				isLinked.set(true);
+				modalSuccess = true;
+			} else if (result.type == 'failure') {
+				// The action failed. Like a verification
+				modalError = true;
+				messageError = result.data?.message ?? 'Something happened, try again';
+			} else if (result.type == 'error') {
+				// An unexpected error happened (server side or something else)
+				console.log(result.error);
+			}
+			update();
+		};
 	};
 
 	const closeMainModal = () => {
@@ -43,25 +59,26 @@
 
 		openedModal = false;
 	};
-
-	const openErrorModal = (errorMessag_: string) => {
-		messageError = errorMessag_;
-		openedModal = false;
-		modalError = true;
-	};
 </script>
 
 <Modal bind:open={openedModal}>
-	<div class="flex flex-col gap-5 w-min">
+	<form
+		method="POST"
+		action="/settings/wallets?/linkAddress"
+		class="flex flex-col gap-5 w-min"
+		use:enhance={submitFunction}
+	>
 		<div class="flex flex-col gap-2.5 w-fit">
 			<p class="text-[25px]">The connected wallet is not linked to your account.</p>
 			<p class="font-mono">{address}</p>
 		</div>
+
 		<div class="flex gap-3.5">
-			<Button variant="primary" on:click={linkAddress}>Link wallet</Button>
-			<Button variant="black" on:click={closeMainModal}>Cancel</Button>
+			<input hidden name="address" bind:value={address} class="p-2 bg-gray-300 rounded-[10px]" />
+			<Button type="submit" variant="primary">Link wallet</Button>
+			<Button type="button" variant="black" on:click={closeMainModal}>Cancel</Button>
 		</div>
-	</div>
+	</form>
 </Modal>
 
 <!-- Modal success -->

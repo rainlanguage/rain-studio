@@ -32,7 +32,6 @@
 				isLinkedToOther.set(false);
 			} else {
 				// Search if it's linked to another account or it's available to link this to this acc
-				const user = $page.data?.session?.user;
 				currentSearchStatus.set(SearchStatus.Searching);
 				loading = true;
 
@@ -95,12 +94,15 @@
 				{#if loading}
 					<Ring size="44px" color="#cbd5e1" />
 				{:else if $isLinked}
-					<!-- TODO: Add support to unlink wallets. Maybe set an primary wallet OR allow unlink wallets until only one is remaining -->
-					<HoverTooltip placeHolder="Unlink wallets is not supported yet">
-						<Button variant="black" disabled on:click={() => (openedModalUnlink = true)}
+					{#if $page.data.wallets_linked?.length > 1}
+						<Button variant="black" on:click={() => (openedModalUnlink = true)}
 							>Unlink this wallet</Button
 						>
-					</HoverTooltip>
+					{:else}
+						<HoverTooltip placeHolder="Cannot delete last address">
+							<Button variant="black" disabled>Unlink this wallet</Button>
+						</HoverTooltip>
+					{/if}
 				{:else if $isLinkedToOther}
 					<HoverTooltip placeHolder="This wallet is linked to other account">
 						<div>
