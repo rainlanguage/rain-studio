@@ -6,7 +6,7 @@
 	import { DocumentDuplicate, Eye } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
-	import { Formatter } from '@beehiveinnovation/rainlang';
+	import { Formatter } from '@rainprotocol/rainlang';
 	import { goto } from '$app/navigation';
 
 	export let expression: any;
