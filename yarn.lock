@@ -784,6 +784,20 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
+"@rainprotocol/interpreter-ts@https://github.com/rainprotocol/interpreter-ts.git#a7e3257dc121729884d17bd141c2682c451d2510":
+  version "0.0.0"
+  resolved "https://github.com/rainprotocol/interpreter-ts.git#a7e3257dc121729884d17bd141c2682c451d2510"
+  dependencies:
+    ethers "^5.7.2"
+    prettier "^2.7.1"
+
+"@rainprotocol/rainlang@https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1":
+  version "1.0.0"
+  resolved "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
+  dependencies:
+    ethers "^5.7.2"
+    prettier "^2.7.1"
+
 "@rollup/pluginutils@^4.0.0":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.2.1.tgz#e6c6c3aba0744edce3fb2074922d3776c0af2a6d"
@@ -4286,9 +4300,9 @@ quick-lru@^5.1.1:
   version "0.0.0"
   resolved "git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
 
-"rain-metadata@https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383":
+"rain-metadata@https://github.com/rainprotocol/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383":
   version "0.0.0"
-  resolved "https://github.com/beehive-innovation/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383"
+  resolved "https://github.com/rainprotocol/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383"
 
 "rain-sdk@git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a":
   version "2.1.2-beta"
@@ -4297,13 +4311,14 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/beehive-innovation/rain-svelte-components#95c687f0e5f9dfeffb59195a1821fc9a705ec2c1":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#ae92fe57b908606fb1d32b92f97f1f456171d8d0":
   version "0.0.1"
-  resolved "https://github.com/beehive-innovation/rain-svelte-components#95c687f0e5f9dfeffb59195a1821fc9a705ec2c1"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#ae92fe57b908606fb1d32b92f97f1f456171d8d0"
   dependencies:
-    "@beehiveinnovation/rainlang" "https://github.com/beehive-innovation/rainlang#e17dc1d8a0b19c43be59907f6b02bccd51acf707"
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
+    "@rainprotocol/interpreter-ts" "https://github.com/rainprotocol/interpreter-ts.git#a7e3257dc121729884d17bd141c2682c451d2510"
+    "@rainprotocol/rainlang" "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
     "@steeze-ui/heroicons" "^2.1.0"
     "@steeze-ui/svelte-icon" "^1.3.2"
     "@types/lodash" "^4.14.186"
@@ -4311,8 +4326,8 @@ quick-lru@^5.1.1:
     ajv "^8.11.0"
     ethers "^5.7.1"
     lodash-es "^4.17.21"
-    rain-metadata "git+https://github.com/beehive-innovation/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
-    rain-sdk "git+https://github.com/beehive-innovation/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
+    rain-metadata "git+https://github.com/rainprotocol/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
+    rain-sdk "git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
     slate "^0.85.0"
     svelte-ethers-store "^2.5.8"
     svelte-slate "^0.1.62"

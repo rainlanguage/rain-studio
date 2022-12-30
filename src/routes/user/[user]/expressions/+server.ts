@@ -6,12 +6,13 @@ import type { RequestHandler } from './$types';
 export const POST: RequestHandler = async (event) => {
 	const { order, selectedContract, selectedInterpreter, selectedTags, searchValue, expressionComponentName } = await event.request.json()
 	const { supabaseClient } = await getSupabase(event);
+	console.log(event)
 	let query = supabaseClient
 		.from('draft_expressions_w')
 		.select('*, contract ( metadata, project (name, logo_url), id ), interpreter ( metadata, id )')
-    .eq('user_id', event.params.user);
+		.eq('user_id', event.params.user);
 
-
+	console.log(selectedContract)
 	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract')
 		query = query.eq('contract', selectedContract);
 	if (selectedContract === 'no-contract') query = query.is('contract', null);
@@ -27,8 +28,9 @@ export const POST: RequestHandler = async (event) => {
 	if (order) query = query.order(...order)
 
 	const { data, error } = await query;
+	// console.log(data, error)
 	if (error) throw kitError(404, 'Not found');
 	const draft_expressions = data;
-
+	// console.log(data)
 	return jsonResponse({ draft_expressions });
 };
