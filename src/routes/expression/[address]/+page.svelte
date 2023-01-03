@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Formatter as RainlangFormatter } from '@beehiveinnovation/rainlang';
+	import { Formatter as RainlangFormatter } from '@rainprotocol/rainlang';
 	import { Button, Modal } from 'rain-svelte-components/package';
 	import { page } from '$app/stores';
 	import PageHeader from '$lib/PageHeader.svelte';
@@ -11,7 +11,6 @@
 	import Auth from '$lib/Auth.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import SocialButton from '$lib/SocialButton.svelte';
-	import { Icon } from '@steeze-ui/svelte-icon';
 	import { supabaseClient } from '$lib/supabaseClient';
 
 	$: expression = $page.data.expression;

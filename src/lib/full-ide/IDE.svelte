@@ -14,6 +14,7 @@
 	} from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Button, Modal, OpDocs, ParserInput, HoverTooltip } from 'rain-svelte-components/package';
+	import SimulatedOutput from 'rain-svelte-components/package/parser/SimulatedOutput.svelte';
 	import { throttle } from 'lodash-es';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { tick } from 'svelte';
@@ -27,12 +28,16 @@
 	import Tags from '$lib/Tags.svelte';
 	import { copyAndEmit } from '$lib/expressions/expressions';
 	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
+	import type { Writable } from 'svelte/store';
+	import type { StateConfig } from 'rain-metadata/metadata-types/expression';
+	import { BigNumber } from 'ethers';
 
 	export let expression: ExpressionRowFull;
 	export let closeCallback: Function;
 	export let asModal: boolean = false;
 
 	let raw_expression = expression.raw_expression || '';
+	let vmStateConfig: Writable<StateConfig>;
 	let notes = expression.notes || '';
 	let name = expression.name || '';
 	let contract_expression = expression?.contract_expression;
@@ -56,7 +61,10 @@
 			['', '']
 		];
 	$: context = mockContext && signedContext ? [...mockContext, ...signedContext] : 0;
+	$: console.log(context);
 	$: saved_context = { mockContext, signedContext };
+
+	const testContext = [[BigNumber.from(1)]];
 
 	// for saving the exression and notes - this happens automatically as the user edits
 	let saving: boolean; // track saving state
@@ -207,12 +215,15 @@
 		<div class="flex flex-col flex-grow h-[400px] border-b border-gray-300">
 			<PanelHeader>Expression</PanelHeader>
 			<div class="flex-grow p-2 flex flex-col overflow-scroll">
-				<ParserInput bind:raw={raw_expression} />
+				<ParserInput bind:raw={raw_expression} bind:vmStateConfig />
 			</div>
 		</div>
 		<div class="flex flex-col flex-grow h-1/6 border-b border-gray-300">
 			<PanelHeader>Simulator</PanelHeader>
-			<div class="flex-grow p-2">Simulator</div>
+			<div class="p-2 overflow-y-scroll flex-grow relative">
+				<span class="text-fuchsia-800 top-2 right-2 absolute text-xs">Mumbai</span>
+				<SimulatedOutput {vmStateConfig} {context} />
+			</div>
 		</div>
 		{#if !asModal}
 			<div class="flex flex-col flex-grow h-1/3">
