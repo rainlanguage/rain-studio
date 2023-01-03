@@ -784,9 +784,9 @@
     ethers "^5.7.2"
     prettier "^2.7.1"
 
-"@rainprotocol/rainlang@https://github.com/rainprotocol/rainlang#b8a9aeed1e534838d4624ada3135dd2ec04fd69d":
+"@rainprotocol/rainlang@https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1":
   version "1.0.0"
-  resolved "https://github.com/rainprotocol/rainlang#b8a9aeed1e534838d4624ada3135dd2ec04fd69d"
+  resolved "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
   dependencies:
     ethers "^5.7.2"
     prettier "^2.7.1"
@@ -4304,14 +4304,14 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#c245b9bfacc1f88c3487e93933f68be4fad5acb3":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#ae92fe57b908606fb1d32b92f97f1f456171d8d0":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#c245b9bfacc1f88c3487e93933f68be4fad5acb3"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#ae92fe57b908606fb1d32b92f97f1f456171d8d0"
   dependencies:
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
     "@rainprotocol/interpreter-ts" "https://github.com/rainprotocol/interpreter-ts.git#a7e3257dc121729884d17bd141c2682c451d2510"
-    "@rainprotocol/rainlang" "https://github.com/rainprotocol/rainlang#b8a9aeed1e534838d4624ada3135dd2ec04fd69d"
+    "@rainprotocol/rainlang" "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
     "@steeze-ui/heroicons" "^2.1.0"
     "@steeze-ui/svelte-icon" "^1.3.2"
     "@types/lodash" "^4.14.186"

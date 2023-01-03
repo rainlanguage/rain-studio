@@ -9,9 +9,7 @@ export const POST: RequestHandler = async (event) => {
 	let query = supabaseClient
 		.from('draft_expressions_w')
 		.select('*, contract ( metadata, project (name, logo_url), id ), interpreter ( metadata, id )')
-    .eq('user_id', event.params.user);
-
-
+		.eq('user_id', event.params.user);
 	if (selectedContract && selectedContract !== 'all' && selectedContract !== 'no-contract')
 		query = query.eq('contract', selectedContract);
 	if (selectedContract === 'no-contract') query = query.is('contract', null);
@@ -29,6 +27,5 @@ export const POST: RequestHandler = async (event) => {
 	const { data, error } = await query;
 	if (error) throw kitError(404, 'Not found');
 	const draft_expressions = data;
-
 	return jsonResponse({ draft_expressions });
 };
