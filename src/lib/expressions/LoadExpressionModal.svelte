@@ -11,7 +11,6 @@
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-		console.log($page.data.session?.user.id);
 		const resp = await fetch(`/user/${$page.data.session?.user.id}/expressions`, {
 			method: 'POST',
 			body: JSON.stringify({ selectedContract: contract.id, expressionComponentName })
