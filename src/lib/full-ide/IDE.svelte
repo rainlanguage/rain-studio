@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { fade } from 'svelte/transition';
 	import PanelHeader from '$lib/full-ide/PanelHeader.svelte';
+	import { Pane, Splitpanes } from 'svelte-splitpanes';
 	import {
 		ArrowPath,
 		ArrowUturnLeft,
@@ -13,14 +14,13 @@
 		LockOpen
 	} from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { Button, Modal, OpDocs, ParserInput, HoverTooltip } from 'rain-svelte-components/package';
+	import { Button, Modal, OpDocs, ParserInput } from 'rain-svelte-components/package';
 	import SimulatedOutput from 'rain-svelte-components/package/parser/SimulatedOutput.svelte';
 	import { throttle } from 'lodash-es';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { tick } from 'svelte';
 	import type { ExpressionRowFull } from '$lib/types/types';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
-	import { toast } from '@zerodevx/svelte-toast';
 	import { goto } from '$app/navigation';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
@@ -117,7 +117,7 @@
 	let saveACopy: boolean = false;
 </script>
 
-<div class="flex justify-between border-b border-gray-300">
+<div class="flex justify-between ">
 	<div class="flex items-center">
 		<button on:click={back} class="flex gap-x-1 items-center p-3">
 			<div class="w-3">
@@ -204,64 +204,80 @@
 	</div>
 </div>
 
-<div class="w-full flex flex-grow items-stretch">
-	<div class="flex flex-col w-3/12">
-		<div class="flex flex-col gap-y-2 py-4 px-2 border-b border-gray-300">
-			<span class="text-gray-600 text-[10px] uppercase">Writing for</span>
-			<ExpressionEnv {expression} />
-		</div>
-	</div>
-	<div class="flex flex-col w-5/12 border-x border-gray-300">
-		<div class="flex flex-col flex-grow h-[400px] border-b border-gray-300">
-			<PanelHeader>Expression</PanelHeader>
-			<div class="flex-grow p-2 flex flex-col overflow-scroll">
-				<ParserInput bind:raw={raw_expression} bind:vmStateConfig />
+<Splitpanes theme="modern-theme" style="flex-grow: 1; height:1px;">
+	<Pane size={25} minSize={15}>
+		<div class="flex flex-col bg-white border-t border-gray-300">
+			<div class="flex flex-col gap-y-2 py-4 px-2 border-b border-gray-300">
+				<span class="text-gray-600 text-[10px] uppercase">Writing for</span>
+				<ExpressionEnv {expression} />
 			</div>
 		</div>
-		<div class="flex flex-col flex-grow h-1/6 border-b border-gray-300">
-			<PanelHeader>Simulator</PanelHeader>
-			<div class="p-2 overflow-y-scroll flex-grow relative">
-				<span class="text-fuchsia-800 top-2 right-2 absolute text-xs">Mumbai</span>
-				<SimulatedOutput {vmStateConfig} {context} />
-			</div>
-		</div>
-		{#if !asModal}
-			<div class="flex flex-col flex-grow h-1/3">
-				<PanelHeader>Notes</PanelHeader>
-				<div class="p-2 flex-col flex flex-grow gap-y-2">
-					<Tags bind:tags onlyUnique labelShow allowBlur labelText="Tags" />
-					<textarea
-						class="flex-grow self-stretch justify-self-stretch whitespace-pre-wrap outline-0"
-						bind:value={notes}
-					/>
+	</Pane>
+	<Pane minSize={10}>
+		<Splitpanes horizontal firstSplitter theme="modern-theme">
+			<Pane size={50} minSize={10}>
+				<div class="flex flex-col h-full">
+					<PanelHeader>Expression</PanelHeader>
+					<div class="flex-grow p-2 flex flex-col overflow-scroll min-h-0">
+						<ParserInput bind:raw={raw_expression} bind:vmStateConfig />
+					</div>
 				</div>
-			</div>
-		{/if}
-	</div>
-	<div class="flex flex-col w-4/12">
-		<div class="h-96 border-b border-gray-300">
-			<PanelHeader>Mock data</PanelHeader>
-			<div class="p-2 overflow-scroll h-full">
-				{#if contextColumns}
-					<ContextGrid {contextColumns} bind:mockContext />
-				{/if}
-				{#if hasSignedContext}
-					<SignedContext bind:signedContext />
-				{/if}
-			</div>
-		</div>
-		<div class="flex-col flex flex-grow">
-			<div class="flex-shrink">
-				<PanelHeader>Available words</PanelHeader>
-			</div>
-			<div class="flex-grow relative">
-				<div class="inset-0 absolute">
-					<OpDocs />
+			</Pane>
+			<Pane size={30} minSize={10}>
+				<div class="h-full">
+					<PanelHeader>Mock data</PanelHeader>
+					<div class="p-2 overflow-scroll h-full">
+						{#if contextColumns}
+							<ContextGrid {contextColumns} bind:mockContext />
+						{/if}
+						{#if hasSignedContext}
+							<SignedContext bind:signedContext />
+						{/if}
+					</div>
 				</div>
-			</div>
-		</div>
-	</div>
-</div>
+			</Pane>
+			{#if !asModal}
+				<Pane size={20} minSize={10}>
+					<div class="flex flex-col flex-grow h-full">
+						<PanelHeader>Notes</PanelHeader>
+						<div class="p-2 flex-col flex flex-grow gap-y-2">
+							<Tags bind:tags onlyUnique labelShow allowBlur labelText="Tags" />
+							<textarea
+								class="flex-grow self-stretch justify-self-stretch whitespace-pre-wrap outline-0"
+								bind:value={notes}
+							/>
+						</div>
+					</div>
+				</Pane>
+			{/if}
+		</Splitpanes>
+	</Pane>
+	<Pane size={25} minSize={15}>
+		<Splitpanes horizontal firstSplitter theme="modern-theme">
+			<Pane size={50} minSize={10}>
+				<div class="flex flex-col flex-grow h-full">
+					<PanelHeader>Simulator</PanelHeader>
+					<div class="p-2 overflow-y-scroll flex-grow relative">
+						<span class="text-fuchsia-800 top-2 right-2 absolute text-xs">Mumbai</span>
+						<SimulatedOutput {vmStateConfig} {context} />
+					</div>
+				</div>
+			</Pane>
+			<Pane size={50} minSize={10}>
+				<div class="flex-col flex flex-grow h-full">
+					<div class="flex-shrink">
+						<PanelHeader>Available words</PanelHeader>
+					</div>
+					<div class="flex-grow relative">
+						<div class="inset-0 absolute">
+							<OpDocs />
+						</div>
+					</div>
+				</div>
+			</Pane>
+		</Splitpanes>
+	</Pane>
+</Splitpanes>
 
 <Modal open={saveACopy}>
 	<ForkExpression
@@ -280,3 +296,43 @@
 	{expression}
 	bind:isOpen={changeVisiblityModal}
 />
+
+<style lang="postcss" global>
+	.splitpanes.modern-theme .splitpanes__pane {
+		background-color: #ffffff;
+	}
+	.splitpanes.modern-theme .splitpanes__splitter {
+		@apply bg-gray-300;
+		position: relative;
+	}
+
+	.splitpanes.modern-theme .splitpanes__splitter:before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		transition: opacity 0.4s;
+		@apply bg-blue-400;
+		opacity: 0;
+		z-index: 1;
+	}
+	.splitpanes.modern-theme .splitpanes__splitter:hover:before {
+		opacity: 1;
+	}
+	.splitpanes.modern-theme .splitpanes__splitter__active {
+		z-index: 100; /* Fix an issue of overlap fighting with a near hovered splitter */
+	}
+
+	.modern-theme.splitpanes--vertical > .splitpanes__splitter:before {
+		left: -3px;
+		right: -3px;
+		height: 100%;
+		cursor: col-resize;
+	}
+	.modern-theme.splitpanes--horizontal > .splitpanes__splitter:before {
+		top: -3px;
+		bottom: -3px;
+		width: 100%;
+		cursor: row-resize;
+	}
+</style>
