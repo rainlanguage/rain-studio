@@ -7,8 +7,6 @@ export const load: PageLoad = async ({ params }) => {
 
 	let match: { path?: string; resolver?: App.MdsvexResolver } = {};
 	for (const [path, resolver] of Object.entries(modules)) {
-		console.log('1', slugFromPath(path))
-		console.log('2', params.slug)
 		if (slugFromPath(path) === params.slug) {
 			match = { path, resolver: resolver as unknown as App.MdsvexResolver };
 			break;
@@ -18,8 +16,8 @@ export const load: PageLoad = async ({ params }) => {
 	const post = await match?.resolver?.();
 	console.log(post)
 
-	if (!post || !post.metadata.published) {
-		console.log('bad')
+	if (!post || !post.metadata?.published) {
+		console.log(post)
 		throw error(404); // Couldn't resolve the post
 	}
 

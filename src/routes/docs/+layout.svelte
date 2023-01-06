@@ -13,7 +13,7 @@
 		{/each}
 	</div>
 	<div class="self-stretch overflow-y-auto justify-self-stretch flex-grow">
-		<div class="prose pl-8 pt-8 ">
+		<div class="prose p-8 ">
 			<slot />
 		</div>
 	</div>

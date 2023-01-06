@@ -3,10 +3,8 @@ import { slugFromPath } from '$lib/utils/slugFromPath';
 
 const MAX_POSTS = 10;
 
-export const load: LayoutServerLoad = async ({ url }) => {
-	console.log(url)
+export const load: LayoutServerLoad = async (event) => {
 	const modules = import.meta.glob(`/src/docs/**/*.{md,svx,svelte.md}`);
-	console.log(modules)
 	const postPromises = Object.entries(modules).map(([path, resolver]) =>
 		resolver().then(
 			(post) =>
