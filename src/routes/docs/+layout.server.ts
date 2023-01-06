@@ -1,24 +1,66 @@
 import type { LayoutServerLoad } from './$types';
 import { slugFromPath } from '$lib/utils/slugFromPath';
-
-const MAX_POSTS = 10;
+import { forEach } from 'lodash-es';
 
 export const load: LayoutServerLoad = async (event) => {
 	const modules = import.meta.glob(`/src/docs/**/*.{md,svx,svelte.md}`);
-	const postPromises = Object.entries(modules).map(([path, resolver]) =>
+	const categoryMeta = import.meta.glob(`/src/docs/**/*.json`);
+
+	// getting and sorting the categories
+	const categoryPromises = Object.entries(categoryMeta).map(([path, resolver]) =>
 		resolver().then(
-			(post) =>
+			(meta) =>
 			({
-				slug: slugFromPath(path),
-				...(post as unknown as App.MdsvexFile).metadata
+				slug: path.split('/')[3],
+				category: meta.category
+			})
+		)
+	);
+	const categories = await Promise.all(categoryPromises);
+
+	categories.sort(function (a, b) {
+		if (a.slug < b.slug) {
+			return -1;
+		}
+		if (a.slug > b.slug) {
+			return 1;
+		}
+		return 0;
+	});
+
+	// getting and filtering the articles
+	const articlePromises = Object.entries(modules).map(([path, resolver]) =>
+		resolver().then(
+			(article) =>
+			({
+				slug: slugFromPath(path)?.split('-').slice(1).join('-'),
+				path,
+				file: path.split('/').pop(),
+				categorySlug: path.split('/')[3],
+				...(article as unknown as App.MdsvexFile).metadata,
 			})
 		)
 	);
 
-	const posts = await Promise.all(postPromises);
-	const publishedPosts = posts.filter((post) => post.published).slice(0, MAX_POSTS);
+	const articles = await Promise.all(articlePromises);
 
-	publishedPosts.sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1));
+	const publishedArticles = articles.filter((article) => article.published);
 
-	return { posts: publishedPosts };
+	// categorising and sorting the articles
+	const categorisedArticles = categories.map(category => {
+		return {
+			...category,
+			articles: publishedArticles.filter(article => article.categorySlug == category.slug).sort(function (a, b) {
+				if (a.slug < b.slug) {
+					return -1;
+				}
+				if (a.slug > b.slug) {
+					return 1;
+				}
+				return 0;
+			})
+		}
+	})
+
+	return { categorisedArticles };
 };

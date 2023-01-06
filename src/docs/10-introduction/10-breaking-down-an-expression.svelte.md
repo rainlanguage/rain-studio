@@ -1,7 +1,5 @@
 ---
-title: Breaking down an expression
-slug: breaking-down-an-expression
-position: 1
+title: Blah
 published: true
 ---
 
