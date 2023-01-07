@@ -51,10 +51,10 @@ export const load: LayoutServerLoad = async (event) => {
 		return {
 			...category,
 			articles: publishedArticles.filter(article => article.categorySlug == category.slug).sort(function (a, b) {
-				if (a.slug < b.slug) {
+				if (a.file < b.file) {
 					return -1;
 				}
-				if (a.slug > b.slug) {
+				if (a.file > b.file) {
 					return 1;
 				}
 				return 0;

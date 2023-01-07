@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { PageData } from '../$types';
+	import { page } from '$app/stores';
 	import type { SvelteComponentTyped } from 'svelte/internal';
 
-	export let data: PageData;
-
 	type C = $$Generic<typeof SvelteComponentTyped<any, any, any>>;
-	const component = data.component as unknown as C;
+	$: component = $page.data.component as unknown as C;
+	$: console.log($page.data);
 </script>
 
+<h1 class="text-3xl">{$page.data.frontmatter.title}</h1>
 <svelte:component this={component} />
