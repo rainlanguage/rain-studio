@@ -258,7 +258,6 @@
 				<div class="flex flex-col flex-grow h-full">
 					<PanelHeader>Simulator</PanelHeader>
 					<div class="p-2 overflow-y-scroll flex-grow relative">
-						<span class="text-fuchsia-800 top-2 right-2 absolute text-xs">Mumbai</span>
 						<SimulatedOutput {vmStateConfig} {context} />
 					</div>
 				</div>
