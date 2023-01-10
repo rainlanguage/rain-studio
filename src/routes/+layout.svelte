@@ -65,7 +65,7 @@
 
 <ModalLinkAddress bind:openedModal={openedModalLink} address={$signerAddress} />
 
-<div data-sveltekit-prefetch class="min-h-screen flex flex-col">
+<div data-sveltekit-prefetch class="min-h-screen flex flex-col h-1">
 	<Nav />
 	<slot />
 </div>

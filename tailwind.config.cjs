@@ -16,7 +16,7 @@ const config = {
 	},
 	darkMode: 'class',
 
-	plugins: [require('tailwind-gradient-mask-image')]
+	plugins: [require('tailwind-gradient-mask-image'), require('@tailwindcss/typography')]
 };
 
 module.exports = config;
