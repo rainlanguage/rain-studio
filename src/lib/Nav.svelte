@@ -62,6 +62,13 @@
 					goto('/expressions');
 				}}>Expressions</a
 			>
+			<a
+				href="/docs"
+				class="nav-link"
+				on:click|preventDefault={() => {
+					goto('/docs');
+				}}>Docs</a
+			>
 			<!-- <span class="nav-link">Docs</span> -->
 		</div>
 	</div>
