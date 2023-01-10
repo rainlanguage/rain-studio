@@ -785,9 +785,9 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@rainprotocol/interpreter-ts@https://github.com/rainprotocol/interpreter-ts.git#a7e3257dc121729884d17bd141c2682c451d2510":
+"@rainprotocol/interpreter-ts@https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51":
   version "0.0.0"
-  resolved "https://github.com/rainprotocol/interpreter-ts.git#a7e3257dc121729884d17bd141c2682c451d2510"
+  resolved "https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51"
   dependencies:
     ethers "^5.7.2"
     prettier "^2.7.1"
@@ -4625,13 +4625,13 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#46ca663a6db242f9467eb87f58c30284c1c58935":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#dbfe0cd47f7fa12e87a9d41b19df8afa3af7b171":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#46ca663a6db242f9467eb87f58c30284c1c58935"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#dbfe0cd47f7fa12e87a9d41b19df8afa3af7b171"
   dependencies:
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
-    "@rainprotocol/interpreter-ts" "https://github.com/rainprotocol/interpreter-ts.git#a7e3257dc121729884d17bd141c2682c451d2510"
+    "@rainprotocol/interpreter-ts" "https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51"
     "@rainprotocol/rainlang" "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
     "@steeze-ui/heroicons" "^2.1.0"
     "@steeze-ui/svelte-icon" "^1.3.2"
