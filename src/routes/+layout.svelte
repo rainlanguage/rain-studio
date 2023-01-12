@@ -1,7 +1,7 @@
 <script>
 	import '../app.postcss';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { invalidate } from '$app/navigation';
+	import { afterNavigate, beforeNavigate, invalidate } from '$app/navigation';
 	import { afterUpdate, onMount } from 'svelte';
 	import Nav from '$lib/Nav.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
@@ -17,6 +17,7 @@
 		isLinkedToOther,
 		linkedWalllets
 	} from '$lib/connected-table';
+	import Footer from '$lib/Footer.svelte';
 
 	let openedModalLink = false;
 	let _address = '';
@@ -61,6 +62,14 @@
 	) {
 		openedModalLink = true;
 	}
+
+	beforeNavigate(() => {
+		console.log('loading');
+	});
+
+	afterNavigate(() => {
+		console.log('navigated');
+	});
 </script>
 
 <ModalLinkAddress bind:openedModal={openedModalLink} address={$signerAddress} />
@@ -68,6 +77,7 @@
 <div data-sveltekit-prefetch class="min-h-screen flex flex-col h-1">
 	<Nav />
 	<slot />
+	<Footer />
 </div>
 
 <SvelteToast />

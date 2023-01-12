@@ -39,10 +39,10 @@
 	</div>
 	<div class="flex-grow h-full w-2/3">
 		{#if expression.raw_expression}
-			<Formatter raw={expression.raw_expression} />
+			<Formatter raw={expression.raw_expression} showFork={false} />
 		{/if}
 		{#if expression.stateConfig}
-			<Formatter stateConfig={expression.stateConfig} />
+			<Formatter stateConfig={expression.stateConfig} showFork={false} />
 		{/if}
 	</div>
 </div>

@@ -912,6 +912,13 @@
   dependencies:
     "@sentry/bundler-plugin-core" "0.3.0"
 
+"@splinetool/runtime@^0.9.181":
+  version "0.9.181"
+  resolved "https://registry.yarnpkg.com/@splinetool/runtime/-/runtime-0.9.181.tgz#d02070507d72657240a33d3f3a73cb2dc1683e1f"
+  integrity sha512-zKSjwL/eNYdfz2XafH1TR+lDkqNvyMZ7Sj7xo7ylmxrzC+W4W30LQ6JubIGRn6wskPKkOfZFcSquNZd+dgADxw==
+  dependencies:
+    on-change "^4.0.0"
+
 "@steeze-ui/heroicons@^2.1.0":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@steeze-ui/heroicons/-/heroicons-2.2.1.tgz#d76072b3bff535053a1a8185b1ec406d8979693d"
@@ -4240,6 +4247,11 @@ object-keys@~0.4.0:
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-0.4.0.tgz#28a6aae7428dd2c3a92f3d95f21335dd204e0336"
   integrity sha512-ncrLw+X55z7bkl5PnUvHwFK9FcGuFYo9gtjws2XtSzL+aZ8tm830P60WJ0dSmFVaSalWieW5MD7kEdnXda9yJw==
 
+on-change@^4.0.0:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/on-change/-/on-change-4.0.2.tgz#838129790f09dc2ed04284944bda6e82b92c10b8"
+  integrity sha512-cMtCyuJmTx/bg2HCpHo3ZLeF7FZnBOapLqZHr2AlLeJ5Ul0Zu2mUJJz051Fdwu/Et2YW04ZD+TtU+gVy0ACNCA==
+
 on-headers@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/on-headers/-/on-headers-1.0.2.tgz#772b0ae6aaa525c399e489adfad90c403eb3c28f"
@@ -4625,9 +4637,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#dbfe0cd47f7fa12e87a9d41b19df8afa3af7b171":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#90cf1175036c787fd2865efd6e1940e990cb9670":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#dbfe0cd47f7fa12e87a9d41b19df8afa3af7b171"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#90cf1175036c787fd2865efd6e1940e990cb9670"
   dependencies:
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
