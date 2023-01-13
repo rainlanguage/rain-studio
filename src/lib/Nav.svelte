@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import logo from './assets/rain-logo.svg';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { supabaseClient } from '$lib/supabaseClient';
@@ -10,6 +9,7 @@
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
 	import { connected } from 'svelte-ethers-store';
 	import { connectWallet } from '$lib/connect-wallet';
+	import Logo from '$lib/Logo.svelte';
 
 	let profileMenuOpen: boolean = false;
 	let addressOrText = '';
@@ -37,10 +37,7 @@
 	class="flex justify-between px-4 py-3 sticky top-0 bg-white bg-opacity-70 backdrop-blur-md border-b border-gray-200 z-20"
 >
 	<div class="flex items-center gap-x-2.5 w-max">
-		<a href="/" class="flex flex-row w-max">
-			<img alt="Rain Studio logo" class="w-7" src={logo} />
-			<span class="font-medium mr-2 ml-2.5">Rain Studio</span>
-		</a>
+		<Logo />
 		<div class="w-[345px]">
 			<form on:submit|preventDefault={searchAddressOrText}>
 				<Input placeholder="Search rain" bind:value={addressOrText} />

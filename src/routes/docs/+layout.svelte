@@ -4,9 +4,9 @@
 	export let data: PageData;
 </script>
 
-<div class="flex flex-grow min-h-0">
+<div class="flex relative">
 	<div
-		class="flex flex-col w-80 self-stretch shrink-0 border-r border-gray-300 overflow-y-auto p-8 gap-y-6"
+		class="flex flex-col w-80 border-r border-gray-300 overflow-y-auto p-8 gap-y-6 h-screen sticky top-16"
 	>
 		{#each data.categorisedArticles as { category, articles }}
 			<div class="flex flex-col gap-y-2">
@@ -17,7 +17,7 @@
 			</div>
 		{/each}
 	</div>
-	<div class="self-stretch overflow-y-auto justify-self-stretch flex-grow">
+	<div class="">
 		<div class="prose p-8 ">
 			<slot />
 		</div>
