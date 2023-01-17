@@ -24,7 +24,7 @@ To understand how the stack works in Rainlang, let's start with a simple express
 
 <Formatter raw={`myCalculation: add(1 2)`} />
 
-This expression has two inputs, 1 and 2, and one output, the result of adding 1 and 2 (i.e. 3). When this expression is executed, the interpreter takes the inputs from the stack, performs the calculation, and puts the result back into the stack. In this case,the stack will look like this after the expression is executed:
+This expression has two inputs, 1 and 2, and one output, the result of adding 1 and 2 (i.e. 3). When this expression is executed, the interpreter takes the inputs from the stack, performs the calculation, and puts the result back into the stack. In this case, the stack will look like this after the expression is executed:
 
 ```
 [3]
