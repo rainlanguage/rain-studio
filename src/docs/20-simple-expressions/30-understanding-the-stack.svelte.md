@@ -18,7 +18,7 @@ Rainlang is a stack-based programming language, which means that data and calcul
 
 This allows users to perform computations on-chain and use the results to accomplish tasks like minting, burning, or transferring tokens. Because Rainlang is stack-based, the order of operations is determined by the order in which values are pushed onto the stack, rather than the order in which they appear in the expression.
 
-## Basic operations
+## [Basic operations](#basic-operations)
 
 To understand how the stack works in Rainlang, let's start with a simple expression that calculates the sum of 1 and 2 and names the output "myCalculation":
 
