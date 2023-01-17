@@ -33,6 +33,6 @@ For example, an expression in a smart contract could be used to define the condi
 
 Rainlang is designed to be easily customizable and adaptable. This means that different implementations of Rainlang can be easily swapped out and replaced with new versions. This is useful because it allows users to choose the version of Rainlang that best suits their needs. For example, a user who is interested in security may choose to use a version of Rainlang that has been specifically designed to prioritize security.
 
-In Rainlang, the interpreter is the Contract that takes the expressions that are written in Rainlang and translates them into actions that can be executed by a Smart Contract. The Interpreter is an important part of Rainlang because it is what allows users to interact with Smart Contracts using Rainlang expressions.
+In Rainlang, the interpreter is the contract that takes the expressions that are written in Rainlang and translates them into actions that can be executed by a smart contract. The Interpreter is an important part of Rainlang because it is what allows users to interact with smart contracts using Rainlang expressions.
 
 Rainlang is extensible because it allows users to customize and modify the interpreter in order to add new features or make changes to the language. This makes Rainlang a very powerful tool because it allows users to create new and innovative expressions that can be used to interact with smart contracts in new and interesting ways
