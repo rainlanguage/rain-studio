@@ -21,7 +21,7 @@ Now you are ready to make your first calculation in the Expression section.
 
 - Expressions are saved automatically
 - You can create expressions without a contract or within a contract
-- Expressions can be edited only if you wrote them
+- Expressions can be edited only if you are the author
 - Any expression you can see, you can duplicate
 - "Save a copy" of an expression duplicates it
 - For now, please use Google Chrome as there may be issues with other browsers
