@@ -60,14 +60,6 @@ For example, the following program calculates the sum of 1 and 5, then multiplie
 <Formatter raw={`myCalculation: add(1 5),
 result: mul(myCalculation 2);`} />
 
-## Using placeholders on the left-hand side
-
-You can also use placeholders on the left-hand side of an expression instead of naming the outputs produced by the right-hand side of the expression. For example, the following expression calculates the sum of 1 and 2 and multiplies that result by 3:
-
-<Formatter raw={`_: mul(add(1 2) 3)`} />
-
-As you can see, using placeholders on the left-hand side of an expression allows you to perform calculations without naming the outputs.
-
 ## Comments
 
 You can use comments for adding notes or explanations to your code.

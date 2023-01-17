@@ -13,7 +13,7 @@ To get started, open Rain Studio in your web browser and sign in. Create new exp
 
 Rename your expression from "Untitled expression" to "My First Expression". In the notes section, add a note saying "My First Expression from Getting Started with Rain". This will help you identify and organize your expression later on.
 
-Your changes will be automatically saved. All changes in an expression from names to expression writing are saved automatically.
+Your changes will be automatically saved. All changes in an expression, from names to expression writing, are saved automatically.
 
 Now you are ready to make your first calculation in the Expression section.
 
@@ -21,7 +21,7 @@ Now you are ready to make your first calculation in the Expression section.
 
 - Expressions are saved automatically
 - You can create expressions without a contract or within a contract
-- Expressions can be edited only if you wrote them
+- Expressions can be edited only if you are the author
 - Any expression you can see, you can duplicate
 - "Save a copy" of an expression duplicates it
 - For now, please use Google Chrome as there may be issues with other browsers
