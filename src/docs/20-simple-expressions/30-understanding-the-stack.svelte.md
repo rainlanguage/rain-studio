@@ -12,13 +12,13 @@ published: true
 
 In Rainlang, the stack is a First-In-Last-Out (FILO) data structure that is used to store numeric constants and the results of calculations. In this tutorial, we'll explain how the stack works in Rainlang and how to use it to write expressions.
 
-## Overview
+## [Overview](#overview)
 
 Rainlang is a stack-based programming language, which means that data and calculations are performed using a stack. In this language, opcodes (operators) act on values that are pushed onto the stack, and the result of the operation is also pushed onto the stack. This allows for the creation of complex expressions that can be executed by an interpreter (the Rain Interpreter) implemented in a smart contract on the blockchain.
 
 This allows users to perform computations on-chain and use the results to accomplish tasks like minting, burning, or transferring tokens. Because Rainlang is stack-based, the order of operations is determined by the order in which values are pushed onto the stack, rather than the order in which they appear in the expression.
 
-## Basic operations
+## [Basic operations](#basic-operations)
 
 To understand how the stack works in Rainlang, let's start with a simple expression that calculates the sum of 1 and 2 and names the output "myCalculation":
 
