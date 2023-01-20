@@ -2,9 +2,9 @@
 	import type { InterpreterRowFull } from '$lib/types/types';
 	import { CodeBracketSquare } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { DisplayAddress } from 'rain-svelte-components/package';
 
 	export let interpreter: InterpreterRowFull;
+	console.log(interpreter);
 </script>
 
 <div class="flex gap-x-1 items-center">
