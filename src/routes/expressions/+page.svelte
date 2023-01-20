@@ -16,7 +16,7 @@
 </script>
 
 <div class="flex">
-	<div class="flex justify-end container-pl bg-gray-50 flex-shrink-0">
+	<div class="flex justify-end container-pl bg-gray-100 flex-shrink-0">
 		<div class="container-2/3 h-full pt-8 gap-y-20 flex flex-col flex-shrink-0 pr-8">
 			<div class="flex justify-between items-end">
 				<div class="flex flex-col gap-y-3">
@@ -37,7 +37,7 @@
 						<span class="px-3 py-2 leading-none bg-gray-200 rounded-xl">#{tag}</span>
 					{/each}
 				</div>
-				<div class="grid grid-cols-2">
+				<div class="grid grid-cols-2 gap-4">
 					{#each rainStarred as expression}
 						<ExpressionTile {expression} />
 					{/each}
