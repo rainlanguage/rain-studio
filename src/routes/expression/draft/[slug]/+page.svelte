@@ -62,7 +62,9 @@
 </script>
 
 <PageHeader>
-	<div class="w-full flex justify-between items-center container mx-auto">
+	<div
+		class="container mx-auto flex w-full flex-col items-stretch justify-between gap-y-4 px-4 sm:px-0 lg:flex-row lg:items-center"
+	>
 		<div class="flex flex-col gap-y-2">
 			<span class="text-sm text-gray-500">Draft expression</span>
 			<div class="flex gap-x-1.5">
@@ -124,19 +126,19 @@
 	</div>
 </PageHeader>
 
-<div class="container mx-auto">
-	<div class="mt-8">
-		<div class="gap-y-4 grid grid-cols-7 gap-8">
-			<div class="flex flex-col gap-y-4 col-span-3">
-				<div class="font-semibold text-xl">Writer's notes</div>
+<div class="container mx-auto px-4 sm:px-0">
+	<div class="py-8">
+		<div class="grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-7">
+			<div class="col-span-3 flex flex-col gap-y-4">
+				<div class="text-xl font-semibold">Writer's notes</div>
 				<div class="whitespace-pre-line">{expression.notes}</div>
 				<ViewTags {tags} />
-				<div class="flex flex-col gap-y-2 border-t border-gray-200 pt-4 mt-4 items-start">
+				<div class="mt-4 flex flex-col items-start gap-y-2 border-t border-gray-200 pt-4">
 					<ExpressionEnv {expression} />
 				</div>
 			</div>
 			<div class="col-span-4">
-				<div class="w-full flex flex-col gap-y-4">
+				<div class="flex w-full flex-col gap-y-4">
 					<Formatter raw={expression.raw_expression} />
 				</div>
 			</div>

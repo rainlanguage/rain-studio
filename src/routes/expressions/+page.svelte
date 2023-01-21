@@ -15,10 +15,14 @@
 	$: rainStarred = $page.data.rainStarred;
 </script>
 
-<div class="flex">
-	<div class="flex justify-end container-pl bg-gray-100 flex-shrink-0">
-		<div class="container-2/3 h-full pt-8 gap-y-20 flex flex-col flex-shrink-0 pr-8">
-			<div class="flex justify-between items-end">
+<div class="flex flex-col xl:flex-row">
+	<div class="xl:container-pl flex flex-shrink-0 justify-end bg-gray-100">
+		<div
+			class="xl:container-2/3 container mx-auto flex h-full w-full flex-shrink-0 flex-col gap-y-12 px-4 py-8 pt-8 sm:px-0 md:gap-y-20 xl:mx-0 xl:pr-8"
+		>
+			<div
+				class="flex flex-col items-start gap-y-4 md:flex-row md:items-end md:justify-between md:gap-y-0"
+			>
 				<div class="flex flex-col gap-y-3">
 					<span class="text-2xl font-semibold">Discover community expressions</span>
 					<span class="text-lg">Get inspired by others in the community, fork and create.</span>
@@ -31,13 +35,15 @@
 				>
 			</div>
 			<div class="flex flex-col gap-y-6">
-				<div class="flex gap-x-2">
+				<div class="flex flex-col gap-2 sm:flex-row">
 					<span>Popular tags</span>
-					{#each popularTags as tag}
-						<span class="px-3 py-2 leading-none bg-gray-200 rounded-xl">#{tag}</span>
-					{/each}
+					<div class="flex flex-wrap gap-2">
+						{#each popularTags as tag}
+							<span class="rounded-xl bg-gray-200 px-3 py-2 leading-none">#{tag}</span>
+						{/each}
+					</div>
 				</div>
-				<div class="grid grid-cols-2 gap-4">
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{#each rainStarred as expression}
 						<ExpressionTile {expression} />
 					{/each}
@@ -45,8 +51,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex justify-start container-pr flex-shrink-0">
-		<div class="container-1/3 h-full flex-shrink-0 pl-8 pb-8 pt-8">
+	<div class="xl:container-pr flex flex-shrink-0 justify-start bg-gray-100 xl:bg-white">
+		<div
+			class="xl:container-1/3 container mx-auto h-full w-full flex-shrink-0 py-2 px-4 pb-8 pt-8 sm:px-0 xl:mx-0 xl:pl-8"
+		>
 			<div class="flex flex-col gap-y-6">
 				<span class="text-2xl font-semibold">Learn</span>
 				<div class="flex gap-x-2">
@@ -65,9 +73,11 @@
 						icon={UserGroup}>Ask the communty</Button
 					>
 				</div>
-				{#each lessons as lesson, i}
-					<LessonCta {i} time={lesson.time} title={lesson.title} href={lesson.href} />
-				{/each}
+				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-1">
+					{#each lessons as lesson, i}
+						<LessonCta {i} time={lesson.time} title={lesson.title} href={lesson.href} />
+					{/each}
+				</div>
 			</div>
 		</div>
 	</div>
