@@ -3,7 +3,7 @@
 </script>
 
 <div class="bg-rainsecondary">
-	<div class="container mx-auto flex flex-col gap-8 px-8 pt-14 pb-20 sm:px-0 md:flex-row">
+	<div class="container mx-auto flex flex-col gap-8 px-4 pt-8 pb-20 sm:px-0 md:flex-row md:pt-14">
 		<div class="w-48">
 			<Logo />
 		</div>
