@@ -3,23 +3,23 @@
 </script>
 
 <div class="bg-rainsecondary">
-	<div class="container mx-auto pt-14 pb-20 flex gap-x-8">
+	<div class="container mx-auto flex flex-col gap-8 px-8 pt-14 pb-20 sm:px-0 md:flex-row">
 		<div class="w-48">
 			<Logo />
 		</div>
-		<div class="flex flex-col w-48">
-			<span class="font-semibold mb-2">Explore</span>
+		<div class="flex w-48 flex-col">
+			<span class="mb-2 font-semibold">Explore</span>
 			<a href="/contracts">Contracts</a>
 			<a href="/expressions">Expressions</a>
 		</div>
-		<div class="flex flex-col w-48">
-			<span class="font-semibold mb-2">Documentation</span>
+		<div class="flex w-48 flex-col">
+			<span class="mb-2 font-semibold">Documentation</span>
 			<a href="/docs">Learn Rainlang</a>
 			<a href="http://docs.rainprotocol.xyz" target="_blank" rel="noreferrer">Rain Docs</a>
 			<a href="https://github.com/rain-protocol" target="_blank" rel="noreferrer">Github</a>
 		</div>
-		<div class="flex flex-col w-48">
-			<span class="font-semibold mb-2">Community</span>
+		<div class="flex w-48 flex-col">
+			<span class="mb-2 font-semibold">Community</span>
 			<a href="https://t.me/+W0aQ36ptN_E2MjZk">Telegram</a>
 			<a href="https://twitter.com/rainprotocol">Twitter</a>
 			<a href="https://docs.rainprotocol.xyz/blog">Blog</a>
