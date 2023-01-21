@@ -11,273 +11,273 @@ export interface Database {
     Tables: {
       contracts: {
         Row: {
-          id: string
+          abi: Json | null
           created_at: string | null
+          id: string
           metadata: Json | null
           project: string | null
-          abi: Json | null
           slug: string | null
         }
         Insert: {
-          id?: string
+          abi?: Json | null
           created_at?: string | null
+          id?: string
           metadata?: Json | null
           project?: string | null
-          abi?: Json | null
           slug?: string | null
         }
         Update: {
-          id?: string
+          abi?: Json | null
           created_at?: string | null
+          id?: string
           metadata?: Json | null
           project?: string | null
-          abi?: Json | null
           slug?: string | null
         }
       }
       draft_expressions: {
         Row: {
-          id: string
-          created_at: string | null
           contract: string | null
-          user_id: string
-          raw_expression: string
-          sharable_slug: string
+          contract_expression: string | null
+          created_at: string | null
+          id: string
           interpreter: string
           name: string
           notes: string
-          contract_expression: string | null
-          saved_context: Json | null
-          tags: string[] | null
           public: boolean
+          raw_expression: string
+          saved_context: Json | null
+          sharable_slug: string
+          tags: string[] | null
+          user_id: string
         }
         Insert: {
-          id?: string
-          created_at?: string | null
           contract?: string | null
-          user_id?: string
-          raw_expression: string
-          sharable_slug?: string
+          contract_expression?: string | null
+          created_at?: string | null
+          id?: string
           interpreter: string
           name: string
           notes: string
-          contract_expression?: string | null
-          saved_context?: Json | null
-          tags?: string[] | null
           public?: boolean
+          raw_expression: string
+          saved_context?: Json | null
+          sharable_slug?: string
+          tags?: string[] | null
+          user_id?: string
         }
         Update: {
-          id?: string
-          created_at?: string | null
           contract?: string | null
-          user_id?: string
-          raw_expression?: string
-          sharable_slug?: string
+          contract_expression?: string | null
+          created_at?: string | null
+          id?: string
           interpreter?: string
           name?: string
           notes?: string
-          contract_expression?: string | null
-          saved_context?: Json | null
-          tags?: string[] | null
           public?: boolean
+          raw_expression?: string
+          saved_context?: Json | null
+          sharable_slug?: string
+          tags?: string[] | null
+          user_id?: string
         }
       }
       draft_expressions_w: {
         Row: {
-          id: string
-          created_at: string | null
           contract: string | null
-          user_id: string
-          raw_expression: string
-          sharable_slug: string
+          contract_expression: string | null
+          created_at: string | null
+          id: string
           interpreter: string
           name: string
           notes: string
-          contract_expression: string | null
-          saved_context: Json | null
-          tags: string[] | null
           public: boolean
+          raw_expression: string
+          saved_context: Json | null
+          sharable_slug: string
+          tags: string[] | null
+          user_id: string
         }
         Insert: {
-          id?: string
-          created_at?: string | null
           contract?: string | null
-          user_id?: string
-          raw_expression: string
-          sharable_slug?: string
+          contract_expression?: string | null
+          created_at?: string | null
+          id?: string
           interpreter: string
           name: string
           notes: string
-          contract_expression?: string | null
-          saved_context?: Json | null
-          tags?: string[] | null
           public?: boolean
+          raw_expression: string
+          saved_context?: Json | null
+          sharable_slug?: string
+          tags?: string[] | null
+          user_id?: string
         }
         Update: {
-          id?: string
-          created_at?: string | null
           contract?: string | null
-          user_id?: string
-          raw_expression?: string
-          sharable_slug?: string
+          contract_expression?: string | null
+          created_at?: string | null
+          id?: string
           interpreter?: string
           name?: string
           notes?: string
-          contract_expression?: string | null
-          saved_context?: Json | null
-          tags?: string[] | null
           public?: boolean
+          raw_expression?: string
+          saved_context?: Json | null
+          sharable_slug?: string
+          tags?: string[] | null
+          user_id?: string
         }
       }
       interpreters: {
         Row: {
-          id: string
           created_at: string | null
+          id: string
           metadata: Json
         }
         Insert: {
-          id?: string
           created_at?: string | null
+          id?: string
           metadata: Json
         }
         Update: {
-          id?: string
           created_at?: string | null
+          id?: string
           metadata?: Json
         }
       }
       profiles: {
         Row: {
+          avatar_url: string | null
+          full_name: string | null
           id: string
           updated_at: string | null
           username: string
-          full_name: string | null
-          avatar_url: string | null
           website: string | null
         }
         Insert: {
+          avatar_url?: string | null
+          full_name?: string | null
           id: string
           updated_at?: string | null
           username: string
-          full_name?: string | null
-          avatar_url?: string | null
           website?: string | null
         }
         Update: {
+          avatar_url?: string | null
+          full_name?: string | null
           id?: string
           updated_at?: string | null
           username?: string
-          full_name?: string | null
-          avatar_url?: string | null
           website?: string | null
         }
       }
       projects: {
         Row: {
-          id: string
           created_at: string | null
-          name: string
+          id: string
           logo_url: string
+          name: string
         }
         Insert: {
-          id?: string
           created_at?: string | null
-          name: string
+          id?: string
           logo_url: string
+          name: string
         }
         Update: {
-          id?: string
           created_at?: string | null
-          name?: string
+          id?: string
           logo_url?: string
+          name?: string
         }
       }
       starred: {
         Row: {
-          id: string
-          user_id: string
-          starred: string
-          foreign_key: string | null
           address: string | null
+          foreign_key: string | null
+          id: string
+          starred: string
+          user_id: string
         }
         Insert: {
-          id?: string
-          user_id?: string
-          starred: string
-          foreign_key?: string | null
           address?: string | null
+          foreign_key?: string | null
+          id?: string
+          starred: string
+          user_id?: string
         }
         Update: {
-          id?: string
-          user_id?: string
-          starred?: string
-          foreign_key?: string | null
           address?: string | null
+          foreign_key?: string | null
+          id?: string
+          starred?: string
+          user_id?: string
         }
       }
       wallet_users: {
         Row: {
-          id: string
-          created_at: string | null
-          username: string
-          full_name: string | null
           avatar_url: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          username: string
           website: string | null
         }
         Insert: {
-          id?: string
-          created_at?: string | null
-          username: string
-          full_name?: string | null
           avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          username: string
           website?: string | null
         }
         Update: {
-          id?: string
-          created_at?: string | null
-          username?: string
-          full_name?: string | null
           avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          username?: string
           website?: string | null
         }
       }
       wallets: {
         Row: {
+          address: string
           id: string
           linked_at: string | null
-          address: string
           user_id: string | null
         }
         Insert: {
+          address: string
           id: string
           linked_at?: string | null
-          address: string
           user_id?: string | null
         }
         Update: {
+          address?: string
           id?: string
           linked_at?: string | null
-          address?: string
           user_id?: string | null
         }
       }
       wallets_linked: {
         Row: {
+          address: string
           id: string
           linked_at: string
-          address: string
           user_id: string
         }
         Insert: {
+          address: string
           id?: string
           linked_at?: string
-          address: string
           user_id: string
         }
         Update: {
+          address?: string
           id?: string
           linked_at?: string
-          address?: string
           user_id?: string
         }
       }

@@ -8,8 +8,59 @@
 body {
 	@apply bg-white;
 	font-family: 'DM Sans', sans-serif;
-	@apply text-gray-800;
+	@apply text-gray-900;
 }
 
 @tailwind components;
 @tailwind utilities;
+
+/* for containers that are a fraction of the usual container sizes */
+:root {
+	/* break points and container widths */
+	--2xl: 1536px;
+	--xl: 1280px;
+	--lg: 1024px;
+	--md: 768px;
+	--sm: 640px;
+	--default: 100%;
+
+	/* 1/3 of the container */
+	--2xl-1\/3: calc(var(--2xl) / 3);
+	--xl-1\/3: calc(var(--xl) / 3);
+	--lg-1\/3: calc(var(--lg) / 3);
+	--md-1\/3: calc(var(--md) / 3);
+	--sm-1\/3: calc(var(--sm) / 3);
+	--default-1\/3: calc(var(--default) / 3);
+
+	/* 2/3 of the container */
+	--2xl-2\/3: calc(var(--2xl) / 3 * 2);
+	--xl-2\/3: calc(var(--xl) / 3 * 2);
+	--lg-2\/3: calc(var(--lg) / 3 * 2);
+	--md-2\/3: calc(var(--md) / 3 * 2);
+	--sm-2\/3: calc(var(--sm) / 3 * 2);
+	--default-2\/3: calc(var(--default) / 3 * 2);
+
+	/* the padding */
+	--p-2xl: calc((100vw - var(--2xl)) / 2);
+	--p-xl: calc((100vw - var(--xl)) / 2);
+	--p-lg: calc((100vw - var(--lg)) / 2);
+	--p-md: calc((100vw - var(--md)) / 2);
+	--p-sm: calc((100vw - var(--sm)) / 2);
+	--p-default: calc((100vw - var(--default)) / 2);
+}
+
+.container-pl {
+	@apply pl-[var(--p-default)] sm:pl-[var(--p-sm)] md:pl-[var(--p-md)] lg:pl-[var(--p-lg)] xl:pl-[var(--p-xl)] 2xl:pl-[var(--p-2xl)];
+}
+
+.container-pr {
+	@apply pr-[var(--p-default)] sm:pr-[var(--p-sm)] md:pr-[var(--p-md)] lg:pr-[var(--p-lg)] xl:pr-[var(--p-xl)] 2xl:pr-[var(--p-2xl)];
+}
+
+.container-1\/3 {
+	@apply w-[var(--default-1\/3)] sm:w-[var(--sm-1\/3)] md:w-[var(--md-1\/3)] lg:w-[var(--lg-1\/3)] xl:w-[var(--xl-1\/3)] 2xl:w-[var(--2xl-1\/3)];
+}
+
+.container-2\/3 {
+	@apply w-[var(--default-2\/3)] sm:w-[var(--sm-2\/3)] md:w-[var(--md-2\/3)] lg:w-[var(--lg-2\/3)] xl:w-[var(--xl-2\/3)] 2xl:w-[var(--2xl-2\/3)];
+}

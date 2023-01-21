@@ -23,8 +23,8 @@ export const POST: RequestHandler = async (event) => {
 
 	if (selectedTags?.length && !isEqual(selectedTags, ['all-tags'])) query = query.overlaps('tags', selectedTags)
 	if (order) query = query.order(...order)
-
 	const { data, error } = await query;
+	console.log(data)
 	if (error) throw kitError(404, 'Not found');
 	const draft_expressions = data;
 	return jsonResponse({ draft_expressions });
