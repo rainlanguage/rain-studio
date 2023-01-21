@@ -2,7 +2,7 @@
 	import { Button, Modal } from 'rain-svelte-components/package';
 	import { getMessage } from '$lib/utils';
 	import { signer } from 'svelte-ethers-store';
-	import { isLinked, unwantedWallets } from '$lib/connected-table';
+	import { isLinked, unwantedWallets } from '$lib/stores';
 	import { enhance } from '$app/forms';
 	import { ExclamationTriangle, CheckCircle } from '@steeze-ui/heroicons';
 	import CommonModal from '$lib/CommonModal.svelte';

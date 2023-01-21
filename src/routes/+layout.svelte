@@ -9,14 +9,14 @@
 	import { BrowserTracing } from '@sentry/tracing';
 	import ModalLinkAddress from '$lib/connected-table/ModalLinkAddress.svelte';
 	import { signerAddress, connected } from 'svelte-ethers-store';
+	import { SearchStatus } from '$lib/connected-table';
 	import {
 		isLinked,
 		unwantedWallets,
-		SearchStatus,
 		currentSearchStatus,
 		isLinkedToOther,
 		linkedWalllets
-	} from '$lib/connected-table';
+	} from '$lib/stores';
 	import Footer from '$lib/Footer.svelte';
 
 	let openedModalLink = false;

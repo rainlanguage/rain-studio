@@ -5,13 +5,8 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
 	import ModalLinkAddress from '$lib/connected-table/ModalLinkAddress.svelte';
-	import {
-		isLinked,
-		isLinkedToOther,
-		SearchStatus,
-		currentSearchStatus,
-		alreadySearched
-	} from './';
+	import { SearchStatus } from './';
+	import { isLinked, isLinkedToOther, currentSearchStatus, alreadySearched } from '$lib/stores';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowUpRight } from '@steeze-ui/heroicons';
 	// When size is small, hide the Connect Button/Unlink

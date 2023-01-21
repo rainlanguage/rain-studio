@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button, Modal } from 'rain-svelte-components/package';
 	import { signerAddress } from 'svelte-ethers-store';
-	import { isLinked, unwantedWallets } from '$lib/connected-table';
+	import { isLinked, unwantedWallets } from '$lib/stores';
 	import { enhance } from '$app/forms';
 	import CommonModal from '$lib/CommonModal.svelte';
 	import { ExclamationCircle, CheckCircle } from '@steeze-ui/heroicons';
