@@ -4642,9 +4642,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#90cf1175036c787fd2865efd6e1940e990cb9670":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#3d1d1494dbbd78d5401c317035708ad0bc5bdd6b":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#90cf1175036c787fd2865efd6e1940e990cb9670"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#3d1d1494dbbd78d5401c317035708ad0bc5bdd6b"
   dependencies:
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"

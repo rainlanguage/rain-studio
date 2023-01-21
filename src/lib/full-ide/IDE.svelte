@@ -31,6 +31,8 @@
 	import type { Writable } from 'svelte/store';
 	import type { StateConfig } from 'rain-metadata/metadata-types/expression';
 	import { BigNumber } from 'ethers';
+	import { OverflowMenu } from 'rain-svelte-components/package/overflow-menu';
+	import HelpPanel from '$lib/HelpPanel.svelte';
 
 	export let expression: ExpressionRowFull;
 	export let closeCallback: Function;
@@ -145,15 +147,15 @@
 					</div>
 				{/if}
 			</div>
-		{/if}
-		<div class="flex gap-x-1">
-			<span class="text-gray-600 text-[14px]">
-				{expression.public ? 'Public' : 'Private'}
-			</span>
-			<div class="w-3.5 mr-3 pb-0.5">
-				<Icon src={expression.public ? LockOpen : LockClosed} />
+			<div class="flex gap-x-1">
+				<span class="text-gray-600 text-[14px]">
+					{expression.public ? 'Public' : 'Private'}
+				</span>
+				<div class="w-3.5 mr-3 pb-0.5">
+					<Icon src={expression.public ? LockOpen : LockClosed} />
+				</div>
 			</div>
-		</div>
+		{/if}
 		{#if saving}
 			<div
 				transition:fade={{ duration: 100 }}
@@ -199,8 +201,14 @@
 				size="small">Make {expression.public ? 'private' : 'public'}</Button
 			>
 		{/if}
-
-		<Button variant="transparent" icon={QuestionMarkCircle} size="small">Help</Button>
+		<OverflowMenu position="right" autoWidth>
+			<svelte:fragment slot="button">
+				<Button variant="transparent" icon={QuestionMarkCircle} size="small">Help</Button>
+			</svelte:fragment>
+			<div class="p-4">
+				<HelpPanel />
+			</div>
+		</OverflowMenu>
 	</div>
 </div>
 

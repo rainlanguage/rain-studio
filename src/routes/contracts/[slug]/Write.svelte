@@ -21,6 +21,7 @@
 		getWriteMethods
 	} from './write';
 	import type { ExpressionRowFull, InterpreterRowFull } from '$lib/types/types';
+	import HelpPanel from '$lib/HelpPanel.svelte';
 
 	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: any;
 
@@ -48,6 +49,8 @@
 	let loadExpressionModal: boolean = false;
 	let loadRaw: Function;
 	let expressionComponentName: string;
+
+	let openHelpModal: boolean = false;
 
 	$: availableChains = getCommonChains($page.data.interpreters, metadata);
 	$: writeMethods = getWriteMethods(abi.abi);
@@ -164,6 +167,10 @@
 		openIDEModal = true;
 	};
 
+	const handleHelp = () => {
+		openHelpModal = true;
+	};
+
 	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
 </script>
 
@@ -200,6 +207,7 @@
 					on:save={saveExpression}
 					on:load={loadExpression}
 					on:expand={expandExpression}
+					on:help={handleHelp}
 					showInterpreterFields={false}
 				/>
 			{/key}
@@ -245,6 +253,10 @@
 	{:else}
 		<Auth />
 	{/if}
+</Modal>
+
+<Modal bind:open={openHelpModal}>
+	<HelpPanel />
 </Modal>
 
 <Modal bind:open={loadExpressionModal}>
