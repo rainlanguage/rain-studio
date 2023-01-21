@@ -29,7 +29,6 @@
 	};
 </script>
 
-<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Signed context</div>
 <table class="mb-8">
 	<tr class="border-b border-gray-300">
 		<td class="cell" />

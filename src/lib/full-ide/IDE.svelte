@@ -47,9 +47,10 @@
 	let changeVisiblityModal: boolean = false;
 
 	// get from the metadata whether the expression type has a signed context
-	$: hasSignedContext = expression.contract?.metadata.expressions?.find(
-		(_expression) => _expression.name == expression.contract_expression
-	)?.signedContext;
+	$: hasSignedContext =
+		expression.contract?.metadata.expressions?.find(
+			(_expression) => _expression.name == expression.contract_expression
+		)?.signedContext || !expression.contract;
 
 	// get the contextColumns from the metadata for this expressoin type
 	$: contextColumns = expression.contract?.metadata.expressions?.find(
@@ -57,16 +58,14 @@
 	)?.contextColumns;
 
 	// merging contract base context and dynamic signed context
-	let mockContext: any = expression.saved_context?.mockContext,
+	let mockContext: any = expression.saved_context?.mockContext || [],
 		signedContext: any = expression.saved_context?.signedContext || [
 			['', ''],
 			['', '']
 		];
-	$: context = mockContext && signedContext ? [...mockContext, ...signedContext] : 0;
+	$: context = mockContext || signedContext ? [...mockContext, ...signedContext] : 0;
 	$: console.log(context);
 	$: saved_context = { mockContext, signedContext };
-
-	const testContext = [[BigNumber.from(1)]];
 
 	// for saving the exression and notes - this happens automatically as the user edits
 	let saving: boolean; // track saving state
@@ -236,9 +235,13 @@
 					<PanelHeader>Mock data</PanelHeader>
 					<div class="p-2 overflow-scroll h-full">
 						{#if contextColumns}
+							<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Context</div>
 							<ContextGrid {contextColumns} bind:mockContext />
 						{/if}
 						{#if hasSignedContext}
+							<div class="uppercase text-xs text-gray-500 pt-4 pb-2">
+								{expression.contract ? 'Signed context' : 'Context'}
+							</div>
 							<SignedContext bind:signedContext />
 						{/if}
 					</div>
