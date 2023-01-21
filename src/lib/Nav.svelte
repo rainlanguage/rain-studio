@@ -10,8 +10,11 @@
 	import { connected } from 'svelte-ethers-store';
 	import { connectWallet } from '$lib/connect-wallet';
 	import Logo from '$lib/Logo.svelte';
-
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { PlusCircle, ChevronUpDown } from '@steeze-ui/heroicons';
+	import { isOrgContext } from '$lib/stores';
 	let profileMenuOpen: boolean = false;
+	let contextMenuOpen: boolean = false;
 	let addressOrText = '';
 
 	onMount(() => (addressOrText = ''));
@@ -25,11 +28,19 @@
 		profileMenuOpen = !profileMenuOpen;
 	};
 
+	const openContextMenu = () => {
+		contextMenuOpen = !contextMenuOpen;
+	};
+
 	const handleDropdownFocusLoss = ({ relatedTarget, currentTarget }) => {
-		// use "focusout" event to ensure that we can close the dropdown when clicking outside or when we leave the dropdown with the "Tab" button
-		// check if the new focus target doesn't present in the dropdown tree (exclude ul\li padding area because relatedTarget, in this case, will be null)
+		// Use "focusout" event to ensure that we can close the dropdown when clicking
+		// outside or when we leave the dropdown with the "Tab" button.
 		if (relatedTarget instanceof HTMLElement && currentTarget.contains(relatedTarget)) return;
+
+		// Check if the new focus target doesn't present in the dropdown tree (exclude
+		//  ul\li padding area because relatedTarget, in this case, will be null)
 		profileMenuOpen = false;
+		contextMenuOpen = false;
 	};
 </script>
 
@@ -88,8 +99,45 @@
 			> -->
 			<span class="text-red-400">[Alpha version]</span>
 			<div class="relative flex flex-col items-center" on:focusout={handleDropdownFocusLoss}>
+				<button class="flex items-center" on:click={openContextMenu}>
+					<div>Username</div>
+					<div class="pt-0.5">
+						<Icon src={ChevronUpDown} size={'20'} />
+					</div>
+				</button>
+				{#if contextMenuOpen}
+					<div
+						transition:fly={{ duration: 300, y: 10 }}
+						class="absolute right-0 -bottom-4 bg-white flex flex-col gap-y-2 translate-y-full w-56 rounded-xl py-3 border border-gray-100 shadow-md"
+					>
+						<!-- User logged -->
+						<div class="context-option">
+							<UserAvatar url={$page.data.profile?.avatar_url} />
+							{$page.data.profile.username}
+						</div>
+						{#if $page.data.orgs && $page.data.orgs.length}
+							{#each $page.data.orgs as organization}
+								<!-- if have organizations -->
+								<div class="context-option">
+									<UserAvatar isOrg url={organization.url} />
+									{organization.username}
+								</div>
+							{/each}
+						{/if}
+						<!-- Allow create -->
+						<div class="flex border-t-[1px] border-gray-200">
+							<button class="add-org-option" on:click={() => console.log('creating new org...')}>
+								<Icon src={PlusCircle} size={'30'} />
+								Create organization
+							</button>
+						</div>
+					</div>
+				{/if}
+			</div>
+			<div class="relative flex flex-col items-center" on:focusout={handleDropdownFocusLoss}>
 				<button on:click={openProfileMenu}>
-					<UserAvatar url={$page.data.profile?.avatar_url} />
+					<!-- TODO: Add store with the current context info (username/org name, etc) -->
+					<UserAvatar isOrg={$isOrgContext} url={$page.data.profile?.avatar_url} />
 				</button>
 				{#if profileMenuOpen}
 					<div
@@ -102,6 +150,9 @@
 							>Expressions</a
 						>
 						<!-- <a class="profile-link">Deployments</a> -->
+						{#if $isOrgContext}
+							<a href={`/organization`} class="profile-link">Organization</a>
+						{/if}
 						<div class="border-t border-gray-200" />
 						{#if !$connected}
 							<!-- <div class="self-start p-4">
@@ -139,6 +190,17 @@
 		@apply text-gray-500;
 	}
 	.profile-link {
-		@apply px-4 py-2 cursor-pointer hover:bg-gray-100 rounded-lg mx-2;
+		@apply px-4 py-2 mx-2 cursor-pointer hover:bg-gray-500 rounded-lg;
+	}
+
+	.option {
+		@apply flex items-center gap-x-2.5 place-content-start w-full py-1 mx-1 cursor-pointer hover:bg-gray-500 rounded-lg;
+	}
+
+	.context-option {
+		@apply option px-1.5;
+	}
+	.add-org-option {
+		@apply option px-1 mt-2;
 	}
 </style>

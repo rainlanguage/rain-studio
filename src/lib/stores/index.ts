@@ -35,3 +35,8 @@ export const unwantedWallets: Writable<string[]> = writable([]);
  * Array that contain all the linked wallets by the current user
  */
 export const linkedWalllets: Writable<string[]> = writable([]);
+
+/**
+ * Flag that represent if the current user has changed to an organization context.
+ */
+export const isOrgContext = writable(false);
