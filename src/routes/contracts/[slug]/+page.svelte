@@ -18,20 +18,22 @@
 </script>
 
 <PageHeader>
-	<div class="flex flex-col container mx-auto h-full items-stretch">
-		<div class="flex flex-col justify-center justify-self-stretch h-full gap-y-3">
+	<div class="container mx-auto flex h-full flex-col items-stretch px-4 sm:px-0">
+		<div class="flex h-full flex-col justify-center gap-y-3 justify-self-stretch">
 			<ProjectTag logoUrl={project.logo_url} name={project.name} />
-			<span class="font-semibold text-2xl">{metadata.name}</span>
-			<div class="flex gap-x-2 items-center">
+			<span class="text-2xl font-semibold">{metadata.name}</span>
+			<div class="flex items-center gap-x-2">
 				<Pills><span class="text-sm">{metadata.type}</span></Pills>
-				<span class="text-gray-500"><KnownAddresses {metadata} /></span>
+				<span class="text-gray-500">
+					<KnownAddresses {metadata} />
+				</span>
 			</div>
 		</div>
 	</div>
 </PageHeader>
 <Tabs>
-	<div class="bg-gray-100 w-full">
-		<div class="container mx-auto ">
+	<div class="w-full bg-gray-100">
+		<div class="container mx-auto px-4 sm:px-0 ">
 			<TabList>
 				<Tab>Contract</Tab>
 				<Tab>Write</Tab>
@@ -40,8 +42,8 @@
 			</TabList>
 		</div>
 	</div>
-	<div class="container flex mx-auto justify-stretch">
-		<div class="w-2/3 flex flex-col pt-10 gap-y-8 pr-6">
+	<div class="justify-stretch container mx-auto flex flex-col gap-y-8 px-4 sm:px-0 lg:flex-row">
+		<div class="flex flex-col gap-y-8 pt-10 lg:w-2/3 lg:pr-6">
 			<TabPanel>
 				<Summary {abi} {metadata} />
 			</TabPanel>
@@ -49,6 +51,6 @@
 				<Write {abi} {metadata} {contract} {project} />
 			</TabPanel>
 		</div>
-		<div class="w-1/3 pb-1.5"><Sidebar /></div>
+		<div class="py-8 lg:w-1/3"><Sidebar /></div>
 	</div>
 </Tabs>
