@@ -7,12 +7,13 @@
 	export let mobileContext: boolean = false;
 </script>
 
-<a href="/settings/profile" class={mobileContext ? 'mobile-profile-link' : 'profile-link'}
-	>Profile</a
+<a
+	href="/settings/profile"
+	class={mobileContext ? 'mobile-profile-link text-gray-500' : 'profile-link'}>Profile</a
 >
 <a
 	href={`/user/${$page.data.profile?.username}/expressions`}
-	class={mobileContext ? 'mobile-profile-link' : 'profile-link'}>Expressions</a
+	class={mobileContext ? 'mobile-profile-link text-gray-500' : 'profile-link'}>Expressions</a
 >
 <!-- <a class="profile-link">Deployments</a> -->
 <div class="border-t border-gray-200" />
@@ -23,14 +24,14 @@
 		>Connect Wallet</button
 	>
 {:else}
-	<div class={`w-full ${mobileContext ? 'py-3' : 'px-5'}`}>
+	<div class={`w-full ${mobileContext ? 'py-3' : 'px-5 py-2'}`}>
 		<ConnectedTable size="small" />
 	</div>
 {/if}
 <div class="border-t border-gray-200" />
 <a
 	href="/sign-out"
-	class={mobileContext ? 'mobile-profile-link' : 'profile-link'}
+	class={`${mobileContext ? 'mobile-profile-link ' : 'profile-link'}`}
 	on:click|preventDefault={() => {
 		// @ts-ignore
 		window.location = '/sign-out';

@@ -67,17 +67,17 @@
 </script>
 
 <Background alignItems="items-start" justifyContent="justify-center">
-	<div class="pt-28 flex flex-col items-center max-w-5xl gap-y-6">
-		<h1 class="text-4xl font-semibold">Start writing a new expression</h1>
+	<div class="container mx-auto flex flex-col items-center gap-y-6 px-4 pt-8 sm:px-0 md:pt-20">
+		<h1 class="text-center text-2xl font-semibold sm:text-4xl">Start writing a new expression</h1>
 		{#if step == ExpressionSteps.Contract}
 			<div in:fade class="step-wrapper">
-				<h2>Choose a contract to write for</h2>
+				<h2 class="text-center">Choose a contract to write for</h2>
 				{#if contracts.length}
-					<div class="grid grid-cols-3 gap-4">
+					<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<div
 							on:click={() => chooseContract(null)}
-							class="flex flex-col gap-y-2 p-4 rounded-2xl border-gray-200 border w-full hover:scale-105 transition-transform cursor-pointer bg-white"
+							class="flex w-full cursor-pointer flex-col gap-y-2 rounded-2xl border border-gray-200 bg-white p-4 transition-transform hover:scale-105"
 						>
 							<span class="w-7 text-gray-400">
 								<Icon src={PlusCircle} />
@@ -104,16 +104,16 @@
 					<h2>Choose an expression to write for</h2>
 				</div>
 				{#if chosenContract && chosenContract?.metadata.expressions}
-					<div class="flex flex-col gap-y-4 w-full max-w-4xl">
+					<div class="flex w-full max-w-4xl flex-col gap-y-4">
 						{#each chosenContract.metadata.expressions as expression}
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<div
 								on:click={() => {
 									chooseExpression(expression);
 								}}
-								class="flex flex-col gap-y-2 p-6 rounded-2xl border-gray-200 border w-full hover:scale-105 transition-transform cursor-pointer bg-white"
+								class="flex w-full cursor-pointer flex-col gap-y-2 rounded-2xl border border-gray-200 bg-white p-6 transition-transform hover:scale-105"
 							>
-								<span class="text-xl self-start rounded-lg">
+								<span class="self-start rounded-lg text-xl">
 									{expression.name}
 								</span>
 								<span>
@@ -129,16 +129,16 @@
 				<div class="header">
 					<h2>Choose an interpreter</h2>
 				</div>
-				<div class="flex flex-col gap-y-4 w-full max-w-4xl">
+				<div class="flex w-full max-w-4xl flex-col gap-y-4">
 					{#each interpreters as interpreter}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<div
 							on:click={() => {
 								chooseInterpreter(interpreter);
 							}}
-							class="flex flex-col gap-y-2 p-6 rounded-2xl border-gray-200 border w-full hover:scale-105 transition-transform cursor-pointer bg-white"
+							class="flex w-full cursor-pointer flex-col gap-y-2 rounded-2xl border border-gray-200 bg-white p-6 transition-transform hover:scale-105"
 						>
-							<span class="text-xl self-start rounded-lg">
+							<span class="self-start rounded-lg text-xl">
 								{interpreter.metadata.name}
 							</span>
 							<span>Extra info</span>
@@ -152,7 +152,7 @@
 					<h2>Confirm and start writing</h2>
 				</div>
 				<div class="flex flex-col gap-y-4">
-					<span class="text-gray-600 text-xs uppercase">Writing for</span>
+					<span class="text-xs uppercase text-gray-600">Writing for</span>
 					<ExpressionEnv
 						expression={{
 							contract: chosenContract,
@@ -185,7 +185,7 @@
 
 <style lang="postcss">
 	.header {
-		@apply w-full flex flex-col items-center gap-y-6;
+		@apply flex w-full flex-col items-center gap-y-6;
 	}
 
 	h2 {
@@ -193,6 +193,6 @@
 	}
 
 	.step-wrapper {
-		@apply w-full flex flex-col items-center gap-y-16;
+		@apply flex w-full flex-col items-center gap-y-16;
 	}
 </style>

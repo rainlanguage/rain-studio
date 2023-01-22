@@ -64,13 +64,9 @@
 		openedModalLink = true;
 	}
 
-	beforeNavigate(() => {
-		console.log('loading');
-	});
+	beforeNavigate(() => {});
 
-	afterNavigate(() => {
-		console.log('navigated');
-	});
+	afterNavigate(() => {});
 </script>
 
 <svelte:window bind:outerWidth={$viewportWidth} />
