@@ -18,7 +18,11 @@ const config = {
 	},
 	darkMode: 'class',
 
-	plugins: [require('tailwind-gradient-mask-image'), require('@tailwindcss/typography')]
+	plugins: [
+		require('tailwind-gradient-mask-image'),
+		require('@tailwindcss/typography'),
+		require('@tailwindcss/line-clamp')
+	]
 };
 
 module.exports = config;

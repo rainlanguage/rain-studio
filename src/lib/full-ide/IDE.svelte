@@ -31,6 +31,8 @@
 	import type { Writable } from 'svelte/store';
 	import type { StateConfig } from 'rain-metadata/metadata-types/expression';
 	import { BigNumber } from 'ethers';
+	import { OverflowMenu } from 'rain-svelte-components/package/overflow-menu';
+	import HelpPanel from '$lib/HelpPanel.svelte';
 
 	export let expression: ExpressionRowFull;
 	export let closeCallback: Function;
@@ -45,9 +47,10 @@
 	let changeVisiblityModal: boolean = false;
 
 	// get from the metadata whether the expression type has a signed context
-	$: hasSignedContext = expression.contract?.metadata.expressions?.find(
-		(_expression) => _expression.name == expression.contract_expression
-	)?.signedContext;
+	$: hasSignedContext =
+		expression.contract?.metadata.expressions?.find(
+			(_expression) => _expression.name == expression.contract_expression
+		)?.signedContext || !expression.contract;
 
 	// get the contextColumns from the metadata for this expressoin type
 	$: contextColumns = expression.contract?.metadata.expressions?.find(
@@ -55,16 +58,14 @@
 	)?.contextColumns;
 
 	// merging contract base context and dynamic signed context
-	let mockContext: any = expression.saved_context?.mockContext,
+	let mockContext: any = expression.saved_context?.mockContext || [],
 		signedContext: any = expression.saved_context?.signedContext || [
 			['', ''],
 			['', '']
 		];
-	$: context = mockContext && signedContext ? [...mockContext, ...signedContext] : 0;
+	$: context = mockContext || signedContext ? [...mockContext, ...signedContext] : 0;
 	$: console.log(context);
 	$: saved_context = { mockContext, signedContext };
-
-	const testContext = [[BigNumber.from(1)]];
 
 	// for saving the exression and notes - this happens automatically as the user edits
 	let saving: boolean; // track saving state
@@ -145,15 +146,15 @@
 					</div>
 				{/if}
 			</div>
-		{/if}
-		<div class="flex gap-x-1">
-			<span class="text-gray-600 text-[14px]">
-				{expression.public ? 'Public' : 'Private'}
-			</span>
-			<div class="w-3.5 mr-3 pb-0.5">
-				<Icon src={expression.public ? LockOpen : LockClosed} />
+			<div class="flex gap-x-1">
+				<span class="text-gray-600 text-[14px]">
+					{expression.public ? 'Public' : 'Private'}
+				</span>
+				<div class="w-3.5 mr-3 pb-0.5">
+					<Icon src={expression.public ? LockOpen : LockClosed} />
+				</div>
 			</div>
-		</div>
+		{/if}
 		{#if saving}
 			<div
 				transition:fade={{ duration: 100 }}
@@ -199,8 +200,14 @@
 				size="small">Make {expression.public ? 'private' : 'public'}</Button
 			>
 		{/if}
-
-		<Button variant="transparent" icon={QuestionMarkCircle} size="small">Help</Button>
+		<OverflowMenu position="right" autoWidth>
+			<svelte:fragment slot="button">
+				<Button variant="transparent" icon={QuestionMarkCircle} size="small">Help</Button>
+			</svelte:fragment>
+			<div class="p-4">
+				<HelpPanel />
+			</div>
+		</OverflowMenu>
 	</div>
 </div>
 
@@ -228,9 +235,13 @@
 					<PanelHeader>Mock data</PanelHeader>
 					<div class="p-2 overflow-scroll h-full">
 						{#if contextColumns}
+							<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Context</div>
 							<ContextGrid {contextColumns} bind:mockContext />
 						{/if}
 						{#if hasSignedContext}
+							<div class="uppercase text-xs text-gray-500 pt-4 pb-2">
+								{expression.contract ? 'Signed context' : 'Context'}
+							</div>
 							<SignedContext bind:signedContext />
 						{/if}
 					</div>

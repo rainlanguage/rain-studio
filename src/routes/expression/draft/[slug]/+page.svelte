@@ -130,7 +130,6 @@
 			<div class="flex flex-col gap-y-4 col-span-3">
 				<div class="font-semibold text-xl">Writer's notes</div>
 				<div class="whitespace-pre-line">{expression.notes}</div>
-				<span class="font-semibold">Tags</span>
 				<ViewTags {tags} />
 				<div class="flex flex-col gap-y-2 border-t border-gray-200 pt-4 mt-4 items-start">
 					<ExpressionEnv {expression} />
