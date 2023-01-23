@@ -22,9 +22,9 @@
 
 {#if show}
 	<!-- hero -->
-	<div class="h-full flex flex-col justify-center bg-rainsecondary relative">
-		<div class="z-10 container mx-auto py-80">
-			<div in:fly class="flex flex-col gap-y-8 w-1/2 h-full">
+	<div class="relative flex h-full flex-col justify-center bg-rainsecondary">
+		<div class="container z-10 mx-auto py-80">
+			<div in:fly class="flex h-full w-1/2 flex-col gap-y-8">
 				<span class="text-4xl font-bold"
 					>The on-chain language for <span class="text-rainprimary">everyone.</span></span
 				>
@@ -45,24 +45,24 @@
 
 	<!-- express yourself -->
 	<div class="flex flex-col items-center gap-y-20 py-32">
-		<div class="flex flex-col gap-y-8 items-center">
+		<div class="flex flex-col items-center gap-y-8">
 			<span class="text-4xl font-semibold">Express yourself.</span>
-			<span class="text-xl w-1/2 text-center"
+			<span class="w-1/2 text-center text-xl"
 				>Rainlang Expressions are executed by the Rain Interpreter, enabling you to perform
 				calculations on-chain and use the results to accomplish tasks like writing order strategies,
 				or minting, burning and transferring tokens.</span
 			>
 			<Button>Discover community expressions</Button>
 		</div>
-		<div class="flex gap-x-12 w-full max-w-6xl">
-			<div class="flex-grow divide-y flex flex-col">
+		<div class="flex w-full max-w-6xl gap-x-12">
+			<div class="flex flex-grow flex-col divide-y">
 				{#each expressionExamples as example, i}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
 						on:click={() => {
 							activeExample = i;
 						}}
-						class="flex flex-col gap-y-2 py-6 cursor-pointer"
+						class="flex cursor-pointer flex-col gap-y-2 py-6"
 						use:autoAnimate
 					>
 						<span class={`text-2xl font-semibold ${activeExample == i ? 'text-rainprimary' : ''}`}
@@ -85,11 +85,11 @@
 	<!-- features -->
 	<div class="bg-rainsecondary py-32">
 		<div class="container mx-auto flex flex-col items-center gap-y-20">
-			<div class="gap-y-8 flex flex-col items-center">
+			<div class="flex flex-col items-center gap-y-8">
 				<span class="text-4xl font-semibold"
 					>Write, test and deploy your smart contracts with Studio.</span
 				>
-				<span class="text-xl w-1/2 text-center"
+				<span class="w-1/2 text-center text-xl"
 					>Our user-friendly interface and powerful simulation tools make it easy to learn and use
 					Rainlang, even if you have no previous experience with smart contract development. And
 					with our community features, you can collaborate with other users, share your expressions,
@@ -97,11 +97,11 @@
 				>
 				<Button>Learn how to write expressions</Button>
 			</div>
-			<div class="grid grid-cols-4 gap-x-8 w-full">
+			<div class="grid w-full grid-cols-4 gap-x-8">
 				{#each features as feature}
-					<div class="flex flex-col gap-y-4 p-12 rounded-3xl bg-white">
+					<div class="flex flex-col gap-y-4 rounded-3xl bg-white p-12">
 						<img class="w-20" alt={feature.title} src={feature.image} />
-						<span class="font-semibold text-2xl">{feature.title}</span>
+						<span class="text-2xl font-semibold">{feature.title}</span>
 						<span>{feature.description}</span>
 					</div>
 				{/each}
@@ -112,15 +112,15 @@
 	<!-- ecosystem -->
 	<div class="bg-white py-32">
 		<div class="container mx-auto flex flex-col items-center gap-y-20">
-			<div class="gap-y-2 flex flex-col items-center">
+			<div class="flex flex-col items-center gap-y-2">
 				<span class="uppercase">Ecosystem</span>
-				<span class="text-4xl font-semibold max-w-[700px] text-center"
+				<span class="max-w-[700px] text-center text-4xl font-semibold"
 					>The smartest projects, building better, faster, cheaper with Rain.</span
 				>
 			</div>
 			<div class="flex gap-x-8">
 				{#each ecosystemProjects as project}
-					<div class="flex flex-col gap-y-4 px-12 py-6 rounded-3xl bg-gray-100">
+					<div class="flex flex-col gap-y-4 rounded-3xl bg-gray-100 px-12 py-6">
 						<img class="h-8" alt={project.name} src={project.logo} />
 					</div>
 				{/each}
@@ -136,12 +136,12 @@
 				new URL('$lib/homepage/images/rain-section-bg.svg', import.meta.url).href
 			}"); background-size: contain; background-position-x:85%; background-repeat:no-repeat;`}
 		>
-			<div class="w-1/2 gap-x-2 flex flex-col gap-y-20 py-32">
-				<div class="gap-y-14 flex flex-col">
+			<div class="flex w-1/2 flex-col gap-x-2 gap-y-20 py-32">
+				<div class="flex flex-col gap-y-14">
 					<span class="text-4xl font-semibold"
 						>Rain Protocol is a framework that enables building web3 economies of any scale.</span
 					>
-					<div class="text-xl gap-y-8 flex flex-col">
+					<div class="flex flex-col gap-y-8 text-xl">
 						<p>
 							Much of the magic of Rain is due to the Rain Interpreter, a simple way to define and
 							run algorithms on-chain, fully compatible with all EVM chains.
@@ -156,7 +156,7 @@
 							their interpretation.
 						</p>
 						<p>
-							Today 20K solidity devs are priests. <span class="text-rainprimary font-semibold"
+							Today 20K solidity devs are priests. <span class="font-semibold text-rainprimary"
 								>Rain opens up web3 to everybody.</span
 							>
 						</p>
