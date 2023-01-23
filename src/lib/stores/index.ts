@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import { SearchStatus } from '$lib/connected-table';
 import type { Writable } from 'svelte/store';
+import type { ContextInfo } from '$lib/types/context-types';
 
 /**
  * Save if an address that was already use to find a match (the latest address used)
@@ -40,3 +41,5 @@ export const linkedWalllets: Writable<string[]> = writable([]);
  * Flag that represent if the current user has changed to an organization context.
  */
 export const isOrgContext = writable(false);
+
+export const userContextData: Writable<ContextInfo> = writable();

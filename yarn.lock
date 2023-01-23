@@ -4637,9 +4637,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#90cf1175036c787fd2865efd6e1940e990cb9670":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#6a25e1bf4a424b9f862b74b79d4982cf311392cc":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#90cf1175036c787fd2865efd6e1940e990cb9670"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#6a25e1bf4a424b9f862b74b79d4982cf311392cc"
   dependencies:
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
@@ -5549,10 +5549,10 @@ undici@5.14.0:
   dependencies:
     busboy "^1.6.0"
 
-unique-username-generator@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/unique-username-generator/-/unique-username-generator-1.1.3.tgz#ff0745dd8539bc08187f3ab2396ba420ab561d2d"
-  integrity sha512-TB6YdqPMKMpTSgxAzjZkKWtmpZPHvARoWreCKBpc1UrLFz/0C6Q96/qdjpLr9OXPCHk16sD1LHjTr3JDj7q2JA==
+unique-names-generator@^4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/unique-names-generator/-/unique-names-generator-4.7.1.tgz#966407b12ba97f618928f77322cfac8c80df5597"
+  integrity sha512-lMx9dX+KRmG8sq6gulYYpKWZc9RlGsgBR6aoO8Qsm3qvkSJ+3rAymr+TnV8EDMrIrwuFJ4kruzMWM/OpYzPoow==
 
 unist-util-stringify-position@^2.0.0:
   version "2.0.3"

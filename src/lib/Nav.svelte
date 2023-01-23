@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
-	import { supabaseClient } from '$lib/supabaseClient';
+	import { afterNavigate, goto } from '$app/navigation';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { Input } from 'rain-svelte-components/package';
+	import { Button, Input } from 'rain-svelte-components/package';
 	import { onMount } from 'svelte';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
 	import { connected } from 'svelte-ethers-store';
@@ -12,12 +11,20 @@
 	import Logo from '$lib/Logo.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { PlusCircle, ChevronUpDown } from '@steeze-ui/heroicons';
-	import { isOrgContext } from '$lib/stores';
+	import { isOrgContext, userContextData } from '$lib/stores';
+	import { handleSetContext } from '$lib/user-context';
 	let profileMenuOpen: boolean = false;
 	let contextMenuOpen: boolean = false;
 	let addressOrText = '';
 
-	onMount(() => (addressOrText = ''));
+	// TODO: Improve to handle using $paga.data or cookie
+	handleSetContext($page.data.profile, 'user');
+
+	onMount(() => {
+		addressOrText = '';
+	});
+
+	afterNavigate(() => {});
 
 	const searchAddressOrText = async (event) => {
 		event?.target?.reset();
@@ -100,7 +107,7 @@
 			<span class="text-red-400">[Alpha version]</span>
 			<div class="relative flex flex-col items-center" on:focusout={handleDropdownFocusLoss}>
 				<button class="flex items-center" on:click={openContextMenu}>
-					<div>Username</div>
+					<div>{$userContextData?.nickname}</div>
 					<div class="pt-0.5">
 						<Icon src={ChevronUpDown} size={'20'} />
 					</div>
@@ -110,23 +117,35 @@
 						transition:fly={{ duration: 300, y: 10 }}
 						class="absolute right-0 -bottom-4 bg-white flex flex-col gap-y-2 translate-y-full w-56 rounded-xl py-3 border border-gray-100 shadow-md"
 					>
-						<!-- User logged -->
-						<div class="context-option">
-							<UserAvatar url={$page.data.profile?.avatar_url} />
-							{$page.data.profile.username}
+						<div class="flex flex-col gap-y-1">
+							<!-- User logged -->
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<div
+								class="context-option"
+								on:click={() => handleSetContext($page.data.profile, 'user')}
+							>
+								<UserAvatar url={$page.data.profile?.avatar_url} />
+								{$page.data.profile.username}
+							</div>
+							{#if $page.data.organizations && $page.data.organizations.length}
+								{#each $page.data.organizations as organization}
+									<!-- svelte-ignore a11y-click-events-have-key-events -->
+									<div
+										class="context-option"
+										on:click={() => handleSetContext(organization, 'org')}
+									>
+										<UserAvatar isOrg url={organization.info_org.avatar_url} />
+										{organization.info_org.name}
+									</div>
+								{/each}
+							{/if}
 						</div>
-						{#if $page.data.orgs && $page.data.orgs.length}
-							{#each $page.data.orgs as organization}
-								<!-- if have organizations -->
-								<div class="context-option">
-									<UserAvatar isOrg url={organization.url} />
-									{organization.username}
-								</div>
-							{/each}
-						{/if}
-						<!-- Allow create -->
+						<!-- Redirect create -->
 						<div class="flex border-t-[1px] border-gray-200">
-							<button class="add-org-option" on:click={() => console.log('creating new org...')}>
+							<button
+								class="context-option w-full mt-2"
+								on:click={() => goto('/organizations?ref=create')}
+							>
 								<Icon src={PlusCircle} size={'30'} />
 								Create organization
 							</button>
@@ -190,17 +209,10 @@
 		@apply text-gray-500;
 	}
 	.profile-link {
-		@apply px-4 py-2 mx-2 cursor-pointer hover:bg-gray-500 rounded-lg;
-	}
-
-	.option {
-		@apply flex items-center gap-x-2.5 place-content-start w-full py-1 mx-1 cursor-pointer hover:bg-gray-500 rounded-lg;
+		@apply px-4 py-2 mx-2 cursor-pointer hover:bg-gray-200 rounded-lg;
 	}
 
 	.context-option {
-		@apply option px-1.5;
-	}
-	.add-org-option {
-		@apply option px-1 mt-2;
+		@apply flex gap-x-2.5 p-1 mx-1 cursor-pointer hover:bg-gray-200 rounded-lg;
 	}
 </style>

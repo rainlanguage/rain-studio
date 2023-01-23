@@ -1,10 +1,15 @@
 import { getServerSession, getSupabase } from '@supabase/auth-helpers-sveltekit';
-import { generateUsername } from 'unique-username-generator';
+import {
+	uniqueNamesGenerator,
+	NumberDictionary,
+	Config,
+	adjectives,
+	names
+} from 'unique-names-generator';
 import { SUPABASE_JWT } from '$env/static/private';
 import { redirect, error } from '@sveltejs/kit';
 import { utils } from 'ethers';
 import jwt from 'jsonwebtoken';
-
 import type { TypedSupabaseClient } from '@supabase/auth-helpers-sveltekit/dist/types';
 
 /** @type {import('./$types').PageServerLoad} */
@@ -35,7 +40,7 @@ export const actions = {
 			httpOnly: false
 		});
 
-		return { _token: newCookie.access_token };
+		return { _user: newCookie.user };
 	}
 };
 
@@ -69,7 +74,7 @@ async function sign(address_: string, supabase_: TypedSupabaseClient) {
 
 	const resp = await supabase_
 		.from('wallets_linked')
-		.select('id, user:user_id(id, created_at)')
+		.select('id, user:user_id(id, full_name, username, avatar_url, website)')
 		.eq('address', address_)
 		.single();
 
@@ -77,7 +82,13 @@ async function sign(address_: string, supabase_: TypedSupabaseClient) {
 
 	if (resp.error) {
 		// Since it's sign up - Create a new user with this wallet and a random Username
-		const username_ = generateUsername('', 6).toLowerCase();
+		const numberDictionary = NumberDictionary.generate({ min: 10, max: 999 });
+		const customConfig: Config = {
+			dictionaries: [names, adjectives, numberDictionary],
+			separator: '',
+			length: 3
+		};
+		const username_ = uniqueNamesGenerator(customConfig).toLowerCase();
 		const respNewUser = await supabase_.rpc('new_user_from_address', {
 			address_,
 			username_
@@ -104,7 +115,7 @@ async function sign(address_: string, supabase_: TypedSupabaseClient) {
 		});
 	}
 
-	const expires_in = 60 * 60; // 3600sec
+	const expires_in = 60 * 60 * 24; // 3600sec * 24
 	const time_expired = Math.floor(Date.now() / 1000) + expires_in;
 
 	const token = jwt.sign(
