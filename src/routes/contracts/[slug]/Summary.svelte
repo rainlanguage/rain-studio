@@ -3,8 +3,6 @@
 	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { allChainsData } from 'svelte-ethers-store';
 	export let abi: any, metadata: ContractMetadata;
-
-	import { json, redirect } from '@sveltejs/kit';
 </script>
 
 <div>
@@ -15,7 +13,7 @@
 	<SectionBody>
 		<div class="flex flex-col text-sm">
 			<table class="">
-				<tr class="pb-2 border-b border-gray-200">
+				<tr class="border-b border-gray-200 pb-2">
 					<td class="pb-2">Network</td>
 					<td class="pb-2">Chain id</td>
 					<td class="pb-2">Address</td>
@@ -28,7 +26,7 @@
 									>{allChainsData.find((_chain) => _chain.chainId == chain.chainId)?.name}</td
 								>
 								<td class="pt-3">{chain.chainId}</td>
-								<td class="truncate pt-3">{knownAddress}</td>
+								<td class="block w-48 truncate pt-3 md:w-full">{knownAddress}</td>
 							</tr>
 						{/each}
 					{/each}

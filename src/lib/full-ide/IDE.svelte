@@ -64,7 +64,6 @@
 			['', '']
 		];
 	$: context = mockContext || signedContext ? [...mockContext, ...signedContext] : 0;
-	$: console.log(context);
 	$: saved_context = { mockContext, signedContext };
 
 	// for saving the exression and notes - this happens automatically as the user edits
@@ -120,7 +119,7 @@
 
 <div class="flex justify-between ">
 	<div class="flex items-center">
-		<button on:click={back} class="flex gap-x-1 items-center p-3">
+		<button on:click={back} class="flex items-center gap-x-1 p-3">
 			<div class="w-3">
 				<Icon src={ArrowUturnLeft} />
 			</div>
@@ -129,7 +128,7 @@
 		<div class="h-full border-l border-gray-300" />
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		{#if !asModal}
-			<div class="p-3 flex gap-x-1 items-center">
+			<div class="flex items-center gap-x-1 p-3">
 				{#if editingName}
 					<input
 						on:focusout={saveName}
@@ -147,10 +146,10 @@
 				{/if}
 			</div>
 			<div class="flex gap-x-1">
-				<span class="text-gray-600 text-[14px]">
+				<span class="text-[14px] text-gray-600">
 					{expression.public ? 'Public' : 'Private'}
 				</span>
-				<div class="w-3.5 mr-3 pb-0.5">
+				<div class="mr-3 w-3.5 pb-0.5">
 					<Icon src={expression.public ? LockOpen : LockClosed} />
 				</div>
 			</div>
@@ -158,9 +157,9 @@
 		{#if saving}
 			<div
 				transition:fade={{ duration: 100 }}
-				class="flex items-center bg-gray-100 border border-gray-200 rounded-xl gap-x-1 p-1"
+				class="flex items-center gap-x-1 rounded-xl border border-gray-200 bg-gray-100 p-1"
 			>
-				<div class="animate-spin w-4 text-gray-500">
+				<div class="w-4 animate-spin text-gray-500">
 					<Icon src={ArrowPath} />
 				</div>
 				<span class="text-xs text-gray-500">Saving</span>
@@ -213,9 +212,9 @@
 
 <Splitpanes theme="modern-theme" style="flex-grow: 1; height:1px;">
 	<Pane size={25} minSize={15}>
-		<div class="flex flex-col bg-white border-t border-gray-300">
-			<div class="flex flex-col gap-y-2 py-4 px-2 border-b border-gray-300">
-				<span class="text-gray-600 text-[10px] uppercase">Writing for</span>
+		<div class="flex flex-col border-t border-gray-300 bg-white">
+			<div class="flex flex-col gap-y-2 border-b border-gray-300 py-4 px-2">
+				<span class="text-[10px] uppercase text-gray-600">Writing for</span>
 				<ExpressionEnv {expression} />
 			</div>
 		</div>
@@ -223,9 +222,9 @@
 	<Pane minSize={10}>
 		<Splitpanes horizontal firstSplitter theme="modern-theme">
 			<Pane size={50} minSize={10}>
-				<div class="flex flex-col h-full">
+				<div class="flex h-full flex-col">
 					<PanelHeader>Expression</PanelHeader>
-					<div class="flex-grow p-2 flex flex-col overflow-scroll min-h-0">
+					<div class="flex min-h-0 flex-grow flex-col overflow-scroll p-2">
 						<ParserInput bind:raw={raw_expression} bind:vmStateConfig />
 					</div>
 				</div>
@@ -233,13 +232,13 @@
 			<Pane size={30} minSize={10}>
 				<div class="h-full">
 					<PanelHeader>Mock data</PanelHeader>
-					<div class="p-2 overflow-scroll h-full">
+					<div class="h-full overflow-scroll p-2">
 						{#if contextColumns}
-							<div class="uppercase text-xs text-gray-500 pt-4 pb-2">Context</div>
+							<div class="pt-4 pb-2 text-xs uppercase text-gray-500">Context</div>
 							<ContextGrid {contextColumns} bind:mockContext />
 						{/if}
 						{#if hasSignedContext}
-							<div class="uppercase text-xs text-gray-500 pt-4 pb-2">
+							<div class="pt-4 pb-2 text-xs uppercase text-gray-500">
 								{expression.contract ? 'Signed context' : 'Context'}
 							</div>
 							<SignedContext bind:signedContext />
@@ -249,9 +248,9 @@
 			</Pane>
 			{#if !asModal}
 				<Pane size={20} minSize={10}>
-					<div class="flex flex-col flex-grow h-full">
+					<div class="flex h-full flex-grow flex-col">
 						<PanelHeader>Notes</PanelHeader>
-						<div class="p-2 flex-col flex flex-grow gap-y-2">
+						<div class="flex flex-grow flex-col gap-y-2 p-2">
 							<Tags bind:tags onlyUnique labelShow allowBlur labelText="Tags" />
 							<textarea
 								class="flex-grow self-stretch justify-self-stretch whitespace-pre-wrap outline-0"
@@ -266,20 +265,20 @@
 	<Pane size={25} minSize={15}>
 		<Splitpanes horizontal firstSplitter theme="modern-theme">
 			<Pane size={50} minSize={10}>
-				<div class="flex flex-col flex-grow h-full">
+				<div class="flex h-full flex-grow flex-col">
 					<PanelHeader>Simulator</PanelHeader>
-					<div class="p-2 overflow-y-scroll flex-grow relative">
+					<div class="relative flex-grow overflow-y-scroll p-2">
 						<SimulatedOutput {vmStateConfig} {context} />
 					</div>
 				</div>
 			</Pane>
 			<Pane size={50} minSize={10}>
-				<div class="flex-col flex flex-grow h-full">
+				<div class="flex h-full flex-grow flex-col">
 					<div class="flex-shrink">
 						<PanelHeader>Available words</PanelHeader>
 					</div>
-					<div class="flex-grow relative">
-						<div class="inset-0 absolute">
+					<div class="relative flex-grow">
+						<div class="absolute inset-0">
 							<OpDocs />
 						</div>
 					</div>

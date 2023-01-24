@@ -34,7 +34,10 @@
 	};
 
 	const confirmDelete = async () => {
-		const action = await supabaseClient.from('draft_expressions_w').delete().eq('id', expression.id);
+		const action = await supabaseClient
+			.from('draft_expressions_w')
+			.delete()
+			.eq('id', expression.id);
 		if (action?.error) {
 			alert(action.error);
 		} else {
@@ -42,7 +45,6 @@
 			dispatch('deleted');
 		}
 	};
-
 </script>
 
 <ExpressionRow {expression}>
@@ -72,7 +74,7 @@
 			variant="transparent"
 			icon={PaperAirplane}>Share</Button
 		>
-		<OverflowMenu>
+		<OverflowMenu position="right">
 			{#if $page.data.session?.user?.id}
 				<OverflowMenuItem>
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -112,7 +114,7 @@
 	<div class="flex flex-col gap-y-2">
 		<span class="text-2xl">Delete expression</span>
 		<span>Are you sure you want to delete this expression? This can't be undone.</span>
-		<div class="flex gap-x-2 mt-4">
+		<div class="mt-4 flex gap-x-2">
 			<Button variant="primary" on:click={confirmDelete}>Delete</Button><Button
 				on:click={() => {
 					deleteExpressionModal = false;

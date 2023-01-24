@@ -17,7 +17,6 @@
 
 	import type { UserLikes, ExpressionLikes, AccountData } from './types';
 
-
 	let expressionsToShow: any[] = [];
 	let isLoading = true;
 	let showMore = false;
@@ -121,16 +120,17 @@
 						{#each expressionsToShow as { id, name, config, event, account }, index}
 							<div class="flex flex-col gap-y-2.5 border-b border-slate-200 pb-[10px]">
 								<div
-									class="font-mono text-[12px] leading-4 bg-neutral-100 tracking-[-0.01em] rounded-[5px] max-h-[89px] overflow-hidden gradient-mask-b-70"
+									class="overflow-hidden rounded-[5px] bg-neutral-100 font-mono text-[12px] leading-4 tracking-[-0.01em]"
 								>
 									<Formatter
+										maxHeight="150px"
 										stateConfig={{
 											sources: config.sources,
 											constants: config.constants
 										}}
 									/>
 								</div>
-								<div class="flex gap-x-3.5 text-neutral-500 text-[13px] items-center">
+								<div class="flex items-center gap-x-3.5 text-[13px] text-neutral-500">
 									<TimeAgo dateString={event.transaction.timestamp * 1000} />
 									<div class="flex items-center gap-x-1">
 										<UserAvatar url={accountsData[account.id]?.avatar_url ?? ''} size={13} />
@@ -188,12 +188,12 @@
 							</div>
 						{/each}
 						<div
-							class="self-center text-[13px] leading-[17px] tracking-[-0.01em] text-black hover:"
+							class="hover: self-center text-[13px] leading-[17px] tracking-[-0.01em] text-black"
 						>
 							<button on:click={seeAll}>{showMore ? 'Hide' : 'See all'}</button>
 						</div>
 					{:else}
-						<div class="text-neutral-500 text-[15px]">Nothing to show</div>
+						<div class="text-[15px] text-neutral-500">Nothing to show</div>
 					{/if}
 				</div>
 			{:else}
