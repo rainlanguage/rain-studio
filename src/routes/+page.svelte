@@ -76,7 +76,6 @@
 							activeExample = i;
 						}}
 						class="flex cursor-pointer flex-col gap-y-2 py-6"
-						class="flex cursor-pointer flex-col gap-y-2 py-6"
 						use:autoAnimate
 					>
 						<span class={`text-2xl font-semibold ${activeExample == i ? 'text-rainprimary' : ''}`}
@@ -118,9 +117,7 @@
 			<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-2 2xl:grid-cols-4">
 				{#each features as feature}
 					<div class="flex flex-col gap-y-4 rounded-3xl bg-white p-12">
-					<div class="flex flex-col gap-y-4 rounded-3xl bg-white p-12">
 						<img class="w-20" alt={feature.title} src={feature.image} />
-						<span class="text-2xl font-semibold">{feature.title}</span>
 						<span class="text-2xl font-semibold">{feature.title}</span>
 						<span>{feature.description}</span>
 					</div>
@@ -135,13 +132,11 @@
 			<div class="flex flex-col items-center gap-y-2">
 				<span class="uppercase">Ecosystem</span>
 				<span class="max-w-[700px] text-center text-4xl font-semibold"
-				<span class="max-w-[700px] text-center text-4xl font-semibold"
 					>The smartest projects, building better, faster, cheaper with Rain.</span
 				>
 			</div>
 			<div class="flex flex-col gap-x-8 gap-y-8 lg:flex-row">
 				{#each ecosystemProjects as project}
-					<div class="flex flex-col gap-y-4 rounded-3xl bg-gray-100 px-12 py-6">
 					<div class="flex flex-col gap-y-4 rounded-3xl bg-gray-100 px-12 py-6">
 						<img class="h-8" alt={project.name} src={project.logo} />
 					</div>
@@ -164,7 +159,6 @@
 						>Rain Protocol is a framework that enables building web3 economies of any scale.</span
 					>
 					<div class="flex flex-col gap-y-8 text-xl">
-					<div class="flex flex-col gap-y-8 text-xl">
 						<p>
 							Much of the magic of Rain is due to the Rain Interpreter, a simple way to define and
 							run algorithms on-chain, fully compatible with all EVM chains.
@@ -179,7 +173,6 @@
 							their interpretation.
 						</p>
 						<p>
-							Today 20K solidity devs are priests. <span class="font-semibold text-rainprimary"
 							Today 20K solidity devs are priests. <span class="font-semibold text-rainprimary"
 								>Rain opens up web3 to everybody.</span
 							>
