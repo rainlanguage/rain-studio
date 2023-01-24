@@ -15,20 +15,20 @@ export const rainLinks: { name: string, url: string }[] = [
 
 export const ecosystemProjects: { name: string, logo: string }[] = [
     {
-        name: "Bancor",
-        logo: new URL('$lib/homepage/images/bancor.svg', import.meta.url).href
+        name: "Rain",
+        logo: new URL('$lib/homepage/images/rain-logo.svg', import.meta.url).href
     },
     {
-        name: "Bancor",
-        logo: new URL('$lib/homepage/images/bancor.svg', import.meta.url).href
+        name: "Rain",
+        logo: new URL('$lib/homepage/images/rain-logo.svg', import.meta.url).href
     },
     {
-        name: "Bancor",
-        logo: new URL('$lib/homepage/images/bancor.svg', import.meta.url).href
+        name: "Rain",
+        logo: new URL('$lib/homepage/images/rain-logo.svg', import.meta.url).href
     },
     {
-        name: "Bancor",
-        logo: new URL('$lib/homepage/images/bancor.svg', import.meta.url).href
+        name: "Rain",
+        logo: new URL('$lib/homepage/images/rain-logo.svg', import.meta.url).href
     },
 ]
 
