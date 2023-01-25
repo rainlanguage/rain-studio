@@ -67,8 +67,8 @@
 	}
 </script>
 
-<div class="flex flex-col w-max gap-y-6">
-	<form class="flex flex-col gap-y-4 w-96" on:submit|preventDefault={updateProfile}>
+<div class="flex w-full flex-col items-stretch gap-y-6">
+	<form class="flex w-full max-w-sm flex-col gap-y-4" on:submit|preventDefault={updateProfile}>
 		<div class="flex items-center gap-x-3">
 			<UserAvatar url={avatarUrl} size={70} />
 			<span>Change profile image</span>

@@ -59,47 +59,135 @@ export const expressionExamples: { name: string, description: string, expression
     {
         name: "DEX Strategies",
         description: "Dollar-cost averaging strategy, used with the Orderbook contract.",
-        expression: `/* calculate the number of seconds in a month */
-seconds-in-month: mul(60 60 24 30),
+        expression: `/*
+the number of seconds in a month (roughly) as 60 * 60 * 24 * 30 = 2592000
+*/
+seconds-in-month: 2592000,
 
-/* set the maximum amount of dollars to spend per month */
-dollars-per-month: 1000,
+/*
+set the maximum amount of dollars to spend per month.
 
-/* calculate the maximum amount of dollars to spend per second */
-dollars-per-second: div(1000 seconds-in-month),
+orderbook treats 1e18 as "one" as this is the standard used by eth and many erc20 tokens. for example dai uses 1e18 to be $1 but tether only uses 1e6 for $1. regardless, orderbook will scale all tokens up or down as needed so that 1e18 is always "one token".
 
-/* set the start timestamp for the dca strategy */
+therefore 1000e18 is $1000.
+*/
+dollars-per-month: 1000000000000000000000,
+
+/*
+calculate the maximum amount of dollars to spend per second.
+
+it would cost less gas to precalculate this offchain and provide it as an integer, but this is just an example so breaking the problem down lets us document and comment each line better :)
+*/
+dollars-per-second: div(dollars-per-month seconds-in-month),
+
+/*
+the start timestamp for the dca strategy as a unix timestamp in seconds.
+
+this time is from nov 2022 so you'll want to provide your own.
+
+there are plenty of online tools to easily generate a timestamp
+*/
 start-timestamp: 1668780839,
 
-/* get the address of the order author */
-order-author: sender(),
+/* 
+the hash of the order is in context for orderbook.
+*/
+order-hash: context<1 0>(),
 
-/* get the hash of the order */
-order-hash: context<0 0>(),
+/* 
+the address of the order author is in context for orderbook.
+*/
+order-author: context<1 1>(),
 
-/* create a unique storage key using the order author and order hash */
-storage-key: hash(order-author order-hash),
+/*
+get the total amount of dollars sent for the lifetime of the order so far.
 
-/* get the total amount of dollars sent in previous orders */
-total-sent: get(storage-key),
+the order hash is unique to this order, and we're only tracking one value so we can use the order hash as the key for get/set.
+*/
+total-sent: get(order-hash),
 
-/* calculate the total amount of dollars that can be sent by now */
-total-sendable-by-now: mul(dollars-per-second sub(block-timestamp() start-timestamp)),
+/*
+the order age in seconds is simply the current timestamp minus the start time.
 
-/* calculate the amount of dollars that can be sent in this order */
-sendable-in-this-order: sub(total-sendable-by-now total-sent),
+'sub' throws an error and rolls back the entire transaction if this is a negative number, so that prevents anything happening before the start timestamp.
+*/
+order-age: sub(block-timestamp() start-timestamp),
 
-/* set the arb bounty factor to 0.999 */
-arb-bounty-factor: 0.999,
+/*
+calculate the maximum total amount of dollars that can be sent by now.
+*/
+max-sendable: mul(dollars-per-second order-age),
 
-/* get the usdt-eth price from the chainlink oracle */
-usdt-eth: chainlinkprice(0x00 0x00),
+/*
+calculate the amount of dollars that can be sent in this order.
 
-/* calculate the amount and price of the order */
-amount price: sendable-in-this-order mul(usdt-eth arb-bounty-factor),
+this is the max we could send minus the amount we already sent.
+*/
+sendable: sub(max-sendable total-sent),
 
-/* update the total amount of dollars sent using the storage key */
-:set(storage-key add(total-sent amount);`
+/*
+orders only clear if there is a bounty (probably).
+
+we are more concerned about regularly buying close to the market price over time than getting an "exact best price".
+
+if we give a bounty of 0.1% that should help bots pay the gas and include our order in a transaction.
+
+as a percentage the bounty will naturally get larger as the sendable amount increases over time.
+
+again we use 1e18 to mean "one" so 1e15 would be 0.001, therefore 1e18 - 1e15 is 0.999.
+*/
+bounty-factor: 999000000000000000,
+
+/*
+get the usd-eth price from the chainlink oracle.
+
+the list of chainlink oracles can be found at https://data.chain.link/
+
+the first argument is the contract address. for this example we are using the usdt/eth feed on mainnet.
+
+the second argument is the oldest a quoted price can be and still considered "current". if the price from chainlink is older than this the expression will error and so the order won't clear. for this example we will use 1 hour, which is 3600 seconds.
+
+chainlink oracle prices are always provided as 18 decimal, so 1e18 is "one" regardless of what the underlying oracle is configured as. this makes all feeds compatible with the same math in rain expressions.
+*/
+usd-eth: chainlinkprice(0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419 3600),
+
+/*
+orderbook always require the last two values on the lhs to be the max amount
+and the price.
+*/
+amount price: sendable-in-this-order scale18-mul<18>(usd-eth bounty-factor);
+
+/*
+handle io.
+
+this is called after the order is cross referenced against what the counterparty can offer. it's common that the counterparty can't fill the entire possible amount we calculated above.
+
+the actual final vault movements will be provided here in context.
+*/
+
+/*
+the decimals of the token could be different for e.g. usdt and dai.
+
+we will need to rescale the amount sent to 18 decimal fixed point.
+*/
+token-decimals: context<4 1>(),
+
+/*
+the tokens sent are always in this context slot. column 4 is outputs, row 4 is the amount.
+*/
+token-amount-sent: context<4 4>(),
+
+/*
+this scales the real token amounts to their 18 decimal equivalents so we can store them and re-use them in future calculations.
+
+we round up if the token is scaled down to be conservative and overestimate how much we've sent to date.
+*/
+token-amount-scaled: scale-18<18>(token-amount-sent),
+
+/*
+record how much has been sent in total. this will be the total across all input tokens so sending $400 of dai and $600 of usdt will be recorded as $1000 total.
+*/
+:set(order-hash add(get(order-hash) token-amount-scaled);`
     },
     {
         name: "NFT Drops",
