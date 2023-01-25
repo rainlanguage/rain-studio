@@ -6,14 +6,31 @@
 	import { ChevronUpDown, PlusCircle } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { fly } from 'svelte/transition';
-	import { handleSetContext } from '$lib/user-context';
+	import { enhance, type SubmitFunction } from '$app/forms';
+	import { Button, Input } from 'rain-svelte-components/package';
 
 	export let isOpen: boolean;
+	let checking = '';
 
 	const openContextMenu = () => {
 		isOpen = !isOpen;
 	};
+
+	const submitFunction: SubmitFunction = async ({ data, cancel }) => {
+		//
+
+		return async ({ result, update }) => {
+			if (result.type === 'failure') {
+				//
+			}
+			if (result.type === 'success') {
+				//
+			}
+		};
+	};
 </script>
+
+<!-- TODO ADD CHECK TO CONTEXT/USER SELECTED -->
 
 <div class="relative flex flex-col items-center">
 	<button class="flex items-center" on:click={openContextMenu}>
@@ -24,23 +41,25 @@
 	</button>
 	{#if isOpen}
 		<div transition:fly={{ duration: 300, y: 10 }} class="context-container">
-			<div class="flex flex-col gap-y-1">
-				<button
-					class="context-option"
-					on:click={() => handleSetContext($page.data.profile, 'user')}
-				>
+			<form
+				method="POST"
+				action="/organizations?/changeContext"
+				class="flex flex-col gap-y-1"
+				use:enhance={submitFunction}
+			>
+				<button class="context-option" type="submit" value={$page.data.profile.id} name="user-id">
 					<UserAvatar url={$page.data.profile?.avatar_url} />
 					{$page.data.profile.username}
 				</button>
 				{#if $page.data.organizations && $page.data.organizations.length}
 					{#each $page.data.organizations as organization}
-						<button class="context-option" on:click={() => handleSetContext(organization, 'org')}>
+						<button class="context-option" type="submit" value={organization.id} name="member-id">
 							<UserAvatar isOrg url={organization.info_org.avatar_url} />
 							{organization.info_org.name}
 						</button>
 					{/each}
 				{/if}
-			</div>
+			</form>
 			<div class="flex border-t-[1px] border-gray-200">
 				<button
 					class="context-option w-full mt-2"
