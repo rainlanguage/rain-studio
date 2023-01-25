@@ -1,5 +1,7 @@
 import Web3Modal from 'web3modal';
 import { defaultEvmStores } from 'svelte-ethers-store';
+
+// @ts-expect-error The default module is not working here, so use the UMD module
 import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min';
 
 const providerOptions = {
