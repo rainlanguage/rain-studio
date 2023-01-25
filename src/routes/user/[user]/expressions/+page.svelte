@@ -123,14 +123,14 @@
 </script>
 
 <PageHeader>
-	<div class="h-full flex flex-row justify-between items-center container mx-auto">
+	<div class="container mx-auto flex h-full flex-row items-center justify-between px-4 sm:px-0">
 		<span class="text-2xl font-semibold">Expressions</span>
 	</div>
 </PageHeader>
 
 <Tabs>
-	<div class="bg-gray-100 w-full">
-		<div class="container mx-auto ">
+	<div class="w-full bg-gray-100">
+		<div class="container mx-auto px-4 sm:px-0">
 			<TabList>
 				{#if $page.data.currentUser}
 					<Tab>Draft</Tab>
@@ -139,11 +139,11 @@
 			</TabList>
 		</div>
 	</div>
-	<div class="container flex mx-auto justify-stretch">
+	<div class="justify-stretch container mx-auto flex px-4 sm:px-0">
 		{#if $page.data.currentUser}
 			<TabPanel>
-				<div class="container mx-auto gap-y-4 flex flex-col">
-					<div class="flex justify-between w-full mt-6">
+				<div class="container mx-auto flex flex-col gap-y-4">
+					<div class="mt-6 flex w-full justify-between">
 						<Button
 							on:click={() => {
 								goto('/expression/new');
@@ -154,8 +154,8 @@
 							<Select items={sortOptions} bind:value={selectedSortOption} />
 						</div>
 					</div>
-					<div class="flex flex-row gap-x-4">
-						<div class="w-1/4">
+					<div class="flex flex-col gap-4 lg:flex-row">
+						<div class="w-full lg:w-1/4">
 							<FilterGroup name="Contract">
 								<FilterSet exclusive options={contractOptions} bind:value={selectedContract} />
 							</FilterGroup>
@@ -190,12 +190,12 @@
 										on:click={() => {
 											searchValue = '';
 										}}
-										class="underline self-end text-sm cursor-pointer">Clear search</span
+										class="cursor-pointer self-end text-sm underline">Clear search</span
 									>
 								{/if}
 							</div>
 						</div>
-						<div class="w-3/4 gap-y-4 flex-col flex">
+						<div class="flex w-full flex-col gap-y-4 lg:w-3/4">
 							{#each draftExpressions as expression (expression.id)}
 								<div in:fade>
 									<ExpressionSummaryRow
@@ -209,7 +209,7 @@
 								</div>
 							{/each}
 							{#if !draftExpressions.length}
-								<span class="text-xl text-gray-600 w-full text-center pt-8">None found 🙁</span>
+								<span class="w-full pt-8 text-center text-xl text-gray-600">None found 🙁</span>
 							{/if}
 						</div>
 					</div>
@@ -217,13 +217,13 @@
 			</TabPanel>
 		{/if}
 		<TabPanel>
-			<div class="container mx-auto gap-y-4 flex flex-col">
-				<div class="flex justify-between w-full mt-6">
+			<div class="container mx-auto flex flex-col gap-y-4">
+				<div class="mt-6 flex w-full justify-between">
 					<div />
 				</div>
 				<div class="flex flex-row">
 					<div class="w-1/5" />
-					<div use:autoAnimate class="w-4/5 gap-y-4 flex-col flex">
+					<div use:autoAnimate class="flex w-4/5 flex-col gap-y-4">
 						{#if deployedExpressions}
 							{#each deployedExpressions as expression}
 								<DeployedExpressionSummaryRow {expression} />
