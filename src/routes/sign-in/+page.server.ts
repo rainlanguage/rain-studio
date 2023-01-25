@@ -40,6 +40,28 @@ export const actions = {
 			httpOnly: false
 		});
 
+		const encodedKey = encodeURIComponent('user-id');
+		const encodedValue = encodeURIComponent(JSON.stringify(newCookie.user));
+		const formBody = [encodedKey + '=' + encodedValue].join('&');
+
+		const resp = await fetch(`/organizations?/changeContext`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+			},
+			body: formBody
+		});
+
+		if (!resp.ok) {
+			// Something happened, cannot sign in
+			cookies.delete('supabase-auth-token');
+			cookies.delete('rain-studio-context');
+
+			throw error(400, {
+				message: 'ERROR_01: Failed to sign in'
+			});
+		}
+
 		return { _user: newCookie.user };
 	}
 };
