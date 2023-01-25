@@ -17,13 +17,12 @@
 	import ContextDropdown from '$lib/user-context/ContextDropdown.svelte';
 	import { handleSetContext } from '$lib/user-context';
 	import { viewportWidth } from '$lib/breakpoint-stores';
-	import { each } from 'lodash-es';
 
 	let profileMenuOpen: boolean = false;
 	let addressOrText = '';
 	let mobileNavOpen: boolean = false;
 	let contextMenuOpen: boolean = false;
-	$: _width = $viewportWidth;
+	$: _viewWidth = $viewportWidth;
 
 	// TODO: Improve to handle using $paga.data or cookie
 	handleSetContext($page.data.profile, 'user');
@@ -69,7 +68,7 @@
 		</div>
 	</div>
 	<div class="flex items-center gap-x-2 md:gap-x-5">
-		{#if _width < 400}
+		{#if _viewWidth < 400}
 			<span class="text-red-400">[Alpha]</span>
 		{:else}
 			<span class="text-red-400">[Alpha version]</span>
