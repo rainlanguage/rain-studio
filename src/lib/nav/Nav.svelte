@@ -17,6 +17,7 @@
 	import ContextDropdown from '$lib/user-context/ContextDropdown.svelte';
 	import { handleSetContext } from '$lib/user-context';
 	import { viewportWidth } from '$lib/breakpoint-stores';
+	import { each } from 'lodash-es';
 
 	let profileMenuOpen: boolean = false;
 	let addressOrText = '';
@@ -29,19 +30,20 @@
 
 	onMount(() => (addressOrText = ''));
 
-	const searchAddressOrText = async (event) => {
-		event?.target?.reset();
-		goto(`/search/${addressOrText.toLowerCase()}`);
+	const searchAddressOrText = (event: Event & { currentTarget: EventTarget & HTMLFormElement }) => {
+		goto(`/search/${addressOrText.toLowerCase()}`).then(() => {
+			(event?.target as HTMLFormElement).reset();
+		});
 	};
 
 	const openProfileMenu = () => {
 		profileMenuOpen = !profileMenuOpen;
 	};
 
-	const handleDropdownFocusLoss = ({ relatedTarget, currentTarget }) => {
+	const handleDropdownFocusLoss = ({ relatedTarget, currentTarget }: FocusEvent) => {
 		// use "focusout" event to ensure that we can close the dropdown when clicking outside or when we leave the dropdown with the "Tab" button
 		// check if the new focus target doesn't present in the dropdown tree (exclude ul\li padding area because relatedTarget, in this case, will be null)
-		if (relatedTarget instanceof HTMLElement && currentTarget.contains(relatedTarget)) return;
+		if (relatedTarget instanceof HTMLElement && currentTarget?.contains(relatedTarget)) return;
 		profileMenuOpen = false;
 		contextMenuOpen = false;
 	};
@@ -66,19 +68,23 @@
 			<MainNavLinks />
 		</div>
 	</div>
-	<div class="flex items-center gap-x-1.5 md:gap-x-5">
+	<div class="flex items-center gap-x-2 md:gap-x-5">
 		{#if _width < 400}
 			<span class="text-red-400">[Alpha]</span>
 		{:else}
 			<span class="text-red-400">[Alpha version]</span>
 		{/if}
-		<div class="static md:block" on:focusout={handleDropdownFocusLoss}>
-			<ContextDropdown bind:isOpen={contextMenuOpen} />
-		</div>
+
+		{#if $page.data.session}
+			<div class="static md:block" on:focusout={handleDropdownFocusLoss}>
+				<ContextDropdown bind:isOpen={contextMenuOpen} />
+			</div>
+		{/if}
 
 		<button on:click={toggleMobileNav} class="w-8 md:hidden">
 			<Icon src={mobileNavOpen ? XMark : Bars3} />
 		</button>
+
 		{#if !$page.data.session}
 			<a
 				href="/sign-in"
