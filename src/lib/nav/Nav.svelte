@@ -5,27 +5,19 @@
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import { Input } from 'rain-svelte-components/package';
 	import { onMount } from 'svelte';
-	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
-	import { connected } from 'svelte-ethers-store';
-	import { connectWallet } from '$lib/connect-wallet';
 	import Logo from '$lib/Logo.svelte';
-	import { breakpoint, Breakpoints } from '$lib/breakpoint-stores';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Bars3, XMark } from '@steeze-ui/heroicons';
 	import MainNavLinks from '$lib/nav/MainNavLinks.svelte';
 	import ProfileLinks from '$lib/nav/ProfileLinks.svelte';
 	import ContextDropdown from '$lib/user-context/ContextDropdown.svelte';
-	import { handleSetContext } from '$lib/user-context';
 	import { viewportWidth } from '$lib/breakpoint-stores';
 
 	let profileMenuOpen: boolean = false;
 	let addressOrText = '';
 	let mobileNavOpen: boolean = false;
-	let contextMenuOpen: boolean = false;
+	let contextMenuOpen: boolean = true;
 	$: _viewWidth = $viewportWidth;
-
-	// TODO: Improve to handle using $paga.data or cookie
-	handleSetContext($page.data.profile, 'user');
 
 	onMount(() => (addressOrText = ''));
 
@@ -95,7 +87,10 @@
 		{:else}
 			<div class="hidden flex-col items-center md:flex" on:focusout={handleDropdownFocusLoss}>
 				<button on:click={openProfileMenu}>
-					<UserAvatar url={$page.data.profile?.avatar_url} />
+					<UserAvatar
+						isOrg={$page.data.userContext?.__ContextType == 'ORGANIZATION'}
+						url={$page.data.userContext?.avatar_url}
+					/>
 				</button>
 				{#if profileMenuOpen}
 					<div

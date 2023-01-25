@@ -3,40 +3,44 @@
 	import { page } from '$app/stores';
 	import { userContextData } from '$lib/stores';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { ChevronUpDown, PlusCircle } from '@steeze-ui/heroicons';
+	import { ChevronUpDown, PlusCircle, ChevronLeft } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { fly } from 'svelte/transition';
 	import { enhance, type SubmitFunction } from '$app/forms';
-	import { Button, Input } from 'rain-svelte-components/package';
+	import { Ring } from 'rain-svelte-components/package';
 
 	export let isOpen: boolean;
-	let checking = '';
+	let loading = false;
 
 	const openContextMenu = () => {
 		isOpen = !isOpen;
 	};
 
 	const submitFunction: SubmitFunction = async ({ data, cancel }) => {
-		//
+		loading = true;
 
 		return async ({ result, update }) => {
 			if (result.type === 'failure') {
-				//
+				// TODO: Catch to failures
 			}
 			if (result.type === 'success') {
-				//
+				await update();
+				isOpen = false;
+				loading = false;
 			}
 		};
 	};
 </script>
 
-<!-- TODO ADD CHECK TO CONTEXT/USER SELECTED -->
-
 <div class="relative flex flex-col items-center">
 	<button class="flex items-center" on:click={openContextMenu}>
-		<div>{$userContextData?.nickname}</div>
-		<div class="pt-0.5">
-			<Icon src={ChevronUpDown} size={'20'} />
+		<div>{$page.data.userContext?.nickname}</div>
+		<div class="flex items-center pt-0.5 ml-0.5">
+			{#if loading}
+				<Ring size="20px" color="#cbd5e1" />
+			{:else}
+				<Icon src={ChevronUpDown} size={'20'} />
+			{/if}
 		</div>
 	</button>
 	{#if isOpen}
@@ -49,13 +53,23 @@
 			>
 				<button class="context-option" type="submit" value={$page.data.profile.id} name="user-id">
 					<UserAvatar url={$page.data.profile?.avatar_url} />
-					{$page.data.profile.username}
+					<p>{$page.data.profile.username}</p>
+					{#if $page.data.userContext.id == $page.data.profile.id}
+						<div class="-ml-1.5">
+							<Icon src={ChevronLeft} size={'16'} />
+						</div>
+					{/if}
 				</button>
 				{#if $page.data.organizations && $page.data.organizations.length}
 					{#each $page.data.organizations as organization}
 						<button class="context-option" type="submit" value={organization.id} name="member-id">
 							<UserAvatar isOrg url={organization.info_org.avatar_url} />
-							{organization.info_org.name}
+							<p>{organization.info_org.name}</p>
+							{#if $page.data.userContext.id == organization.id}
+								<div class="-ml-1.5">
+									<Icon src={ChevronLeft} size={'16'} />
+								</div>
+							{/if}
 						</button>
 					{/each}
 				{/if}
@@ -79,6 +93,6 @@
 		@apply bg-white shadow-md border border-gray-100 rounded-xl;
 	}
 	.context-option {
-		@apply flex gap-x-2.5 p-1 mx-1 cursor-pointer hover:bg-gray-200 rounded-lg;
+		@apply flex items-center gap-x-2.5 p-1 mx-1 cursor-pointer hover:bg-gray-200 rounded-lg;
 	}
 </style>

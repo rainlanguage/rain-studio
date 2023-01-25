@@ -8,7 +8,6 @@
 
 	// Types
 	import type { SubmitFunction } from '@sveltejs/kit/types';
-	import { handleSetContext } from './user-context';
 
 	/**
 	 * Function that wrap the fetch to only ask for the message based on the address.
@@ -39,7 +38,6 @@
 
 		return async ({ result, update }) => {
 			if (result.type == 'success') {
-				handleSetContext(result.data?._user, 'user');
 				update();
 			}
 		};

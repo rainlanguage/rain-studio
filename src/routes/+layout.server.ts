@@ -7,6 +7,7 @@ export const load: LayoutServerLoad = async (event) => {
 	let profile = null;
 	let wallets_linked = [];
 	let organizations = [];
+	let userContext = null;
 
 	if (session) {
 		const { data: dataWallets } = await supabaseClient
@@ -29,12 +30,16 @@ export const load: LayoutServerLoad = async (event) => {
 		if (dataOrgs) {
 			organizations = dataOrgs;
 		}
+
+		// Making the user context available on all the app (null/undefined or trully data)
+		userContext = JSON.parse(event.cookies.get('rain-studio-context'));
 	}
 
 	return {
 		session,
 		profile,
 		wallets_linked,
-		organizations
+		organizations,
+		userContext
 	};
 };
