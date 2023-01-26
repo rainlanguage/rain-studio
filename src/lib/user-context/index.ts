@@ -1,1 +1,4 @@
-export * from './setContext';
+export enum ContextRoles {
+  ORG = 'ORGANIZATION',
+  USER = 'USER'
+}

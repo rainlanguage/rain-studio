@@ -12,11 +12,12 @@
 	import ProfileLinks from '$lib/nav/ProfileLinks.svelte';
 	import ContextDropdown from '$lib/user-context/ContextDropdown.svelte';
 	import { viewportWidth } from '$lib/breakpoint-stores';
+	import { ContextRoles } from '$lib/user-context';
 
 	let profileMenuOpen: boolean = false;
 	let addressOrText = '';
 	let mobileNavOpen: boolean = false;
-	let contextMenuOpen: boolean = true;
+	let contextMenuOpen: boolean = false;
 	$: _viewWidth = $viewportWidth;
 
 	onMount(() => (addressOrText = ''));
@@ -88,7 +89,7 @@
 			<div class="hidden flex-col items-center md:flex" on:focusout={handleDropdownFocusLoss}>
 				<button on:click={openProfileMenu}>
 					<UserAvatar
-						isOrg={$page.data.userContext?.__ContextType == 'ORGANIZATION'}
+						isOrg={$page.data.userContext?.__ContextType == ContextRoles.ORG}
 						url={$page.data.userContext?.avatar_url}
 					/>
 				</button>

@@ -89,10 +89,10 @@
 	}
 </script>
 
-<div class="flex flex-col w-max bg-white p-6 rounded-lg shadow-md space-y-3">
+<div class="flex w-max flex-col space-y-3 rounded-lg bg-white p-6 shadow-md">
 	<div class="w-full border-b-2 border-double border-gray-300 pb-4">
 		<a
-			class="flex w-5/6 py-1 mx-auto text-white rounded-[10px] border border-neutral-300 bg-blue-500 hover:bg-blue-400"
+			class="mx-auto flex w-5/6 rounded-[10px] border border-neutral-300 bg-blue-500 py-1 text-white hover:bg-blue-400"
 			href={`/user/${username}/expressions`}
 		>
 			<Icon class="h-6 w-4/12" src={TableCells} />
@@ -130,7 +130,7 @@
 			</Input>
 		</div>
 
-		<div class="w-max mx-auto">
+		<div class="mx-auto w-max">
 			<Button size="small" variant="secondary" disabled={loading}
 				>{loading ? 'Loading...' : 'Update'}</Button
 			>

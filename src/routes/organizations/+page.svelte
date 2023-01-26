@@ -1,18 +1,13 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-	import { Button, Modal } from 'rain-svelte-components/package';
 	import { afterNavigate } from '$app/navigation';
-
 	import NewOrgModal from '$lib/user-context/NewOrgModal.svelte';
+	import type { PageData } from './$types';
 
-	let openCreateModal = !!$page.data.create;
-	onMount(() => {
-		console.log($page.data);
-	});
+	export let data: PageData;
+	let openCreateModal: boolean = data.create;
 
 	afterNavigate(() => {
-		openCreateModal = $page.data.create;
+		openCreateModal = data.create;
 	});
 </script>
 

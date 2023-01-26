@@ -35,7 +35,7 @@
 <div class="relative flex flex-col items-center">
 	<button class="flex items-center" on:click={openContextMenu}>
 		<div>{$page.data.userContext?.nickname}</div>
-		<div class="flex items-center pt-0.5 ml-0.5">
+		<div class="ml-0.5 flex items-center pt-0.5">
 			{#if loading}
 				<Ring size="20px" color="#cbd5e1" />
 			{:else}
@@ -43,7 +43,7 @@
 			{/if}
 		</div>
 	</button>
-	{#if isOpen}
+	{#if isOpen && $page.data.profile && $page.data.userContext}
 		<div transition:fly={{ duration: 300, y: 10 }} class="context-container">
 			<form
 				method="POST"
@@ -76,7 +76,7 @@
 			</form>
 			<div class="flex border-t-[1px] border-gray-200">
 				<button
-					class="context-option w-full mt-2"
+					class="context-option mt-2 w-full"
 					on:click={() => goto('/organizations?ref=create')}
 				>
 					<Icon src={PlusCircle} size={'30'} />
@@ -89,10 +89,10 @@
 
 <style lang="postcss">
 	.context-container {
-		@apply absolute right-0 -bottom-4 flex flex-col gap-y-2 translate-y-full w-56 py-3;
-		@apply bg-white shadow-md border border-gray-100 rounded-xl;
+		@apply absolute right-0 -bottom-4 flex w-56 translate-y-full flex-col gap-y-2 py-3;
+		@apply rounded-xl border border-gray-100 bg-white shadow-md;
 	}
 	.context-option {
-		@apply flex items-center gap-x-2.5 p-1 mx-1 cursor-pointer hover:bg-gray-200 rounded-lg;
+		@apply mx-1 flex cursor-pointer items-center gap-x-2.5 rounded-lg p-1 hover:bg-gray-200;
 	}
 </style>
