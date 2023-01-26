@@ -76,33 +76,18 @@
 		>
 		<OverflowMenu position="right">
 			{#if $page.data.session?.user?.id}
-				<OverflowMenuItem>
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<div class="flex gap-x-2" on:click={() => (changeVisiblityModal = true)}>
-						<span class="w-4">
-							<Icon src={expression.public ? LockClosed : LockOpen} />
-						</span>
-						<span> Make {expression.public ? 'private' : 'public'} </span>
-					</div>
+				<OverflowMenuItem
+					on:click={() => (changeVisiblityModal = true)}
+					icon={expression.public ? LockClosed : LockOpen}
+				>
+					Make {expression.public ? 'private' : 'public'}
 				</OverflowMenuItem>
 			{/if}
-			<OverflowMenuItem>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div class="flex gap-x-2" on:click={() => (newExpModal = true)}>
-					<span class="w-4">
-						<Icon src={DocumentDuplicate} />
-					</span>
-					<span> Duplicate </span>
-				</div>
+			<OverflowMenuItem on:click={() => (newExpModal = true)} icon={DocumentDuplicate}
+				>Duplicate
 			</OverflowMenuItem>
-			<OverflowMenuItem>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div class="flex gap-x-2 text-red-700" on:click={deleteExp}>
-					<span class="w-4">
-						<Icon src={Trash} />
-					</span>
-					<span>Delete</span>
-				</div>
+			<OverflowMenuItem on:click={deleteExp} classes="text-red-700" icon={Trash}
+				>Delete
 			</OverflowMenuItem>
 		</OverflowMenu>
 	</div>
