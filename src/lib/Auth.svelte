@@ -46,32 +46,32 @@
 
 <Background>
 	<div
-		class="bg-white rounded-xl p-8 border border-gray-200 -mt-20"
+		class="mx-2 -mt-20 w-full max-w-sm rounded-xl border border-gray-200 bg-white p-8 sm:mx-0"
 		in:fly={{ y: 20, duration: 1000 }}
 	>
-		<div class="flex flex-col gap-y-4 w-80">
+		<div class="flex flex-col gap-y-4">
 			<!-- <div class="flex flex-col gap-y-2"> -->
 			<h1 class="text-2xl font-semibold">Welcome back</h1>
 			<!-- </div> -->
 			{#if $signerAddress && $connected}
-				<p class="text-gray-700 text-sm">Sign into your account</p>
+				<p class="text-sm text-gray-700">Sign into your account</p>
 				<form
 					method="POST"
 					action="/sign-in"
-					class="flex flex-col gap-y-4 w-80"
+					class="flex flex-col gap-y-4"
 					use:enhance={submitFunction}
 				>
 					<input
 						hidden
 						name="address"
 						bind:value={$signerAddress}
-						class="p-2 bg-gray-300 rounded-[10px]"
+						class="rounded-[10px] bg-gray-300 p-2"
 					/>
 
-					<Button variant="primary" classes="text-center w-full">Sign in with your wallet</Button>
+					<Button variant="primary" classes="text-center">Sign in with your wallet</Button>
 				</form>
 			{:else}
-				<p class="text-gray-700 text-sm">Connect your wallet to continue</p>
+				<p class="text-sm text-gray-700">Connect your wallet to continue</p>
 				<ConnectWallet />
 			{/if}
 		</div>

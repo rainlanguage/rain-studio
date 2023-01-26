@@ -8,29 +8,35 @@
 		? Math.max(...contextColumns.map((column) => (column?.cells ? column.cells?.length : 0)))
 		: 0;
 
-	export let mockContext = Array(contextColumns?.length)
-		.fill(0)
-		.map((arr) => Array(maxRows));
+	const fillContext = () => {
+		return Array(contextColumns?.length)
+			.fill(0)
+			.map((arr) => Array(maxRows));
+	};
+
+	export let mockContext = fillContext();
+
+	$: if ((mockContext = [])) mockContext = fillContext();
 
 	let columns = contextColumns?.length || 0;
 </script>
 
 {#if contextColumns}
-	<table class={`text-sm border border-gray-300`}>
-		<tr class="border-gray-300 border-b">
+	<table class={`border border-gray-300 text-sm`}>
+		<tr class="border-b border-gray-300">
 			{#each Array(columns) as col, y}
-				<td class="p-1 text-xs font-medium cell bg-gray-100">{contextColumns[y].name}</td>
+				<td class="cell bg-gray-100 p-1 text-xs font-medium">{contextColumns[y].name}</td>
 			{/each}
 		</tr>
 		{#each Array(maxRows) as row, y}
-			<tr class="border-gray-300 border-b">
+			<tr class="border-b border-gray-300">
 				{#each Array(columns) as col, x}
-					<td class="p-2 border-gray-300 border-r">
-						<HoverTooltip width="w-48" class="bg-white flex flex-col">
+					<td class="border-r border-gray-300 p-2">
+						<HoverTooltip width="w-48" class="flex flex-col bg-white">
 							<div class="flex flex-col">
-								<span class="font-mono text-gray-400 text-xs">{`<${x} ${y}>`}</span>
+								<span class="font-mono text-xs text-gray-400">{`<${x} ${y}>`}</span>
 								{#if contextColumns?.[x]?.cells?.[y].alias}
-									<span class="font-mono whitespace-nowrap"
+									<span class="whitespace-nowrap font-mono"
 										>{contextColumns[x]?.cells?.[y].alias}</span
 									>
 								{/if}
@@ -43,10 +49,10 @@
 							>
 						</HoverTooltip>
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<div class="flex flex-col mt-0.5">
+						<div class="mt-0.5 flex flex-col">
 							{#if contextColumns?.[x]?.cells?.[y].alias}
 								<input
-									class="text-gray-700 bg-gray-100 p-1"
+									class="bg-gray-100 p-1 text-gray-700"
 									placeholder="..."
 									bind:value={mockContext[x][y]}
 								/>

@@ -1,4 +1,5 @@
 <script>
+	import { page } from '$app/stores';
 	import '../app.postcss';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { afterNavigate, beforeNavigate, invalidate } from '$app/navigation';
@@ -76,7 +77,9 @@
 <div data-sveltekit-prefetch class="flex h-full min-h-screen flex-col">
 	<Nav />
 	<slot />
-	<Footer />
+	{#if !$page.data?.noFooter}
+		<Footer />
+	{/if}
 </div>
 
 <SvelteToast />

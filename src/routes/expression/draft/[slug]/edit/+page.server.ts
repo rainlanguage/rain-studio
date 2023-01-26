@@ -4,7 +4,7 @@ import type { ExpressionRowFull, ExpressionRow, ContractRowFull, InterpreterRowF
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load(event): Promise<{ expression: ExpressionRowFull }> {
+export async function load(event): Promise<{ expression: ExpressionRowFull, noFooter: true }> {
     const { supabaseClient, session } = await getSupabase(event)
 
     // if there's no session at all, have them sign in
@@ -31,6 +31,7 @@ export async function load(event): Promise<{ expression: ExpressionRowFull }> {
     if (!query.data.length || !userQuery?.data || !interpreterQuery?.data) throw error(404, 'Not found');
 
     return {
+        noFooter: true,
         expression: { ...query.data[0], user_id: userQuery.data, contract: contractQuery?.data as unknown as ContractRowFull, interpreter: interpreterQuery.data as InterpreterRowFull }
     }
 }
