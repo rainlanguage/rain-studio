@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { userContextData } from '$lib/stores';
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import { ChevronUpDown, PlusCircle, ChevronLeft } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';

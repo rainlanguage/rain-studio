@@ -89,7 +89,7 @@
 				{#if loading}
 					<Ring size="44px" color="#cbd5e1" />
 				{:else if $isLinked}
-					{#if $page.data.wallets_linked?.length > 1}
+					{#if $page.data.wallets_linked && $page.data.wallets_linked.length > 1}
 						<Button variant="black" on:click={() => (openedModalUnlink = true)}
 							>Unlink this wallet</Button
 						>
