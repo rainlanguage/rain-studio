@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 
 	const expression = `/**
@@ -62,26 +62,26 @@ _ _: sender finalAmount,`
 In Rainlang, you can use the if word to perform different actions based on a given condition. In this tutorial, we will use the if word and the erc721balanceof word to create a FlowERC20 expression that mints an amount of the token for the sender of the transaction, but only if they have at least 2 of a specific ERC721 token.
 First, let's define the named outputs that we will use in our expression. In this case, we will define the "mintAmount" output with the amount of the FlowERC20 token that we want to mint, and the "erc721Contract" output with the contract address of the ERC721 token that we want to check the balance of.
 
-<Formatter raw={`mintAmount: 100,
+<ForkableFormatter raw={`mintAmount: 100,
 erc721Contract: 0x123456,`} />
 
 Next, we will use the erc721balanceof word to get the balance of the ERC721 token for the sender of the transaction. We’ll then define our condition, which checks if the balance is greater than 1.
 
-<Formatter raw={`balance: erc721balanceof(erc721Contract, sender),
+<ForkableFormatter raw={`balance: erc721balanceof(erc721Contract, sender),
 condition: greater-than(balance 1),`} />
 
 We will then use the if word to decide what the final amount to mint is. If the condition is true, the finalAmount will be the mintAmount, otherwise 0.
 
-<Formatter raw={`finalAmount: if(condition mintAmount 0),`} />
+<ForkableFormatter raw={`finalAmount: if(condition mintAmount 0),`} />
 
 The last step is to use these values to define a mint, as part of the mints list. As we learned in the previous section, mints are defined as `\_ \_: to amount`.
 
-<Formatter raw={expression} />
+<ForkableFormatter raw={expression} />
 
 ## Including the logic in the FlowERC20 expression template
 
 The final expression would look like this:
 
-<Formatter raw={expression2} />
+<ForkableFormatter raw={expression2} />
 
 This expression will mint "mintAmount" of the FlowERC20 token to the sender if they have at least 2 of the specified ERC721 token, otherwise it will not mint any tokens. This is a simple example of how you can use the if word and named outputs to create more complex expressions with FlowERC20.

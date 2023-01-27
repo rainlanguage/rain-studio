@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 </script>
 
@@ -17,7 +17,7 @@ Use this box to experiment with ideas below
 
 In Rainlang, you can use the if word to perform different actions based on a given condition. The if word takes three parameters: a condition, a value to return if the condition is true, and a value to return if the condition is false. For example, the following expression gets the balance of an ERC20 token with contract address 0x123456 for an Ethereum wallet with address 0xabcdef and returns a value of 10 if the balance is greater than 10, and a value of 5 if the balance is 10 or less:
 
-<Formatter raw={`myBalance: erc20balanceof(0x123456 0xabcdef),
+<ForkableFormatter raw={`myBalance: erc20balanceof(0x123456 0xabcdef),
 high: 10,
 low: 5,
 result: if(greater-than(myBalance 10) high low);`} />

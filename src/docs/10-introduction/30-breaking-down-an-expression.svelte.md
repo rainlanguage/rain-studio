@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 </script>
 
@@ -12,7 +12,7 @@ published: true
 
 Consider this simple Rainlang expression:
 
-<Formatter raw={`_: add(1 2);`} />
+<ForkableFormatter raw={`_: add(1 2);`} />
 
 The expression starts with an underscore, which is a placeholder for the output of the expression. In this case, the output will be the result of the addition of 1 and 2.
 
