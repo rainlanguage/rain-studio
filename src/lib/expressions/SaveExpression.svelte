@@ -43,7 +43,7 @@
 	};
 </script>
 
-<div class="flex flex-col gap-y-4 w-screen max-w-2xl">
+<div class="flex w-screen max-w-2xl flex-col gap-y-4">
 	{#if !newSlug}
 		<span class="text-2xl font-semibold"
 			>{#if forking}Fork this expression{:else}Save this expression{/if}</span
@@ -54,7 +54,7 @@
 		/>
 		<Pills><span class="text-sm">{presaveExpression.interpreter.metadata.name}</span></Pills>
 		<div class="max-h-80 overflow-y-scroll">
-			<Formatter raw={presaveExpression.raw_expression} />
+			<Formatter raw={presaveExpression.raw_expression} showFork={false} />
 		</div>
 		<Input bind:value={presaveExpression.name}>
 			<svelte:fragment slot="label">Name</svelte:fragment>
