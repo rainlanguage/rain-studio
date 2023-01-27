@@ -29,7 +29,7 @@ A smart contract could use this result to, for example, decide how many of a tok
 
 Try changing the numbers that are being added in this expression and see how the simulated result changes.
 
-<Parser raw={`_: add(1 2);`}/>
+<Parser raw={`_: add(1 2);`} hideSave hideLoad hideExpand hideHelp/>
 
 ## Terms
 
