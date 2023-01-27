@@ -1,13 +1,15 @@
-import { getSupabase } from '@supabase/auth-helpers-sveltekit';
+import { getServerSession, getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { redirect, fail, error as sveltekitError } from '@sveltejs/kit';
 import type { PageServerLoad, RequestEvent } from './$types';
 import type { ContextInfo } from '$lib/types/context-types';
-import type { Profile } from '$lib/types/app-types';
-import { ContextRoles } from '$lib/user-context';
+import type { Organization, Profile } from '$lib/types/app-types';
+import { ContextBuilder } from '$lib/user-context';
+import { generateCookie } from '$lib/utils/auth';
 
 /** @type {import('./$types').PageData} */
 export const load: PageServerLoad = async (event) => {
-    const { supabaseClient, session } = await getSupabase(event);
+    const session = await getServerSession(event);
+
     if (!session) throw redirect(307, '/sign-in');
     const { url } = event;
     let create = false;
@@ -24,33 +26,21 @@ export const actions = {
         const { request } = event;
         const { supabaseClient, session } = await getSupabase(event);
         if (session) {
-            const { user } = session;
-
             const data = await request.formData();
             const orgName = data.get('OrgName');
             const orgNickname = data.get('OrgNickname');
             if (orgName && orgNickname) {
-                const { data: dataOrg, error: errorOrg } = await supabaseClient
-                    .from('organizations')
-                    .insert({
-                        name: orgName,
-                        nickname: orgNickname.toString().toLowerCase()
-                    })
-                    .select('*')
-                    .single();
+                const name_ = orgName.toString();
+                const nickname_ = orgNickname.toString();
 
-                if (errorOrg) {
-                    return fail(400, { error: errorOrg });
-                }
-
-                const { error: errorMember } = await supabaseClient.from('org_member').insert({
-                    user_id: user.id,
-                    org_id: dataOrg.id,
-                    role: 'admin'
+                // The RPC function use the current session to link to user_id
+                const { error } = await supabaseClient.rpc('create_organization', {
+                    name_,
+                    nickname_
                 });
 
-                if (errorMember) {
-                    return fail(400, { error: errorMember });
+                if (error) {
+                    return fail(400, error);
                 }
             }
         } else {
@@ -60,8 +50,11 @@ export const actions = {
     changeContext: async (event: RequestEvent) => {
         const { request, cookies } = event;
         const { supabaseClient, session } = await getSupabase(event);
+        const currentSessionCookie = cookies.get('rain-studio-session');
 
-        if (!session) throw sveltekitError(401, { message: 'User not logged' });
+        // In practice, the session and the session cookie will coexist. This is for type safe.
+        if (!session || !currentSessionCookie)
+            throw sveltekitError(401, { message: 'User not logged' });
 
         const user = session.user as unknown as Profile;
 
@@ -72,15 +65,7 @@ export const actions = {
         let dataContext: ContextInfo | null = null;
 
         if (userId) {
-            dataContext = {
-                id: user.id,
-                name: user.full_name ?? user.username,
-                nickname: user.username,
-                avatar_url: user.avatar_url ?? null,
-                role: 'user',
-                website: user.website,
-                __ContextType: ContextRoles.USER
-            };
+            dataContext = ContextBuilder.fromProfile(user);
         }
 
         if (memberId) {
@@ -95,22 +80,19 @@ export const actions = {
             if (dataOrg) {
                 if (dataOrg.user_id != user.id) fail(401, { error: 'Not have right to access.' });
 
-                dataContext = {
-                    id: dataOrg.id,
-                    orgId: dataOrg.info_org.id,
-                    name: dataOrg.info_org.name,
-                    nickname: dataOrg.info_org.nickname,
-                    avatar_url: dataOrg.info_org.avatar_url,
-                    role: dataOrg.role,
-                    website: dataOrg.info_org.website,
-                    __ContextType: ContextRoles.ORG
-                };
+                dataContext = ContextBuilder.fromDataOrg(dataOrg as Organization);
             }
         }
 
-        // If the user is logged, should have the supabase cookie
-        const { expires_at } = JSON.parse(cookies.get('supabase-auth-token'));
-        cookies.set('rain-studio-context', JSON.stringify(dataContext), {
+        // Get the expire times from the current cookie (don't extend the session).
+        const { expires_in, expires_at } = JSON.parse(currentSessionCookie);
+
+        const newCookie = await generateCookie(user, dataContext, {
+            exp_in: expires_in,
+            exp_at: expires_at
+        });
+
+        cookies.set('rain-studio-session', JSON.stringify(newCookie), {
             path: '/',
             maxAge: expires_at,
             httpOnly: false

@@ -35,8 +35,6 @@
 			.select('*')
 			.eq('nickname', value.toLowerCase());
 
-		console.log('a: ', data);
-
 		if (error) {
 			return { error: 'Something went wrong' };
 		}
@@ -87,10 +85,10 @@
 		<form
 			method="POST"
 			action="/organizations?/newOrg"
-			class="flex flex-col gap-5 w-full"
+			class="flex w-full flex-col gap-5"
 			use:enhance={submitFunction}
 		>
-			<div class="flex flex-col gap-2.5 w-fit">
+			<div class="flex w-fit flex-col gap-2.5">
 				<p class="text-[25px]">Create a new organization</p>
 			</div>
 

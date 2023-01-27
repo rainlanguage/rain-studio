@@ -1,9 +1,9 @@
 import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ cookies }) {
-	cookies.delete('supabase-auth-token');
-	cookies.delete('rain-studio-context');
+export const load: PageServerLoad = async ({ cookies }) => {
+    cookies.delete('rain-studio-session');
 
-	throw redirect(307, '/dashboard');
-}
+    throw redirect(307, '/');
+};

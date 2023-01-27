@@ -5,13 +5,15 @@ import type { ContextInfo } from '$lib/types/context-types';
 
 export const load: LayoutServerLoad = async (event) => {
     const { supabaseClient, session } = await getSupabase(event);
+    const currentSessionCookie = event.cookies.get('rain-studio-session');
 
     let profile: Profile | null = null;
     let wallets_linked: string[] | null = null;
     let organizations: Organization[] | null = null;
     let userContext: ContextInfo | null = null;
 
-    if (session) {
+    // In practice, the session and the session cookie will coexist. This is for type safe.
+    if (session && currentSessionCookie) {
         const { data: dataWallets } = await supabaseClient
             .from('wallet_users')
             .select(`*, wallets_linked(*)`)
@@ -31,11 +33,11 @@ export const load: LayoutServerLoad = async (event) => {
             .eq('user_id', session.user.id);
 
         if (dataOrgs) {
-            organizations = dataOrgs;
+            organizations = dataOrgs as Organization[];
         }
 
-        // Making the user context available on all the app (null/undefined or trully data)
-        userContext = JSON.parse(event.cookies.get('rain-studio-context'));
+        const { orgContext } = JSON.parse(currentSessionCookie);
+        userContext = orgContext;
     }
 
     return {
