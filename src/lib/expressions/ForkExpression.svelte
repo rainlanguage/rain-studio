@@ -22,7 +22,6 @@
 			notes: expression?.notes || ''
 		};
 
-		console.log(expressionCopy);
 		const response = await saveExpressionCopy(expressionCopy);
 		if (response.status == 400) error = 'Something went wrong';
 		if (response.status == 201 && response.data) {

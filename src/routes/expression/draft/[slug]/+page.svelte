@@ -16,25 +16,20 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import SocialButton from '$lib/SocialButton.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
+	import { flattenExpression } from '$lib/expressions/expressions';
 
 	$: expression = $page.data.expression;
 	$: user = $page.data.expression.user_id;
-	$: contract = $page.data.expression.contract;
-	$: interpreter = $page.data.expression.interpreter;
 	$: tags = $page.data.expression?.tags;
-	$: userLike = $page.data.expression?.userLike;
+	$: userLike = $page.data.userLike;
 
 	let session = $page.data.session;
-	let openNewExpModal: boolean = false;
+	let openForkModal: boolean = false;
 	let openSignInModal: boolean = false;
 	let changeVisiblityModal: boolean = false;
 
 	const fork = () => {
-		if (session) {
-			openNewExpModal = true;
-		} else {
-			openSignInModal = true;
-		}
+		openForkModal = true;
 	};
 
 	const clickLike = async () => {
@@ -154,8 +149,10 @@
 	}}
 />
 
-<Modal bind:open={openNewExpModal}>
-	<ForkExpression {expression} />
+<Modal bind:open={openForkModal}>
+	{#if $page.data.session}
+		<ForkExpression expression={flattenExpression(expression)} on:saved />
+	{:else}
+		<Auth />
+	{/if}
 </Modal>
-
-<Modal bind:open={openSignInModal}><Auth /></Modal>
