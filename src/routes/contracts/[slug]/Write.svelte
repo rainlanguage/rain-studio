@@ -22,6 +22,7 @@
 	} from './write';
 	import type { ContractRowFull, ExpressionRowFull, InterpreterRowFull } from '$lib/types/types';
 	import HelpPanel from '$lib/HelpPanel.svelte';
+	import AuthInner from '$lib/AuthInner.svelte';
 
 	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: ContractRowFull;
 
@@ -251,7 +252,7 @@
 	{#if $page.data.session}
 		<SaveExpression {presaveExpression} />
 	{:else}
-		<Auth />
+		<AuthInner />
 	{/if}
 </Modal>
 
@@ -263,7 +264,7 @@
 	{#if $page.data.session}
 		<LoadExpressionModal on:select={loadSelectedExpression} {contract} {expressionComponentName} />
 	{:else}
-		<Auth />
+		<AuthInner />
 	{/if}
 </Modal>
 

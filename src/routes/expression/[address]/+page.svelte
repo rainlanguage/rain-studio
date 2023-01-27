@@ -12,6 +12,7 @@
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import SocialButton from '$lib/SocialButton.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
+	import AuthInner from '$lib/AuthInner.svelte';
 
 	$: expression = $page.data.expression;
 	$: user = $page.data.user;
@@ -52,7 +53,7 @@
 </script>
 
 <PageHeader>
-	<div class="w-full flex justify-between items-center container mx-auto">
+	<div class="container mx-auto flex w-full items-center justify-between">
 		<div class="flex flex-col gap-y-2">
 			<span class="text-sm text-gray-500">On-chain expression</span>
 			<span class="font-mono text-xl">{sgQuery.id}</span>
@@ -87,18 +88,18 @@
 
 <div class="container mx-auto">
 	<div class="mt-8">
-		<div class="gap-y-4 grid grid-cols-2 gap-8">
+		<div class="grid grid-cols-2 gap-8 gap-y-4">
 			<div class="flex flex-col gap-y-4">
-				<div class="font-semibold text-xl">Writer's notes</div>
+				<div class="text-xl font-semibold">Writer's notes</div>
 				<div class="whitespace-pre-line">
 					{expression.notes || `The writer of this expression hasn't appended any metadata.`}
 				</div>
-				<div class="flex flex-col gap-y-2 border-t border-gray-200 pt-4 mt-4 items-start">
+				<div class="mt-4 flex flex-col items-start gap-y-2 border-t border-gray-200 pt-4">
 					<ExpressionEnv {expression} />
 				</div>
 			</div>
 			<div>
-				<div class="w-full flex flex-col gap-y-4">
+				<div class="flex w-full flex-col gap-y-4">
 					<Formatter stateConfig={expression.stateConfig} />
 				</div>
 			</div>
@@ -110,8 +111,8 @@
 	{#if $page.data.session}
 		<ForkExpression expression={expressionToFork} />
 	{:else}
-		<Auth />
+		<AuthInner />
 	{/if}
 </Modal>
 
-<Modal bind:open={openSignInModal}><Auth /></Modal>
+<Modal bind:open={openSignInModal}><AuthInner /></Modal>

@@ -17,6 +17,7 @@
 	import type { UserLikes, ExpressionLikes, AccountData } from './types';
 	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import type { ContractRowFull } from '$lib/types/types';
+	import AuthInner from '$lib/AuthInner.svelte';
 
 	export let contract: ContractRowFull;
 
@@ -210,5 +211,5 @@
 </div>
 
 <Modal bind:open={openAuthModal}>
-	<Auth />
+	<AuthInner />
 </Modal>

@@ -17,6 +17,7 @@
 	import SocialButton from '$lib/SocialButton.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { flattenExpression } from '$lib/expressions/expressions';
+	import AuthInner from '$lib/AuthInner.svelte';
 
 	$: expression = $page.data.expression;
 	$: user = $page.data.expression.user_id;
@@ -153,6 +154,6 @@
 	{#if $page.data.session}
 		<ForkExpression expression={flattenExpression(expression)} on:saved />
 	{:else}
-		<Auth />
+		<AuthInner />
 	{/if}
 </Modal>

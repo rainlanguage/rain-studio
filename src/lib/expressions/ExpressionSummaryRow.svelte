@@ -21,6 +21,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components/package/overflow-menu';
 	import type { ExpressionRowFull } from '$lib/types/types';
+	import AuthInner from '$lib/AuthInner.svelte';
 
 	export let expression: ExpressionRowFull;
 	const dispatch = createEventDispatcher();
@@ -113,6 +114,6 @@
 	{#if $page.data.session}
 		<ForkExpression expression={flattenExpression(expression)} on:saved />
 	{:else}
-		<Auth />
+		<AuthInner />
 	{/if}
 </Modal>
