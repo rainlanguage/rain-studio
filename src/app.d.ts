@@ -9,7 +9,7 @@ declare namespace App {
     }
     // interface Locals {}
     interface PageData {
-        session: import('@supabase/supabase-js').Session | null;
+        session: import('./lib/types/app-types').Session | null;
         profile: import('./lib/types/app-types').Profile | null;
         wallets_linked: string[] | null;
         organizations: import('./lib/types/app-types').Organization[] | null;
