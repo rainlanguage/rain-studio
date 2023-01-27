@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Heart, ArrowUp, ArrowDown, ChatBubbleLeft } from '@steeze-ui/heroicons';
 	import { Section, SectionBody } from 'rain-svelte-components/package/section';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import { DisplayAddress, Ring, Modal } from 'rain-svelte-components/package';
 
 	import { page } from '$app/stores';
@@ -16,6 +15,10 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 
 	import type { UserLikes, ExpressionLikes, AccountData } from './types';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
+	import type { ContractRowFull } from '$lib/types/types';
+
+	export let contract: ContractRowFull;
 
 	let expressionsToShow: any[] = [];
 	let isLoading = true;
@@ -122,12 +125,13 @@
 								<div
 									class="overflow-hidden rounded-[5px] bg-neutral-100 font-mono text-[12px] leading-4 tracking-[-0.01em]"
 								>
-									<Formatter
+									<ForkableFormatter
 										maxHeight="150px"
 										stateConfig={{
 											sources: config.sources,
 											constants: config.constants
 										}}
+										contract={contract.id}
 									/>
 								</div>
 								<div class="flex items-center gap-x-3.5 text-[13px] text-neutral-500">

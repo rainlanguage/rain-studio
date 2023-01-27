@@ -139,7 +139,7 @@
 			</div>
 			<div class="col-span-4">
 				<div class="flex w-full flex-col gap-y-4">
-					<Formatter raw={expression.raw_expression} />
+					<Formatter raw={expression.raw_expression} showFork={false} />
 				</div>
 			</div>
 		</div>

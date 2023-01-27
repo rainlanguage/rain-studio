@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import Auth from '$lib/Auth.svelte';
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
-	import { copyAndEmit } from '$lib/expressions/expressions';
+	import { copyAndEmit, flattenExpression } from '$lib/expressions/expressions';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
@@ -20,9 +20,9 @@
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components/package/overflow-menu';
-	import { Icon } from '@steeze-ui/svelte-icon';
+	import type { ExpressionRowFull } from '$lib/types/types';
 
-	export let expression: any;
+	export let expression: ExpressionRowFull;
 	const dispatch = createEventDispatcher();
 
 	let deleteExpressionModal: boolean = false,
@@ -111,7 +111,7 @@
 
 <Modal bind:open={newExpModal}>
 	{#if $page.data.session}
-		<ForkExpression {expression} on:saved />
+		<ForkExpression expression={flattenExpression(expression)} on:saved />
 	{:else}
 		<Auth />
 	{/if}

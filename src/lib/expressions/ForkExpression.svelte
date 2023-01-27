@@ -2,10 +2,11 @@
 	import { fade } from 'svelte/transition';
 	import { Button } from 'rain-svelte-components/package';
 	import { createEventDispatcher } from 'svelte';
-	import type { ExpressionRowFull } from '$lib/types/types';
+	import type { ExpressionInsert } from '$lib/types/types';
 	import { saveExpressionCopy } from '$lib/expressions/expressions';
+	import type { Database } from '$lib/types/generated-db-types';
 
-	export let expression: ExpressionRowFull;
+	export let expression: ExpressionInsert;
 	let error: string | null;
 	let newSlug: string;
 
@@ -13,14 +14,15 @@
 
 	const saveExpression = async () => {
 		error = null;
-		const expressionCopy = {
+		let expressionCopy: ExpressionInsert;
+
+		expressionCopy = {
+			...expression,
 			name: expression?.name || 'Untitled',
-			notes: expression?.notes || '',
-			contract: expression?.contract?.id,
-			contract_expression: expression?.contract_expression,
-			interpreter: expression?.interpreter?.id,
-			raw_expression: expression.raw_expression
+			notes: expression?.notes || ''
 		};
+
+		console.log(expressionCopy);
 		const response = await saveExpressionCopy(expressionCopy);
 		if (response.status == 400) error = 'Something went wrong';
 		if (response.status == 201 && response.data) {
@@ -30,12 +32,12 @@
 	};
 </script>
 
-<div class="flex flex-col gap-y-4 w-screen max-w-2xl">
+<div class="flex w-full flex-col gap-y-4 md:max-w-lg">
 	{#if !newSlug}
 		<span class="text-2xl font-semibold">Fork this expression</span>
-		<span>This will save a copy of this expression into your libary.</span>
+		<span>This will save a copy of this expression into your library.</span>
 		<div>
-			<Button variant="primary" on:click={saveExpression}>Save expression</Button>
+			<Button variant="primary" on:click={saveExpression}>Fork</Button>
 		</div>
 	{:else}
 		<div in:fade class="flex flex-col gap-y-4">

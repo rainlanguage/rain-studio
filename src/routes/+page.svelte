@@ -9,6 +9,7 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowUpRight } from '@steeze-ui/heroicons';
 	import { goto } from '$app/navigation';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 
 	let show = false;
 	onMount(() => {
@@ -89,7 +90,11 @@
 			</div>
 			<div class="w-full flex-shrink-0 md:w-3/5">
 				{#key activeExample}
-					<Formatter raw={expressionExamples[activeExample].expression} maxHeight="400px" />
+					<ForkableFormatter
+						raw={expressionExamples[activeExample].expression}
+						maxHeight="400px"
+						showForkLabel
+					/>
 				{/key}
 			</div>
 		</div>
