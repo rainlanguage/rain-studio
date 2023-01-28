@@ -57,7 +57,7 @@ export async function load(event) {
 			user_id: userQuery.data,
 			contract: contractQuery?.data as unknown as ContractRowFull,
 			interpreter: interpreterQuery.data,
-			userLike
-		}
+		},
+		userLike
 	};
 }

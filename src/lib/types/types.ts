@@ -9,6 +9,8 @@ export type ContractRow = Database['public']['Tables']['contracts']['Row']
 export type ProfileRow = Database['public']['Tables']['wallet_users']['Row']
 export type InterpreterRow = Database['public']['Tables']['interpreters']['Row']
 
+export type ExpressionInsert = Database['public']['Tables']['draft_expressions_w']['Insert']
+
 export type ContractRowFull = Nest<Nest<Nest<ContractRow, 'project', ProjectRow>, 'metadata', ContractMetadata>, 'abi', { abi: Abi }>
 export type ExpressionRowFull = Nest<Nest<Nest<Nest<ExpressionRow, 'contract', ContractRowFull | null>, 'user_id', ProfileRow>, 'interpreter', InterpreterRowFull>, 'saved_context', SavedContext>
 export type InterpreterRowFull = Nest<InterpreterRow, 'metadata', InterpreterMetadata>

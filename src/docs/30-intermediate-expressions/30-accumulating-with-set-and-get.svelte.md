@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 
 	const expression = `/* Calculate the amount of the token to mint */
@@ -45,7 +45,7 @@ new-accumulated-amount: add(amount-so-far amount-for-this-mint),
 
 Example: To use the "if" word to check if the accumulated amount of a token for a wallet is above a certain value, you can use the following expression:
 
-<Formatter raw={expression} />
+<ForkableFormatter raw={expression} />
 
 In this expression, the "amount" variable is set to a constant value of 1000. Then, the "result" variable is calculated using the "if" word to check if the accumulated amount is above 20000 using the "greater-than" word and the value stored under the key "sender()". If the accumulated amount is above 20000, the "if" word returns 0, which means that no tokens will be minted. Otherwise, the "if" word returns the "amount" variable, which is the amount of tokens to mint.
 

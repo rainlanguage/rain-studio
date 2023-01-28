@@ -20,10 +20,11 @@
 		getNameFromChainId,
 		getWriteMethods
 	} from './write';
-	import type { ExpressionRowFull, InterpreterRowFull } from '$lib/types/types';
+	import type { ContractRowFull, ExpressionRowFull, InterpreterRowFull } from '$lib/types/types';
 	import HelpPanel from '$lib/HelpPanel.svelte';
+	import AuthInner from '$lib/AuthInner.svelte';
 
-	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: any;
+	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: ContractRowFull;
 
 	let result: any = []; // the state of the the form
 
@@ -211,14 +212,14 @@
 					showInterpreterFields={false}
 				/>
 			{/key}
-			<div class="flex flex-col gap-y-4 p-4 border-gray-300 rounded-lg border mt-8">
+			<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
 				{#if !$signer}
 					<div class="self-center">
 						<ConnectWallet />
 					</div>
 				{:else}
-					<div class="flex gap-x-2 items-center">
-						<div class="w-3 h-3 rounded-full bg-green-600" />
+					<div class="flex items-center gap-x-2">
+						<div class="h-3 w-3 rounded-full bg-green-600" />
 						<span>Connected to {connectedChainName}</span>
 					</div>
 					<div class="flex flex-col gap-y-2">
@@ -251,7 +252,7 @@
 	{#if $page.data.session}
 		<SaveExpression {presaveExpression} />
 	{:else}
-		<Auth />
+		<AuthInner />
 	{/if}
 </Modal>
 
@@ -263,7 +264,7 @@
 	{#if $page.data.session}
 		<LoadExpressionModal on:select={loadSelectedExpression} {contract} {expressionComponentName} />
 	{:else}
-		<Auth />
+		<AuthInner />
 	{/if}
 </Modal>
 

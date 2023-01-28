@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 
 	const expression = `amount: 1000,
@@ -34,7 +34,7 @@ The amount value is known as the 'maxAmount' and will be used by the Orderbook c
 
 Use the 'maxAmount' and 'price' values to construct your order expression. For example, to place a bid to buy 100 TKN at a maximum price of 1 USDT per TKN, you could use the following expression:
 
-<Formatter raw={`amount: 100,
+<ForkableFormatter raw={`amount: 100,
 the-price: 1,
 _ _: amount the-price`} />
 
@@ -50,7 +50,7 @@ When your Order is cleared by Orderbook, it is matched to another Order submitte
 
 To write an order expression using the 'set' and 'get' words to only clear a maximum of 1000 tokens for a specific counterparty at a price of 1, you can use the following expression:
 
-<Formatter raw={`amount: 100,
+<ForkableFormatter raw={`amount: 100,
 the-price: 1,
 _ _: amount the-price`} />
 

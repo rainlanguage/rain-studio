@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 </script>
 
@@ -16,7 +16,7 @@ In Rainlang, **Expressions** are written using a specific syntax that consists o
 
 The syntax for an expression in Rainlang is as follows:
 
-<Formatter raw={`output: word(input1 input2 ... inputN)`} />
+<ForkableFormatter raw={`output: word(input1 input2 ... inputN)`} />
 
 In this syntax, the "output" is the name of the result of the expression, the "word" is the name of the word that is being executed, and the "input1 input2 ... inputN" are the values or expressions that are passed to the function as inputs.
 
@@ -33,13 +33,13 @@ In Rainlang, there are many different Words that can be used in expressions. Som
 
 These Words can be used in expressions to perform a wide range of calculations. For example, the following expression calculates the sum of 1 and 2 and names the result "mySum":
 
-<Formatter raw={`mySum: add(1 2)`} />
+<ForkableFormatter raw={`mySum: add(1 2)`} />
 
 We’ll explore more words and their uses throughout these guides.
 Inputs
 The inputs to a Word can be either numeric values or the results of other expressions. For example, the following expression calculates the product of the sum of 1 and 2 and the difference of 3 and 4 and names the result '\_'. '\_' is used as a placeholder when you don’t want to name the output (see below).
 
-<Formatter raw={`_: mul(add(1 2) sub(4 3))`} />
+<ForkableFormatter raw={`_: mul(add(1 2) sub(4 3))`} />
 
 In this expression, the add word is used as an input to the mul word. This is an example of a nested expression, where one expression is used as an input to another expression.
 
@@ -47,7 +47,7 @@ In this expression, the add word is used as an input to the mul word. This is an
 
 The output of an expression is a named value that can be used in other expressions or as an input to a smart contract. For example, the following expression calculates the sum of 1 and 2 and names the result "mySum":
 
-<Formatter raw={`mySum: add(1 2)`} />
+<ForkableFormatter raw={`mySum: add(1 2)`} />
 
 In this expression, the "mySum" value is the output of the add word, and because it’s named it can be used in other lines. If it’s the last line, it will be passed to the host smart contract as an input.
 
@@ -57,14 +57,14 @@ Now that you know how to make a simple calculation and name its output, you can 
 
 For example, the following program calculates the sum of 1 and 5, then multiplies that result by 2 and names the output "result":
 
-<Formatter raw={`myCalculation: add(1 5),
+<ForkableFormatter raw={`myCalculation: add(1 5),
 result: mul(myCalculation 2);`} />
 
 ## Comments
 
 You can use comments for adding notes or explanations to your code.
 
-<Formatter raw={`\/\*
+<ForkableFormatter raw={`\/\*
 This is a comment block. In Rainlang, comments start with a slash and an asterisk and end with an asterisk and a slash
 */`} />
 

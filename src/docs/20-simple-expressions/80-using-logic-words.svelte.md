@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 </script>
 
@@ -23,25 +23,25 @@ The "any" word takes any number of parameters and returns true if any of the par
 
 To understand how to use these words, let's start with a simple example. The following expression uses the "if" word to check if the number 3 is greater than 10, and names the output "result":
 
-<Formatter raw={`result: if(greater-than(3 10) 1 0)`} />
+<ForkableFormatter raw={`result: if(greater-than(3 10) 1 0)`} />
 
 In this case, the "if" word will evaluate the condition "greater-than(3 10)". Since 3 is not greater than 10, the "if" word will return 0, which is the value specified for the "false" case. The output of the expression is named "result".
 
 In a more complicated example, the following "if" statement uses the "every" word to evaluate multiple conditions and names the output "result":
 
-<Formatter raw={`result: if(every(greater-than(a b) less-than(c d)) 1 0)`} />
+<ForkableFormatter raw={`result: if(every(greater-than(a b) less-than(c d)) 1 0)`} />
 
 In this case, the "if" statement will return 1 if the condition "greater-than(a b)" and the condition "less-than(c d)" are both true, and 0 otherwise. The output of the "if" statement is named "result".
 
 Similarly, the following "if" statement uses the "any" word to evaluate multiple conditions and names the output "result".
 
-<Formatter raw={`result: if(any(equal_to(a b) equal_to(c d)) 1 0)`} />
+<ForkableFormatter raw={`result: if(any(equal_to(a b) equal_to(c d)) 1 0)`} />
 
 In this case, the "if" statement will return 1 if either the condition "equals(a b)" or the condition "equals(c d)" is true, and 0 otherwise. The output of the "if" statement is named "result".
 
 In addition to the "every" and "any" words, Rainlang also includes the "greater-than" and "less-than" words, which can be used to compare two numbers and return true or false based on the comparison. For example, the following "if" statement uses the "greater-than" word to evaluate a condition and names the output "result":
 
-<Formatter raw={`result: if(greater-than(a b) 1 0)`} />
+<ForkableFormatter raw={`result: if(greater-than(a b) 1 0)`} />
 
 In this case, the "if" statement will return 1 if the value of "a" is greater than the value of "b", and 0 otherwise. The output of the "if" statement is named "result".
 
@@ -49,13 +49,13 @@ Here’s another example that uses another available word ‘erc20balanceof’. 
 
 For example, the following expression uses the "erc20balanceof" word to check the balance of a token with the address "0x123" for the wallet with the address "0x456", and names the output "balance":
 
-<Formatter raw={`balance: erc20balanceof(0x123 0x456)`} />
+<ForkableFormatter raw={`balance: erc20balanceof(0x123 0x456)`} />
 
 In this case, the "erc20balanceof" word will put the balance of the token with the address "0x123" for the wallet with the address "0x456" on the top of the stack. The output of the expression is named "balance".
 
 You can use the "erc20balanceof" word in combination with the "every" and "any" words to evaluate multiple conditions in an "if" statement. For example, the following "if" statement uses the "every" word and the "erc20balanceof" word to evaluate multiple conditions and names the output "result":
 
-<Formatter raw={`balance1condition: greater-than(erc20balanceof(0x789 0xabc) 10),
+<ForkableFormatter raw={`balance1condition: greater-than(erc20balanceof(0x789 0xabc) 10),
 balance2condition: greater-than(erc20balanceof(0x123 0x456) 10),
 bothConditions: every(balance1condition balance2condition),
 result: if(bothConditions 1 0)`} />
