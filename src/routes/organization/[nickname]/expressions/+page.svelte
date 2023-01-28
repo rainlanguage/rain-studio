@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { PageData } from './$types';
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import ExpressionSummaryRow from '$lib/expressions/ExpressionSummaryRow.svelte';
@@ -21,9 +22,11 @@
 	import type { ContractRowFull, InterpreterRowFull } from '$lib/types/types';
 	import { everyAfter } from '$lib/utils/everyAfter';
 
-	let draftExpressions = $page.data?.draft_expressions;
-	let deployedExpressions = $page.data?.deployedExpressions;
-	let tags = $page.data?.tags;
+	export let data: PageData;
+
+	$: draftExpressions = data?.draft_expressions;
+	$: deployedExpressions = data?.deployedExpressions;
+	$: tags = data?.tags;
 
 	const contracts: ContractRowFull[] = $page.data.contracts;
 	const interpreters: InterpreterRowFull[] = $page.data.interpreters;
@@ -87,20 +90,16 @@
 			searchValue: string
 		) => {
 			const order = selectedSortOption === SortOptions.ByOldest ? true : false;
-			const resp = await fetch(
-				// `${$page.url.origin}/user/${$page.data.session?.user.id}/expressions`,
-				`${$page.url.origin}/api/expressions?userId=${$page.data.session?.user.id}`,
-				{
-					method: 'POST',
-					body: JSON.stringify({
-						order: ['created_at', { ascending: order }],
-						selectedContract,
-						selectedInterpreter,
-						searchValue,
-						selectedTags
-					})
-				}
-			);
+			const resp = await fetch(`/api/expressions?orgId=${data.userContext?.orgId}`, {
+				method: 'POST',
+				body: JSON.stringify({
+					order: ['created_at', { ascending: order }],
+					selectedContract,
+					selectedInterpreter,
+					searchValue,
+					selectedTags
+				})
+			});
 			if (resp.ok) ({ draft_expressions: draftExpressions } = await resp.json());
 		}
 	);
@@ -110,8 +109,8 @@
 	};
 
 	const refresh = async () => {
-		if ($page.data.session && 'id' in $page.data.session.user) {
-			const resp = await fetch(`/user/${$page.data.session.user.id}/expressions`, {
+		if (data.session && 'id' in data.session.user) {
+			const resp = await fetch(`/api/expressions?orgId=${$page.data.userContext?.orgId}`, {
 				method: 'POST',
 				body: JSON.stringify({ order: ['created_at', { ascending: false }] })
 			});
@@ -133,7 +132,7 @@
 	<div class="w-full bg-gray-100">
 		<div class="container mx-auto px-4 sm:px-0">
 			<TabList>
-				{#if $page.data.currentUser}
+				{#if data.isWriteRole}
 					<Tab>Draft</Tab>
 				{/if}
 				<Tab>Deployed</Tab>
@@ -141,7 +140,7 @@
 		</div>
 	</div>
 	<div class="justify-stretch container mx-auto flex px-4 sm:px-0">
-		{#if $page.data.currentUser}
+		{#if data.isWriteRole}
 			<TabPanel>
 				<div class="container mx-auto flex flex-col gap-y-4">
 					<div class="mt-6 flex w-full justify-between">

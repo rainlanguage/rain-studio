@@ -50,11 +50,8 @@ export const actions = {
     changeContext: async (event: RequestEvent) => {
         const { request, cookies } = event;
         const { supabaseClient, session } = await getSupabase(event);
-        const currentSessionCookie = cookies.get('rain-studio-session');
 
-        // In practice, the session and the session cookie will coexist. This is for type safe.
-        if (!session || !currentSessionCookie)
-            throw sveltekitError(401, { message: 'User not logged' });
+        if (!session) throw sveltekitError(401, { message: 'User not logged' });
 
         const user = session.user as unknown as Profile;
 
@@ -84,8 +81,8 @@ export const actions = {
             }
         }
 
-        // Get the expire times from the current cookie (don't extend the session).
-        const { expires_in, expires_at } = JSON.parse(currentSessionCookie);
+        // Get the expire times from the current cookie/session
+        const { expires_in, expires_at } = session;
 
         const newCookie = await generateCookie(user, dataContext, {
             exp_in: expires_in,

@@ -5,15 +5,12 @@ import type { ContextInfo } from '$lib/types/context-types';
 
 export const load: LayoutServerLoad = async (event) => {
     const { supabaseClient, session } = await getSupabase(event);
-    const currentSessionCookie = event.cookies.get('rain-studio-session');
-
     let profile: Profile | null = null;
     let wallets_linked: string[] | null = null;
     let organizations: Organization[] | null = null;
     let userContext: ContextInfo | null = null;
 
-    // In practice, the session and the session cookie will coexist. This is for type safe.
-    if (session && currentSessionCookie) {
+    if (session) {
         const { data: dataWallets } = await supabaseClient
             .from('wallet_users')
             .select(`*, wallets_linked(*)`)
@@ -36,8 +33,7 @@ export const load: LayoutServerLoad = async (event) => {
             organizations = dataOrgs as Organization[];
         }
 
-        const { orgContext } = JSON.parse(currentSessionCookie);
-        userContext = orgContext;
+        userContext = session.orgContext;
     }
 
     return {

@@ -6,14 +6,14 @@ import type { Organization } from '$lib/types/app-types';
 
 export const load: PageServerLoad = async (event) => {
     const { session, supabaseClient } = await getSupabase(event);
-    const org_nickname = event.params.org_nickname;
+    const nickname = event.params.nickname;
 
     if (!session) throw redirect(307, '/sign-in');
 
     const { data, error } = await supabaseClient
         .from('organizations')
         .select('*, org_members: org_member(*)')
-        .eq('nickname', org_nickname.toLowerCase())
+        .eq('nickname', nickname.toLowerCase())
         .single();
 
     if (error) throw sveltekitError(404, 'Organization not found');
@@ -21,7 +21,7 @@ export const load: PageServerLoad = async (event) => {
     const dataParents = await event.parent();
 
     const organization = dataParents.organizations?.find(
-        (org_) => org_.info_org.nickname == org_nickname
+        (org_) => org_.info_org.nickname == nickname
     );
 
     if (!organization) throw sveltekitError(401, 'Do not have permissions to manage');

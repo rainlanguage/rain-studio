@@ -45,6 +45,7 @@
 	import { breakpoint, Breakpoints } from '$lib/breakpoint-stores';
 	import { ShowPane } from '$lib/full-ide/types';
 	import MobileTabButton from '$lib/full-ide/MobileTabButton.svelte';
+	import { ContextRoles } from '$lib/user-context';
 
 	export let expression: ExpressionRowFull;
 	export let closeCallback: Function;
@@ -122,8 +123,16 @@
 	};
 
 	const back = () => {
-		if (closeCallback) closeCallback(raw_expression);
-		else goto(`/user/${$page.data.profile.username}/expressions`);
+		if (closeCallback) {
+			closeCallback(raw_expression);
+		} else {
+			if ($page.data.userContext?.__ContextType == ContextRoles.USER) {
+				goto(`/user/${$page.data.profile.username}/expressions`);
+			} else {
+				goto(`/organization/${$page.data.userContext?.name}/expressions`);
+
+			}
+		}
 	};
 
 	let saveACopy: boolean = false;

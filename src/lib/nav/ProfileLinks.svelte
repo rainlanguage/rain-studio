@@ -4,6 +4,7 @@
 	import { connectWallet } from '$lib/connect-wallet';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
 	import { goto } from '$app/navigation';
+	import { ContextRoles } from '$lib/user-context';
 
 	export let mobileContext: boolean = false;
 </script>
@@ -13,7 +14,9 @@
 	class={mobileContext ? 'mobile-profile-link text-gray-500' : 'profile-link'}>Profile</a
 >
 <a
-	href={`/user/${$page.data.profile?.username}/expressions`}
+	href={$page.data.userContext?.__ContextType == ContextRoles.USER
+		? `/user/${$page.data.profile?.username}/expressions`
+		: `/organization/${$page.data.userContext?.name}/expressions`}
 	class={mobileContext ? 'mobile-profile-link text-gray-500' : 'profile-link'}>Expressions</a
 >
 <!-- <a class="profile-link">Deployments</a> -->

@@ -12,7 +12,7 @@ export interface Session {
     access_token: string;
     refresh_token: string;
     expires_in: number;
-    expires_at?: number;
+    expires_at: number;
     token_type: string;
     orgContext: ContextInfo;
     user: Profile;

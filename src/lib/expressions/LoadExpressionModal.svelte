@@ -11,7 +11,7 @@
 	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
-		const resp = await fetch(`/user/${$page.data.session?.user.id}/expressions`, {
+		const resp = await fetch(`/api/expressions?userId=${$page.data.session?.user.id}`, {
 			method: 'POST',
 			body: JSON.stringify({ selectedContract: contract.id, expressionComponentName })
 		});
@@ -23,7 +23,7 @@
 </script>
 
 {#if draftExpressions}
-	<div class="max-w-5xl gap-y-4 flex flex-col overflow-y-scroll max-h-[80vh] overflow-x-visible">
+	<div class="flex max-h-[80vh] max-w-5xl flex-col gap-y-4 overflow-x-visible overflow-y-scroll">
 		{#each draftExpressions as expression}
 			<div
 				class="cursor-pointer"
