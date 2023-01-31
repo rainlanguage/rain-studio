@@ -2,8 +2,6 @@
 	import { page } from '$app/stores';
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
-	import { Button } from 'rain-svelte-components/package';
-	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
 	import Sidebar from './Sidebar.svelte';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
 	import { Tabs, TabList, TabPanel, Tab } from 'rain-svelte-components/package/tabs/tabs';
@@ -11,10 +9,8 @@
 	import Write from './Write.svelte';
 	import Summary from './Summary.svelte';
 
-	$: project = $page.data.contract.project;
 	$: contract = $page.data.contract;
-	$: metadata = $page.data.contract.metadata;
-	$: abi = $page.data.contract.abi;
+	$: ({ project, metadata, abi } = contract);
 </script>
 
 <PageHeader>
@@ -48,9 +44,9 @@
 				<Summary {abi} {metadata} />
 			</TabPanel>
 			<TabPanel>
-				<Write {abi} {metadata} {contract} {project} />
+				<Write {abi} {metadata} {contract} />
 			</TabPanel>
 		</div>
-		<div class="py-8 lg:w-1/3"><Sidebar /></div>
+		<div class="py-8 lg:w-1/3"><Sidebar {contract} /></div>
 	</div>
 </Tabs>

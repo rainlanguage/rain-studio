@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 
 	const expression = `/* Calculate the number of seconds in a month */
@@ -57,43 +57,43 @@ storage-key: hash(order-author order-hash),`
 A dollar-cost averaging (DCA) strategy is a common investment technique used to mitigate the risks of volatility in the market by buying a fixed amount of a particular asset at regular intervals. This can be useful for traders who want to buy a specific token over time, without having to worry about the market fluctuations.
 To implement a DCA order strategy in Rainlang, you can use the following expression:
 
-<Formatter raw={expression} />
+<ForkableFormatter raw={expression} />
 
 Let's break down this expression line by line to understand how it works:
 
-<Formatter raw={`seconds-in-month: mul(60 60 24 30),
+<ForkableFormatter raw={`seconds-in-month: mul(60 60 24 30),
 dollars-per-month: 1000,
 dollars-per-second: div(1000 seconds-in-month),`} />
 
 The first part of the expression calculates the number of seconds in a month using the mul word to multiply the number of minutes in an hour by the number of hours in a day by the number of days in a month. This is then used to calculate the maximum amount of tokens that can be sent per second using the div word to divide the maximum amount per month by the number of seconds in a month.
 
-<Formatter raw={`start-timestamp: 1668780839,`} />
+<ForkableFormatter raw={`start-timestamp: 1668780839,`} />
 
 Next, the start-timestamp variable is set to the timestamp of the beginning of the strategy, which is used as a reference point for calculating the amount of tokens that can be sent in each order.
 
-<Formatter raw={expression2} />
+<ForkableFormatter raw={expression2} />
 
 This is followed by the order-author and order-hash variables, which are used to construct a unique storage key for tracking the total amount of tokens cleared so far across executions of this order.
 
-<Formatter raw={`total-sent: get(storage-key),`} />
+<ForkableFormatter raw={`total-sent: get(storage-key),`} />
 
 The total-sent variable is then set to the value stored under the storage-key, which represents the total amount of tokens sent so far.
 
-<Formatter raw={`total-sendable-by-now: mul(dollars-per-second sub(block-timestamp() start-timestamp)),`} />
+<ForkableFormatter raw={`total-sendable-by-now: mul(dollars-per-second sub(block-timestamp() start-timestamp)),`} />
 
 This is used to calculate the total amount of tokens that can be sent by now, which is calculated by multiplying the maximum amount per second by the number of seconds since the start of the month. This output is named total-sendable-by-now.
 
-<Formatter raw={`sendable-in-this-order: sub(total-sendable-by-now total-sent),`} />
+<ForkableFormatter raw={`sendable-in-this-order: sub(total-sendable-by-now total-sent),`} />
 
 The sendable-in-this-order variable is then calculated using the sub word to subtract the total amount sent so far from the total amount that can be sent by now. This represents the amount of tokens that can be sent in this order.
 
-<Formatter raw={`arb-bounty-factor: 0.999,
+<ForkableFormatter raw={`arb-bounty-factor: 0.999,
 usdt-eth: chainlinkprice(0x00 0x00),
 amount price: sendable-in-this-order mul(usdt-eth arb-bounty-factor),`} />
 
 To get the current USDT-ETH price, we use the chainlinkprice word. This value is then multiplied by the arb-bounty-factor value to leave an arbitrage bounty, incentivising the order to be cleared.
 
-<Formatter raw={`:set(storage-key add(total-sent amount);`} />
+<ForkableFormatter raw={`:set(storage-key add(total-sent amount);`} />
 
 Finally, the set word is used to update the value stored under the storage-key by adding the amount of tokens sent in this order to the total amount sent so far. This allows you to track the total amount of tokens sent and ensure that you do not exceed the maximum amount per month.
 

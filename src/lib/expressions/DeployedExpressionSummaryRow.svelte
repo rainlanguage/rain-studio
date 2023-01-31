@@ -8,6 +8,7 @@
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
 	import { Formatter } from '@rainprotocol/rainlang';
 	import { goto } from '$app/navigation';
+	import AuthInner from '$lib/AuthInner.svelte';
 
 	export let expression: any;
 	$: expressionToFork = { ...expression, raw_expression: Formatter.get(expression.stateConfig) };
@@ -37,6 +38,6 @@
 	{#if $page.data.session}
 		<ForkExpression expression={expressionToFork} on:saved />
 	{:else}
-		<Auth />
+		<AuthInner />
 	{/if}
 </Modal>

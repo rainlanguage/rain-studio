@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 
 	const expression = `/**
@@ -110,32 +110,32 @@ It is important to note that you can leave a list empty, but you must still incl
 
 Here is an example expression that defines a transfer of an ERC1155 token, a mint of the FlowERC20 token, and a burn of the FlowERC20 token:
 
-<Formatter raw={expression} />
+<ForkableFormatter raw={expression} />
 
 Defining mints and burns
 To define a mint of the FlowERC20 token, you can add a line to the "mintsList" that includes the recipient address and the amount to mint. For example, the following expression defines a mint of 100 tokens to the address "recipientAddress":
 
-<Formatter raw={`mintsList: separator,
+<ForkableFormatter raw={`mintsList: separator,
 _ _: recipientAddress 100;`} />
 
 To define a burn of the FlowERC20 token, you can add a line to the "burnsList" that includes the sender address and the amount to burn. For example, the following expression defines a burn of 100 tokens from the address "senderAddress":
 
-<Formatter raw={`burnsList: separator,
+<ForkableFormatter raw={`burnsList: separator,
 _ _ _: senderAddress 0 100;`} />
 
 ## Defining token transfers
 
 First, let's look at how to define the values for an ERC1155 transfer. In this example, we'll transfer 100 tokens from address 1 to address 2. We'll use named outputs to define the values and then reference them in the transfererc1155slist.
 
-<Formatter raw={expression2} />
+<ForkableFormatter raw={expression2} />
 
 Next, let's look at how to define the values for an ERC721 transfer. In this example, we'll transfer a token with id 100 from address 1 to address 2. We'll use named outputs to define the values and then reference them in the transfererc721slist.
 
 Here's the code:
 
-<Formatter raw={expression3} />
+<ForkableFormatter raw={expression3} />
 
 Finally, let's look at how to define the values for an ERC20 transfer. In this example, we'll transfer 100 tokens from address 1 to address 2. We'll use named outputs to define the values and then reference them in the transfererc20slist.
 Here's the code:
 
-<Formatter raw={expression4} />
+<ForkableFormatter raw={expression4} />

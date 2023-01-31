@@ -10,6 +10,7 @@ export type Wallet_UsersRow = Database['public']['Tables']['wallet_users']['Row'
 export type InterpreterRow = Database['public']['Tables']['interpreters']['Row'];
 export type OrganizationRow = Database['public']['Tables']['organizations']['Row'];
 
+export type ExpressionInsert = Database['public']['Tables']['draft_expressions_w']['Insert'];
 export type ContractRowFull = Nest<
     Nest<Nest<ContractRow, 'project', ProjectRow>, 'metadata', ContractMetadata>,
     'abi',
@@ -25,6 +26,7 @@ export type ExpressionRowFull = Nest<
     SavedContext
 >;
 export type InterpreterRowFull = Nest<InterpreterRow, 'metadata', InterpreterMetadata>;
+
 //ExpressionRow & { contract: ContractRowFull, user_id: ProfileRow, interpreter: InterpreterRow }
 
 /* type for saved context created by IDE.svelte */

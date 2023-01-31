@@ -18,7 +18,3 @@
 		</div>
 	</div>
 </Background>
-
-<!-- <div class="w-full overflow-hidden">
-	<pre>{JSON.stringify($page.data, null, 2)}</pre>
-</div> -->

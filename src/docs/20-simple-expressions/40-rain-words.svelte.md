@@ -3,11 +3,6 @@ title: Rain words
 published: true
 ---
 
-<script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
-	import { Parser } from 'rain-svelte-components/package'
-</script>
-
 In Rainlang, Words are the fundamental building blocks of Rainlang expressions. A "Word" is a unit of logic that performs a specific operation or function, similar to opcodes or instructions in other programming languages. Words are combined together to form Expressions, which are used to perform calculations or execute specific tasks.
 
 ## Categories of Words

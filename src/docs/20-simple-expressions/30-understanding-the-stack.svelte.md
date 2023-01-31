@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 </script>
 
@@ -22,7 +22,7 @@ This allows users to perform computations on-chain and use the results to accomp
 
 To understand how the stack works in Rainlang, let's start with a simple expression that calculates the sum of 1 and 2 and names the output "myCalculation":
 
-<Formatter raw={`myCalculation: add(1 2)`} />
+<ForkableFormatter raw={`myCalculation: add(1 2)`} />
 
 This expression has two inputs, 1 and 2, and one output, the result of adding 1 and 2 (i.e. 3). When this expression is executed, the interpreter takes the inputs from the stack, performs the calculation, and puts the result back into the stack. In this case, the stack will look like this after the expression is executed:
 
@@ -37,7 +37,7 @@ As you can see, the stack contains one item, the result of the calculation.
 
 In Rainlang, you can nest expressions within other expressions. For example, the following expression calculates the sum of 1 and 2, then multiplies that result by 3 and names the output "result":
 
-<Formatter raw={`result: mul(add(1 2) 3)`} />
+<ForkableFormatter raw={`result: mul(add(1 2) 3)`} />
 
 This expression has two nested expressions, the first of which calculates the sum of 1 and 2, and the second of which multiplies that result by 3. When this expression is executed, the interpreter evaluates the nested expressions in order, starting with the innermost expression. In this case, the stack will look like this after the innermost expression (i.e. add(1 2)) is executed:
 

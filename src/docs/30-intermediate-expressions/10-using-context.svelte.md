@@ -4,7 +4,7 @@ published: true
 ---
 
 <script>
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import { Parser } from 'rain-svelte-components/package'
 
 	const expression1 = `toAddress: context\<0 1>()`
@@ -27,15 +27,15 @@ Different smart contracts will insert different data into the context grid, so t
 
 To use the context word in a Rainlang expression, you can simply use the coordinates of the cell you want to access as the operand of the word, followed by a set of parentheses. The result of the expression can be named on the left-hand side of the statement. For example, to access the "to" address in a "can transfer" expression and name the result "toAddress", you could use the context word with the coordinates 0 1, like this:
 
-<Formatter raw={expression1} />
+<ForkableFormatter raw={expression1} />
 
 This expression would return the "to" address as a string and name the result "toAddress". You can then use this named output in subsequent calculations or comparisons. For example, to check if the "to" address is the same as a specific address, you could use the equals function, like this:
 
-<Formatter raw={expression2} />
+<ForkableFormatter raw={expression2} />
 
 In this expression, the equals function compares the value of toAddress to the string "some-address" and returns 1 if they are equal and 0 if they are not. You can then use this result in an if statement to control the flow of your program. For example, to block a transfer if the "to" address is "some-address", you could use the following expression:
 
-<Formatter raw={expression3} />
+<ForkableFormatter raw={expression3} />
 
 This expression checks if the "to" address is "some-address" using the equals function, and if it is, it returns 0, which will block the transfer.
 

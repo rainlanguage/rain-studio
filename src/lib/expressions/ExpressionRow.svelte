@@ -4,11 +4,11 @@
 	import ViewTags from '$lib/ViewTags.svelte';
 	import { DisplayAddress, HoverTooltip } from 'rain-svelte-components/package';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
-
 	import { LockOpen, LockClosed } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
+	import type { ExpressionRowFull } from '$lib/types/types';
 
-	export let expression: any;
+	export let expression: ExpressionRowFull;
 </script>
 
 <div class="flex w-full flex-col gap-x-4 gap-y-4 rounded-lg border border-gray-200 p-5 xl:flex-row">
@@ -29,7 +29,9 @@
 				</HoverTooltip>
 			</div>
 		</div>
-		<TimeAgo dateString={expression.created_at} />
+		{#if expression.created_at}
+			<TimeAgo dateString={expression.created_at} />
+		{/if}
 		{#if expression?.tags}
 			<ViewTags tags={expression.tags} />
 		{/if}

@@ -1,7 +1,7 @@
 import { matchContracts, matchInterpreters } from '$lib/match-addresses';
 import { supabaseClient as _supabaseClient } from '$lib/supabaseClient';
 import type { Database } from '$lib/types/generated-db-types';
-import type { ExpressionRow } from '$lib/types/types';
+import type { ExpressionInsert, ExpressionRow, ExpressionRowFull } from '$lib/types/types';
 import { QueryAccountsFromArray, QueryExpression, Subgraphs } from '$lib/utils';
 import type { TypedSupabaseClient } from '@supabase/auth-helpers-sveltekit/dist/types';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
@@ -10,11 +10,13 @@ import { error as sveltekitError } from '@sveltejs/kit';
 import { ethers } from 'ethers';
 import { toast } from '@zerodevx/svelte-toast';
 
+/**
+ * Create a new blank expression, with no raw string, notes or name.
+ *
+ * @param expression - the expression
+ */
 export const createNewExpression = async (
-    expression: Omit<
-        Database['public']['Tables']['draft_expressions_w']['Insert'],
-        'raw_expression' | 'notes' | 'name'
-    >
+    expression: Omit<ExpressionInsert, 'raw_expression' | 'notes' | 'name'>
 ) => {
     const _expression = {
         ...expression,
@@ -24,9 +26,19 @@ export const createNewExpression = async (
     };
     return await saveExpression(_expression);
 };
+
+/**
+ * Save an expression
+ *
+ * @param expression - the expression
+ */
 export const saveExpression = async (
-    expression: Database['public']['Tables']['draft_expressions_w']['Insert']
+    expression: ExpressionInsert
 ): Promise<PostgrestSingleResponse<ExpressionRow>> => {
+    delete expression.id;
+    delete expression.sharable_slug;
+    expression.public = false;
+
     const newExpression = await _supabaseClient
         .from('draft_expressions_w')
         .insert(expression)
@@ -35,13 +47,30 @@ export const saveExpression = async (
     return newExpression;
 };
 
+/**
+ * Save a copy of an expression, this updates the name to "Copy of {expression_name}"
+ *
+ * @param expression - the expression
+ */
 export const saveExpressionCopy = async (
-    expression: Database['public']['Tables']['draft_expressions_w']['Insert']
+    expression: ExpressionInsert
 ): Promise<ReturnType<typeof saveExpression>> => {
     const expressionCopy = { ...expression, name: `Copy of ${expression.name}` };
     return await saveExpression(expressionCopy);
 };
-
+/**
+ * Convert an expression from the ExpressionRowFull type to the ExpressionInsert type
+ * This is necessary, because the ExpressionRowFull type is fully joined on contract, interpreter etc,
+ * however when we insert we just need id's for those fields.
+ */
+export const flattenExpression = (expression: ExpressionRowFull): ExpressionInsert => {
+    return {
+        ...expression,
+        contract: expression?.contract?.id,
+        interpreter: expression?.interpreter?.id,
+        user_id: expression?.user_id.id
+    };
+};
 /**
  * Gets all deployed expressions for a user.
  * This function gets all the user's linked wallets and fetches the deployed expressions from the subgraph.
