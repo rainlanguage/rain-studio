@@ -1,12 +1,13 @@
 import type { ContextInfo } from '$lib/types/context-types';
-import type { Database } from "$lib/types/generated-db-types";
+import type { OrganizationRow, Wallet_UsersRow } from '$lib/types/types';
 
-export type Profile = {
+export type Profile = Omit<Wallet_UsersRow, 'created_at'>;
+export type Organization = OrganizationRow;
+
+export type MemberOrg = {
     id: string;
-    full_name: string | null;
-    username: string;
-    avatar_url: string | null;
-    website: string | null;
+    role: string;
+    info_org: Organization;
 };
 
 export interface Session {
@@ -18,18 +19,3 @@ export interface Session {
     orgContext: ContextInfo;
     user: Profile;
 }
-
-export type Organization = {
-    id: string;
-    role: string;
-    info_org: OrganizationInfo;
-};
-
-type OrganizationInfo = {
-    id: string;
-    created_at: string;
-    name: string;
-    nickname: string;
-    avatar_url: string;
-    website: string;
-};

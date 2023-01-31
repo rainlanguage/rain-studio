@@ -1,5 +1,4 @@
 import type { ContextRoles } from '$lib/user-context';
-import type { Database } from "$lib/types/generated-db-types";
 
 export type ContextInfo = UserContext | OrgContext;
 
@@ -12,6 +11,9 @@ export type OrgContext = ContextData & {
     __ContextType: ContextRoles.ORG;
 };
 
+/**
+ * Custom type since it's intended to handle and check between an User or Org context.
+ */
 type ContextData = {
     id: string;
     name: string;

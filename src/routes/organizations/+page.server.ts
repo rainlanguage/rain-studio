@@ -2,7 +2,7 @@ import { getServerSession, getSupabase } from '@supabase/auth-helpers-sveltekit'
 import { redirect, fail, error as sveltekitError } from '@sveltejs/kit';
 import type { PageServerLoad, RequestEvent } from './$types';
 import type { ContextInfo } from '$lib/types/context-types';
-import type { Organization, Profile } from '$lib/types/app-types';
+import type { MemberOrg, Profile } from '$lib/types/app-types';
 import { ContextBuilder } from '$lib/user-context';
 import { generateCookie } from '$lib/utils/auth';
 
@@ -66,7 +66,7 @@ export const actions = {
         }
 
         if (memberId) {
-            const { error: errorOrg, data: dataOrg } = await supabaseClient
+            const { error: errorOrg, data: dataMember } = await supabaseClient
                 .from('org_member')
                 .select(`id, role, user_id, info_org: organizations(*)`)
                 .eq('id', memberId)
@@ -74,10 +74,11 @@ export const actions = {
 
             if (errorOrg) fail(400, { error: errorOrg });
 
-            if (dataOrg) {
-                if (dataOrg.user_id != user.id) fail(401, { error: 'Not have right to access.' });
+            if (dataMember) {
+                if (dataMember.user_id != user.id)
+                    fail(401, { error: 'Not have right to access.' });
 
-                dataContext = ContextBuilder.fromDataOrg(dataOrg as Organization);
+                dataContext = ContextBuilder.fromDataMember(dataMember as MemberOrg);
             }
         }
 

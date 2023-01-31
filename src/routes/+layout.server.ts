@@ -1,13 +1,13 @@
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import type { LayoutServerLoad } from './$types';
-import type { Organization, Profile } from '$lib/types/app-types';
+import type { MemberOrg, Profile } from '$lib/types/app-types';
 import type { ContextInfo } from '$lib/types/context-types';
 
 export const load: LayoutServerLoad = async (event) => {
     const { supabaseClient, session } = await getSupabase(event);
     let profile: Profile | null = null;
     let wallets_linked: string[] | null = null;
-    let organizations: Organization[] | null = null;
+    let organizations: MemberOrg[] | null = null;
     let userContext: ContextInfo | null = null;
 
     if (session) {
@@ -30,7 +30,7 @@ export const load: LayoutServerLoad = async (event) => {
             .eq('user_id', session.user.id);
 
         if (dataOrgs) {
-            organizations = dataOrgs as Organization[];
+            organizations = dataOrgs as MemberOrg[];
         }
 
         userContext = session.orgContext;

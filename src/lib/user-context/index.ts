@@ -1,4 +1,4 @@
-import type { Profile, Organization } from '$lib/types/app-types';
+import type { Profile, MemberOrg } from '$lib/types/app-types';
 import type { ContextInfo } from '$lib/types/context-types';
 
 export enum ContextRoles {
@@ -19,15 +19,15 @@ export class ContextBuilder {
         };
     }
 
-    public static fromDataOrg(dataOrg_: Organization): ContextInfo {
+    public static fromDataMember(dataMemberOrg_: MemberOrg): ContextInfo {
         return {
-            id: dataOrg_.id,
-            orgId: dataOrg_.info_org.id,
-            name: dataOrg_.info_org.name,
-            nickname: dataOrg_.info_org.nickname,
-            avatar_url: dataOrg_.info_org.avatar_url,
-            role: dataOrg_.role,
-            website: dataOrg_.info_org.website,
+            id: dataMemberOrg_.id,
+            orgId: dataMemberOrg_.info_org.id,
+            name: dataMemberOrg_.info_org.name,
+            nickname: dataMemberOrg_.info_org.nickname,
+            avatar_url: dataMemberOrg_.info_org.avatar_url,
+            role: dataMemberOrg_.role,
+            website: dataMemberOrg_.info_org.website,
             __ContextType: ContextRoles.ORG
         };
     }

@@ -2,7 +2,7 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { redirect, error as sveltekitError } from '@sveltejs/kit';
 
 import type { PageServerLoad } from './$types';
-import type { Organization } from '$lib/types/app-types';
+import type { MemberOrg } from '$lib/types/app-types';
 
 export const load: PageServerLoad = async (event) => {
     const { session, supabaseClient } = await getSupabase(event);
@@ -26,7 +26,7 @@ export const load: PageServerLoad = async (event) => {
 
     if (!organization) throw sveltekitError(401, 'Do not have permissions to manage');
 
-    const orgData = data as Organization['info_org'] & {
+    const orgData = data as MemberOrg['info_org'] & {
         created_at: string;
         user_id: string;
         role: string;

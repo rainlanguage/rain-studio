@@ -6,8 +6,9 @@ import type { Abi } from 'abitype';
 export type ExpressionRow = Database['public']['Tables']['draft_expressions_w']['Row'];
 export type ProjectRow = Database['public']['Tables']['projects']['Row'];
 export type ContractRow = Database['public']['Tables']['contracts']['Row'];
-export type ProfileRow = Database['public']['Tables']['wallet_users']['Row'];
+export type Wallet_UsersRow = Database['public']['Tables']['wallet_users']['Row'];
 export type InterpreterRow = Database['public']['Tables']['interpreters']['Row'];
+export type OrganizationRow = Database['public']['Tables']['organizations']['Row'];
 
 export type ContractRowFull = Nest<
     Nest<Nest<ContractRow, 'project', ProjectRow>, 'metadata', ContractMetadata>,
@@ -16,7 +17,7 @@ export type ContractRowFull = Nest<
 >;
 export type ExpressionRowFull = Nest<
     Nest<
-        Nest<Nest<ExpressionRow, 'contract', ContractRowFull | null>, 'user_id', ProfileRow>,
+        Nest<Nest<ExpressionRow, 'contract', ContractRowFull | null>, 'user_id', Wallet_UsersRow>,
         'interpreter',
         InterpreterRowFull
     >,

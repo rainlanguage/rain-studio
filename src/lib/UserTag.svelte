@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { ProfileRow } from '$lib/types/types';
+	import type { Wallet_UsersRow } from '$lib/types/types';
 	import UserAvatar from '$lib/UserAvatar.svelte';
 
-	export let user: ProfileRow;
+	export let user: Wallet_UsersRow;
 </script>
 
 <div class="flex gap-x-2">
