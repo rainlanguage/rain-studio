@@ -1,4 +1,5 @@
 import type { ContextRoles } from '$lib/user-context';
+import type { Database } from "$lib/types/generated-db-types";
 
 export type ContextInfo = UserContext | OrgContext;
 

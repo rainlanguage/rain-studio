@@ -26,7 +26,7 @@
 		Confirm
 	}
 
-	let newExpression: Database['public']['Tables']['draft_expressions']['Insert'];
+	let newExpression: Database['public']['Tables']['draft_expressions_w']['Insert'];
 	let step: ExpressionSteps = ExpressionSteps.Contract;
 
 	let chosenContract: ContractRowFull | null,

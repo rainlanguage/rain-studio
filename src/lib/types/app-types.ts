@@ -1,4 +1,5 @@
 import type { ContextInfo } from '$lib/types/context-types';
+import type { Database } from "$lib/types/generated-db-types";
 
 export type Profile = {
     id: string;
