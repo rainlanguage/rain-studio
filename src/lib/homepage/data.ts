@@ -1,64 +1,64 @@
-export const rainLinks: { name: string, url: string }[] = [
+export const rainLinks: { name: string; url: string }[] = [
     {
-        name: "Github",
-        url: "https://github.com/rainprotocol/rain-protocol"
+        name: 'Github',
+        url: 'https://github.com/rainprotocol/rain-protocol'
     },
     {
-        name: "Docs",
-        url: "https://docs.rainprotocol.xyz/intro"
+        name: 'Docs',
+        url: 'https://docs.rainprotocol.xyz/intro'
     },
     {
-        name: "Dev ecosystem",
-        url: "https://t.me/+W0aQ36ptN_E2MjZk"
+        name: 'Dev ecosystem',
+        url: 'https://t.me/+W0aQ36ptN_E2MjZk'
     }
-]
+];
 
-export const ecosystemProjects: { name: string, logo: string }[] = [
+export const ecosystemProjects: { name: string; logo: string }[] = [
     {
-        name: "Rain",
+        name: 'Rain',
         logo: new URL('$lib/homepage/images/rain-logo.svg', import.meta.url).href
     },
     {
-        name: "Rain",
+        name: 'Rain',
         logo: new URL('$lib/homepage/images/rain-logo.svg', import.meta.url).href
     },
     {
-        name: "Rain",
+        name: 'Rain',
         logo: new URL('$lib/homepage/images/rain-logo.svg', import.meta.url).href
     },
     {
-        name: "Rain",
+        name: 'Rain',
         logo: new URL('$lib/homepage/images/rain-logo.svg', import.meta.url).href
-    },
-]
+    }
+];
 
-export const features: { title: string, description: string, image: string }[] = [
+export const features: { title: string; description: string; image: string }[] = [
     {
-        title: "Discover",
-        description: "Join the growing community of Rain Studio users, share and fork expressions.",
+        title: 'Discover',
+        description: 'Join the growing community of Rain Studio users, share and fork expressions.',
         image: new URL('$lib/homepage/images/discover.svg', import.meta.url).href
     },
     {
-        title: "Write",
-        description: "User-friendly IDE for writing and testing RainLang expressions.",
+        title: 'Write',
+        description: 'User-friendly IDE for writing and testing RainLang expressions.',
         image: new URL('$lib/homepage/images/write.svg', import.meta.url).href
     },
     {
-        title: "Test",
-        description: "View the simulated output of your expressions in real time.",
+        title: 'Test',
+        description: 'View the simulated output of your expressions in real time.',
         image: new URL('$lib/homepage/images/test.svg', import.meta.url).href
     },
     {
-        title: "Deploy",
-        description: "Deploy your expressions using an ever growing library of contracts.",
+        title: 'Deploy',
+        description: 'Deploy your expressions using an ever growing library of contracts.',
         image: new URL('$lib/homepage/images/deploy.svg', import.meta.url).href
     }
-]
+];
 
-export const expressionExamples: { name: string, description: string, expression: string }[] = [
+export const expressionExamples: { name: string; description: string; expression: string }[] = [
     {
-        name: "DEX Strategies",
-        description: "Dollar-cost averaging strategy, used with the Orderbook contract.",
+        name: 'DEX Strategies',
+        description: 'Dollar-cost averaging strategy, used with the Orderbook contract.',
         expression: `/*
 the number of seconds in a month (roughly) as 60 * 60 * 24 * 30 = 2592000
 */
@@ -190,8 +190,8 @@ record how much has been sent in total. this will be the total across all input 
 :set(order-hash add(get(order-hash) token-amount-scaled);`
     },
     {
-        name: "NFT Drops",
-        description: "An NFT drop expression",
+        name: 'NFT Drops',
+        description: 'An NFT drop expression',
         expression: `/* calculate the number of seconds in a month */
     seconds-in-month: mul(60 60 24 30),
     
@@ -235,8 +235,8 @@ record how much has been sent in total. this will be the total across all input 
     :set(storage-key add(total-sent amount);`
     },
     {
-        name: "Decentralised tournaments",
-        description: "A Lobby expression",
+        name: 'Decentralised tournaments',
+        description: 'A Lobby expression',
         expression: `/* calculate the number of seconds in a month */
     seconds-in-month: mul(60 60 24 30),
     
@@ -280,8 +280,9 @@ record how much has been sent in total. this will be the total across all input 
     :set(storage-key add(total-sent amount);`
     },
     {
-        name: "Game currencies",
-        description: "A game energy currency that lets a wallet mint up to a specified max per day.",
+        name: 'Game currencies',
+        description:
+            'A game energy currency that lets a wallet mint up to a specified max per day.',
         expression: `/**
 * Energy claim calculation
 *
@@ -354,4 +355,4 @@ mintsList: mintBurnSeparator,
 _ _: sender claimable-in-this-transaction;
        `
     }
-]
+];

@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let tags: string[] | null;
 	export let limit: number | null = null;
-	let moreLength: number = 0;
+	let moreLength = 0;
 	$: if (limit && tags) {
 		const oldLength = tags.length;
 		tags = tags.slice(0, limit);
@@ -10,9 +10,9 @@
 </script>
 
 {#if tags}
-	<div class="flex flex-wrap gap-2 items-end">
+	<div class="flex flex-wrap items-end gap-2">
 		{#each tags as tag}
-			<span class="bg-gray-100 rounded-md px-2 py-1 leading-none">
+			<span class="rounded-md bg-gray-100 px-2 py-1 leading-none">
 				#{tag}
 			</span>
 		{/each}

@@ -14,7 +14,7 @@
 {:else}
 	<div
 		style={size ? `width: ${size}px; height: ${size}px;` : ''}
-		class={`${size ? '' : 'w-7 h-7'} ${isOrg ? 'org' : 'profile'}`}
+		class={`${size ? '' : 'h-7 w-7'} ${isOrg ? 'org' : 'profile'}`}
 	/>
 {/if}
 

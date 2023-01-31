@@ -9,12 +9,12 @@
 
 <a
 	href={`/expression/draft/${expression.sharable_slug}`}
-	class="px-6 py-8 rounded-lg bg-white flex flex-col gap-y-4 transition-transform hover:scale-105"
+	class="flex flex-col gap-y-4 rounded-lg bg-white px-6 py-8 transition-transform hover:scale-105"
 >
 	<span class="text-lg font-medium">{expression.name}</span>
 	<span class="line-clamp-2">{expression.notes}</span>
 	<ViewTags tags={expression.tags} limit={3} />
-	<div class="gap-y-1 flex flex-col">
+	<div class="flex flex-col gap-y-1">
 		<ExpressionEnv {expression} showProject={false} compact />
 	</div>
 	<UserTag user={expression.user_id} />

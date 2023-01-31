@@ -2,7 +2,7 @@
 	import { Clock } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 
-	export let i: number = 0;
+	export let i = 0;
 	export let title: string;
 	export let time: number;
 	export let href: string;
@@ -10,7 +10,7 @@
 
 <a
 	{href}
-	class={`block-${i} rounded-xl flex flex-col justify-end p-6 gap-y-3 min-h-[200px] hover:scale-105 transition-transform cursor-pointer`}
+	class={`block-${i} flex min-h-[200px] cursor-pointer flex-col justify-end gap-y-3 rounded-xl p-6 transition-transform hover:scale-105`}
 >
 	<span class="text-2xl font-semibold">{title}</span>
 	<div class="flex gap-x-1">

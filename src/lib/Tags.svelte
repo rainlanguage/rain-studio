@@ -387,7 +387,7 @@
 		align-items: center;
 		padding: 0px 5px 5px 5px;
 		background: #fff;
-		@apply border border-gray-200 rounded-lg;
+		@apply rounded-lg border border-gray-200;
 	}
 	.svelte-tags-input-layout:focus-within {
 	}
@@ -412,7 +412,7 @@
 		list-style: none;
 		margin-right: 5px;
 		margin-top: 5px;
-		@apply rounded-md bg-gray-100 px-2 leading-none py-1;
+		@apply rounded-md bg-gray-100 px-2 py-1 leading-none;
 	}
 	/*.svelte-tags-input-tag:hover {
         background: #CCC;

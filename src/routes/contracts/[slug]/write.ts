@@ -1,7 +1,7 @@
-import type { InterpreterRowFull } from "$lib/types/types";
-import type { Abi, AbiError, AbiEvent, AbiFunction } from "abitype";
-import type { ContractMetadata } from "rain-metadata/metadata-types/contract";
-import { allChainsData } from "svelte-ethers-store";
+import type { InterpreterRowFull } from '$lib/types/types';
+import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
+import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
+import { allChainsData } from 'svelte-ethers-store';
 
 // getting all of the state changing methods for this abi
 export const getWriteMethods = (
@@ -11,8 +11,8 @@ export const getWriteMethods = (
         .filter(
             (method: AbiFunction | AbiEvent | AbiError): method is AbiFunction =>
                 method.type == 'function' &&
-                "inputs" in method &&
-                "name" in method &&
+                'inputs' in method &&
+                'name' in method &&
                 method.name !== 'createChild' &&
                 method.stateMutability !== 'view'
         )
@@ -20,7 +20,7 @@ export const getWriteMethods = (
             label: method.name,
             value: { name: method.name, def: method },
             index
-        }))
+        }));
 };
 
 export const getNameFromChainId = (id: number): string => {
@@ -53,7 +53,12 @@ export const getInterpretersForChain = (
 ): { label: string; value: { interpreter: string; deployer: string } }[] => {
     const interpretersForSelect: {
         label: string;
-        value: { id: string; interpreterAddress: string; deployerAddress: string, interpreter: InterpreterRowFull };
+        value: {
+            id: string;
+            interpreterAddress: string;
+            deployerAddress: string;
+            interpreter: InterpreterRowFull;
+        };
     }[] = [];
     interpreters.forEach((interpreter) => {
         interpreter.metadata.addresses.forEach((address) => {

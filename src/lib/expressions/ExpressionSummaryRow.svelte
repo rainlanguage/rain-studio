@@ -26,9 +26,9 @@
 	export let expression: ExpressionRowFull;
 	const dispatch = createEventDispatcher();
 
-	let deleteExpressionModal: boolean = false,
-		newExpModal: boolean = false,
-		changeVisiblityModal: boolean = false;
+	let deleteExpressionModal = false,
+		newExpModal = false,
+		changeVisiblityModal = false;
 
 	const deleteExp = () => {
 		deleteExpressionModal = true;

@@ -27,7 +27,7 @@
 	afterUpdate(() => {
 		if (_address != $signerAddress) {
 			_address = $signerAddress;
-			$page.data
+			$page.data;
 		}
 	});
 

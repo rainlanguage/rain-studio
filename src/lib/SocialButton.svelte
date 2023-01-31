@@ -5,7 +5,7 @@
 	export let icon: IconSource | undefined = undefined;
 	export let iconSize = '12';
 	export let iconTheme = '';
-	export let classes: string = '';
+	export let classes = '';
 	export let isActived = false;
 	export let colorActive = 'green';
 </script>

@@ -14,10 +14,10 @@
 	import { viewportWidth } from '$lib/breakpoint-stores';
 	import { ContextRoles } from '$lib/user-context';
 
-	let profileMenuOpen: boolean = false;
+	let profileMenuOpen = false;
 	let addressOrText = '';
-	let mobileNavOpen: boolean = false;
-	let contextMenuOpen: boolean = false;
+	let mobileNavOpen = false;
+	let contextMenuOpen = false;
 	$: _viewWidth = $viewportWidth;
 
 	onMount(() => (addressOrText = ''));

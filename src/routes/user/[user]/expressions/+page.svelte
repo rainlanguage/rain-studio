@@ -68,7 +68,7 @@
 	let selectedTags: string[] = [];
 
 	// search value
-	let searchValue: string = '';
+	let searchValue = '';
 
 	$: getDraftExpressions(
 		selectedSortOption,

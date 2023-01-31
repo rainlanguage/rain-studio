@@ -6,6 +6,6 @@
 	const expression: ExpressionRowFull = $page.data.expression;
 </script>
 
-<div class="flex-grow flex flex-col">
+<div class="flex flex-grow flex-col">
 	<IDE expression={$page.data.expression} />
 </div>

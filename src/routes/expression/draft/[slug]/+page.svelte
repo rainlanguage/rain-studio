@@ -25,9 +25,9 @@
 	$: userLike = $page.data.userLike;
 
 	let session = $page.data.session;
-	let openForkModal: boolean = false;
-	let openSignInModal: boolean = false;
-	let changeVisiblityModal: boolean = false;
+	let openForkModal = false;
+	let openSignInModal = false;
+	let changeVisiblityModal = false;
 
 	const fork = () => {
 		openForkModal = true;

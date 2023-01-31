@@ -3,6 +3,6 @@
 	export let justifyContent: 'justify-start' | 'justify-end' | 'justify-center' = 'justify-center';
 </script>
 
-<div class={`w-full flex-grow bg-gray-100 flex ${alignItems} ${justifyContent}`}>
+<div class={`flex w-full flex-grow bg-gray-100 ${alignItems} ${justifyContent}`}>
 	<slot />
 </div>

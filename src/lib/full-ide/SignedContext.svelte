@@ -33,20 +33,20 @@
 	<tr class="border-b border-gray-300">
 		<td class="cell" />
 		{#each Array(columns) as col, i}
-			<td class="header text-center border-t border-gray-300">{i}</td>
+			<td class="header border-t border-gray-300 text-center">{i}</td>
 		{/each}
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<td class="text-center  border-t border-gray-300 border-r button" on:click={addCol}>+</td>
+		<td class="button  border-t border-r border-gray-300 text-center" on:click={addCol}>+</td>
 	</tr>
 	{#each Array(rows) as row, x}
-		<tr class="border-gray-300 border-b">
-			<td class="header border-t border-gray-300 border-l">{x}</td>
+		<tr class="border-b border-gray-300">
+			<td class="header border-t border-l border-gray-300">{x}</td>
 			{#each signedContext as col, y}
 				<td class="cell">
 					<div class="flex flex-col">
-						<span class="font-mono text-gray-400 text-xs">{`<${y} ${x}>`}</span>
+						<span class="font-mono text-xs text-gray-400">{`<${y} ${x}>`}</span>
 						<input
-							class="text-gray-700 bg-gray-100 p-1 text-xs"
+							class="bg-gray-100 p-1 text-xs text-gray-700"
 							placeholder="..."
 							bind:value={signedContext[y][x]}
 						/>
@@ -55,7 +55,7 @@
 			{/each}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<td
-				class="p-2  border-gray-300 border-r button"
+				class="button  border-r border-gray-300 p-2"
 				on:click={() => {
 					removeRow(x);
 				}}>-</td
@@ -64,13 +64,13 @@
 	{/each}
 	<tr>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<td class="text-center border-gray-300 border-l border-b border-r button" on:click={addRow}
+		<td class="button border-l border-b border-r border-gray-300 text-center" on:click={addRow}
 			>+</td
 		>
 		{#each Array(columns) as col, i}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<td
-				class="text-center border-b border-r border-gray-300 button"
+				class="button border-b border-r border-gray-300 text-center"
 				on:click={() => {
 					removeCol(i);
 				}}>-</td
@@ -81,14 +81,14 @@
 
 <style lang="postcss">
 	.header {
-		@apply text-xs text-gray-800 text-center border-r bg-gray-100 font-semibold border-gray-300;
+		@apply border-r border-gray-300 bg-gray-100 text-center text-xs font-semibold text-gray-800;
 	}
 
 	.cell {
-		@apply p-2 border-r border-gray-300;
+		@apply border-r border-gray-300 p-2;
 	}
 
 	.button {
-		@apply cursor-pointer hover:bg-gray-100 bg-gray-50;
+		@apply cursor-pointer bg-gray-50 hover:bg-gray-100;
 	}
 </style>

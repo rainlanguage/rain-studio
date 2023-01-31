@@ -10,14 +10,14 @@
 
 	export let raw: string | null = null;
 	export let stateConfig: StateConfig | null = null;
-	export let showFork: boolean = true;
-	export let showForkLabel: boolean = false;
+	export let showFork = true;
+	export let showForkLabel = false;
 	export let maxHeight: string | null = null;
 	export let contract: string | null = null;
 	export let contractExpression: string | null = null;
 
 	let expression: ExpressionInsert;
-	let open: boolean = false;
+	let open = false;
 
 	$: if (stateConfig)
 		buildExpression(RainlangFormatter.get(stateConfig, { opmeta: rainterpreterOpMeta }));

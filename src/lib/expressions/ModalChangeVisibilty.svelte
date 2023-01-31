@@ -8,9 +8,9 @@
 
 	const dispatch = createEventDispatcher();
 	export let expression: any;
-	export let isOpen: boolean = false,
-		isSuccess: boolean = false,
-		isFailure: boolean = false;
+	export let isOpen = false,
+		isSuccess = false,
+		isFailure = false;
 
 	const changeVisibility = async () => {
 		const action = await supabaseClient
@@ -42,7 +42,7 @@
 				It will become fully visible to other users and they will be able to interact with it.
 			</span>
 		{/if}
-		<div class="flex gap-x-2 mt-4">
+		<div class="mt-4 flex gap-x-2">
 			<Button variant="primary" on:click={changeVisibility}>Change visibility</Button>
 			<Button
 				on:click={() => {
@@ -55,10 +55,10 @@
 
 <!-- Modal on success -->
 <Modal bind:open={isSuccess}>
-	<div class="flex flex-col gap-y-3 items-center">
+	<div class="flex flex-col items-center gap-y-3">
 		<span class="text-2xl">Visibility changed</span>
 
-		<div class="w-16 mb-2 text-green-500">
+		<div class="mb-2 w-16 text-green-500">
 			<Icon src={CheckCircle} />
 		</div>
 
@@ -78,10 +78,10 @@
 
 <!-- Modal on failure -->
 <Modal bind:open={isFailure}>
-	<div class="flex flex-col gap-y-3 items-center">
+	<div class="flex flex-col items-center gap-y-3">
 		<span class="text-2xl">The visibility was not changed</span>
 
-		<div class="w-16 mb-2 text-red-500">
+		<div class="mb-2 w-16 text-red-500">
 			<Icon src={ExclamationCircle} />
 		</div>
 

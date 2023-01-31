@@ -1,5 +1,5 @@
 export enum SearchStatus {
-	NotStarted,
-	Searching,
-	Finished
+    NotStarted,
+    Searching,
+    Finished
 }

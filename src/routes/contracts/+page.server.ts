@@ -3,11 +3,11 @@ import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-	const query = await supabaseClient
-		.from('contracts')
-		.select('project ( name, logo_url ), metadata, abi, slug');
+    const query = await supabaseClient
+        .from('contracts')
+        .select('project ( name, logo_url ), metadata, abi, slug');
 
-	if (query.error) throw error(404, 'Not found');
+    if (query.error) throw error(404, 'Not found');
 
-	return { contract: query.data };
+    return { contract: query.data };
 }

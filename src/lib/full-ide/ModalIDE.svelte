@@ -23,11 +23,11 @@
 
 <div
 	bind:this={modalWrapper}
-	class="fixed inset-0 w-full h-full bg-white z-50 flex flex-col"
+	class="fixed inset-0 z-50 flex h-full w-full flex-col bg-white"
 	class:hidden={!open}
 >
 	{#if open}
-		<div class="flex flex-col flex-grow" transition:fade>
+		<div class="flex flex-grow flex-col" transition:fade>
 			<IDE {expression} asModal {closeCallback} />
 		</div>
 	{/if}

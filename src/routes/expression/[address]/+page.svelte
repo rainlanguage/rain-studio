@@ -48,8 +48,8 @@
 		}
 	};
 
-	let openNewExpModal: boolean = false,
-		openSignInModal: boolean = false;
+	let openNewExpModal = false,
+		openSignInModal = false;
 </script>
 
 <PageHeader>

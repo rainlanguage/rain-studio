@@ -12,7 +12,7 @@
 
 	export let expression: any;
 	$: expressionToFork = { ...expression, raw_expression: Formatter.get(expression.stateConfig) };
-	let newExpModal: boolean = false;
+	let newExpModal = false;
 </script>
 
 <ExpressionRow {expression}>

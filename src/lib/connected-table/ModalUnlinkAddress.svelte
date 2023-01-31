@@ -49,7 +49,7 @@
 		</div>
 
 		<div class="flex gap-3.5">
-			<input hidden name="address" bind:value={address} class="p-2 bg-gray-300 rounded-[10px]" />
+			<input hidden name="address" bind:value={address} class="rounded-[10px] bg-gray-300 p-2" />
 			<div class="flex gap-3.5">
 				<Button type="submit" variant="primary">Unlink</Button>
 				<Button type="button" variant="black" on:click={() => (openedModal = false)}>Cancel</Button>

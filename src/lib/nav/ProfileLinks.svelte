@@ -6,7 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { ContextRoles } from '$lib/user-context';
 
-	export let mobileContext: boolean = false;
+	export let mobileContext = false;
 </script>
 
 <a

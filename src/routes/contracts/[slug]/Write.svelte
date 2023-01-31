@@ -40,18 +40,18 @@
 		| -1;
 	let selectedContract: string | -1; // the selected contract address
 
-	let openNewExpModal: boolean = false;
+	let openNewExpModal = false;
 	let presaveExpression: PresaveExpression;
 	let expressionToSave: string;
 
-	let openIDEModal: boolean = false;
+	let openIDEModal = false;
 	let expressionForIDE: ExpressionRowFull;
 
-	let loadExpressionModal: boolean = false;
+	let loadExpressionModal = false;
 	let loadRaw: Function;
 	let expressionComponentName: string;
 
-	let openHelpModal: boolean = false;
+	let openHelpModal = false;
 
 	$: availableChains = getCommonChains($page.data.interpreters, metadata);
 	$: writeMethods = getWriteMethods(abi.abi);

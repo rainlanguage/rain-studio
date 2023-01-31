@@ -18,7 +18,7 @@
 	import { createEventDispatcher } from 'svelte';
 
 	export let presaveExpression: PresaveExpression;
-	export let forking: boolean = false;
+	export let forking = false;
 
 	let error: string | null;
 	let newSlug: string;

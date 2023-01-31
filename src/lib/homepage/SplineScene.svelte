@@ -5,7 +5,7 @@
 
 	// const canvas = document.getElementById('canvas3d');
 	let canvas: HTMLCanvasElement;
-	export let ready: boolean = false;
+	export let ready = false;
 
 	onMount(() => {
 		const app = new Application(canvas);

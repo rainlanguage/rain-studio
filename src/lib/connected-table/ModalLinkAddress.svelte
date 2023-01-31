@@ -24,7 +24,7 @@
 			signedMessage = await $signer.signMessage(messageToSign);
 		} catch (error) {
 			// Search for this error instances (?).
-			//@ts-expect-error
+			//@ts-expect-error Required serach for these error instance
 			if (error.code == 'ACTION_REJECTED') {
 				openedModal = false;
 				modalError = true;
@@ -65,16 +65,16 @@
 	<form
 		method="POST"
 		action="/settings/wallets?/linkAddress"
-		class="flex flex-col gap-5 w-min"
+		class="flex w-min flex-col gap-5"
 		use:enhance={submitFunction}
 	>
-		<div class="flex flex-col gap-2.5 w-fit">
+		<div class="flex w-fit flex-col gap-2.5">
 			<p class="text-[25px]">The connected wallet is not linked to your account.</p>
 			<p class="font-mono">{address}</p>
 		</div>
 
 		<div class="flex gap-3.5">
-			<input hidden name="address" bind:value={address} class="p-2 bg-gray-300 rounded-[10px]" />
+			<input hidden name="address" bind:value={address} class="rounded-[10px] bg-gray-300 p-2" />
 			<Button type="submit" variant="primary">Link wallet</Button>
 			<Button type="button" variant="black" on:click={closeMainModal}>Cancel</Button>
 		</div>

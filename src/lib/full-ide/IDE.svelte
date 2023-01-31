@@ -49,7 +49,7 @@
 
 	export let expression: ExpressionRowFull;
 	export let closeCallback: Function;
-	export let asModal: boolean = false;
+	export let asModal = false;
 
 	let raw_expression = expression.raw_expression || '';
 	let vmStateConfig: Writable<StateConfig>;
@@ -57,7 +57,7 @@
 	let name = expression.name || '';
 	let contract_expression = expression?.contract_expression;
 	let tags: string[] = expression?.tags || [];
-	let changeVisiblityModal: boolean = false;
+	let changeVisiblityModal = false;
 
 	// get from the metadata whether the expression type has a signed context
 	$: hasSignedContext =
@@ -130,12 +130,11 @@
 				goto(`/user/${$page.data.profile.username}/expressions`);
 			} else {
 				goto(`/organization/${$page.data.userContext?.name}/expressions`);
-
 			}
 		}
 	};
 
-	let saveACopy: boolean = false;
+	let saveACopy = false;
 
 	// code for showing different panes on mobile
 	let mobileActivePane = ShowPane.Expression;

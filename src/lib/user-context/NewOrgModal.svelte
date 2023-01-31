@@ -11,8 +11,8 @@
 	let orgNickname = '';
 	let error: null | string = null;
 	let modalErrorMsg: string;
-	let modalError: boolean = false;
-	let modalSuccess: boolean = false;
+	let modalError = false;
+	let modalSuccess = false;
 	let loading = false;
 
 	const close = () => (open = false);

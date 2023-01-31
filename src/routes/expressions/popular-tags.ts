@@ -1,1 +1,1 @@
-export const popularTags = ['ERC20', 'NFT', 'Trading strategy', 'Tournament']
+export const popularTags = ['ERC20', 'NFT', 'Trading strategy', 'Tournament'];

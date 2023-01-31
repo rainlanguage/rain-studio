@@ -4,8 +4,8 @@
 	import type { ExpressionRowFull } from '$lib/types/types';
 
 	export let expression: ExpressionRowFull;
-	export let showProject: boolean = true;
-	export let compact: boolean = false;
+	export let showProject = true;
+	export let compact = false;
 </script>
 
 {#if expression.contract}
@@ -15,15 +15,15 @@
 			logoUrl={expression.contract.project.logo_url}
 		/>
 	{/if}
-	<div class={`${compact ? 'text-md' : 'text-xl'} flex items-center gap-x-2 flex-wrap`}>
+	<div class={`${compact ? 'text-md' : 'text-xl'} flex flex-wrap items-center gap-x-2`}>
 		<span class="font-semibold">{expression.contract.metadata.name}</span>
 		{#if expression.contract_expression}
-			<div class={`${compact ? 'h-4' : 'h-8'} border-l-2 border-gray-700 -rotate-12`} />
+			<div class={`${compact ? 'h-4' : 'h-8'} -rotate-12 border-l-2 border-gray-700`} />
 			<span>{expression.contract_expression}</span>
 		{/if}
 	</div>
 {:else}
-	<div class="text-xl flex items-center gap-x-2 font-semibold">No contract</div>
+	<div class="flex items-center gap-x-2 text-xl font-semibold">No contract</div>
 {/if}
 {#if expression.interpreter}
 	<InterpreterTag interpreter={expression.interpreter} />

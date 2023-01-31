@@ -22,7 +22,7 @@
 
 <Background>
 	<div
-		class="bg-white rounded-xl p-8 border border-gray-200 -mt-20"
+		class="-mt-20 rounded-xl border border-gray-200 bg-white p-8"
 		in:fly={{ y: 20, duration: 1000 }}
 	>
 		{#if loading}
