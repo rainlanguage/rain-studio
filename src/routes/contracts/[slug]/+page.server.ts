@@ -127,7 +127,7 @@ export const load: PageServerLoad = async (event) => {
 		.select('address, profiles(username, avatar_url)')
 		.in('address', _accounts);
 
-	accountsQuery.data.forEach((account_) => {
+	accountsQuery.data?.forEach((account_) => {
 		_accountsData[account_.address.toLowerCase()] = {
 			username: account_.profiles.username,
 			avatar_url: account_.profiles.avatar_url

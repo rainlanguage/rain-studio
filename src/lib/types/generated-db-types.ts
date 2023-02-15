@@ -35,53 +35,6 @@ export interface Database {
           slug?: string | null
         }
       }
-      draft_expressions: {
-        Row: {
-          contract: string | null
-          contract_expression: string | null
-          created_at: string | null
-          id: string
-          interpreter: string
-          name: string
-          notes: string
-          public: boolean
-          raw_expression: string
-          saved_context: Json | null
-          sharable_slug: string
-          tags: string[] | null
-          user_id: string
-        }
-        Insert: {
-          contract?: string | null
-          contract_expression?: string | null
-          created_at?: string | null
-          id?: string
-          interpreter: string
-          name: string
-          notes: string
-          public?: boolean
-          raw_expression: string
-          saved_context?: Json | null
-          sharable_slug?: string
-          tags?: string[] | null
-          user_id?: string
-        }
-        Update: {
-          contract?: string | null
-          contract_expression?: string | null
-          created_at?: string | null
-          id?: string
-          interpreter?: string
-          name?: string
-          notes?: string
-          public?: boolean
-          raw_expression?: string
-          saved_context?: Json | null
-          sharable_slug?: string
-          tags?: string[] | null
-          user_id?: string
-        }
-      }
       draft_expressions_w: {
         Row: {
           contract: string | null
@@ -91,6 +44,7 @@ export interface Database {
           interpreter: string
           name: string
           notes: string
+          org_id: string | null
           public: boolean
           raw_expression: string
           saved_context: Json | null
@@ -106,6 +60,7 @@ export interface Database {
           interpreter: string
           name: string
           notes: string
+          org_id?: string | null
           public?: boolean
           raw_expression: string
           saved_context?: Json | null
@@ -121,6 +76,7 @@ export interface Database {
           interpreter?: string
           name?: string
           notes?: string
+          org_id?: string | null
           public?: boolean
           raw_expression?: string
           saved_context?: Json | null
@@ -146,29 +102,52 @@ export interface Database {
           metadata?: Json
         }
       }
-      profiles: {
+      org_member: {
+        Row: {
+          created_at: string
+          id: string
+          org_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          org_id: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          org_id?: string
+          role?: string
+          user_id?: string
+        }
+      }
+      organizations: {
         Row: {
           avatar_url: string | null
-          full_name: string | null
+          created_at: string | null
           id: string
-          updated_at: string | null
-          username: string
+          name: string
+          nickname: string
           website: string | null
         }
         Insert: {
           avatar_url?: string | null
-          full_name?: string | null
-          id: string
-          updated_at?: string | null
-          username: string
+          created_at?: string | null
+          id?: string
+          name: string
+          nickname: string
           website?: string | null
         }
         Update: {
           avatar_url?: string | null
-          full_name?: string | null
+          created_at?: string | null
           id?: string
-          updated_at?: string | null
-          username?: string
+          name?: string
+          nickname?: string
           website?: string | null
         }
       }
@@ -241,26 +220,6 @@ export interface Database {
           website?: string | null
         }
       }
-      wallets: {
-        Row: {
-          address: string
-          id: string
-          linked_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          address: string
-          id: string
-          linked_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          address?: string
-          id?: string
-          linked_at?: string | null
-          user_id?: string | null
-        }
-      }
       wallets_linked: {
         Row: {
           address: string
@@ -286,28 +245,60 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      get_expression_by_slug: {
-        Args: { slug: string }
-        Returns: unknown
+      create_organization: {
+        Args: {
+          name_: string
+          nickname_: string
+        }
+        Returns: undefined
       }
       get_expression_by_slug_w: {
-        Args: { slug: string }
-        Returns: unknown
+        Args: {
+          slug: string
+        }
+        Returns: {
+          contract: string | null
+          contract_expression: string | null
+          created_at: string | null
+          id: string
+          interpreter: string
+          name: string
+          notes: string
+          org_id: string | null
+          public: boolean
+          raw_expression: string
+          saved_context: Json | null
+          sharable_slug: string
+          tags: string[] | null
+          user_id: string
+        }[]
       }
-      get_unique_tags_for_user: {
+      get_member_id: {
         Args: Record<PropertyKey, never>
-        Returns: { tags: string }[]
+        Returns: string
+      }
+      get_org_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_unique_tags_for_user_w: {
         Args: Record<PropertyKey, never>
-        Returns: { tags: string }[]
+        Returns: {
+          tags: string
+        }[]
       }
       get_user_id: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      is_context_org: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       match_contracts_by_address: {
-        Args: { contracts_array: string[] }
+        Args: {
+          contracts_array: string[]
+        }
         Returns: {
           id: string
           metadata: Json
@@ -318,15 +309,27 @@ export interface Database {
         }[]
       }
       match_interpreters_by_address: {
-        Args: { interpreters_array: string[] }
-        Returns: { id: string; metadata: Json; interpreteraddress: string }[]
+        Args: {
+          interpreters_array: string[]
+        }
+        Returns: {
+          id: string
+          metadata: Json
+          interpreteraddress: string
+        }[]
       }
       new_user_from_address: {
-        Args: { address_: string; username_: string }
+        Args: {
+          address_: string
+          username_: string
+        }
         Returns: undefined
       }
     }
     Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }
