@@ -32,7 +32,7 @@ const sortExpressions = (a, b) => {
 
 /** @type {import('./$types').PageServerLoad} */
 export const load: PageServerLoad = async (event) => {
-	const { params } = event;
+	const { params, fetch } = event;
 	const session = await getServerSession(event);
 
 	const _userLikes: UserLikes = {};
@@ -59,7 +59,7 @@ export const load: PageServerLoad = async (event) => {
 
 	//	Only mumbai at the moment
 	const client = createClient({
-		url: Subgraphs[0].url
+		url: Subgraphs[0].endpoints.expressions
 	});
 
 	const knowContractsQuery = await client
@@ -172,9 +172,24 @@ export const load: PageServerLoad = async (event) => {
 		});
 	}
 
+	const getAddresses = async (fetch_) => {
+		const resp = await fetch_(`/api/get_interpreters`, {
+			method: 'GET'
+		});
+		if (resp.ok) {
+			const { interpreterAddresses } = await resp.json();
+			return interpreterAddresses;
+		}
+
+		return [];
+	};
+
+	const interpreterDeployers = await getAddresses(fetch);
+
 	return {
 		contract: contractQuery.data,
 		interpreters: interpretersQuery.data,
+		interpreterDeployers,
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,
 		userLikes: _userLikes,

@@ -18,7 +18,7 @@ export async function POST(event) {
 
 	//	Only mumbai at the moment
 	const client = createClient({
-		url: Subgraphs[0].url
+		url: Subgraphs[0].endpoints.expressions
 	});
 
 	if (!addressOrText) {

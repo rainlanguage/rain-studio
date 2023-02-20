@@ -3,7 +3,7 @@
 	import '../app.postcss';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { afterNavigate, beforeNavigate, invalidate } from '$app/navigation';
-	import { afterUpdate, onMount } from 'svelte';
+	import { afterUpdate, getContext, onMount, setContext } from 'svelte';
 	import Nav from '$lib/nav/Nav.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import * as Sentry from '@sentry/svelte';
@@ -24,7 +24,21 @@
 	let openedModalLink = false;
 	let _address = '';
 
-	afterUpdate(() => {
+	setContext('EVALUABLE_ADDRESSES', {
+		getAddresses: async () => {
+			const resp = await fetch(`/api/get_interpreters`, {
+				method: 'GET'
+			});
+			if (resp.ok) {
+				const { interpreterAddresses } = await resp.json();
+				return interpreterAddresses;
+			}
+
+			return [];
+		}
+	});
+
+	afterUpdate(async () => {
 		if (_address != $signerAddress) {
 			_address = $signerAddress;
 		}

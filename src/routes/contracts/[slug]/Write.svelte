@@ -30,14 +30,7 @@
 
 	let selectedMethod: { name: string; def: AbiFunction } | -1; // the selected method
 	let selectedChain: number;
-	let selectedInterpreter:
-		| {
-				id: string;
-				interpreterAddress: string;
-				deployerAddress: string;
-				interpreter: InterpreterRowFull;
-		  }
-		| -1;
+	let selectedInterpreter: string;
 	let selectedContract: string | -1; // the selected contract address
 
 	let openNewExpModal: boolean = false;
@@ -53,8 +46,15 @@
 
 	let openHelpModal: boolean = false;
 
+	let aver: string = '';
+
 	$: availableChains = getCommonChains($page.data.interpreters, metadata);
 	$: writeMethods = getWriteMethods(abi.abi);
+
+	// Always get an array from the server
+	let interpreterDeployers = $page.data.interpreterDeployers.map((e) => {
+		return { value: e, label: e };
+	});
 
 	/**
 	 * Function for converting an abi path to a path that can be used to set the path
@@ -107,7 +107,7 @@
 			);
 
 		// handling error cases
-		if (selectedInterpreter == -1) throw Error('No interpreter selected');
+		if (selectedInterpreter == '') throw Error('No interpreter selected');
 		if (selectedMethod == -1) throw Error('No method selected');
 		if (!metadata.interpreterFields)
 			throw Error('Interpreter and deploy fields not defined in metadata');
@@ -121,7 +121,7 @@
 			selectedMethod.name
 		);
 		// set it
-		if (deployerPath) set(result, deployerPath, selectedInterpreter.deployerAddress);
+		if (deployerPath) set(result, deployerPath, selectedInterpreter);
 
 		// get the path of the deployer field in the result
 		const interpreterPath = constructPath(
@@ -130,17 +130,17 @@
 			selectedMethod.name
 		);
 		// set it
-		if (interpreterPath) set(result, interpreterPath, selectedInterpreter.interpreterAddress);
+		// if (interpreterPath) set(result, interpreterPath, selectedInterpreter.interpreterAddress);
 		console.log(result);
 		await $contracts.selectedContract[selectedMethod.name](...result);
 	};
 
 	const saveExpression = async ({ detail: { raw } }: { detail: { raw: string } }) => {
-		if (selectedInterpreter == -1) throw Error('No interpreter selected');
+		if (selectedInterpreter == '') throw Error('No interpreter selected');
 		presaveExpression = {
 			raw_expression: raw,
 			contract,
-			interpreter: selectedInterpreter?.interpreter
+			interpreter: selectedInterpreter
 		};
 		expressionToSave = raw;
 		openNewExpModal = true;
@@ -186,12 +186,9 @@
 	/>
 	{#if selectedChain && selectedChain !== -1}
 		<span>Select an interpreter</span>
-		<Select
-			items={getInterpretersForChain($page.data.interpreters, selectedChain)}
-			bind:value={selectedInterpreter}
-		/>
+		<Select items={interpreterDeployers} bind:value={selectedInterpreter} />
 	{/if}
-	{#if selectedInterpreter && selectedInterpreter !== -1}
+	{#if selectedInterpreter && selectedInterpreter !== ''}
 		<span>Select a method to write</span>
 		<Select items={writeMethods} bind:value={selectedMethod} />
 	{/if}

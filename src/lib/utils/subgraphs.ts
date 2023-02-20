@@ -1,12 +1,23 @@
+type SubgraphData = {
+	chain: number;
+	endpoints: {
+		expressions: string;
+		interpreters: string;
+	};
+};
+
 /**
  * Rain expression Subgraphs for each chain
  */
-export const Subgraphs = [
+export const Subgraphs: SubgraphData[] = [
 	{
 		/**
 		 * 	Only mumbai at the moment
 		 */
 		chain: 80001,
-		url: 'https://api.thegraph.com/subgraphs/name/beehive-innovation/rain-expressions'
+		endpoints: {
+			expressions: 'https://api.thegraph.com/subgraphs/name/beehive-innovation/rain-expressions',
+			interpreters: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry'
+		}
 	}
 ];
