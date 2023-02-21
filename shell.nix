@@ -14,8 +14,8 @@ in
 pkgs.stdenv.mkDerivation {
   name = "shell";
   buildInputs = [
+    pkgs.deno
     pkgs.nixpkgs-fmt
-    pkgs.nodejs-16_x
     pkgs.typescript
     pkgs.yarn
     dev
