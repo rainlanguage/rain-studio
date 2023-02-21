@@ -1,13 +1,12 @@
 <script lang="ts">
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
+	import { logoUrlRain, nameRain } from '$lib/utils/constants';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
 
 	export let contract: any;
 
 	const addressCount = contract.knownAddress.length;
-	const nameRain = 'Rain';
-	const logoUrlRain = '/src/lib/assets/rain-logo.svg';
 </script>
 
 <div

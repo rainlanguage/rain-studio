@@ -1,12 +1,14 @@
 import { supabaseClient } from '$lib/supabaseClient';
 import { ethers } from 'ethers';
 import { getServerSession } from '@supabase/auth-helpers-sveltekit';
-
-import type { PageServerLoad } from './$types';
-import type { UserLikes, ExpressionLikes, AccountData } from './types';
+import { error } from '@sveltejs/kit';
 
 import { createClient } from '@urql/core';
 import { Subgraphs, QueryGetKnowContracts } from '$lib/utils';
+
+import type { PageServerLoad } from './$types';
+import type { UserLikes, ExpressionLikes, AccountData } from './types';
+import { formatContract, parseMeta } from '$lib/utils/meta';
 
 //  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai.
 
@@ -18,7 +20,7 @@ const chainId = 80001;
 /**
  * Sort expression from recents to olders
  */
-const sortExpressions = (a, b) => {
+const sortExpressions = (a: any, b: any) => {
 	const timeA = a.event.transaction.timestamp;
 	const timeB = b.event.transaction.timestamp;
 	if (timeA > timeB) {
@@ -32,7 +34,7 @@ const sortExpressions = (a, b) => {
 
 /** @type {import('./$types').PageServerLoad} */
 export const load: PageServerLoad = async (event) => {
-	const { params, fetch } = event;
+	const { params } = event;
 	const session = await getServerSession(event);
 
 	const _userLikes: UserLikes = {};
@@ -40,83 +42,52 @@ export const load: PageServerLoad = async (event) => {
 	const _accountsData: AccountData = {};
 	let recentExpressions = [];
 
+	//	Only mumbai at the moment
+	const client = createClient({
+		url: Subgraphs[0].endpoints.interpreters
+	});
+
+	const querySg = `
+			query {
+				interpreterInstances {
+					id
+				}
+				expressionDeployers {
+					id
+				}
+				contracts {
+					id
+					opmeta
+				}
+			}
+		`;
+
+	const { data: dataSg, error: errorSg } = await client.query(querySg, {}).toPromise();
+
+	if (errorSg) throw error(404, 'Not found');
+
+	const _contracts = formatContract(dataSg.contracts);
+
+	const slugData = _contracts.find((element_) => element_.slug == params.slug);
+
+	const knowContractsQuery = await client
+		.query(QueryGetKnowContracts, { knowAddresses: slugData?.knownAddress ?? [] })
+		.toPromise();
+
+	const meta = parseMeta(knowContractsQuery.data.contracts[0].opmeta);
+
 	const contractQuery = await supabaseClient
 		.from('contracts')
 		.select('project ( * ), *')
 		.eq('slug', params.slug)
 		.single();
 
-	if (contractQuery.error) throw error(404, 'Not found');
-
-	const interpretersQuery = await supabaseClient.from('interpreters').select('*');
-	if (interpretersQuery.error) throw error(500, 'Something went wrong :(');
-
-	// Aaddresses filtered with the proper chain ID in an array
-	const addresses = contractQuery.data.metadata.addresses
-		.filter((element) => element.chainId == chainId)
-		.map((element) => element.knownAddresses)
-		.flat();
-
-	//	Only mumbai at the moment
-	const client = createClient({
-		url: Subgraphs[0].endpoints.expressions
-	});
-
-	const knowContractsQuery = await client
-		.query(QueryGetKnowContracts, { knowAddresses: addresses })
-		.toPromise();
+	// if (contractQuery.error) throw error(404, `Not found ${params.slug}`);
 
 	if (knowContractsQuery.data) {
 		recentExpressions = knowContractsQuery.data.contracts.map((ele) => ele.expressions).flat();
 		recentExpressions.sort(sortExpressions);
 	}
-
-	///////////////////////////////////////////// Test design data
-
-	// Expression from SG to obtain values
-	const query = `
-		query GetAllExpressions {
-			expressions {
-				id
-				contextScratch
-				config {
-					id
-					sources
-					constants
-				}
-				account {
-					id
-				}
-				event {
-					id
-					transaction {
-						id
-						timestamp
-						blockNumber
-					}
-				}
-				sender {
-					id
-					deployTransaction {
-						id
-						timestamp
-						blockNumber
-					}
-				}
-				interpreter {
-					id
-				}
-				interpreterInstance {
-					id
-				}
-			}
-		}
-	`;
-	const testQuery = await client.query(query, {}).toPromise();
-
-	recentExpressions = testQuery.data.expressions;
-	recentExpressions.sort(sortExpressions);
-	///////////////////////////////////////////////////////////////////////
 
 	// Check on DB if the expression_.account.id is an regirtered user, saving the username and avatar.
 	const _accounts = recentExpressions.map((expression_) =>
@@ -184,11 +155,16 @@ export const load: PageServerLoad = async (event) => {
 		return [];
 	};
 
-	const interpreterDeployers = await getAddresses(fetch);
+	const interpreterDeployers = dataSg.expressionDeployers;
+
+	slugData;
 
 	return {
-		contract: contractQuery.data,
-		interpreters: interpretersQuery.data,
+		contract: contractQuery?.data,
+		slugData,
+		meta,
+		knowContracts: knowContractsQuery,
+		interpreters: dataSg.interpreterInstances,
 		interpreterDeployers,
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,

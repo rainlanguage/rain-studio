@@ -100,6 +100,7 @@ const factoryQuery = `
  */
 const contractQuery = `
   id
+  opmeta
   deployTransaction {
     id
     timestamp
@@ -107,7 +108,6 @@ const contractQuery = `
   }
   expressions {
     id
-    contextScratch
     config {
       id
       sources
@@ -115,22 +115,12 @@ const contractQuery = `
     }
     event {
       id
-      transaction {
-        id
-        timestamp
-        blockNumber
-      }
     }
     account {
       id
     }
     sender {
       id
-      deployTransaction {
-        id
-        timestamp
-        blockNumber
-      }
     }
     interpreter {
       id

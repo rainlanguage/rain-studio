@@ -8,20 +8,28 @@
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import Write from './Write.svelte';
 	import Summary from './Summary.svelte';
+	import { logoUrlRain, nameRain } from '$lib/utils/constants';
 
 	$: contract = $page.data.contract;
-	$: ({ project, metadata, abi } = contract);
+	$: knowContracts = $page.data.knowContracts;
+	$: slugData = $page.data.slugData;
+	$: meta = $page.data.meta;
+
+	$: project = contract?.project;
+	// $: metadata = contract?.metadata;
+	// $: abi = contract?.abi;
+
+	$: addressCount = slugData?.knownAddress.length;
 </script>
 
 <PageHeader>
 	<div class="container mx-auto flex h-full flex-col items-stretch px-4 sm:px-0">
 		<div class="flex h-full flex-col justify-center gap-y-3 justify-self-stretch">
-			<ProjectTag logoUrl={project.logo_url} name={project.name} />
-			<span class="text-2xl font-semibold">{metadata.name}</span>
+			<ProjectTag logoUrl={project?.logo_url ?? logoUrlRain} name={project?.name ?? nameRain} />
+			<span class="text-2xl font-semibold">{slugData.name}</span>
 			<div class="flex items-center gap-x-2">
-				<Pills><span class="text-sm">{metadata.type}</span></Pills>
-				<span class="text-gray-500">
-					<KnownAddresses {metadata} />
+				<span class="text-sm text-gray-600">
+					{addressCount} known address{#if addressCount > 1}es{/if} on 1 chain
 				</span>
 			</div>
 		</div>
@@ -40,12 +48,12 @@
 	</div>
 	<div class="justify-stretch container mx-auto flex flex-col gap-y-8 px-4 sm:px-0 lg:flex-row">
 		<div class="flex flex-col gap-y-8 pt-10 lg:w-2/3 lg:pr-6">
-			<TabPanel>
+			<!-- <TabPanel>
 				<Summary {abi} {metadata} />
-			</TabPanel>
-			<TabPanel>
+			</TabPanel> -->
+			<!-- <TabPanel>
 				<Write {abi} {metadata} {contract} />
-			</TabPanel>
+			</TabPanel> -->
 		</div>
 		<div class="py-8 lg:w-1/3"><Sidebar {contract} /></div>
 	</div>
