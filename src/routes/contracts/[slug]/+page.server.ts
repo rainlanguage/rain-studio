@@ -66,7 +66,9 @@ export const load: PageServerLoad = async (event) => {
 
 	if (errorSg) throw error(404, 'Not found');
 
-	const _contracts = formatContract(dataSg.contracts);
+	const _contracts = formatContract(
+		dataSg.contracts.filter((contract) => contract.opmeta !== null)
+	);
 
 	const slugData = _contracts.find((element_) => element_.slug == params.slug);
 

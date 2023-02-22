@@ -6,7 +6,7 @@ type SGContract = {
 	opmeta: string;
 };
 
-type FormatedContract = {
+type FormattedContract = {
 	name: string;
 	slug: string;
 	description: string;
@@ -26,9 +26,9 @@ export function parseMeta(bytes: string) {
 	return JSON.parse(_meta);
 }
 
-export function formatContract(contracts_: SGContract[]): FormatedContract[] {
+export function formatContract(contracts_: SGContract[]): FormattedContract[] {
 	const _contracts: {
-		[key: string]: FormatedContract;
+		[key: string]: FormattedContract;
 	} = {};
 
 	for (let i = 0; i < contracts_.length; i++) {

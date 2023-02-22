@@ -2,13 +2,9 @@
 	import { page } from '$app/stores';
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
-	import Sidebar from './Sidebar.svelte';
-	import Pills from 'rain-svelte-components/package/Pills.svelte';
-	import { Tabs, TabList, TabPanel, Tab } from 'rain-svelte-components/package/tabs/tabs';
-	import KnownAddresses from '$lib/KnownAddresses.svelte';
-	import Write from './Write.svelte';
-	import Summary from './Summary.svelte';
 	import { logoUrlRain, nameRain } from '$lib/utils/constants';
+	import { Tab, TabList, Tabs } from 'rain-svelte-components/package/tabs/tabs';
+	import Sidebar from './Sidebar.svelte';
 
 	$: contract = $page.data.contract;
 	$: knowContracts = $page.data.knowContracts;
