@@ -33,6 +33,9 @@ export function formatContract(contracts_: SGContract[]): FormattedContract[] {
 
 	for (let i = 0; i < contracts_.length; i++) {
 		const contract = contracts_[i];
+
+		if (!contract.opmeta) continue;
+		
 		const meta = parseMeta(contract.opmeta);
 
 		if (_contracts[meta.alias]) {

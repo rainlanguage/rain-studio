@@ -2,10 +2,10 @@
 	import { Section, SectionBody, SectionHeading } from 'rain-svelte-components/package/section';
 	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { allChainsData } from 'svelte-ethers-store';
-	export let abi: any, metadata: ContractMetadata;
+	export let metadata: any;
 </script>
 
-<div>
+<div class="whitespace-pre-line">
 	{metadata.description}
 </div>
 <Section>
@@ -19,16 +19,13 @@
 					<td class="pb-2">Address</td>
 				</tr>
 				{#if metadata.addresses}
-					{#each metadata.addresses as chain}
-						{#each chain.knownAddresses as knownAddress}
-							<tr>
-								<td class="pt-3"
-									>{allChainsData.find((_chain) => _chain.chainId == chain.chainId)?.name}</td
-								>
-								<td class="pt-3">{chain.chainId}</td>
-								<td class="block w-48 truncate pt-3 md:w-full">{knownAddress}</td>
-							</tr>
-						{/each}
+					{#each metadata.addresses as knownAddress}
+						<tr>
+							<!-- TODO: REMOVE HARDCODED -->
+							<td class="pt-3">Mumbai</td>
+							<td class="pt-3">80001</td>
+							<td class="block w-48 truncate pt-3 md:w-full">{knownAddress}</td>
+						</tr>
 					{/each}
 				{/if}
 			</table>

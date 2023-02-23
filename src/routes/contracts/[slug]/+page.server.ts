@@ -159,7 +159,6 @@ export const load: PageServerLoad = async (event) => {
 
 	const interpreterDeployers = dataSg.expressionDeployers;
 
-	slugData;
 
 	return {
 		contract: contractQuery?.data,
