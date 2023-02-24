@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { Section, SectionBody, SectionHeading } from 'rain-svelte-components/package/section';
-	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
-	import { allChainsData } from 'svelte-ethers-store';
+	import SvelteMarkdown from 'svelte-markdown';
 	export let metadata: any;
 </script>
 
 <div class="whitespace-pre-line">
-	{metadata.description}
+	<SvelteMarkdown source={metadata.description} />
 </div>
 <Section>
 	<SectionHeading>Known addresses</SectionHeading>

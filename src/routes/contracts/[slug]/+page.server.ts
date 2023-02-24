@@ -1,14 +1,12 @@
 import { supabaseClient } from '$lib/supabaseClient';
-import { ethers } from 'ethers';
+import { QueryGetKnownContracts, Subgraphs } from '$lib/utils';
+import { formatContract, parseMeta } from '$lib/utils/meta';
 import { getServerSession } from '@supabase/auth-helpers-sveltekit';
 import { error } from '@sveltejs/kit';
-
 import { createClient } from '@urql/core';
-import { Subgraphs, QueryGetKnowContracts } from '$lib/utils';
-
+import { ethers } from 'ethers';
 import type { PageServerLoad } from './$types';
-import type { UserLikes, ExpressionLikes, AccountData } from './types';
-import { formatContract, parseMeta } from '$lib/utils/meta';
+import type { AccountData, ExpressionLikes, UserLikes } from './types';
 
 //  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai.
 
@@ -72,11 +70,11 @@ export const load: PageServerLoad = async (event) => {
 
 	const slugData = _contracts.find((element_) => element_.slug == params.slug);
 
-	const knowContractsQuery = await client
-		.query(QueryGetKnowContracts, { knowAddresses: slugData?.knownAddress ?? [] })
+	const knownContractsQuery = await client
+		.query(QueryGetKnownContracts, { knowAddresses: slugData?.knownAddresses ?? [] })
 		.toPromise();
 
-	const meta = parseMeta(knowContractsQuery.data.contracts[0].opmeta);
+	const meta = parseMeta(knownContractsQuery.data.contracts[0].opmeta);
 
 	const contractQuery = await supabaseClient
 		.from('contracts')
@@ -86,8 +84,8 @@ export const load: PageServerLoad = async (event) => {
 
 	// if (contractQuery.error) throw error(404, `Not found ${params.slug}`);
 
-	if (knowContractsQuery.data) {
-		recentExpressions = knowContractsQuery.data.contracts.map((ele) => ele.expressions).flat();
+	if (knownContractsQuery.data) {
+		recentExpressions = knownContractsQuery.data.contracts.map((ele) => ele.expressions).flat();
 		recentExpressions.sort(sortExpressions);
 	}
 
@@ -159,12 +157,11 @@ export const load: PageServerLoad = async (event) => {
 
 	const interpreterDeployers = dataSg.expressionDeployers;
 
-
 	return {
 		contract: contractQuery?.data,
 		slugData,
 		meta,
-		knowContracts: knowContractsQuery,
+		knownContracts: knownContractsQuery,
 		interpreters: dataSg.interpreterInstances,
 		interpreterDeployers,
 		expressionSG: recentExpressions,

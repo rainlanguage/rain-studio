@@ -1,6 +1,7 @@
+import type { Abi } from 'abitype';
 import type { ContractDataFormat } from '../types';
 
-export const abi = [
+export const abi: Abi = [
 	{
 		inputs: [
 			{
@@ -1705,7 +1706,7 @@ export const abi = [
 ];
 
 const Orderbook: ContractDataFormat = {
-	abi,
+	abi: { abi },
 	type: 'contract'
 };
 

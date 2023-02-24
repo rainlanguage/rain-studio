@@ -10,7 +10,7 @@ type FormattedContract = {
 	name: string;
 	slug: string;
 	description: string;
-	knownAddress: string[];
+	knownAddresses: string[];
 };
 
 export function parseMeta(bytes: string) {
@@ -35,17 +35,17 @@ export function formatContract(contracts_: SGContract[]): FormattedContract[] {
 		const contract = contracts_[i];
 
 		if (!contract.opmeta) continue;
-		
+
 		const meta = parseMeta(contract.opmeta);
 
 		if (_contracts[meta.alias]) {
-			_contracts[meta.alias].knownAddress.push(contract.id);
+			_contracts[meta.alias].knownAddresses.push(contract.id);
 		} else {
 			_contracts[meta.alias] = {
 				name: meta.name,
 				slug: meta.alias,
 				description: meta.desc,
-				knownAddress: [contract.id]
+				knownAddresses: [contract.id]
 			};
 		}
 	}

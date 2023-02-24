@@ -1,5 +1,7 @@
+import type { Abi } from 'abitype';
+
 type DataFormat = {
-	abi: any[];
+	abi: { abi: Abi };
 	type: 'contract' | 'implementation';
 };
 

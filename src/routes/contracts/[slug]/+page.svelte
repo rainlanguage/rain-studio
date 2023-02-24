@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { getContractInfo } from '$lib/abis';
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { logoUrlRain, nameRain } from '$lib/utils/constants';
-	import { getCloneFactory, getContractInfo } from '$lib/abis';
 	import { Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components/package/tabs/tabs';
 	import Sidebar from './Sidebar.svelte';
 	import Summary from './Summary.svelte';
-	import { Ring } from 'rain-svelte-components/package';
 	import Write from './Write.svelte';
 
 	$: contract = $page.data.contract;
@@ -18,11 +17,11 @@
 	$: project = contract?.project;
 	$: metadata = {
 		description: meta.desc,
-		addresses: slugData.knownAddress
+		addresses: slugData.knownAddresses
 	};
 	$: contractF = getContractInfo($page.params.slug);
 
-	$: addressCount = slugData?.knownAddress.length;
+	$: addressCount = slugData?.knownAddresses.length;
 </script>
 
 <PageHeader>
@@ -51,13 +50,13 @@
 			</div>
 		</div>
 		<div class="justify-stretch container mx-auto flex flex-col gap-y-8 px-4 sm:px-0 lg:flex-row">
-			<div class="flex flex-col gap-y-8 pt-10 lg:w-2/3 lg:pr-6">
+			<div class="flex flex-col gap-y-8 py-10 lg:w-2/3 lg:pr-6">
 				<TabPanel>
 					<Summary {metadata} />
 				</TabPanel>
-				<!-- <TabPanel>
+				<TabPanel>
 					<Write abi={contractF.abi} {metadata} {contract} />
-				</TabPanel> -->
+				</TabPanel>
 			</div>
 			<div class="py-8 lg:w-1/3"><Sidebar {contract} /></div>
 		</div>

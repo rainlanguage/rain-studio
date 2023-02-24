@@ -1,6 +1,7 @@
-import type { ImplementationDataFormat } from "../types";
+import type { Abi } from 'abitype';
+import type { ImplementationDataFormat } from '../types';
 
-export const abi = [
+export const abi: Abi = [
 	{
 		inputs: [
 			{
@@ -1177,7 +1178,7 @@ export const tupleFormat =
 	'tuple(tuple(address deployer, bytes[] sources, uint256[] constants) dummyConfig, tuple(address deployer, bytes[] sources, uint256[] constants)[] config)';
 
 const FlowERC721: ImplementationDataFormat = {
-	abi,
+	abi: { abi },
 	initializeTuple: tupleFormat,
 	type: 'implementation'
 };

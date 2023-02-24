@@ -6,7 +6,7 @@
 
 	export let contract: any;
 
-	const addressCount = contract.knownAddress.length;
+	const addressCount = contract.knownAddresses.length;
 </script>
 
 <div

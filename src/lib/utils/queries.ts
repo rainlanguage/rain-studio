@@ -297,7 +297,7 @@ export const QueryExpression = `
  }
 `;
 
-export const QueryGetKnowContracts = `
+export const QueryGetKnownContracts = `
   query GetKnowContracts($knowAddresses: [ID!]) {
     contracts(where: {id_in: $knowAddresses}) {
       ${contractQuery}
