@@ -50,7 +50,7 @@
 
 	// Always get an array from the server
 	let interpreterDeployers = $page.data.interpreterDeployers.map((e) => {
-		return { value: e, label: e };
+		return { value: e.id, label: JSON.stringify(e) };
 	});
 
 	/**
@@ -176,8 +176,8 @@
 	<span>Select a chain</span>
 	<Select
 		items={availableChains.map((chainId) => ({
-			label: getNameFromChainId(chainId),
-			value: chainId
+			label: 'Mumbai',
+			value: 80001
 		}))}
 		bind:value={selectedChain}
 	/>
