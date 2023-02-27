@@ -186,14 +186,13 @@
 		<span>Select an interpreter</span>
 		<Select
 			items={$page.data.expressionDeployers
+				.filter((deployer) => deployer.chainId == selectedChain)
 				.map((deployer) => {
 					return {
-						value: deployer.id,
-						label: deployer.id,
-						chainId: deployer.chainId
+						value: deployer,
+						label: deployer.id
 					};
-				})
-				.filter((deployer) => deployer.chainId == selectedChain)}
+				})}
 			bind:value={selectedInterpreter}
 		/>
 	{/if}
