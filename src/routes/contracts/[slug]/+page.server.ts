@@ -64,6 +64,14 @@ export const load: PageServerLoad = async (event) => {
 
 	if (errorSg) throw error(404, 'Not found');
 
+	//  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai, so we're hardcoding the chain id
+	dataSg.interpreterInstances = dataSg.interpreterInstances.map((interpreter) => {
+		return { ...interpreter, chainId: Subgraphs[0].chain };
+	});
+	dataSg.contracts = dataSg.contracts.map((contract) => {
+		return { ...contract, chainId: Subgraphs[0].chain };
+	});
+
 	const _contracts = formatContract(
 		dataSg.contracts.filter((contract) => contract.opmeta !== null)
 	);
@@ -155,7 +163,10 @@ export const load: PageServerLoad = async (event) => {
 		return [];
 	};
 
-	const interpreterDeployers = dataSg.expressionDeployers;
+	//  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai, so we're hardcoding the chain id
+	dataSg.expressionDeployers = dataSg.expressionDeployers.map((deployer) => {
+		return { ...deployer, chainId: Subgraphs[0].chain };
+	});
 
 	return {
 		contract: contractQuery?.data,
@@ -163,7 +174,7 @@ export const load: PageServerLoad = async (event) => {
 		meta,
 		knownContracts: knownContractsQuery,
 		interpreters: dataSg.interpreterInstances,
-		interpreterDeployers,
+		expressionDeployers: dataSg.expressionDeployers,
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,
 		userLikes: _userLikes,

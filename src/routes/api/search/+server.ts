@@ -4,7 +4,7 @@ import { createClient } from '@urql/core';
 import { json } from '@sveltejs/kit';
 import { ethers } from 'ethers';
 import { matchInterpreters } from '$lib/match-addresses';
-import { QueryAddress, QueryTrasnsaction, Subgraphs } from '$lib/utils';
+import { QueryAddress, QueryTransaction, Subgraphs } from '$lib/utils';
 
 // TODO: Improve to search multi chain
 // TODO: Improve the format of the data response (?)
@@ -61,7 +61,7 @@ export async function POST(event) {
 		// Search a transaction
 		const hash = addressOrText.toLowerCase();
 
-		const { data, error } = await client.query(QueryTrasnsaction, { hash }).toPromise();
+		const { data, error } = await client.query(QueryTransaction, { hash }).toPromise();
 
 		if (error) {
 			console.log(error);

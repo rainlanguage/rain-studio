@@ -45,13 +45,8 @@
 
 	let aver: string = '';
 
-	$: availableChains = getCommonChains($page.data.interpreters, metadata);
+	$: availableChains = getCommonChains($page.data.interpreters, metadata.addresses);
 	$: writeMethods = getWriteMethods(abi.abi);
-
-	// Always get an array from the server
-	let interpreterDeployers = $page.data.interpreterDeployers.map((e) => {
-		return { value: e.id, label: JSON.stringify(e) };
-	});
 
 	/**
 	 * Function for converting an abi path to a path that can be used to set the path
@@ -173,17 +168,34 @@
 </script>
 
 <div class="flex flex-col gap-y-4">
-	<span>Select a chain</span>
-	<Select
-		items={availableChains.map((chainId) => ({
-			label: 'Mumbai',
-			value: 80001
-		}))}
-		bind:value={selectedChain}
-	/>
+	{#if availableChains.length > 0}
+		<span>Select a chain</span>
+		<Select
+			items={availableChains.map((chainId) => {
+				return {
+					label: getNameFromChainId(chainId),
+					value: chainId
+				};
+			})}
+			bind:value={selectedChain}
+		/>
+	{:else}
+		<span>No available chains</span>
+	{/if}
 	{#if selectedChain && selectedChain !== -1}
 		<span>Select an interpreter</span>
-		<Select items={interpreterDeployers} bind:value={selectedInterpreter} />
+		<Select
+			items={$page.data.expressionDeployers
+				.map((deployer) => {
+					return {
+						value: deployer.id,
+						label: deployer.id,
+						chainId: deployer.chainId
+					};
+				})
+				.filter((deployer) => deployer.chainId == selectedChain)}
+			bind:value={selectedInterpreter}
+		/>
 	{/if}
 	{#if selectedInterpreter && selectedInterpreter !== ''}
 		<span>Select a method to write</span>

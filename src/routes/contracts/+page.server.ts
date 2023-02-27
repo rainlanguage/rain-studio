@@ -25,6 +25,8 @@ export async function load() {
 
 	if (errorSg) throw error(404, 'Not found');
 
+	console.log(dataSg.contracts);
+
 	contracts = formatContract(dataSg.contracts);
 
 	return { contracts: contracts };

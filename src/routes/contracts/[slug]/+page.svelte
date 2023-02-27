@@ -10,14 +10,19 @@
 	import Write from './Write.svelte';
 
 	$: contract = $page.data.contract;
-	$: knowContracts = $page.data.knowContracts;
+	$: knownContracts = $page.data.knownContracts;
 	$: slugData = $page.data.slugData;
 	$: meta = $page.data.meta;
 
 	$: project = contract?.project;
 	$: metadata = {
 		description: meta.desc,
-		addresses: slugData.knownAddresses
+		addresses: [
+			{
+				chainId: slugData.chainId,
+				knownAddresses: slugData.knownAddresses
+			}
+		]
 	};
 	$: contractF = getContractInfo($page.params.slug);
 

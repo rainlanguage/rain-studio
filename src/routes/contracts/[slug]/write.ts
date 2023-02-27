@@ -1,12 +1,12 @@
 import type { InterpreterRowFull } from '$lib/types/types';
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
+import { ethers } from 'ethers';
 import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
+import type { EVMAddress } from 'rain-metadata/metadata-types/general';
 import { allChainsData } from 'svelte-ethers-store';
 
 // getting all of the state changing methods for this abi
-export const getWriteMethods = (
-	abi: Abi
-): { label: string; value: { name: string; def: AbiFunction }; index: number }[] => {
+export const getWriteMethods = (abi: Abi) => {
 	return abi
 		.filter(
 			(method: AbiFunction | AbiEvent | AbiError): method is AbiFunction =>
@@ -29,23 +29,31 @@ export const getNameFromChainId = (id: number): string => {
 	return name;
 };
 
-// getting the chains for which there's both a known address for contract and interpreter
-export const getCommonChains = (interpreterInstances: any[], metadata: any): number[] => {
-	// will only include unique chains
-	const chains: Set<number> = new Set();
-	interpreterInstances.forEach((interpreter) => {
-		chains.add(interpreter.chainId);
+// Returns chains which are shared by both contract address and interpreter address
+export const getCommonChains = (interpreters: any[], contracts: EVMAddress[]): number[] => {
+	// Only include unique chains
+	const interpreterChains: Set<number> = new Set();
+	const contractChains: Set<number> = new Set();
+
+	interpreters.forEach((interpreterAddress) => {
+		if (interpreterAddress.chainId) interpreterChains.add(interpreterAddress.chainId);
 	});
-	metadata.addresses.forEach((address) => {
-		chains.add(address.chainId);
+
+	contracts.forEach((contractAddress) => {
+		if (contractAddress.chainId) contractChains.add(contractAddress.chainId);
 	});
-	return Array.from(chains.values());
+
+	// Inner join. If chain is not shared, delete from set.
+	interpreterChains.forEach((interpreterChain) => {
+		if (!contractChains.has(interpreterChain)) {
+			interpreterChains.delete(interpreterChain);
+		}
+	});
+
+	return Array.from(interpreterChains.values());
 };
 
-export const getInterpretersForChain = (
-	interpreters: InterpreterRowFull[],
-	chainId: number
-): { label: string; value: { interpreter: string; deployer: string } }[] => {
+export const getInterpretersForChain = (interpreters: InterpreterRowFull[], chainId: number) => {
 	const interpretersForSelect: {
 		label: string;
 		value: {

@@ -176,9 +176,9 @@ const interpreterQuery = `
 `;
 
 /**
- * Hold all the info/keys that will be queried with Expresion entities
+ * Hold all the info/keys that will be queried with Expression entities
  */
-const expresionQuery = `
+const expressionQuery = `
   id
   event {
     id
@@ -226,7 +226,7 @@ export const QueryAddress = `
       ${interpreterQuery}
     }
     expression(id: $address) {
-      ${expresionQuery}
+      ${expressionQuery}
     }
   }
 `;
@@ -234,7 +234,7 @@ export const QueryAddress = `
 /**
  * Query to search an specific transaction hash.
  */
-export const QueryTrasnsaction = `
+export const QueryTransaction = `
   query ($hash: ID!) {
     transaction (id: $hash) {
       id
@@ -292,13 +292,13 @@ export const QueryAccountsFromArray = `
 export const QueryExpression = `
  query ($address: ID!) {
    expression(id: $address) {
-     ${expresionQuery}
+     ${expressionQuery}
    }
  }
 `;
 
 export const QueryGetKnownContracts = `
-  query GetKnowContracts($knowAddresses: [ID!]) {
+  query GetKnownContracts($knowAddresses: [ID!]) {
     contracts(where: {id_in: $knowAddresses}) {
       ${contractQuery}
     }

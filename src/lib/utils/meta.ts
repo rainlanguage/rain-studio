@@ -4,6 +4,7 @@ import { inflateSync } from 'zlib';
 type SGContract = {
 	id: string;
 	opmeta: string;
+	chainId: number;
 };
 
 type FormattedContract = {
@@ -11,6 +12,7 @@ type FormattedContract = {
 	slug: string;
 	description: string;
 	knownAddresses: string[];
+	chainId: number;
 };
 
 export function parseMeta(bytes: string) {
@@ -45,7 +47,8 @@ export function formatContract(contracts_: SGContract[]): FormattedContract[] {
 				name: meta.name,
 				slug: meta.alias,
 				description: meta.desc,
-				knownAddresses: [contract.id]
+				knownAddresses: [contract.id],
+				chainId: contract.chainId
 			};
 		}
 	}
