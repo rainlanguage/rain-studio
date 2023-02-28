@@ -18,7 +18,7 @@ export const Subgraphs: SubgraphData[] = [
 		endpoints: {
 			// TODO: Should remove the "expressions" sg
 			expressions: 'https://api.thegraph.com/subgraphs/name/beehive-innovation/rain-expressions',
-			interpreters: 'https://api.thegraph.com/subgraphs/name/nanezx/interpreter-registry'
+			interpreters: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry'
 		}
 	}
 ];

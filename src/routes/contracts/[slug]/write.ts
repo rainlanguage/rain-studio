@@ -1,4 +1,5 @@
 import type { InterpreterRowFull } from '$lib/types/types';
+import { Subgraphs } from '$lib/utils';
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
 import { ethers } from 'ethers';
 import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
@@ -29,29 +30,10 @@ export const getNameFromChainId = (id: number): string => {
 	return name;
 };
 
-// Returns chains which are shared by both contract address and interpreter address
-export const getCommonChains = (interpreters: any[], contracts: EVMAddress[]): number[] => {
-	// Only include unique chains
-	const interpreterChains: Set<number> = new Set();
-	const contractChains: Set<number> = new Set();
-
-	interpreters.forEach((interpreterAddress) => {
-		if (interpreterAddress.chainId) interpreterChains.add(interpreterAddress.chainId);
-	});
-
-	contracts.forEach((contractAddress) => {
-		if (contractAddress.chainId) contractChains.add(contractAddress.chainId);
-	});
-
-	// Inner join. If chain is not shared, delete from set.
-	interpreterChains.forEach((interpreterChain) => {
-		if (!contractChains.has(interpreterChain)) {
-			interpreterChains.delete(interpreterChain);
-		}
-	});
-
-	return Array.from(interpreterChains.values());
-};
+// TODO: Support multiple chains
+export const getCommonChains = (interpreters: any[], contracts: any[]): number[] => [
+	Subgraphs[0].chain
+];
 
 export const getInterpretersForChain = (interpreters: InterpreterRowFull[], chainId: number) => {
 	const interpretersForSelect: {

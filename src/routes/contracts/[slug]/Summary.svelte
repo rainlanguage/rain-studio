@@ -18,12 +18,12 @@
 					<td class="pb-2">Address</td>
 				</tr>
 				{#if metadata.addresses}
-					{#each metadata.addresses as knownAddress}
+					{#each metadata.addresses as addresses}
 						<tr>
 							<!-- TODO: REMOVE HARDCODED -->
 							<td class="pt-3">Mumbai</td>
 							<td class="pt-3">80001</td>
-							<td class="block w-48 truncate pt-3 md:w-full">{knownAddress}</td>
+							<td class="block w-48 truncate pt-3 md:w-full">{addresses}</td>
 						</tr>
 					{/each}
 				{/if}

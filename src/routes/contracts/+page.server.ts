@@ -27,5 +27,5 @@ export async function load() {
 
 	contracts = formatContract(dataSg.contracts);
 
-	return { contracts: contracts };
+	return { contracts };
 }

@@ -45,7 +45,7 @@
 
 	let aver: string = '';
 
-	$: availableChains = getCommonChains($page.data.interpreters, metadata.addresses);
+	$: availableChains = getCommonChains($page.data.interpreters, metadata);
 	$: writeMethods = getWriteMethods(abi.abi);
 
 	/**
@@ -150,6 +150,7 @@
 	};
 
 	const expandExpression = async ({ detail }: { detail: any }) => {
+		// @ts-ignore
 		expressionForIDE = {
 			id: '',
 			contract_expression: detail.componentName,

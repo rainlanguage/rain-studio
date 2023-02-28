@@ -1,6 +1,7 @@
 import { supabaseClient } from '$lib/supabaseClient';
 import { QueryGetKnownContracts, Subgraphs } from '$lib/utils';
 import { formatContract, parseMeta } from '$lib/utils/meta';
+import { MAGIC_NUMBERS } from '$lib/utils/metadataV1';
 import { getServerSession } from '@supabase/auth-helpers-sveltekit';
 import { error } from '@sveltejs/kit';
 import { createClient } from '@urql/core';
@@ -72,9 +73,7 @@ export const load: PageServerLoad = async (event) => {
 		return { ...contract, chainId: Subgraphs[0].chain };
 	});
 
-	const _contracts = formatContract(
-		dataSg.contracts.filter((contract) => contract.opmeta !== null)
-	);
+	const _contracts = formatContract(dataSg.contracts);
 
 	const slugData = _contracts.find((element_) => element_.slug == params.slug);
 
@@ -82,7 +81,10 @@ export const load: PageServerLoad = async (event) => {
 		.query(QueryGetKnownContracts, { knowAddresses: slugData?.knownAddresses ?? [] })
 		.toPromise();
 
-	const meta = parseMeta(knownContractsQuery.data.contracts[0].opmeta);
+	const meta = parseMeta(
+		knownContractsQuery.data.contracts[0].opmeta,
+		MAGIC_NUMBERS.CONTRACT_META_V1
+	);
 
 	const contractQuery = await supabaseClient
 		.from('contracts')

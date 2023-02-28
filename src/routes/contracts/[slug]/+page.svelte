@@ -17,13 +17,10 @@
 	$: project = contract?.project;
 	$: metadata = {
 		description: meta.desc,
-		addresses: [
-			{
-				chainId: slugData.chainId,
-				knownAddresses: slugData.knownAddresses
-			}
-		]
+		chainId: slugData.chainId,
+		addresses: slugData.knownAddresses
 	};
+
 	$: contractF = getContractInfo($page.params.slug);
 
 	$: addressCount = slugData?.knownAddresses.length;

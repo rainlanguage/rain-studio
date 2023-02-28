@@ -17,22 +17,18 @@ type FormattedContract = {
 	chainId: number;
 };
 
-export function parseMeta(bytes: string) {
+export function parseMeta(bytes: string, magicNumber: bigint) {
 	const decoded = decodeRainDocument(bytes);
 
-	console.log({ MAGIC_NUMBERS, decoded });
-
 	// Find the correct element related to OPS_META_V1
-	const opsMetaMap = decoded.find((elem_) => elem_.get(1) === MAGIC_NUMBERS.OPS_META_V1);
+	const metaMap = decoded.find((elem_) => elem_.get(1) === magicNumber);
 
-	if (opsMetaMap === undefined) {
-		throw new Error('No OPS_META_V1 found when parsing encoded meta');
+	if (metaMap === undefined) {
+		throw new Error(`No data found for magic number ${magicNumber}`);
 	}
 
-	const hexOpsMeta = hexlify(opsMetaMap.get(0));
-
-	const _meta = inflateJson(hexOpsMeta);
-
+	const hexMeta = hexlify(metaMap.get(0));
+	const _meta = inflateJson(hexMeta);
 	return JSON.parse(_meta);
 }
 
@@ -46,7 +42,7 @@ export function formatContract(contracts_: SGContract[]): FormattedContract[] {
 
 		if (!contract.opmeta) continue;
 
-		const meta = parseMeta(contract.opmeta);
+		const meta = parseMeta(contract.opmeta, MAGIC_NUMBERS.CONTRACT_META_V1);
 
 		if (_contracts[meta.alias]) {
 			_contracts[meta.alias].knownAddresses.push(contract.id);
