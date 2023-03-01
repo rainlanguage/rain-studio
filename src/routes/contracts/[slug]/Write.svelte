@@ -5,10 +5,11 @@
 	import LoadExpressionModal from '$lib/expressions/LoadExpressionModal.svelte';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
 	import HelpPanel from '$lib/HelpPanel.svelte';
-	import type { ContractRowFull, ExpressionRowFull } from '$lib/types/types';
+	import type { ContractRowFull, ExpressionRowFull, InterpreterRowFull } from '$lib/types/types';
 	import type { Abi, AbiFunction } from 'abitype';
 	import { ethers } from 'ethers';
 	import { get, set } from 'lodash-es';
+	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { Button, Modal, Select } from 'rain-svelte-components/package';
 	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
 	import { allChainsData, chainId, contracts, defaultEvmStores, signer } from 'svelte-ethers-store';
@@ -21,7 +22,7 @@
 		getWriteMethods
 	} from './write';
 
-	export let metadata: any, abi: { abi: Abi }, contract: ContractRowFull;
+	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: ContractRowFull;
 
 	let result: any = []; // the state of the the form
 
@@ -32,7 +33,6 @@
 
 	let openNewExpModal: boolean = false;
 	let presaveExpression: PresaveExpression;
-	let expressionToSave: string;
 
 	let openIDEModal: boolean = false;
 	let expressionForIDE: ExpressionRowFull;
@@ -42,8 +42,6 @@
 	let expressionComponentName: string;
 
 	let openHelpModal: boolean = false;
-
-	let aver: string = '';
 
 	$: availableChains = getCommonChains($page.data.interpreters, metadata);
 	$: writeMethods = getWriteMethods(abi.abi);
@@ -134,7 +132,6 @@
 			contract,
 			interpreter: selectedInterpreter
 		};
-		expressionToSave = raw;
 		openNewExpModal = true;
 	};
 

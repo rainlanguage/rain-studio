@@ -9,17 +9,12 @@ import { ethers } from 'ethers';
 import type { PageServerLoad } from './$types';
 import type { AccountData, ExpressionLikes, UserLikes } from './types';
 
-//  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai.
-
-/**
- * ChainID to filter. This could be use later to specify which subgraph use
- */
-const chainId = 80001;
+let chainId: number;
 
 /**
  * Sort expression from recents to olders
  */
-const sortExpressions = (a: any, b: any) => {
+const sortExpressions = (a, b) => {
 	const timeA = a.event.transaction.timestamp;
 	const timeB = b.event.transaction.timestamp;
 	if (timeA > timeB) {
@@ -42,47 +37,48 @@ export const load: PageServerLoad = async (event) => {
 	let recentExpressions = [];
 
 	//	Only mumbai at the moment
-	const client = createClient({
+	const mumbaiClient = createClient({
 		url: Subgraphs[0].endpoints.interpreters
 	});
 
+	chainId = Subgraphs[0].chain;
+
 	const querySg = `
-			query {
-				interpreterInstances {
+		query {
+			interpreterInstances {
+				id
+			}
+			expressionDeployers {
+				id
+				meta
+			}
+			contracts {
+				id
+				deployTransaction {
 					id
 				}
-				expressionDeployers {
+				meta
+				expressions {
 					id
-				}
-				contracts {
-					id
-					opmeta
 				}
 			}
-		`;
+		}
+	`;
 
-	const { data: dataSg, error: errorSg } = await client.query(querySg, {}).toPromise();
+	const { data: dataSg, error: errorSg } = await mumbaiClient.query(querySg, {}).toPromise();
 
 	if (errorSg) throw error(404, 'Not found');
-
-	//  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai, so we're hardcoding the chain id
-	dataSg.interpreterInstances = dataSg.interpreterInstances.map((interpreter) => {
-		return { ...interpreter, chainId: Subgraphs[0].chain };
-	});
-	dataSg.contracts = dataSg.contracts.map((contract) => {
-		return { ...contract, chainId: Subgraphs[0].chain };
-	});
 
 	const _contracts = formatContract(dataSg.contracts);
 
 	const slugData = _contracts.find((element_) => element_.slug == params.slug);
 
-	const knownContractsQuery = await client
+	const knownContractsQuery = await mumbaiClient
 		.query(QueryGetKnownContracts, { knowAddresses: slugData?.knownAddresses ?? [] })
 		.toPromise();
 
 	const meta = parseMeta(
-		knownContractsQuery.data.contracts[0].opmeta,
+		knownContractsQuery.data.contracts[0].meta,
 		MAGIC_NUMBERS.CONTRACT_META_V1
 	);
 
@@ -153,23 +149,6 @@ export const load: PageServerLoad = async (event) => {
 		});
 	}
 
-	const getAddresses = async (fetch_) => {
-		const resp = await fetch_(`/api/get_interpreters`, {
-			method: 'GET'
-		});
-		if (resp.ok) {
-			const { interpreterAddresses } = await resp.json();
-			return interpreterAddresses;
-		}
-
-		return [];
-	};
-
-	//  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai, so we're hardcoding the chain id
-	dataSg.expressionDeployers = dataSg.expressionDeployers.map((deployer) => {
-		return { ...deployer, chainId: Subgraphs[0].chain };
-	});
-
 	return {
 		contract: contractQuery?.data,
 		slugData,
@@ -180,6 +159,7 @@ export const load: PageServerLoad = async (event) => {
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,
 		userLikes: _userLikes,
-		expressionLikes: _expressionLikes
+		expressionLikes: _expressionLikes,
+		chainId
 	};
 };

@@ -1,23 +1,19 @@
 <script lang="ts">
-	import { Heart, ArrowUp, ArrowDown, ChatBubbleLeft } from '@steeze-ui/heroicons';
-	import { Section, SectionBody } from 'rain-svelte-components/package/section';
-	import { DisplayAddress, Ring, Modal } from 'rain-svelte-components/package';
-
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
-
-	import Auth from '$lib/Auth.svelte';
+	import AuthInner from '$lib/AuthInner.svelte';
+	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
 	import SidebarHeading from '$lib/SidebarHeading.svelte';
-	import TimeAgo from '$lib/TimeAgo.svelte';
-	import UserAvatar from '$lib/UserAvatar.svelte';
 	import SocialButton from '$lib/SocialButton.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
-
-	import type { UserLikes, ExpressionLikes, AccountData } from './types';
-	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
+	import TimeAgo from '$lib/TimeAgo.svelte';
 	import type { ContractRowFull } from '$lib/types/types';
-	import AuthInner from '$lib/AuthInner.svelte';
+	import UserAvatar from '$lib/UserAvatar.svelte';
+	import { ArrowDown, ArrowUp, ChatBubbleLeft, Heart } from '@steeze-ui/heroicons';
+	import { DisplayAddress, Modal, Ring } from 'rain-svelte-components/package';
+	import { Section, SectionBody } from 'rain-svelte-components/package/section';
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
+	import type { AccountData, ExpressionLikes, UserLikes } from './types';
 
 	export let contract: ContractRowFull;
 

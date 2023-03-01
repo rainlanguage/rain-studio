@@ -5,10 +5,8 @@ import { createClient } from '@urql/core';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-	let contracts: null | any[] = null;
-
 	//	Only mumbai at the moment
-	const client = createClient({
+	const mumbaiClient = createClient({
 		url: Subgraphs[0].endpoints.interpreters
 	});
 
@@ -16,16 +14,22 @@ export async function load() {
 		query {
 			contracts {
 				id
-				opmeta
+				deployTransaction {
+					id
+				}
+				meta
+				expressions {
+					id
+				}
 			}
 		}
 	`;
 
-	const { data: dataSg, error: errorSg } = await client.query(querySg, {}).toPromise();
+	const { data: dataSg, error: errorSg } = await mumbaiClient.query(querySg, {}).toPromise();
 
 	if (errorSg) throw error(404, 'Not found');
 
-	contracts = formatContract(dataSg.contracts);
+	const contracts = formatContract(dataSg.contracts);
 
 	return { contracts };
 }

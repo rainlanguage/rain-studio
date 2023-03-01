@@ -100,7 +100,7 @@ const factoryQuery = `
  */
 const contractQuery = `
   id
-  opmeta
+  meta
   deployTransaction {
     id
     timestamp

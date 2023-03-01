@@ -5,16 +5,18 @@ import { decodeRainDocument, MAGIC_NUMBERS } from './metadataV1';
 
 type SGContract = {
 	id: string;
-	opmeta: string;
-	chainId: number;
+	meta: string;
 };
 
-type FormattedContract = {
+export type FormattedContract = {
 	name: string;
 	slug: string;
 	description: string;
 	knownAddresses: string[];
-	chainId: number;
+	project?: {
+		logo_url?: string;
+		name: string;
+	};
 };
 
 export function parseMeta(bytes: string, magicNumber: bigint) {
@@ -40,9 +42,9 @@ export function formatContract(contracts_: SGContract[]): FormattedContract[] {
 	for (let i = 0; i < contracts_.length; i++) {
 		const contract = contracts_[i];
 
-		if (!contract.opmeta) continue;
+		if (!contract.meta) continue;
 
-		const meta = parseMeta(contract.opmeta, MAGIC_NUMBERS.CONTRACT_META_V1);
+		const meta = parseMeta(contract.meta, MAGIC_NUMBERS.CONTRACT_META_V1);
 
 		if (_contracts[meta.alias]) {
 			_contracts[meta.alias].knownAddresses.push(contract.id);
@@ -51,8 +53,7 @@ export function formatContract(contracts_: SGContract[]): FormattedContract[] {
 				name: meta.name,
 				slug: meta.alias,
 				description: meta.desc,
-				knownAddresses: [contract.id],
-				chainId: contract.chainId
+				knownAddresses: [contract.id]
 			};
 		}
 	}

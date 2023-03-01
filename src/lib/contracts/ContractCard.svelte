@@ -1,10 +1,11 @@
 <script lang="ts">
-	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { logoUrlRain, nameRain } from '$lib/utils/constants';
+	import type { FormattedContract } from '$lib/utils/meta';
 	import Pills from 'rain-svelte-components/package/Pills.svelte';
+	import SvelteMarkdown from 'svelte-markdown';
 
-	export let contract: any;
+	export let contract: FormattedContract;
 
 	const addressCount = contract.knownAddresses.length;
 </script>
@@ -22,6 +23,6 @@
 		{addressCount} known address{#if addressCount > 1}es{/if} on 1 chain
 	</span>
 	<span class="mt-2 h-24 overflow-clip text-sm text-gray-900">
-		{contract.description}
+		<SvelteMarkdown source={contract.description} />
 	</span>
 </div>

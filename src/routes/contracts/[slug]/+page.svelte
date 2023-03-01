@@ -4,22 +4,21 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { logoUrlRain, nameRain } from '$lib/utils/constants';
+	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components/package/tabs/tabs';
 	import Sidebar from './Sidebar.svelte';
 	import Summary from './Summary.svelte';
 	import Write from './Write.svelte';
 
 	$: contract = $page.data.contract;
-	$: knownContracts = $page.data.knownContracts;
 	$: slugData = $page.data.slugData;
 	$: meta = $page.data.meta;
 
 	$: project = contract?.project;
-	$: metadata = {
-		description: meta.desc,
-		chainId: slugData.chainId,
-		addresses: slugData.knownAddresses
-	};
+
+	$: description = meta.desc;
+	$: knownAddresses = slugData.knownAddresses;
+	$: chainId = $page.data.chainId;
 
 	$: contractF = getContractInfo($page.params.slug);
 
@@ -54,10 +53,10 @@
 		<div class="justify-stretch container mx-auto flex flex-col gap-y-8 px-4 sm:px-0 lg:flex-row">
 			<div class="flex flex-col gap-y-8 py-10 lg:w-2/3 lg:pr-6">
 				<TabPanel>
-					<Summary {metadata} />
+					<Summary {description} {knownAddresses} {chainId} />
 				</TabPanel>
 				<TabPanel>
-					<Write abi={contractF.abi} {metadata} {contract} />
+					<Write abi={contractF.abi} {contract} />
 				</TabPanel>
 			</div>
 			<div class="py-8 lg:w-1/3"><Sidebar {contract} /></div>

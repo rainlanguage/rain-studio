@@ -1,9 +1,6 @@
 import type { InterpreterRowFull } from '$lib/types/types';
-import { Subgraphs } from '$lib/utils';
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
-import { ethers } from 'ethers';
 import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
-import type { EVMAddress } from 'rain-metadata/metadata-types/general';
 import { allChainsData } from 'svelte-ethers-store';
 
 // getting all of the state changing methods for this abi
@@ -30,19 +27,38 @@ export const getNameFromChainId = (id: number): string => {
 	return name;
 };
 
-// TODO: Support multiple chains
-export const getCommonChains = (interpreters: any[], contracts: any[]): number[] => [
-	Subgraphs[0].chain
-];
+// Returns chains which are shared by both contract address and interpreter address
+export const getCommonChains = (interpreters, metadata: ContractMetadata): number[] => {
+	// Only include unique chains
+	const interpreterChains: Set<number> = new Set();
+	const contractChains: Set<number> = new Set();
 
-export const getInterpretersForChain = (interpreters: InterpreterRowFull[], chainId: number) => {
+	interpreters.forEach((interpreterAddress) => {
+		if (interpreterAddress.chainId) interpreterChains.add(interpreterAddress.chainId);
+	});
+
+	metadata.addresses.forEach((contractAddress) => {
+		if (contractAddress.chainId) contractChains.add(contractAddress.chainId);
+	});
+
+	// Inner join. If chain is not shared, delete from set.
+	interpreterChains.forEach((interpreterChain) => {
+		if (!contractChains.has(interpreterChain)) {
+			interpreterChains.delete(interpreterChain);
+		}
+	});
+
+	return Array.from(interpreterChains.values());
+};
+
+export const getInterpretersForChain = (interpreters, chainId: number) => {
 	const interpretersForSelect: {
 		label: string;
 		value: {
 			id: string;
 			interpreterAddress: string;
 			deployerAddress: string;
-			interpreter: InterpreterRowFull;
+			interpreter;
 		};
 	}[] = [];
 	interpreters.forEach((interpreter) => {
