@@ -1,4 +1,3 @@
-import type { InterpreterRowFull } from '$lib/types/types';
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
 import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 import { allChainsData } from 'svelte-ethers-store';
@@ -28,17 +27,17 @@ export const getNameFromChainId = (id: number): string => {
 };
 
 // Returns chains which are shared by both contract address and interpreter address
-export const getCommonChains = (interpreters, metadata: ContractMetadata): number[] => {
+export const getCommonChains = (interpreters, knownContracts): number[] => {
 	// Only include unique chains
 	const interpreterChains: Set<number> = new Set();
 	const contractChains: Set<number> = new Set();
 
-	interpreters.forEach((interpreterAddress) => {
-		if (interpreterAddress.chainId) interpreterChains.add(interpreterAddress.chainId);
+	interpreters.forEach((interpreter) => {
+		if (interpreter.chainId) interpreterChains.add(interpreter.chainId);
 	});
 
-	metadata.addresses.forEach((contractAddress) => {
-		if (contractAddress.chainId) contractChains.add(contractAddress.chainId);
+	knownContracts.forEach((contract) => {
+		if (contract.chainId) contractChains.add(contract.chainId);
 	});
 
 	// Inner join. If chain is not shared, delete from set.

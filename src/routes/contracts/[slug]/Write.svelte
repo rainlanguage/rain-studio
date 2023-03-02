@@ -5,7 +5,7 @@
 	import LoadExpressionModal from '$lib/expressions/LoadExpressionModal.svelte';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
 	import HelpPanel from '$lib/HelpPanel.svelte';
-	import type { ContractRowFull, ExpressionRowFull, InterpreterRowFull } from '$lib/types/types';
+	import type { ExpressionRowFull } from '$lib/types/types';
 	import type { Abi, AbiFunction } from 'abitype';
 	import { ethers } from 'ethers';
 	import { get, set } from 'lodash-es';
@@ -22,7 +22,7 @@
 		getWriteMethods
 	} from './write';
 
-	export let metadata: ContractMetadata, abi: { abi: Abi }, contract: ContractRowFull;
+	export let knownContracts: any[], abi: { abi: Abi }, metadata: ContractMetadata;
 
 	let result: any = []; // the state of the the form
 
@@ -43,7 +43,7 @@
 
 	let openHelpModal: boolean = false;
 
-	$: availableChains = getCommonChains($page.data.interpreters, metadata);
+	$: availableChains = getCommonChains($page.data.interpreters, knownContracts);
 	$: writeMethods = getWriteMethods(abi.abi);
 
 	/**

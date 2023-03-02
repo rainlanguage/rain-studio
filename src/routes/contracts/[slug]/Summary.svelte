@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { Section, SectionBody, SectionHeading } from 'rain-svelte-components/package/section';
 	import SvelteMarkdown from 'svelte-markdown';
 	import { getNameFromChainId } from './write';

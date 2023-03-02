@@ -29,7 +29,10 @@ export async function load() {
 
 	if (errorSg) throw error(404, 'Not found');
 
-	const contracts = formatContract(dataSg.contracts);
+	const contractsF = formatContract(dataSg.contracts);
 
-	return { contracts };
+	return {
+		contracts: dataSg.contracts,
+		contractsF
+	};
 }

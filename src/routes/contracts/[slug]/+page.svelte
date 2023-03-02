@@ -4,17 +4,17 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { logoUrlRain, nameRain } from '$lib/utils/constants';
-	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components/package/tabs/tabs';
 	import Sidebar from './Sidebar.svelte';
 	import Summary from './Summary.svelte';
 	import Write from './Write.svelte';
 
-	$: contract = $page.data.contract;
+	$: contractRowFull = $page.data.contractRowFull;
 	$: slugData = $page.data.slugData;
 	$: meta = $page.data.meta;
+	$: knownContracts = $page.data.knownContracts;
 
-	$: project = contract?.project;
+	$: project = contractRowFull?.project;
 
 	$: description = meta.desc;
 	$: knownAddresses = slugData.knownAddresses;
@@ -23,6 +23,7 @@
 	$: contractF = getContractInfo($page.params.slug);
 
 	$: addressCount = slugData?.knownAddresses.length;
+	$: metadata = $page.data.metadata;
 </script>
 
 <PageHeader>
@@ -56,10 +57,10 @@
 					<Summary {description} {knownAddresses} {chainId} />
 				</TabPanel>
 				<TabPanel>
-					<Write abi={contractF.abi} {contract} />
+					<Write abi={contractF.abi} {knownContracts} {metadata} />
 				</TabPanel>
 			</div>
-			<div class="py-8 lg:w-1/3"><Sidebar {contract} /></div>
+			<div class="py-8 lg:w-1/3"><Sidebar contract={contractRowFull} /></div>
 		</div>
 	</Tabs>
 {/if}

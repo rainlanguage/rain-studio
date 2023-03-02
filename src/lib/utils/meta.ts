@@ -3,9 +3,13 @@ import { format } from 'prettier';
 import { inflateSync } from 'zlib';
 import { decodeRainDocument, MAGIC_NUMBERS } from './metadataV1';
 
-type SGContract = {
+export type SGContract = {
 	id: string;
+	deployTransaction: {
+		id: string;
+	};
 	meta: string;
+	expressions: unknown[];
 };
 
 export type FormattedContract = {

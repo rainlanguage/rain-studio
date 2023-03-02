@@ -92,7 +92,7 @@
 									chooseContract(contract);
 								}}
 							>
-								<ContractCard {contract} />
+								<ContractCard contractF={contract} />
 							</div>
 						{/each}
 					</div>

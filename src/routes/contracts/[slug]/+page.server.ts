@@ -6,6 +6,7 @@ import { getServerSession } from '@supabase/auth-helpers-sveltekit';
 import { error } from '@sveltejs/kit';
 import { createClient } from '@urql/core';
 import { ethers } from 'ethers';
+import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 import type { PageServerLoad } from './$types';
 import type { AccountData, ExpressionLikes, UserLikes } from './types';
 
@@ -67,20 +68,31 @@ export const load: PageServerLoad = async (event) => {
 
 	const { data: dataSg, error: errorSg } = await mumbaiClient.query(querySg, {}).toPromise();
 
-	if (errorSg) throw error(404, 'Not found');
+	if (errorSg) throw errorSg;
 
-	const _contracts = formatContract(dataSg.contracts);
+	// attach inferred chainId from SG endpoint
+	const interpreterInstances = dataSg.interpreterInstances.map((interpreterInstance) => {
+		return { ...interpreterInstance, chainId };
+	});
+	// attach inferred chainId from SG endpoint
+	const expressionDeployers = dataSg.expressionDeployers.map((expressionDeployer) => {
+		return { ...expressionDeployer, chainId };
+	});
 
-	const slugData = _contracts.find((element_) => element_.slug == params.slug);
+	const _contractsF = formatContract(dataSg.contracts);
+
+	const slugData = _contractsF.find((element_) => element_.slug == params.slug);
 
 	const knownContractsQuery = await mumbaiClient
 		.query(QueryGetKnownContracts, { knowAddresses: slugData?.knownAddresses ?? [] })
 		.toPromise();
 
-	const meta = parseMeta(
-		knownContractsQuery.data.contracts[0].meta,
-		MAGIC_NUMBERS.CONTRACT_META_V1
-	);
+	// attach inferred chainId from SG endpoint
+	const knownContracts = knownContractsQuery.data.contracts.map((knownContract) => {
+		return { ...knownContract, chainId };
+	});
+
+	const meta = parseMeta(knownContracts[0].meta, MAGIC_NUMBERS.CONTRACT_META_V1);
 
 	const contractQuery = await supabaseClient
 		.from('contracts')
@@ -90,8 +102,8 @@ export const load: PageServerLoad = async (event) => {
 
 	// if (contractQuery.error) throw error(404, `Not found ${params.slug}`);
 
-	if (knownContractsQuery.data) {
-		recentExpressions = knownContractsQuery.data.contracts.map((ele) => ele.expressions).flat();
+	if (knownContracts.data) {
+		recentExpressions = knownContracts.map((ele) => ele.expressions).flat();
 		recentExpressions.sort(sortExpressions);
 	}
 
@@ -149,17 +161,33 @@ export const load: PageServerLoad = async (event) => {
 		});
 	}
 
+	const metadata: ContractMetadata = {
+		addresses: [],
+		name: '',
+		source: '',
+		commit: '',
+		bytecodeHash: '',
+		description: '',
+		type: '',
+		version: {
+			major: 0,
+			minor: 0,
+			release: ''
+		}
+	};
+
 	return {
-		contract: contractQuery?.data,
+		contractRowFull: contractQuery?.data,
 		slugData,
 		meta,
-		knownContracts: knownContractsQuery,
-		interpreters: dataSg.interpreterInstances,
-		expressionDeployers: dataSg.expressionDeployers,
+		knownContracts,
+		interpreters: interpreterInstances,
+		expressionDeployers: expressionDeployers,
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,
 		userLikes: _userLikes,
 		expressionLikes: _expressionLikes,
-		chainId
+		chainId,
+		metadata
 	};
 };
