@@ -23,7 +23,6 @@
 	$: contractF = getContractInfo($page.params.slug);
 
 	$: addressCount = slugData?.knownAddresses.length;
-	$: metadata = $page.data.metadata;
 </script>
 
 <PageHeader>
@@ -57,7 +56,7 @@
 					<Summary {description} {knownAddresses} {chainId} />
 				</TabPanel>
 				<TabPanel>
-					<Write abi={contractF.abi} {knownContracts} {metadata} />
+					<Write abi={contractF.abi} {knownContracts} {interpreterFields} />
 				</TabPanel>
 			</div>
 			<div class="py-8 lg:w-1/3"><Sidebar contract={contractRowFull} /></div>

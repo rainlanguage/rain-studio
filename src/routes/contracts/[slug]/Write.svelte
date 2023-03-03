@@ -9,7 +9,6 @@
 	import type { Abi, AbiFunction } from 'abitype';
 	import { ethers } from 'ethers';
 	import { get, set } from 'lodash-es';
-	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 	import { Button, Modal, Select } from 'rain-svelte-components/package';
 	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
 	import { allChainsData, chainId, contracts, defaultEvmStores, signer } from 'svelte-ethers-store';
@@ -22,7 +21,7 @@
 		getWriteMethods
 	} from './write';
 
-	export let knownContracts: any[], abi: { abi: Abi }, metadata: ContractMetadata;
+	export let abi: Abi, knownContracts: unknown[], interpreterFields: unknown;
 
 	let result: any = []; // the state of the the form
 
@@ -44,7 +43,7 @@
 	let openHelpModal: boolean = false;
 
 	$: availableChains = getCommonChains($page.data.interpreters, knownContracts);
-	$: writeMethods = getWriteMethods(abi.abi);
+	$: writeMethods = getWriteMethods(abi);
 
 	/**
 	 * Function for converting an abi path to a path that can be used to set the path
@@ -93,21 +92,20 @@
 			defaultEvmStores.attachContract(
 				'selectedContract',
 				selectedContract,
-				abi.abi as unknown as string
+				abi as unknown as string
 			);
 
 		// handling error cases
 		if (selectedInterpreter == '') throw Error('No interpreter selected');
 		if (selectedMethod == -1) throw Error('No method selected');
-		if (!metadata.interpreterFields)
-			throw Error('Interpreter and deploy fields not defined in metadata');
+		if (!interpreterFields) throw Error('Interpreter and deploy fields not defined in metadata');
 
 		// we need to fill out the interpreter/deployer fields for the user based on what they selected
 
 		// get the path of the deployer field in the result
 		const deployerPath = constructPath(
-			metadata.interpreterFields?.deployerFieldPath,
-			abi.abi,
+			interpreterFields?.deployerFieldPath,
+			abi,
 			selectedMethod.name
 		);
 		// set it
@@ -115,8 +113,8 @@
 
 		// get the path of the deployer field in the result
 		const interpreterPath = constructPath(
-			metadata.interpreterFields?.interpreterFieldPath,
-			abi.abi,
+			interpreterFields?.interpreterFieldPath,
+			abi,
 			selectedMethod.name
 		);
 		// set it
@@ -151,7 +149,7 @@
 		expressionForIDE = {
 			id: '',
 			contract_expression: detail.componentName,
-			contract: contract,
+			contract,
 			raw_expression: detail.raw
 		};
 		loadRaw = detail.loadRaw;
@@ -204,7 +202,7 @@
 		<div in:fade class="mb-12">
 			{#key selectedMethod}
 				<AutoAbiFormSeparated
-					abi={abi.abi}
+					{abi}
 					{metadata}
 					methodName={selectedMethod.name}
 					bind:result

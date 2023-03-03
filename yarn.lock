@@ -4661,9 +4661,9 @@ quick-lru@^5.1.1:
   version "0.0.0"
   resolved "git+https://github.com/rainprotocol/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
 
-"rain-metadata@https://github.com/rainprotocol/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383":
+"rain-metadata@https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6":
   version "0.0.0"
-  resolved "https://github.com/rainprotocol/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383"
+  resolved "https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6"
 
 "rain-sdk@git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a":
   version "2.1.2-beta"

@@ -1178,7 +1178,7 @@ export const tupleFormat =
 	'tuple(tuple(address deployer, bytes[] sources, uint256[] constants) dummyConfig, tuple(address deployer, bytes[] sources, uint256[] constants)[] config)';
 
 const FlowERC721: ImplementationDataFormat = {
-	abi: { abi },
+	abi,
 	initializeTuple: tupleFormat,
 	type: 'implementation'
 };

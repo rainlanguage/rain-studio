@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Formatter as RainlangFormatter, rainterpreterOpMeta } from '@rainprotocol/rainlang';
 	import { Modal } from 'rain-svelte-components/package';
-	import type { StateConfig } from 'rain-metadata/metadata-types/expression';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import { page } from '$app/stores';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
@@ -9,7 +8,7 @@
 	import AuthInner from '$lib/AuthInner.svelte';
 
 	export let raw: string | null = null;
-	export let stateConfig: StateConfig | null = null;
+	export let stateConfig: unknown | null = null;
 	export let showFork: boolean = true;
 	export let showForkLabel: boolean = false;
 	export let maxHeight: string | null = null;

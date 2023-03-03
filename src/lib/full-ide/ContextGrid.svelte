@@ -1,8 +1,7 @@
 <script lang="ts">
-	import type { Expression } from 'rain-metadata/metadata-types/contract';
 	import { HoverTooltip } from 'rain-svelte-components/package';
 
-	export let contextColumns: Expression['contextColumns'];
+	export let contextColumns: unknown['contextColumns'];
 
 	let maxRows = contextColumns?.length
 		? Math.max(...contextColumns.map((column) => (column?.cells ? column.cells?.length : 0)))

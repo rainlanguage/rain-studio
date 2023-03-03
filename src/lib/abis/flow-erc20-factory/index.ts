@@ -1132,7 +1132,7 @@ const tupleFormat =
 	'tuple(string name, string symbol, tuple(address deployer, bytes[] sources, uint256[] constants) evaluableConfig, tuple(address deployer, bytes[] sources, uint256[] constants)[] flowConfig)';
 
 const FlowERC20: ImplementationDataFormat = {
-	abi: { abi },
+	abi,
 	initializeTuple: tupleFormat,
 	type: 'implementation'
 };

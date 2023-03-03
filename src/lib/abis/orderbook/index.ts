@@ -1706,7 +1706,7 @@ export const abi: Abi = [
 ];
 
 const Orderbook: ContractDataFormat = {
-	abi: { abi },
+	abi,
 	type: 'contract'
 };
 

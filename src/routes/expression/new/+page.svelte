@@ -5,7 +5,6 @@
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
 	import type { ContractRowFull, InterpreterRowFull } from '$lib/types/types';
 	import type { Database } from '$lib/types/generated-db-types';
-	import type { ExpressionMetadata } from 'rain-metadata/metadata-types/expression';
 	import { Button } from 'rain-svelte-components/package';
 	import { ArrowUturnLeft, PlusCircle } from '@steeze-ui/heroicons';
 	import { createNewExpression } from '$lib/expressions/expressions';
@@ -26,11 +25,11 @@
 		Confirm
 	}
 
-	let newExpression: Database['public']['Tables']['draft_expressions']['Insert'];
+	let newExpression: Database['public']['Tables']['draft_expressions_w']['Insert'];
 	let step: ExpressionSteps = ExpressionSteps.Contract;
 
 	let chosenContract: ContractRowFull | null,
-		chosenExpression: ExpressionMetadata,
+		chosenExpression: unknown,
 		chosenInterpreter: InterpreterRowFull;
 
 	let inserting: boolean;
@@ -44,7 +43,7 @@
 		chosenContract = contract;
 	};
 
-	const chooseExpression = (contractExpression: ExpressionMetadata) => {
+	const chooseExpression = (contractExpression: unknown) => {
 		step = ExpressionSteps.Interpreter;
 		chosenExpression = contractExpression;
 	};

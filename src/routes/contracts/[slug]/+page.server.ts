@@ -3,10 +3,8 @@ import { QueryGetKnownContracts, Subgraphs } from '$lib/utils';
 import { formatContract, parseMeta } from '$lib/utils/meta';
 import { MAGIC_NUMBERS } from '$lib/utils/metadataV1';
 import { getServerSession } from '@supabase/auth-helpers-sveltekit';
-import { error } from '@sveltejs/kit';
 import { createClient } from '@urql/core';
 import { ethers } from 'ethers';
-import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 import type { PageServerLoad } from './$types';
 import type { AccountData, ExpressionLikes, UserLikes } from './types';
 
@@ -161,21 +159,6 @@ export const load: PageServerLoad = async (event) => {
 		});
 	}
 
-	const metadata: ContractMetadata = {
-		addresses: [],
-		name: '',
-		source: '',
-		commit: '',
-		bytecodeHash: '',
-		description: '',
-		type: '',
-		version: {
-			major: 0,
-			minor: 0,
-			release: ''
-		}
-	};
-
 	return {
 		contractRowFull: contractQuery?.data,
 		slugData,
@@ -187,7 +170,6 @@ export const load: PageServerLoad = async (event) => {
 		accountsData: _accountsData,
 		userLikes: _userLikes,
 		expressionLikes: _expressionLikes,
-		chainId,
-		metadata
+		chainId
 	};
 };

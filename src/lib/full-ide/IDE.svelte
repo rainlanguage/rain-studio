@@ -39,7 +39,6 @@
 	import { copyAndEmit } from '$lib/expressions/expressions';
 	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
 	import type { Writable } from 'svelte/store';
-	import type { StateConfig } from 'rain-metadata/metadata-types/expression';
 	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components/package/overflow-menu';
 	import HelpPanel from '$lib/HelpPanel.svelte';
 	import { breakpoint, Breakpoints } from '$lib/breakpoint-stores';
@@ -51,7 +50,7 @@
 	export let asModal: boolean = false;
 
 	let raw_expression = expression.raw_expression || '';
-	let vmStateConfig: Writable<StateConfig>;
+	let vmStateConfig: Writable<unknown>;
 	let notes = expression.notes || '';
 	let name = expression.name || '';
 	let contract_expression = expression?.contract_expression;

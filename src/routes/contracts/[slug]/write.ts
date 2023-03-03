@@ -1,5 +1,4 @@
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
-import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
 import { allChainsData } from 'svelte-ethers-store';
 
 // getting all of the state changing methods for this abi
@@ -27,7 +26,7 @@ export const getNameFromChainId = (id: number): string => {
 };
 
 // Returns chains which are shared by both contract address and interpreter address
-export const getCommonChains = (interpreters, knownContracts): number[] => {
+export const getCommonChains = (interpreters: unknown[], knownContracts: unknown[]): number[] => {
 	// Only include unique chains
 	const interpreterChains: Set<number> = new Set();
 	const contractChains: Set<number> = new Set();
@@ -81,8 +80,8 @@ export const getInterpretersForChain = (interpreters, chainId: number) => {
 };
 
 // filtering to the known addresses for the selected chain
-export const getKnownContractAddressesForChain = (metadata: ContractMetadata, chainId: number) => {
-	return metadata.addresses
+export const getKnownContractAddressesForChain = (addresses: unknown[], chainId: number) => {
+	return addresses
 		.filter((chain) => chain.chainId == chainId)[0]
 		?.knownAddresses.map((address) => {
 			return { label: address, value: address };

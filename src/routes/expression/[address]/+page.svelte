@@ -8,7 +8,6 @@
 	import { DocumentDuplicate, Heart } from '@steeze-ui/heroicons';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
-	import Auth from '$lib/Auth.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import SocialButton from '$lib/SocialButton.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
