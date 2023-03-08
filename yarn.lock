@@ -1084,6 +1084,11 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
   integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
 
+"@types/marked@^4.0.1":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@types/marked/-/marked-4.0.8.tgz#b316887ab3499d0a8f4c70b7bd8508f92d477955"
+  integrity sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==
+
 "@types/node@*":
   version "18.11.17"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.17.tgz#5c009e1d9c38f4a2a9d45c0b0c493fe6cdb4bcb5"
@@ -1100,6 +1105,11 @@
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-1.5.4.tgz#c08a1da6d7b4e365f6a1fe1ff9aada55f5356d24"
   integrity sha512-L5eZmzw89eXBKkiqVBcJfU1QGx9y+wurRIEgt0cuLH0hwNtVUxtx+6cu0R2STwWj468sjXyBYPYDtGclUd1kjQ==
+
+"@types/prettier@^2.7.2":
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.7.2.tgz#6c2324641cc4ba050a8c710b2b251b377581fbf0"
+  integrity sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==
 
 "@types/pug@^2.0.4":
   version "2.0.6"
@@ -1995,6 +2005,11 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
+
+cbor-web@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/cbor-web/-/cbor-web-8.1.0.tgz#c1148e91ca6bfc0f5c07c1df164854596e2e33d6"
+  integrity sha512-2hWHHMVrfffgoEmsAUh8vCxHoLa1vgodtC73+C5cSarkJlwTapnqAzcHINlP6Ej0DXuP4OmmJ9LF+JaNM5Lj/g==
 
 chalk-template@0.4.0:
   version "0.4.0"
@@ -3937,6 +3952,11 @@ make-dir@^3.1.0:
   dependencies:
     semver "^6.0.0"
 
+marked@^4.0.10:
+  version "4.2.12"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.2.12.tgz#d69a64e21d71b06250da995dcd065c11083bebb5"
+  integrity sha512-yr8hSKa3Fv4D3jdZmtMMPghgVt6TWbk86WQaWhDloQjRSQhMMYCAro7jP7VDJrjjdV8pxVxMssXS8B8Y5DZ5aw==
+
 md5.js@^1.3.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/md5.js/-/md5.js-1.3.5.tgz#b5d07b8e3216e3e27cd728d72f70d1e6a342005f"
@@ -4641,9 +4661,9 @@ quick-lru@^5.1.1:
   version "0.0.0"
   resolved "git+https://github.com/rainprotocol/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
 
-"rain-metadata@https://github.com/rainprotocol/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383":
+"rain-metadata@https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6":
   version "0.0.0"
-  resolved "https://github.com/rainprotocol/rain-metadata#4d0c04314d9ee96468c3464216f8e287944aa383"
+  resolved "https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6"
 
 "rain-sdk@git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a":
   version "2.1.2-beta"
@@ -4652,9 +4672,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#d8e8378c0f825b250941d138fc19be49870ef87f":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#8182d210399395b3b6d0cae7dffc5bf06768eabb":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#d8e8378c0f825b250941d138fc19be49870ef87f"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#8182d210399395b3b6d0cae7dffc5bf06768eabb"
   dependencies:
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
@@ -5349,6 +5369,14 @@ svelte-hmr@^0.15.1:
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.15.1.tgz#d11d878a0bbb12ec1cba030f580cd2049f4ec86b"
   integrity sha512-BiKB4RZ8YSwRKCNVdNxK/GfY+r4Kjgp9jCLEy0DuqAKfmQtpL38cQK3afdpjw4sqSs4PLi3jIPJIFp259NkZtA==
+
+svelte-markdown@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/svelte-markdown/-/svelte-markdown-0.2.3.tgz#16c6db61605512100cf25c3e18f8e4105837895c"
+  integrity sha512-2h680NzTXnAD0CXhxe3GeHl6W+ayG4iKQRl+BIDRw+R0mUE0OiNxP1Vt8Rn+aWevB/LBiBIPCAwvL+0BkG057A==
+  dependencies:
+    "@types/marked" "^4.0.1"
+    marked "^4.0.10"
 
 svelte-preprocess@^4.0.0, svelte-preprocess@^4.10.7:
   version "4.10.7"
