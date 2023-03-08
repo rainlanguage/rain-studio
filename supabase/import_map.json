@@ -1,0 +1,14 @@
+{
+	"imports": {
+		"@urql/core": "https://esm.sh/v111/*@urql/core@3.2.0",
+		"@urql/core/": "https://esm.sh/v111/*@urql/core@3.2.0/",
+		"graphql": "https://esm.sh/v111/*graphql@16.6.0",
+		"./language/parser.js": "https://esm.sh/v111/graphql@16.6.0/language/parser.js?external=graphql",
+		"./language/index.js": "https://esm.sh/v111/graphql@16.6.0/language/index.js?external=graphql"
+	},
+	"scopes": {
+		"https://esm.sh/v111/": {
+			"wonka": "https://esm.sh/v111/wonka@6.2.3"
+		}
+	}
+}
