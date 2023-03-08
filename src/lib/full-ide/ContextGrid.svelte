@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Expression } from 'rain-metadata/metadata-types/contract';
+	import type { Expression } from 'rain-metadata/type-definitions/contract';
 	import { HoverTooltip } from 'rain-svelte-components/package';
 
 	export let contextColumns: Expression['contextColumns'];

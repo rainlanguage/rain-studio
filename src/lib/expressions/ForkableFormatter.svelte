@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Formatter as RainlangFormatter, rainterpreterOpMeta } from '@rainprotocol/rainlang';
 	import { Modal } from 'rain-svelte-components/package';
-	import type { StateConfig } from 'rain-metadata/metadata-types/expression';
+	import type { StateConfig } from 'rain-metadata/type-definitions/expression';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import { page } from '$app/stores';
 	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
