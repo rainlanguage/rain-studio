@@ -5,7 +5,7 @@
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
 	import type { ContractRowFull, InterpreterRowFull } from '$lib/types/types';
 	import type { Database } from '$lib/types/generated-db-types';
-	import type { ExpressionMetadata } from 'rain-metadata/metadata-types/expression';
+	import type { ExpressionMetadata } from 'rain-metadata/type-definitions/expression';
 	import { Button } from 'rain-svelte-components/package';
 	import { ArrowUturnLeft, PlusCircle } from '@steeze-ui/heroicons';
 	import { createNewExpression } from '$lib/expressions/expressions';
@@ -67,7 +67,7 @@
 </script>
 
 <Background alignItems="items-start" justifyContent="justify-center">
-	<div class="container mx-auto flex flex-col items-center gap-y-6 px-4 pt-8 sm:px-0 md:pt-20">
+	<div class="container mx-auto flex flex-col items-center gap-y-6 px-4 py-8 sm:px-0 md:pt-20">
 		<h1 class="text-center text-2xl font-semibold sm:text-4xl">Start writing a new expression</h1>
 		{#if step == ExpressionSteps.Contract}
 			<div in:fade class="step-wrapper">

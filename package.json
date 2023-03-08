@@ -57,6 +57,7 @@
 		"@walletconnect/web3-provider": "^1.8.0",
 		"abitype": "^0.2.3",
 		"cbor-web": "^8.1.0",
+		"codemirror": "^6.0.1",
 		"ethers": "^5.7.2",
 		"graphql": "^16.6.0",
 		"install": "^0.13.0",
