@@ -9,6 +9,32 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      contract_addresses_new: {
+        Row: {
+          address: string
+          chainId: number
+          contract: string
+          created_at: string | null
+          id: string
+          type: string
+        }
+        Insert: {
+          address: string
+          chainId: number
+          contract: string
+          created_at?: string | null
+          id: string
+          type: string
+        }
+        Update: {
+          address?: string
+          chainId?: number
+          contract?: string
+          created_at?: string | null
+          id?: string
+          type?: string
+        }
+      }
       contracts: {
         Row: {
           abi: Json | null
@@ -33,6 +59,35 @@ export interface Database {
           metadata?: Json | null
           project?: string | null
           slug?: string | null
+        }
+      }
+      contracts_new: {
+        Row: {
+          abi: Json
+          contract_meta: Json
+          created_at: string
+          id: string
+          metadata: Json
+          project: string | null
+          slug: string
+        }
+        Insert: {
+          abi: Json
+          contract_meta: Json
+          created_at?: string
+          id: string
+          metadata: Json
+          project?: string | null
+          slug: string
+        }
+        Update: {
+          abi?: Json
+          contract_meta?: Json
+          created_at?: string
+          id?: string
+          metadata?: Json
+          project?: string | null
+          slug?: string
         }
       }
       draft_expressions_w: {

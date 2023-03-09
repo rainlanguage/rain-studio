@@ -1,9 +1,11 @@
 <script lang="ts">
-	export let metadata: any;
+	import type { Database } from '$lib/types/generated-db-types';
 
-	$: addressCount = metadata.addresses.length;
-	$: chainCount = metadata.addresses.reduce(
-		(pre: Set<number>, curr: any) => pre.add(curr.chain),
+	export let contract_addresses: Database['public']['Tables']['contract_addresses_new']['Row'][];
+
+	$: addressCount = contract_addresses.length;
+	$: chainCount = contract_addresses.reduce(
+		(pre: Set<number>, curr: any) => pre.add(curr.chainId),
 		new Set()
 	).size;
 </script>

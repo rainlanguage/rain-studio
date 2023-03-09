@@ -1,4 +1,4 @@
-import type { InterpreterRowFull } from '$lib/types/types';
+import type { ContractAddressRow, InterpreterRowFull } from '$lib/types/types';
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
 import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 import { allChainsData } from 'svelte-ethers-store';
@@ -7,6 +7,7 @@ import { allChainsData } from 'svelte-ethers-store';
 export const getWriteMethods = (
 	abi: Abi
 ): { label: string; value: { name: string; def: AbiFunction }; index: number }[] => {
+	console.log(abi)
 	return abi
 		.filter(
 			(method: AbiFunction | AbiEvent | AbiError): method is AbiFunction =>
@@ -32,7 +33,7 @@ export const getNameFromChainId = (id: number): string => {
 // getting the chains for which there's both a known address for contract and interpreter
 export const getCommonChains = (
 	interpreters: InterpreterRowFull[],
-	metadata: ContractMetadata
+	contractAddresses: ContractAddressRow[]
 ): number[] => {
 	// will only include unique chains
 	const chains: Set<number> = new Set();
@@ -41,8 +42,8 @@ export const getCommonChains = (
 			chains.add(address.chainId);
 		});
 	});
-	metadata.addresses.forEach((address) => {
-		chains.add(address.chainId);
+	contractAddresses.forEach((el) => {
+		chains.add(el.chainId);
 	});
 	return Array.from(chains.values());
 };

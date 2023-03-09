@@ -4758,9 +4758,10 @@ quick-lru@^5.1.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-"rain-metadata@git+https://github.com/rainprotocol/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228":
+"rain-metadata@git+https://github.com/rainprotocol/rain-metadata.git":
   version "0.0.0"
-  resolved "git+https://github.com/rainprotocol/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
+  uid aeef8dda333a176e1cb69449c545c90f16ab3ae6
+  resolved "git+https://github.com/rainprotocol/rain-metadata.git#aeef8dda333a176e1cb69449c545c90f16ab3ae6"
 
 "rain-metadata@https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6":
   version "0.0.0"
@@ -4773,9 +4774,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#8182d210399395b3b6d0cae7dffc5bf06768eabb":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#9e72bf736bb8869ae38728502ef1de34d140a90c":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#8182d210399395b3b6d0cae7dffc5bf06768eabb"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#9e72bf736bb8869ae38728502ef1de34d140a90c"
   dependencies:
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
@@ -4788,7 +4789,7 @@ quick-lru@^5.1.1:
     ajv "^8.11.0"
     ethers "^5.7.1"
     lodash-es "^4.17.21"
-    rain-metadata "git+https://github.com/rainprotocol/rain-metadata.git#40dc5c105a9db4169586c3826dd977c15b626228"
+    rain-metadata "git+https://github.com/rainprotocol/rain-metadata.git"
     rain-sdk "git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
     slate "^0.85.0"
     slate-history "^0.86.0"
