@@ -1,57 +1,86 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
 import { serve } from 'https://deno.land/std@0.131.0/http/server.ts';
 
-import { createClient } from 'https://esm.sh/@urql/core/dist/urql-core.js';
+import { createDbClient, createSgClient } from './deps.ts';
+import { DataAddressUpload, DataContractUpload } from './types.ts';
 
-console.log('Hello from Functions!');
+import {
+	getDBContracts,
+	getSGContracts,
+	getSubgraph,
+	filterNonAddedContracts
+} from './utils/index.ts';
 
 serve(async (req) => {
 	try {
-		// const supabaseClient = createClient(
-		// 	Deno.env.get('SUPABASE_URL') ?? '',
-		// 	Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-		// 	{ global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } } }
-		// );
-		// const resp = await supabaseClient.from('contracts').insert({ slug: slug_ }).select('id');
+		// Stablishing just one connection to the DB
+		const supabaseClient = createDbClient(
+			Deno.env.get('SUPABASE_URL') ?? '',
+			Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+			{ global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } } }
+		);
 
-		const { subgraph_url } = await req.json();
+		// Obtaining the subgraph_url and his chain ID
+		// This could be changed later to iterate over an array of suybgraphs and chains
+		const subgraphs = getSubgraph();
 
-		const client = createClient({
-			url: subgraph_url
-		});
+		// Array to be use to insert into the Database
+		let contractsToAdd: DataContractUpload[] = [];
+		let addressesToAdd: DataAddressUpload[] = [];
 
-		const query = `
-		  {
-		      contracts {
-		          id
-		      }
-		  }
-		`;
+		for (let i = 0; i < subgraphs.length; i++) {
+			const { subgraph_url, chainId } = subgraphs[i];
 
-		// const resp = await client.query(query, {}).toPromise();
+			// Create connection the current subgraph (chainID)
+			const subgraphClient = createSgClient({
+				url: subgraph_url
+			});
 
-		const response = await client.query(query, {}).toPromise();
+			const contracts = await getSGContracts(subgraphClient);
 
-		return new Response(JSON.stringify({ resp: response }, null, 2), {
-			headers: { 'Content-Type': 'application/json' },
-			status: 200
-		});
+			const DBContracts = await getDBContracts(supabaseClient);
+
+			// Filter non added contracts
+			const filteredContracts = filterNonAddedContracts(contracts, DBContracts, chainId);
+
+			// Concat to the arrays, so we can use less insert queries
+			contractsToAdd = contractsToAdd.concat(Object.values(filteredContracts.contractsToAdd));
+			addressesToAdd = addressesToAdd.concat(Object.values(filteredContracts.addressesToAdd));
+		}
+
+		let respContracts = 'No new contracts added';
+		let respAddresses = 'No new addresses added';
+
+		// Only send the query if the arrays are filled with data
+		if (contractsToAdd.length)
+			respContracts = await supabaseClient.from('contracts_new').insert(contractsToAdd);
+
+		if (addressesToAdd.length)
+			respAddresses = await supabaseClient.from('contract_addresses_new').insert(addressesToAdd);
+
+		// Return a response with the fully information about any result and well formatted for readability
+		return new Response(
+			JSON.stringify(
+				{
+					responses: {
+						contracts: respContracts,
+						addresses: respAddresses
+					},
+					addresses: addressesToAdd
+				},
+				null,
+				2
+			),
+			{
+				headers: { 'Content-Type': 'application/json' },
+				status: 200
+			}
+		);
 	} catch (error) {
 		return new Response(JSON.stringify({ error }), {
 			headers: { 'Content-Type': 'application/json' },
 			status: 400
 		});
 	}
-
-	// const { name } = await req.json();
-	// const data = {
-	// 	message: `Hello ${name}!`
-	// };
-
-	// return new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } });
 });
 
 // To invoke:
