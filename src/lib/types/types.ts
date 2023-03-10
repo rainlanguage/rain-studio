@@ -8,8 +8,8 @@ export type ProjectRow = Database['public']['Tables']['projects']['Row'];
 export type ContractRow = Database['public']['Tables']['contracts']['Row'];
 export type ProfileRow = Database['public']['Tables']['wallet_users']['Row'];
 export type InterpreterRow = Database['public']['Tables']['interpreters']['Row'];
-export type ContractAddressRow = Database['public']['Tables']['contract_addresses_new']['Row'][];
-
+export type ContractAddressRow = Database['public']['Tables']['contract_addresses_new']['Row'];
+export type DeployerAddressesRow = Database['public']['Tables']['deployers_addresses']['Row']
 export type ExpressionInsert = Database['public']['Tables']['draft_expressions_w']['Insert'];
 
 export type ContractRowFull = Nest<

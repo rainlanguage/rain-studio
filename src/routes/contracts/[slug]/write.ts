@@ -1,13 +1,11 @@
-import type { ContractAddressRow, InterpreterRowFull } from '$lib/types/types';
+import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
-import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 import { allChainsData } from 'svelte-ethers-store';
 
 // getting all of the state changing methods for this abi
 export const getWriteMethods = (
 	abi: Abi
 ): { label: string; value: { name: string; def: AbiFunction }; index: number }[] => {
-	console.log(abi)
 	return abi
 		.filter(
 			(method: AbiFunction | AbiEvent | AbiError): method is AbiFunction =>
@@ -32,15 +30,13 @@ export const getNameFromChainId = (id: number): string => {
 
 // getting the chains for which there's both a known address for contract and interpreter
 export const getCommonChains = (
-	interpreters: InterpreterRowFull[],
+	deployers: DeployerAddressesRow[],
 	contractAddresses: ContractAddressRow[]
 ): number[] => {
 	// will only include unique chains
 	const chains: Set<number> = new Set();
-	interpreters.forEach((interpreter) => {
-		interpreter.metadata.addresses.forEach((address) => {
-			chains.add(address.chainId);
-		});
+	deployers.forEach((deployer) => {
+		chains.add(deployer.chainId);
 	});
 	contractAddresses.forEach((el) => {
 		chains.add(el.chainId);
@@ -49,43 +45,44 @@ export const getCommonChains = (
 };
 
 export const getInterpretersForChain = (
-	interpreters: InterpreterRowFull[],
+	deployers: DeployerAddressesRow[],
 	chainId: number
-): { label: string; value: { interpreter: string; deployer: string } }[] => {
-	const interpretersForSelect: {
+): {
+	label: string;
+	value: {
+		id: string;
+		deployerAddress: string;
+		deployer: DeployerAddressesRow;
+	}
+}[] => {
+	const deployersForSelect: {
 		label: string;
 		value: {
 			id: string;
-			interpreterAddress: string;
 			deployerAddress: string;
-			interpreter: InterpreterRowFull;
+			deployer: DeployerAddressesRow;
 		};
 	}[] = [];
-	interpreters.forEach((interpreter) => {
-		interpreter.metadata.addresses.forEach((address) => {
-			if (address.chainId == chainId) {
-				address.knownAddresses.forEach((address) =>
-					interpretersForSelect.push({
-						label: `${interpreter.metadata.name}: ${address.interpreter}`,
-						value: {
-							id: interpreter.id,
-							interpreter,
-							interpreterAddress: address.interpreter,
-							deployerAddress: address.deployer
-						}
-					})
-				);
-			}
-		});
-	});
-	return interpretersForSelect;
+	deployers.forEach((deployer) => {
+		if (deployer.chainId == chainId) {
+			deployersForSelect.push({
+				label: `${deployer.address}`,
+				value: {
+					id: deployer.id,
+					deployer,
+					deployerAddress: deployer.address,
+				}
+			})
+		}
+	})
+	return deployersForSelect;
 };
 
 // filtering to the known addresses for the selected chain
-export const getKnownContractAddressesForChain = (metadata: ContractMetadata, chainId: number) => {
-	return metadata.addresses
-		.filter((chain) => chain.chainId == chainId)[0]
-		?.knownAddresses.map((address) => {
-			return { label: address, value: address };
+export const getKnownContractAddressesForChain = (contractAddresses: ContractAddressRow[], chainId: number) => {
+	return contractAddresses
+		.filter((contractAddress) => contractAddress.chainId == chainId)
+		?.map((contractAddress) => {
+			return { label: contractAddress.address, value: contractAddress.address };
 		});
 };

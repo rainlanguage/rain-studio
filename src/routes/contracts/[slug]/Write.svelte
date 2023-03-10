@@ -17,7 +17,12 @@
 		getNameFromChainId,
 		getWriteMethods
 	} from './write';
-	import type { ContractAddressRow, ContractRowFull, ExpressionRowFull } from '$lib/types/types';
+	import type {
+		ContractAddressRow,
+		ContractRowFull,
+		DeployerAddressesRow,
+		ExpressionRowFull
+	} from '$lib/types/types';
 	import HelpPanel from '$lib/HelpPanel.svelte';
 	import AuthInner from '$lib/AuthInner.svelte';
 	import { setContext } from 'svelte';
@@ -25,7 +30,8 @@
 	export let metadata: ContractMetadata,
 		abi: Abi,
 		contract: ContractRowFull,
-		contractAddresses: ContractAddressRow[];
+		contractAddresses: ContractAddressRow[],
+		deployerAddresses: DeployerAddressesRow[];
 
 	let result: any = []; // the state of the the form
 
@@ -46,20 +52,12 @@
 
 	let openHelpModal: boolean = false;
 
-	$: availableChains = getCommonChains($page.data.interpreters, contractAddresses);
+	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
 
 	setContext('EVALUABLE_ADDRESSES', {
 		getDeployers: async () => {
-			// const resp = await fetch('www.some_endpoint.com/get_addresses', {
-			// 	method: 'GET'
-			// });
-			// if (resp.ok) {
-			// 	const { interpreterAddresses } = await resp.json();
-			// 	return interpreterAddresses;
-			// }
-
-			return [{ address: '0xDummyAddress1' }, { address: '0xDummyAddress2' }];
+			return deployerAddresses.filter((address) => selectedChain == address.chainId);
 		}
 	});
 
@@ -74,7 +72,6 @@
 			);
 
 		// handling error cases
-		if (selectedInterpreter == -1) throw Error('No interpreter selected');
 		if (selectedMethod == -1) throw Error('No method selected');
 
 		await $contracts.selectedContract[selectedMethod.name](...result);
@@ -161,14 +158,14 @@
 						<span>Connected to {connectedChainName}</span>
 					</div>
 					<div class="flex flex-col gap-y-2">
-						{#if getKnownContractAddressesForChain(metadata, selectedChain)?.length}
+						{#if getKnownContractAddressesForChain(contractAddresses, selectedChain)?.length}
 							<span
 								>Select from known addresses for this contract on {allChainsData.find(
 									(chain) => chain.chainId == $chainId
 								)?.name}</span
 							>
 							<Select
-								items={getKnownContractAddressesForChain(metadata, selectedChain)}
+								items={getKnownContractAddressesForChain(contractAddresses, selectedChain)}
 								bind:value={selectedContract}
 							/>
 						{:else}

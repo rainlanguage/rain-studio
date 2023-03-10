@@ -5,8 +5,6 @@ import { error } from '@sveltejs/kit';
 export async function load() {
 	const query = await supabaseClient.from('contracts_new').select('*, contract_addresses_new(id, address, chainId)');
 
-	console.log(query)
-
 	if (query.error) throw error(404, 'Not found');
 
 	return { contract: query.data };
