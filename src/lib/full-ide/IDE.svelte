@@ -1,50 +1,47 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { fade } from 'svelte/transition';
+	import { breakpoint, Breakpoints } from '$lib/breakpoint-stores';
+	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
+	import { copyAndEmit } from '$lib/expressions/expressions';
+	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
+	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
+	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
+	import MobileTabButton from '$lib/full-ide/MobileTabButton.svelte';
 	import PanelHeader from '$lib/full-ide/PanelHeader.svelte';
-	import { Pane, Splitpanes } from 'svelte-splitpanes';
+	import SignedContext from '$lib/full-ide/SignedContext.svelte';
+	import { ShowPane } from '$lib/full-ide/types';
+	import HelpPanel from '$lib/HelpPanel.svelte';
+	import { supabaseClient } from '$lib/supabaseClient';
+	import Tags from '$lib/Tags.svelte';
+	import type { ExpressionRowFull } from '$lib/types/types';
 	import {
 		ArrowPath,
 		ArrowUturnLeft,
+		Beaker,
+		CodeBracket,
+		DocumentDuplicate,
+		DocumentText,
 		Eye,
+		InformationCircle,
+		Lifebuoy,
+		LockClosed,
+		LockOpen,
 		PaperAirplane,
 		Pencil,
 		QuestionMarkCircle,
-		LockClosed,
-		LockOpen,
-		DocumentDuplicate,
-		Document,
-		CodeBracket,
-		Cog,
-		CircleStack,
-		TableCells,
-		DocumentText,
-		Beaker,
-		InformationCircle,
-		Lifebuoy
+		TableCells
 	} from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { Button, Modal, OpDocs, ParserInput } from 'rain-svelte-components/package';
-	import SimulatedOutput from 'rain-svelte-components/package/parser/SimulatedOutput.svelte';
 	import { throttle } from 'lodash-es';
-	import { supabaseClient } from '$lib/supabaseClient';
-	import { tick } from 'svelte';
-	import type { ExpressionRowFull } from '$lib/types/types';
-	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
-	import { goto } from '$app/navigation';
-	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
-	import ContextGrid from '$lib/full-ide/ContextGrid.svelte';
-	import SignedContext from '$lib/full-ide/SignedContext.svelte';
-	import Tags from '$lib/Tags.svelte';
-	import { copyAndEmit } from '$lib/expressions/expressions';
-	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
-	import type { Writable } from 'svelte/store';
-	import type { StateConfig } from 'rain-metadata/metadata-types/expression';
+	import type { StateConfig } from 'rain-metadata/type-definitions/expression';
+	import { Button, Modal, OpDocs, ParserInput } from 'rain-svelte-components/package';
 	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components/package/overflow-menu';
-	import HelpPanel from '$lib/HelpPanel.svelte';
-	import { breakpoint, Breakpoints } from '$lib/breakpoint-stores';
-	import { ShowPane } from '$lib/full-ide/types';
-	import MobileTabButton from '$lib/full-ide/MobileTabButton.svelte';
+	import SimulatedOutput from 'rain-svelte-components/package/parser/SimulatedOutput.svelte';
+	import { tick } from 'svelte';
+	import { Pane, Splitpanes } from 'svelte-splitpanes';
+	import type { Writable } from 'svelte/store';
+	import { fade } from 'svelte/transition';
 
 	export let expression: ExpressionRowFull;
 	export let closeCallback: Function;
@@ -292,6 +289,7 @@
 												<textarea
 													class="flex-grow self-stretch justify-self-stretch whitespace-pre-wrap outline-0"
 													bind:value={notes}
+													placeholder="Click here to add notes"
 												/>
 											</div>
 										</div>

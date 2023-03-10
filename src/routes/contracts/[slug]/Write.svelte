@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { Button, Select, Modal } from 'rain-svelte-components/package';
 	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
-	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
+	import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 	import { ethers } from 'ethers';
 	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';

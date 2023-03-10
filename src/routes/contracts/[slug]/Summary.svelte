@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Section, SectionBody, SectionHeading } from 'rain-svelte-components/package/section';
-	import type { ContractMetadata } from 'rain-metadata/metadata-types/contract';
+	import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 	import { allChainsData } from 'svelte-ethers-store';
 	export let abi: any, metadata: ContractMetadata;
 </script>
