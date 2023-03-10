@@ -54,7 +54,7 @@ export function findDocInDecodedArray(
 }
 
 /**
- * Get an CBOR sequence and decode it into
+ * Get an CBOR sequence and decode it
  * @param meta_ Hex string CBOR sequence to decode
  */
 export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMeta } | null {
@@ -75,6 +75,26 @@ export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMe
 		abi: decodedMap(solidityAbiMap),
 		contractMeta: decodedMap(contractMetaMap)
 	};
+}
+
+/**
+ * Get an CBOR sequence that have opmeta and decode it
+ * @param meta_ Hex string CBOR sequence to decode
+ */
+export function decodedMetaOPMETA(meta_: string): { opsmeta: any } | null {
+	// If does not have the magic number, it is not proper
+	if (!meta_.startsWith(MAGIC_NUMBERS.RainMetaDocument)) return null;
+
+	// Remove the RainMetaDocument magic number
+	const meta = meta_.replace(MAGIC_NUMBERS.RainMetaDocument, '');
+
+	// Decoded the CBOR sequence
+	const dataDecoded = cbor.decodeAllSync(meta);
+
+	// Find the ABI Map
+	const opsMetaMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.OpsMeta);
+
+	return decodedMap(opsMetaMap);
 }
 
 /**

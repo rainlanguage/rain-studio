@@ -90,6 +90,49 @@ export interface Database {
           slug?: string
         }
       }
+      deployers: {
+        Row: {
+          bytecode_hash: string
+          created_at: string
+          id: string
+          opmeta: Json
+        }
+        Insert: {
+          bytecode_hash: string
+          created_at: string
+          id: string
+          opmeta: Json
+        }
+        Update: {
+          bytecode_hash?: string
+          created_at?: string
+          id?: string
+          opmeta?: Json
+        }
+      }
+      deployers_addresses: {
+        Row: {
+          address: string
+          chainId: number
+          created_at: string
+          deployer: string
+          id: string
+        }
+        Insert: {
+          address: string
+          chainId: number
+          created_at?: string
+          deployer: string
+          id: string
+        }
+        Update: {
+          address?: string
+          chainId?: number
+          created_at?: string
+          deployer?: string
+          id?: string
+        }
+      }
       draft_expressions_w: {
         Row: {
           contract: string | null
@@ -224,6 +267,86 @@ export interface Database {
           id?: string
           logo_url?: string
           name?: string
+        }
+      }
+      rainterpreter_addresses: {
+        Row: {
+          address: string
+          chainId: number
+          created_at: string
+          id: string
+          rainterpreter: string
+        }
+        Insert: {
+          address: string
+          chainId: number
+          created_at?: string
+          id: string
+          rainterpreter: string
+        }
+        Update: {
+          address?: string
+          chainId?: number
+          created_at?: string
+          id?: string
+          rainterpreter?: string
+        }
+      }
+      rainterpreter_store_addresses: {
+        Row: {
+          address: string
+          chainId: number
+          created_at: string
+          id: string
+          rainterpreter_store: string
+        }
+        Insert: {
+          address: string
+          chainId: number
+          created_at?: string
+          id: string
+          rainterpreter_store: string
+        }
+        Update: {
+          address?: string
+          chainId?: number
+          created_at?: string
+          id?: string
+          rainterpreter_store?: string
+        }
+      }
+      rainterpreter_stores: {
+        Row: {
+          bytecode_hash: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          bytecode_hash: string
+          created_at?: string | null
+          id: string
+        }
+        Update: {
+          bytecode_hash?: string
+          created_at?: string | null
+          id?: string
+        }
+      }
+      rainterpreters: {
+        Row: {
+          bytecode_hash: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          bytecode_hash: string
+          created_at?: string
+          id: string
+        }
+        Update: {
+          bytecode_hash?: string
+          created_at?: string
+          id?: string
         }
       }
       starred: {

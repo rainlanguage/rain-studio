@@ -1,13 +1,26 @@
 import { serve } from 'https://deno.land/std@0.131.0/http/server.ts';
 
 import { createDbClient, createSgClient } from './deps.ts';
-import { DataAddressUpload, DataContractUpload } from './types.ts';
+import {
+	DataAddressUpload,
+	DataContractUpload,
+	DataDeployerAddressUpload,
+	DataDeployerUpload,
+	DataRainterpreterAddressUpload,
+	DataRainterpreterStoreAddressUpload,
+	DataRainterpreterStoreUpload,
+	DataRainterpreterUpload
+} from './types.ts';
 
 import {
-	getDBContracts,
-	getSGContracts,
 	getSubgraph,
-	filterNonAddedContracts
+	filterNonAddedContracts,
+	_getSGInterpreters,
+	getContracts,
+	_getDBInterpretersData,
+	filterNonAddedDeployers,
+	filterNonAddedRainterpreters,
+	filterNonAddedStores
 } from './utils/index.ts';
 
 serve(async (req) => {
@@ -16,16 +29,23 @@ serve(async (req) => {
 		const supabaseClient = createDbClient(
 			Deno.env.get('SUPABASE_URL') ?? '',
 			Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+			// This allow to get the Authorization from the header of the request (the bearer key)
 			{ global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } } }
 		);
 
-		// Obtaining the subgraph_url and his chain ID
-		// This could be changed later to iterate over an array of suybgraphs and chains
+		// Obtaining the subgraph_url and his chain ID. This allow to add different
+		// chains and subgraphs.
 		const subgraphs = getSubgraph();
 
 		// Array to be use to insert into the Database
 		let contractsToAdd: DataContractUpload[] = [];
-		let addressesToAdd: DataAddressUpload[] = [];
+		let contractAddressesToAdd: DataAddressUpload[] = [];
+		let deployerToAdd: DataDeployerUpload[] = [];
+		let deployerAddressesToAdd: DataDeployerAddressUpload[] = [];
+		let rainterpretersToAdd: DataRainterpreterUpload[] = [];
+		let rainterpreterAddressesToAdd: DataRainterpreterAddressUpload[] = [];
+		let storesToAdd: DataRainterpreterStoreUpload[] = [];
+		let storeAddressesToAdd: DataRainterpreterStoreAddressUpload[] = [];
 
 		for (let i = 0; i < subgraphs.length; i++) {
 			const { subgraph_url, chainId } = subgraphs[i];
@@ -35,37 +55,115 @@ serve(async (req) => {
 				url: subgraph_url
 			});
 
-			const contracts = await getSGContracts(subgraphClient);
-
-			const DBContracts = await getDBContracts(supabaseClient);
+			// ** Filling the `contracts_new` and `contract_addresses_new` tables
+			// Getting data and information about the contracts
+			const { sgContracts, dBContracts } = await getContracts(supabaseClient, subgraphClient);
 
 			// Filter non added contracts
-			const filteredContracts = filterNonAddedContracts(contracts, DBContracts, chainId);
+			const filteredContracts = filterNonAddedContracts(sgContracts, dBContracts, chainId);
 
 			// Concat to the arrays, so we can use less insert queries
 			contractsToAdd = contractsToAdd.concat(Object.values(filteredContracts.contractsToAdd));
-			addressesToAdd = addressesToAdd.concat(Object.values(filteredContracts.addressesToAdd));
+			contractAddressesToAdd = contractAddressesToAdd.concat(
+				Object.values(filteredContracts.addressesToAdd)
+			);
+
+			// ** Filling the interpreter table
+			// Getting data and information related to interpreters
+			const { deployersDB, rainterpretersDB, rainterpreter_storesDB } =
+				await _getDBInterpretersData(supabaseClient);
+
+			const { deployersSG, rainterpretersSG, rainterpreter_storesSG } = await _getSGInterpreters(
+				subgraphClient
+			);
+
+			const filteredDeployers = filterNonAddedDeployers(deployersSG, deployersDB, chainId);
+			const filteredRainterpreters = filterNonAddedRainterpreters(
+				rainterpretersSG,
+				rainterpretersDB,
+				chainId
+			);
+			const filteredStores = filterNonAddedStores(
+				rainterpreter_storesSG,
+				rainterpreter_storesDB,
+				chainId
+			);
+
+			// Concat and filling the arrays
+			// - Deployers
+			deployerToAdd = deployerToAdd.concat(Object.values(filteredDeployers.deployersToAdd));
+			deployerAddressesToAdd = deployerAddressesToAdd.concat(
+				Object.values(filteredDeployers.deployersAddressesToAdd)
+			);
+
+			// - Rainterpreters
+			rainterpretersToAdd = rainterpretersToAdd.concat(
+				Object.values(filteredRainterpreters.rainterpretersToAdd)
+			);
+			rainterpreterAddressesToAdd = rainterpreterAddressesToAdd.concat(
+				Object.values(filteredRainterpreters.rainterpreterAddressesToAdd)
+			);
+
+			// - Stores
+			storesToAdd = storesToAdd.concat(Object.values(filteredStores.storesToAdd));
+			storeAddressesToAdd = storeAddressesToAdd.concat(
+				Object.values(filteredStores.storeAddressesToAdd)
+			);
 		}
 
-		let respContracts = 'No new contracts added';
-		let respAddresses = 'No new addresses added';
+		const nonChanged = 'No new data added';
 
 		// Only send the query if the arrays are filled with data
-		if (contractsToAdd.length)
-			respContracts = await supabaseClient.from('contracts_new').insert(contractsToAdd);
+		// - Contracts
+		const respContracts = contractsToAdd.length
+			? await supabaseClient.from('contracts_new').insert(contractsToAdd)
+			: nonChanged;
 
-		if (addressesToAdd.length)
-			respAddresses = await supabaseClient.from('contract_addresses_new').insert(addressesToAdd);
+		const respContractAddresses = contractAddressesToAdd.length
+			? await supabaseClient.from('contract_addresses_new').insert(contractAddressesToAdd)
+			: nonChanged;
+
+		// Deployers
+		const respDeployers = deployerToAdd.length
+			? await supabaseClient.from('deployers').insert(deployerToAdd)
+			: nonChanged;
+
+		const respDeployerAddresses = deployerAddressesToAdd.length
+			? await supabaseClient.from('deployers_addresses').insert(deployerAddressesToAdd)
+			: nonChanged;
+
+		// Rainterpreters
+		const respRainterpreters = rainterpretersToAdd.length
+			? await supabaseClient.from('rainterpreters').insert(rainterpretersToAdd)
+			: nonChanged;
+
+		const respRainterpreterAdresses = rainterpreterAddressesToAdd.length
+			? await supabaseClient.from('rainterpreter_addresses').insert(rainterpreterAddressesToAdd)
+			: nonChanged;
+
+		// Stores
+		const respStores = storesToAdd.length
+			? await supabaseClient.from('rainterpreter_stores').insert(storesToAdd)
+			: nonChanged;
+
+		const respStoreAddresses = storeAddressesToAdd.length
+			? await supabaseClient.from('rainterpreter_store_addresses').insert(storeAddressesToAdd)
+			: nonChanged;
 
 		// Return a response with the fully information about any result and well formatted for readability
 		return new Response(
 			JSON.stringify(
 				{
 					responses: {
-						contracts: respContracts,
-						addresses: respAddresses
-					},
-					addresses: addressesToAdd
+						respContracts,
+						respContractAddresses,
+						respDeployers,
+						respDeployerAddresses,
+						respRainterpreters,
+						respRainterpreterAdresses,
+						respStores,
+						respStoreAddresses
+					}
 				},
 				null,
 				2
