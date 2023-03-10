@@ -26,10 +26,25 @@ import type {
 	DataRainterpreterStoreAddressUpload
 } from '../types.ts';
 
+/**
+ * Export all the functionalities around RainDocuments in Deno.
+ */
 export * from './rainDocuments.ts';
+
+/**
+ * The text Decoder in Deno.
+ */
 export const textDecoder = new TextDecoder();
+
+/**
+ * This namespace is arbitrary picked. It work as a seed to generate new UUIDs.
+ */
 export const UUIDnamespace = '0d91cfc8-9be0-4458-8f05-5bd5a5bc2fbb';
 
+/**
+ * Use a given supbaseClient and a subgraphClinet to make the required queries to
+ * get and filter the contracts (InterpreterCallers).
+ */
 export async function getContracts(supabaseClient_: SupabaseClient, subgraphClient_: Client) {
 	// Querying the contracts from supabase
 	const dBContracts = await _getDBContracts(supabaseClient_);
@@ -43,7 +58,11 @@ export async function getContracts(supabaseClient_: SupabaseClient, subgraphClie
 	};
 }
 
-export async function _getDBInterpretersData(supabaseClient_: SupabaseClient) {
+/**
+ * Use a given supabaseCLient to query to the Database and get all the Interpreter
+ * relate information like Rainterpreters, Stores and Deployers.
+ */
+export async function getDBInterpretersData(supabaseClient_: SupabaseClient) {
 	// Getting the `deployers` from supabase
 	const respDeployer = await supabaseClient_.from('deployers').select('*, deployers_addresses(*)');
 	if (respDeployer.error)
@@ -74,7 +93,12 @@ export async function _getDBInterpretersData(supabaseClient_: SupabaseClient) {
 	};
 }
 
-export async function _getSGInterpreters(subgraphClient_: Client) {
+/**
+ * Use a given subgraphClient to query to the subgraph endpoint and get all the
+ * Interpreter related information like Rainterpreters, Stores and Deployers.
+ * @returns
+ */
+export async function getSGInterpreters(subgraphClient_: Client) {
 	const query = `
 		{
 			expressionDeployers {
@@ -114,7 +138,7 @@ export async function _getSGInterpreters(subgraphClient_: Client) {
 
 /**
  * @public
- * `WIP:` Inverse of `deflateJson`. Get a hex string  or Uint8Array and inflate
+ * Inverse of `deflateJson`. Get a hex string  or Uint8Array and inflate
  * the JSON to obtain an string with the decoded data.
  *
  * @param bytes - Bytes to infalte to json
@@ -123,23 +147,15 @@ export const inflateJson = (bytes: unknown) => {
 	if (!isBytesLike(bytes)) throw new Error('invalid bytes');
 	const _uint8Arr = arrayify(bytes, { allowMissingPrefix: true });
 
-	try {
-		const inflated = inflate(_uint8Arr);
-		console.log('inflated');
-		const decoded = textDecoder.decode(inflated);
-		console.log('decoded');
-		const parsed = JSON.parse(decoded);
-		console.log('parsed');
-		console.log(parsed);
-		return parsed;
-	} catch (error) {
-		console.log(error);
-	}
+	const inflated = inflate(_uint8Arr);
+	const decoded = textDecoder.decode(inflated);
+	const parsed = JSON.parse(decoded);
+	return parsed;
 };
 
 /**
  * TODO: At the moment only Mumbai
- * @returns
+ * Return all the subgraphs endpoint that are currently on use.
  */
 export function getSubgraph(): Array<{
 	subgraph_url: string;
@@ -214,11 +230,10 @@ export function filterNonAddedContracts(
 					// To insert the new Contracts
 					contractsToAdd[contractID] = {
 						id: contractID,
-						bytecode_hash: SGcontract.bytecodeHash,
 						abi: metaDecoded.abi,
 						contract_meta: metaDecoded.contractMeta,
 						metadata: buildMetadataFromMeta(metaDecoded.contractMeta),
-						slug: metaDecoded?.contractMeta.alias
+						slug: SGcontract.bytecodeHash
 					};
 
 					// To insert the new address with the Contract referece
@@ -341,6 +356,7 @@ export function filterNonAddedRainterpreters(
 
 	for (let i = 0; i < sgRainterpreters_.length; i++) {
 		const SGrainterpreter = sgRainterpreters_[i];
+		const SGinterpreterInstances = SGrainterpreter.instances;
 		const rainterpreterID = uuidv5(SGrainterpreter.id, UUIDnamespace);
 
 		const rainterpreterMatched = dbRainterpreters_.find(
@@ -348,31 +364,39 @@ export function filterNonAddedRainterpreters(
 		);
 
 		if (!rainterpreterMatched) {
-			// Check if it is already cached
-			if (rainterpretersToAdd[rainterpreterID]) {
-				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGrainterpreter.id, rainterpreterID);
-			} else {
-				// To insert the new Contracts
-				rainterpretersToAdd[rainterpreterID] = {
-					id: rainterpreterID,
-					bytecode_hash: SGrainterpreter.id
-				};
+			// The Subgraph entity Rainterpreter work with an ID based on the bytecode_hash
+			// of the contract, if there are not match on the DB means that is new contract.
+			// Also, all the addresses (instances) are in the same entity, so they will
+			// be directly added since a previous relation did not existed.
 
-				// To insert the new address with the Contract referece
-				addAddress(SGrainterpreter.id, rainterpreterID);
-			}
+			// To insert the new Rainterpreters
+			rainterpretersToAdd[rainterpreterID] = {
+				id: rainterpreterID,
+				bytecode_hash: SGrainterpreter.id
+			};
+
+			// Add all the address (instances)
+			SGinterpreterInstances.forEach((interpreterInstance_) => {
+				addAddress(interpreterInstance_.id, rainterpreterID);
+			});
 		} else {
-			const addressID = uuidv5(SGrainterpreter.id + chainId.toString(), UUIDnamespace);
+			// If there a match, then some addresses could already added, so need to be filtered
+			const DBrainterpreterAddresses = rainterpreterMatched.rainterpreter_addresses;
 
-			const addressRainterpreter = rainterpreterMatched.rainterpreter_addresses.find(
-				(item_) => item_.id === addressID
-			);
+			// Filter the addresses (instances) from the SG that does not exist in the DB
+			const addressesFiltered = SGinterpreterInstances.filter((instances_) => {
+				// Generate the addressID that (will) have the rainterpreter
+				const addressID = uuidv5(instances_.id + chainId.toString(), UUIDnamespace);
 
-			// If does not exist in the DB, prepare data to insert
-			if (!addressRainterpreter) {
-				addAddress(SGrainterpreter.id, rainterpreterID);
-			}
+				// Search for those instances (address) that does not exist in the DB.
+				// If the index returned is `-1`, does not exist in DB and it should be added.
+				return DBrainterpreterAddresses.findIndex((address_) => address_.id == addressID) == -1;
+			});
+
+			// Add all the filtered address (instances)
+			addressesFiltered.forEach((interpreterInstance_) => {
+				addAddress(interpreterInstance_.id, rainterpreterID);
+			});
 		}
 	}
 
@@ -407,36 +431,45 @@ export function filterNonAddedStores(
 
 	for (let i = 0; i < sgStores_.length; i++) {
 		const SGstore = sgStores_[i];
+		const SGstoreInstances = SGstore.instances;
 		const storeID = uuidv5(SGstore.id, UUIDnamespace);
 
 		const storeMatched = dbStores_.find((store_) => store_.id === storeID);
 
 		if (!storeMatched) {
-			// Check if it is already cached
-			if (storesToAdd[storeID]) {
-				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGstore.id, storeID);
-			} else {
-				// To insert the new Contracts
-				storesToAdd[storeID] = {
-					id: storeID,
-					bytecode_hash: SGstore.id
-				};
+			// The Subgraph entity RainterpreterStore work with an ID based on the bytecode_hash
+			// of the contract, if there are not match on the DB means that is new contract.
+			// Also, all the addresses (instances) are in the same entity, so they will
+			// be directly added since a previous relation did not existed.
 
-				// To insert the new address with the Contract referece
-				addAddress(SGstore.id, storeID);
-			}
+			// To insert the new RainterpreterStore (store)
+			storesToAdd[storeID] = {
+				id: storeID,
+				bytecode_hash: SGstore.id
+			};
+
+			// Add all the address (instances)
+			SGstoreInstances.forEach((storeInstance_) => {
+				addAddress(storeInstance_.id, storeID);
+			});
 		} else {
-			const addressID = uuidv5(SGstore.id + chainId.toString(), UUIDnamespace);
+			// If there a match, then some addresses could already added, so need to be filtered
+			const DBstoreAddresses = storeMatched.rainterpreter_store_addresses;
 
-			const addressStore = storeMatched.rainterpreter_store_addresses.find(
-				(item_) => item_.id === addressID
-			);
+			// Filter the addresses (instances) from the SG that does not exist in the DB
+			const addressesFiltered = SGstoreInstances.filter((instances_) => {
+				// Generate the addressID that (will) have the store
+				const addressID = uuidv5(instances_.id + chainId.toString(), UUIDnamespace);
 
-			// If does not exist in the DB, prepare data to insert
-			if (!addressStore) {
-				addAddress(SGstore.id, storeID);
-			}
+				// Search for those instances (address) that does not exist in the DB.
+				// If the index returned is `-1`, does not exist in DB and it should be added.
+				return DBstoreAddresses.findIndex((address_) => address_.id == addressID) == -1;
+			});
+
+			// Add all the filtered address (instances)
+			addressesFiltered.forEach((storeInstance_) => {
+				addAddress(storeInstance_.id, storeID);
+			});
 		}
 	}
 

@@ -2,6 +2,17 @@ import { serve } from 'https://deno.land/std@0.131.0/http/server.ts';
 
 import { createDbClient, createSgClient } from './deps.ts';
 import {
+	getSubgraph,
+	filterNonAddedContracts,
+	getSGInterpreters,
+	getContracts,
+	getDBInterpretersData,
+	filterNonAddedDeployers,
+	filterNonAddedRainterpreters,
+	filterNonAddedStores
+} from './utils/index.ts';
+
+import type {
 	DataAddressUpload,
 	DataContractUpload,
 	DataDeployerAddressUpload,
@@ -11,17 +22,6 @@ import {
 	DataRainterpreterStoreUpload,
 	DataRainterpreterUpload
 } from './types.ts';
-
-import {
-	getSubgraph,
-	filterNonAddedContracts,
-	_getSGInterpreters,
-	getContracts,
-	_getDBInterpretersData,
-	filterNonAddedDeployers,
-	filterNonAddedRainterpreters,
-	filterNonAddedStores
-} from './utils/index.ts';
 
 serve(async (req) => {
 	try {
@@ -70,10 +70,11 @@ serve(async (req) => {
 
 			// ** Filling the interpreter table
 			// Getting data and information related to interpreters
-			const { deployersDB, rainterpretersDB, rainterpreter_storesDB } =
-				await _getDBInterpretersData(supabaseClient);
+			const { deployersDB, rainterpretersDB, rainterpreter_storesDB } = await getDBInterpretersData(
+				supabaseClient
+			);
 
-			const { deployersSG, rainterpretersSG, rainterpreter_storesSG } = await _getSGInterpreters(
+			const { deployersSG, rainterpretersSG, rainterpreter_storesSG } = await getSGInterpreters(
 				subgraphClient
 			);
 
@@ -123,7 +124,7 @@ serve(async (req) => {
 			? await supabaseClient.from('contract_addresses_new').insert(contractAddressesToAdd)
 			: nonChanged;
 
-		// Deployers
+		// - Deployers
 		const respDeployers = deployerToAdd.length
 			? await supabaseClient.from('deployers').insert(deployerToAdd)
 			: nonChanged;
@@ -132,7 +133,7 @@ serve(async (req) => {
 			? await supabaseClient.from('deployers_addresses').insert(deployerAddressesToAdd)
 			: nonChanged;
 
-		// Rainterpreters
+		// - Rainterpreters;
 		const respRainterpreters = rainterpretersToAdd.length
 			? await supabaseClient.from('rainterpreters').insert(rainterpretersToAdd)
 			: nonChanged;
@@ -141,7 +142,7 @@ serve(async (req) => {
 			? await supabaseClient.from('rainterpreter_addresses').insert(rainterpreterAddressesToAdd)
 			: nonChanged;
 
-		// Stores
+		// - Stores
 		const respStores = storesToAdd.length
 			? await supabaseClient.from('rainterpreter_stores').insert(storesToAdd)
 			: nonChanged;

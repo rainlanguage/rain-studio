@@ -99,7 +99,7 @@ export interface Database {
         }
         Insert: {
           bytecode_hash: string
-          created_at: string
+          created_at?: string
           id: string
           opmeta: Json
         }

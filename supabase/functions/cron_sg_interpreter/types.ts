@@ -41,7 +41,12 @@ export type InterpreterSG = {
 	/**
 	 * The instances are each interpreter address that have the same bytecode
 	 */
-	instances: Array<{ id: string }>;
+	instances: Array<{
+		/**
+		 * Address of the instance
+		 */
+		id: string;
+	}>;
 };
 
 export type RainterpreterStoreSG = {
@@ -52,7 +57,12 @@ export type RainterpreterStoreSG = {
 	/**
 	 * The instances are each store address that have the same bytecode
 	 */
-	instances: Array<{ id: string }>;
+	instances: Array<{
+		/**
+		 * Address of the instance
+		 */
+		id: string;
+	}>;
 };
 
 export type ABI = any[];
@@ -90,7 +100,6 @@ export type Metadata = {
 
 export type DataContractUpload = {
 	id: string;
-	bytecode_hash: string;
 	abi: any;
 	contract_meta: any;
 	metadata: any;
