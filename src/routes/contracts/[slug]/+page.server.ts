@@ -7,6 +7,7 @@ import type { UserLikes, ExpressionLikes, AccountData } from './types';
 
 import { createClient } from '@urql/core';
 import { Subgraphs, QueryGetKnowContracts } from '$lib/utils';
+import { error } from '@sveltejs/kit';
 
 //  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai.
 
@@ -52,7 +53,7 @@ export const load: PageServerLoad = async (event) => {
 	if (interpretersQuery.error) throw error(500, 'Something went wrong :(');
 
 	// Aaddresses filtered with the proper chain ID in an array
-	const addresses = contractQuery.data.metadata.addresses
+	const addresses = contractQuery.data?.metadata?.addresses
 		.filter((element) => element.chainId == chainId)
 		.map((element) => element.knownAddresses)
 		.flat();

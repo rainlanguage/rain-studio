@@ -25,10 +25,4 @@ pkgs.stdenv.mkDerivation {
     dev
     yarn-install-serial
   ];
-
-  shellHook = ''
-    export PATH=$( yarn bin ):$PATH
-    # keep it fresh
-    yarn
-  '';
 }

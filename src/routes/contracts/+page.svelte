@@ -3,7 +3,7 @@
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
 	import Background from '$lib/Background.svelte';
 
-	$: contracts = $page.data.contract;
+	$: contracts = $page.data.contracts;
 </script>
 
 <Background alignItems="items-start">

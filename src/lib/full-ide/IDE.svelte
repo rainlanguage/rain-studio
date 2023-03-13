@@ -42,6 +42,7 @@
 	import { Pane, Splitpanes } from 'svelte-splitpanes';
 	import type { Writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
+	import RainlangEditor from './RainlangEditor.svelte';
 
 	export let expression: ExpressionRowFull;
 	export let closeCallback: Function;
@@ -254,8 +255,9 @@
 								<Pane size={isMobile ? 100 : 50} minSize={10}>
 									<div class="flex h-full flex-col">
 										<PanelHeader>Expression</PanelHeader>
-										<div class="flex min-h-0 flex-grow flex-col overflow-scroll p-2">
-											<ParserInput bind:raw={raw_expression} bind:vmStateConfig />
+										<div class="flex min-h-0 flex-grow flex-col overflow-auto p-2">
+											<!-- <ParserInput bind:raw={raw_expression} bind:vmStateConfig /> -->
+											<RainlangEditor bind:raw={raw_expression} bind:vmStateConfig />
 										</div>
 									</div>
 								</Pane>
@@ -264,7 +266,7 @@
 								<Pane size={isMobile ? 100 : 30} minSize={10}>
 									<div class="h-full">
 										<PanelHeader>Mock data</PanelHeader>
-										<div class="h-full overflow-scroll p-2">
+										<div class="h-full overflow-auto p-2">
 											{#if contextColumns}
 												<div class="pt-4 pb-2 text-xs uppercase text-gray-500">Context</div>
 												<ContextGrid {contextColumns} bind:mockContext />
@@ -306,7 +308,7 @@
 								<Pane size={isMobile ? 100 : 50} minSize={10}>
 									<div class="flex h-full flex-grow flex-col">
 										<PanelHeader>Simulator</PanelHeader>
-										<div class="relative flex-grow overflow-y-scroll p-2">
+										<div class="relative flex-grow overflow-y-auto p-2">
 											<SimulatedOutput {vmStateConfig} {context} />
 										</div>
 									</div>

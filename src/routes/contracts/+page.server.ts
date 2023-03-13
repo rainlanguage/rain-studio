@@ -5,9 +5,12 @@ import { error } from '@sveltejs/kit';
 export async function load() {
 	const query = await supabaseClient
 		.from('contracts')
-		.select('project ( name, logo_url ), metadata, abi, slug');
+		.select('project ( name, logo_url ), metadata, abi, slug')
+		.not('metadata', 'is', null);
 
 	if (query.error) throw error(404, 'Not found');
 
-	return { contract: query.data };
+	const contracts = query.data;
+
+	return { contracts };
 }
