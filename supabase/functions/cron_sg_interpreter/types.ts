@@ -118,6 +118,7 @@ export type DataDeployerUpload = {
 	id: string;
 	bytecode_hash: string;
 	opmeta: any;
+	opmeta_bytes: string;
 };
 
 export type DataDeployerAddressUpload = {

@@ -81,7 +81,9 @@ export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMe
  * Get an CBOR sequence that have opmeta and decode it
  * @param meta_ Hex string CBOR sequence to decode
  */
-export function decodedMetaOPMETA(meta_: string): { opsmeta: any } | null {
+export function decodedMetaOPMETA(
+	meta_: string
+): { opmetaDecoded: any; opmeta_bytes: string } | null {
 	// If does not have the magic number, it is not proper
 	if (!meta_.startsWith(MAGIC_NUMBERS.RainMetaDocument)) return null;
 
@@ -94,7 +96,7 @@ export function decodedMetaOPMETA(meta_: string): { opsmeta: any } | null {
 	// Find the ABI Map
 	const opsMetaMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.OpsMeta);
 
-	return decodedMap(opsMetaMap);
+	return { opmetaDecoded: decodedMap(opsMetaMap), opmeta_bytes: meta };
 }
 
 /**

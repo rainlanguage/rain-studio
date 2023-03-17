@@ -295,16 +295,17 @@ export function filterNonAddedDeployers(
 				// Add to contract_address table with the reference to `contractID` because a matched was not found before
 				addAddress(SGdeployer.id, deployerID);
 			} else {
-				// Decoded the meta
-				const opmetaDecoded = decodedMetaOPMETA(SGdeployer.meta);
+				// Decoded the CBOR sequence into the opmeta (the opmeta decoded and the bytes)
+				const opmetaData = decodedMetaOPMETA(SGdeployer.meta);
 
 				// Use the values decoded to prepare to insert
-				if (opmetaDecoded) {
+				if (opmetaData) {
 					// To insert the new Contracts
 					deployersToAdd[deployerID] = {
 						id: deployerID,
 						bytecode_hash: SGdeployer.bytecodeHash,
-						opmeta: opmetaDecoded
+						opmeta: opmetaData.opmetaDecoded,
+						opmeta_bytes: opmetaData.opmeta_bytes
 					};
 
 					// To insert the new address with the Contract referece
