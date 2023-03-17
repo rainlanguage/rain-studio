@@ -297,7 +297,8 @@ export function filterNonAddedDeployers(
 			} else {
 				// Decoded the CBOR sequence into the opmeta (the opmeta decoded and the bytes)
 				const opmetaData = decodedMetaOPMETA(SGdeployer.meta);
-
+				// opmetaDecoded
+				// const a = opsMetaMap?.get(0); //0
 				// Use the values decoded to prepare to insert
 				if (opmetaData) {
 					// To insert the new Contracts

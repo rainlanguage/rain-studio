@@ -71,6 +71,9 @@ export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMe
 	const solidityAbiMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.SolidityABI);
 	const contractMetaMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.ContractMeta);
 
+	// If some Map was not found, the data and it wil be ignored
+	if (!solidityAbiMap || !contractMetaMap) return null;
+
 	return {
 		abi: decodedMap(solidityAbiMap),
 		contractMeta: decodedMap(contractMetaMap)
@@ -96,7 +99,17 @@ export function decodedMetaOPMETA(
 	// Find the ABI Map
 	const opsMetaMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.OpsMeta);
 
-	return { opmetaDecoded: decodedMap(opsMetaMap), opmeta_bytes: meta };
+	// If could not find the opmetaMap, return null
+	if (!opsMetaMap) return null;
+
+	// Obtain the the payload from key 0 and use `hexlify` to get the hex string.
+	// CBOR-js parse the bytes as a ArrayByteLikes (Uint8Array)
+	const opmeta_bytes = hexlify(opsMetaMap.get(0));
+
+	// Decoded the map info into a object (from the deflated JSON)
+	const opmetaDecoded = decodedMap(opsMetaMap);
+
+	return { opmetaDecoded, opmeta_bytes };
 }
 
 /**
@@ -104,9 +117,7 @@ export function decodedMetaOPMETA(
  * @param map_
  * @returns
  */
-function decodedMap(map_: Map<number, any> | undefined) {
-	if (!map_) return null;
-
+function decodedMap(map_: Map<number, any>) {
 	const payloadBytes = hexlify(map_.get(0));
 	const contentType = map_.get(2) as string;
 	const contentEncoding = map_.get(3) as string;
