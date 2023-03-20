@@ -9,6 +9,32 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      contract_addresses_new: {
+        Row: {
+          address: string
+          chainId: number
+          contract: string
+          created_at: string | null
+          id: string
+          type: string
+        }
+        Insert: {
+          address: string
+          chainId: number
+          contract: string
+          created_at?: string | null
+          id: string
+          type: string
+        }
+        Update: {
+          address?: string
+          chainId?: number
+          contract?: string
+          created_at?: string | null
+          id?: string
+          type?: string
+        }
+      }
       contracts: {
         Row: {
           abi: Json | null
@@ -33,6 +59,81 @@ export interface Database {
           metadata?: Json | null
           project?: string | null
           slug?: string | null
+        }
+      }
+      contracts_new: {
+        Row: {
+          abi: Json
+          contract_meta: Json
+          created_at: string
+          id: string
+          metadata: Json
+          project: string | null
+          slug: string
+        }
+        Insert: {
+          abi: Json
+          contract_meta: Json
+          created_at?: string
+          id: string
+          metadata: Json
+          project?: string | null
+          slug: string
+        }
+        Update: {
+          abi?: Json
+          contract_meta?: Json
+          created_at?: string
+          id?: string
+          metadata?: Json
+          project?: string | null
+          slug?: string
+        }
+      }
+      deployers: {
+        Row: {
+          bytecode_hash: string
+          created_at: string
+          id: string
+          opmeta: Json
+          opmeta_bytes: string
+        }
+        Insert: {
+          bytecode_hash: string
+          created_at?: string
+          id: string
+          opmeta: Json
+          opmeta_bytes: string
+        }
+        Update: {
+          bytecode_hash?: string
+          created_at?: string
+          id?: string
+          opmeta?: Json
+          opmeta_bytes?: string
+        }
+      }
+      deployers_addresses: {
+        Row: {
+          address: string
+          chainId: number
+          created_at: string
+          deployer: string
+          id: string
+        }
+        Insert: {
+          address: string
+          chainId: number
+          created_at?: string
+          deployer: string
+          id: string
+        }
+        Update: {
+          address?: string
+          chainId?: number
+          created_at?: string
+          deployer?: string
+          id?: string
         }
       }
       draft_expressions_w: {
@@ -169,6 +270,86 @@ export interface Database {
           id?: string
           logo_url?: string
           name?: string
+        }
+      }
+      rainterpreter_addresses: {
+        Row: {
+          address: string
+          chainId: number
+          created_at: string
+          id: string
+          rainterpreter: string
+        }
+        Insert: {
+          address: string
+          chainId: number
+          created_at?: string
+          id: string
+          rainterpreter: string
+        }
+        Update: {
+          address?: string
+          chainId?: number
+          created_at?: string
+          id?: string
+          rainterpreter?: string
+        }
+      }
+      rainterpreter_store_addresses: {
+        Row: {
+          address: string
+          chainId: number
+          created_at: string
+          id: string
+          rainterpreter_store: string
+        }
+        Insert: {
+          address: string
+          chainId: number
+          created_at?: string
+          id: string
+          rainterpreter_store: string
+        }
+        Update: {
+          address?: string
+          chainId?: number
+          created_at?: string
+          id?: string
+          rainterpreter_store?: string
+        }
+      }
+      rainterpreter_stores: {
+        Row: {
+          bytecode_hash: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          bytecode_hash: string
+          created_at?: string | null
+          id: string
+        }
+        Update: {
+          bytecode_hash?: string
+          created_at?: string | null
+          id?: string
+        }
+      }
+      rainterpreters: {
+        Row: {
+          bytecode_hash: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          bytecode_hash: string
+          created_at?: string
+          id: string
+        }
+        Update: {
+          bytecode_hash?: string
+          created_at?: string
+          id?: string
         }
       }
       starred: {

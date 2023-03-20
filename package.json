@@ -10,7 +10,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"types": "supabase gen types typescript --project-id wjjqadgrfglmanlweats > ./src/lib/types/generated-db-types.ts"
+		"types": "supabase gen types typescript --project-id wjjqadgrfglmanlweats > ./src/lib/types/generated-db-types.ts",
+		"deploy-cron": "supabase functions deploy cron_sg_interpreter --project-ref wjjqadgrfglmanlweats --legacy-bundle"
 	},
 	"devDependencies": {
 		"@sentry/vite-plugin": "^0.3.0",
