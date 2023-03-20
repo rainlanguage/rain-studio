@@ -9,5 +9,9 @@ export async function load() {
 
 	if (query.error) throw error(404, 'Not found');
 
-	return { contract: query.data };
+	const contracts = query.data.filter(
+		(contract) => contract.metadata && contract.abi && contract.slug && contract.project
+	);
+
+	return { contracts };
 }
