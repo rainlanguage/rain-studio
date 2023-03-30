@@ -65,7 +65,7 @@
 		"javascript-time-ago": "^2.5.9",
 		"jsonwebtoken": "^8.5.1",
 		"rain-metadata": "https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6",
-		"rain-svelte-components": "https://github.com/rainprotocol/rain-svelte-components#8182d210399395b3b6d0cae7dffc5bf06768eabb",
+		"rain-svelte-components": "https://github.com/rainprotocol/rain-svelte-components#df6434931c1a737ec188992efd796cc852bf7dc2",
 		"supabase": "^1.15.0",
 		"svelte-ethers-store": "^2.5.8",
 		"svelte-markdown": "^0.2.3",
