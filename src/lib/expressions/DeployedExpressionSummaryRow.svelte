@@ -6,12 +6,24 @@
 	import { DocumentDuplicate, Eye } from '@steeze-ui/heroicons';
 	import { Button } from 'rain-svelte-components/package';
 	import Modal from 'rain-svelte-components/package/Modal.svelte';
-	import { Formatter } from '@rainprotocol/rainlang';
 	import { goto } from '$app/navigation';
 	import AuthInner from '$lib/AuthInner.svelte';
+	import type { ExpressionInsert } from '$lib/types/types';
+	import { getRawExpression } from 'rain-svelte-components/package/formatter/Formatter.svelte';
 
 	export let expression: any;
-	$: expressionToFork = { ...expression, raw_expression: Formatter.get(expression.stateConfig) };
+	$: expressionToFork = getExpressionToFork();
+
+	const getExpressionToFork = (): ExpressionInsert => {
+		let raw_expression;
+		getRawExpression(expression.stateConfig, opMeta)
+			.then((rawExpression_) => {
+				raw_expression = rawExpression_;
+			})
+			.catch((error) => console.log(error));
+		return { ...expression, raw_expression };
+	};
+
 	let newExpModal: boolean = false;
 </script>
 

@@ -4916,9 +4916,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#df6434931c1a737ec188992efd796cc852bf7dc2":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#aa565eb984e6b6a4cdf5d48ac54f4bb1b21c6a38":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#df6434931c1a737ec188992efd796cc852bf7dc2"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#aa565eb984e6b6a4cdf5d48ac54f4bb1b21c6a38"
   dependencies:
     "@codemirror/lang-javascript" "^6.1.4"
     "@formkit/auto-animate" "^1.0.0-beta.3"
