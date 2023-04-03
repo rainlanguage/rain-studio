@@ -1,8 +1,8 @@
 <script lang="ts">
 	export let metadata: any;
 
-	$: addressCount = metadata.addresses.length;
-	$: chainCount = metadata.addresses.reduce(
+	$: addressCount = metadata?.addresses.length;
+	$: chainCount = metadata?.addresses.reduce(
 		(pre: Set<number>, curr: any) => pre.add(curr.chain),
 		new Set()
 	).size;

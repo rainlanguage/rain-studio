@@ -5,7 +5,7 @@
 	export let logoUrl: string, name: string;
 </script>
 
-<div class="flex gap-x-2 items-center">
+<div class="flex items-center gap-x-2">
 	<img alt={`logo for ${name}`} src={logoUrl} class="w-7" />
 	<span>{name}</span>
 	<div class="w-6 text-blue-600">

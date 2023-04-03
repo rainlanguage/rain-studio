@@ -3,7 +3,7 @@
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
 	import Background from '$lib/Background.svelte';
 
-	$: contracts = $page.data.contract;
+	$: contracts = $page.data.contract.filter((contract) => contract?.project?.name);
 </script>
 
 <Background alignItems="items-start">
