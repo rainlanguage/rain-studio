@@ -15,15 +15,10 @@ export const load: PageServerLoad = async (event) => {
 	if (!userQuery?.data) throw error(404, 'Not found');
 
 	// getting all contracts
-	const contractsQuery = await supabaseClient
-		.from('contracts')
-		.select('*')
+	const contractsQuery = await supabaseClient.from('contracts').select('*');
 
 	// getting all interpreters
-	const interpretersQuery = await supabaseClient
-		.from('interpreters')
-		.select('*')
-
+	const interpretersQuery = await supabaseClient.from('interpreters').select('*');
 
 	// using an endpoint here to get the current users expressions
 	// note that this endpoint takes the user id, not the username,
@@ -31,14 +26,12 @@ export const load: PageServerLoad = async (event) => {
 	// as part of the session
 	const resp = await fetch(`/user/${session?.user.id}/expressions`, {
 		method: 'POST',
-		body: JSON.stringify(
-			{ order: ['created_at', { ascending: false }] }
-		)
+		body: JSON.stringify({ order: ['created_at', { ascending: false }] })
 	});
 
-	const tagResp = await supabaseClient.rpc('get_unique_tags_for_user_w')
+	const tagResp = await supabaseClient.rpc('get_unique_tags_for_user_w');
 	if (tagResp.error) throw error(404, 'Not found');
-	const tags = tagResp.data[0]?.tags?.slice(1, -1)?.split(',')
+	const tags = tagResp.data[0]?.tags?.slice(1, -1)?.split(',');
 
 	let draft_expressions;
 	if (resp.ok) ({ draft_expressions } = await resp.json());
