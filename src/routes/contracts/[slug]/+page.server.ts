@@ -7,6 +7,7 @@ import type { UserLikes, ExpressionLikes, AccountData } from './types';
 
 import { createClient } from '@urql/core';
 import { Subgraphs, QueryGetKnowContracts } from '$lib/utils';
+import { error } from '@sveltejs/kit';
 
 //  TODO: Support multichain - crosschain. At the moment, it's only supporting Mumbai.
 
@@ -41,21 +42,21 @@ export const load: PageServerLoad = async (event) => {
 	let recentExpressions = [];
 
 	const contractQuery = await supabaseClient
-		.from('contracts')
-		.select('project ( * ), *')
+		.from('contracts_new')
+		.select('*, contract_addresses_new(*)')
 		.eq('slug', params.slug)
 		.single();
 
 	if (contractQuery.error) throw error(404, 'Not found');
 
-	const interpretersQuery = await supabaseClient.from('interpreters').select('*');
-	if (interpretersQuery.error) throw error(500, 'Something went wrong :(');
+	const deployersQuery = await supabaseClient.from('deployers_addresses').select('*');
+	if (deployersQuery.error) throw error(500, 'Something went wrong :(');
 
 	// Aaddresses filtered with the proper chain ID in an array
-	const addresses = contractQuery.data.metadata.addresses
+	const addresses = contractQuery.data.contract_addresses_new ? contractQuery.data.contract_addresses_new
 		.filter((element) => element.chainId == chainId)
 		.map((element) => element.knownAddresses)
-		.flat();
+		.flat() : null;
 
 	//	Only mumbai at the moment
 	const client = createClient({
@@ -174,7 +175,7 @@ export const load: PageServerLoad = async (event) => {
 
 	return {
 		contract: contractQuery.data,
-		interpreters: interpretersQuery.data,
+		deployers: deployersQuery.data,
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,
 		userLikes: _userLikes,
