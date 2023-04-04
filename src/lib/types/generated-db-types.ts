@@ -99,18 +99,21 @@ export interface Database {
           created_at: string
           id: string
           opmeta: Json
+          opmeta_bytes: string
         }
         Insert: {
           bytecode_hash: string
           created_at?: string
           id: string
           opmeta: Json
+          opmeta_bytes: string
         }
         Update: {
           bytecode_hash?: string
           created_at?: string
           id?: string
           opmeta?: Json
+          opmeta_bytes?: string
         }
       }
       deployers_addresses: {

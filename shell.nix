@@ -10,6 +10,10 @@ let
   dev = pkgs.writeShellScriptBin "dev" ''
     yarn dev
   '';
+
+  yarn-install-serial = pkgs.writeShellScriptBin "yarn-install-serial" ''
+    yarn cache clean && while ! yarn install --network-timeout 1000000 --skip-integrity-check --network-concurrency 1; do echo --- ; done
+  '';
 in
 pkgs.stdenv.mkDerivation {
   name = "shell";
@@ -19,6 +23,7 @@ pkgs.stdenv.mkDerivation {
     pkgs.typescript
     pkgs.yarn
     dev
+    yarn-install-serial
   ];
 
   shellHook = ''
