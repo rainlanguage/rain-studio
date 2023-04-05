@@ -178,7 +178,7 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@codemirror/autocomplete@^6.0.0", "@codemirror/autocomplete@^6.4.2":
+"@codemirror/autocomplete@^6.0.0":
   version "6.4.2"
   resolved "https://registry.yarnpkg.com/@codemirror/autocomplete/-/autocomplete-6.4.2.tgz#938b25223bd21f97b2a6d85474643355f98b505b"
   integrity sha512-8WE2xp+D0MpWEv5lZ6zPW1/tf4AGb358T5GWYiKEuCP8MvFfT3tH2mIF9Y2yr2e3KbHuSvsVhosiEyqCpiJhZQ==
@@ -198,20 +198,7 @@
     "@codemirror/view" "^6.0.0"
     "@lezer/common" "^1.0.0"
 
-"@codemirror/lang-javascript@^6.1.4":
-  version "6.1.5"
-  resolved "https://registry.yarnpkg.com/@codemirror/lang-javascript/-/lang-javascript-6.1.5.tgz#58a2eecddc2134f6fdd7b580ef3a25a22112e1ca"
-  integrity sha512-BS2SmI1IXxWqMPhbJ0DC3eAHAK9V9XvdHMSqwvTBnmh5xFALt+cVDg7XE/A1dxdxzXYXyeqGddgqx1rQv7AYaw==
-  dependencies:
-    "@codemirror/autocomplete" "^6.0.0"
-    "@codemirror/language" "^6.6.0"
-    "@codemirror/lint" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-    "@lezer/common" "^1.0.0"
-    "@lezer/javascript" "^1.0.0"
-
-"@codemirror/language@^6.0.0", "@codemirror/language@^6.6.0":
+"@codemirror/language@^6.0.0":
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/@codemirror/language/-/language-6.6.0.tgz#2204407174a38a68053715c19e28ad61f491779f"
   integrity sha512-cwUd6lzt3MfNYOobdjf14ZkLbJcnv4WtndYaoBkbor/vF+rCNguMPK0IRtvZJG4dsWiaWPcK8x1VijhvSxnstg==
@@ -223,7 +210,7 @@
     "@lezer/lr" "^1.0.0"
     style-mod "^4.0.0"
 
-"@codemirror/lint@^6.0.0", "@codemirror/lint@^6.2.0":
+"@codemirror/lint@^6.0.0":
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/@codemirror/lint/-/lint-6.2.0.tgz#25cdab7425fcda1b38a9d63f230f833c8b6b369f"
   integrity sha512-KVCECmR2fFeYBr1ZXDVue7x3q5PMI0PzcIbA+zKufnkniMBo1325t0h1jM85AKp8l3tj67LRxVpZfgDxEXlQkg==
@@ -250,15 +237,6 @@
   version "6.9.1"
   resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.9.1.tgz#2ce4c528974b6172a5a4a738b7b0a0f04a4c1140"
   integrity sha512-bzfSjJn9dAADVpabLKWKNmMG4ibyTV2e3eOGowjElNPTdTkSbi6ixPYHm2u0ADcETfKsi2/R84Rkmi91dH9yEg==
-  dependencies:
-    "@codemirror/state" "^6.1.4"
-    style-mod "^4.0.0"
-    w3c-keyname "^2.2.4"
-
-"@codemirror/view@^6.9.3":
-  version "6.9.3"
-  resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.9.3.tgz#4475dc0ff5d9a55f8144ad7484e7e17416861cce"
-  integrity sha512-BJ5mvEIhFM+SrNwc5X8pLIvMM9ffjkviVbxpg84Xk2OE8ZyKaEbId8kX+nAYEEso7+qnbwsXe1bkAHsasebMow==
   dependencies:
     "@codemirror/state" "^6.1.4"
     style-mod "^4.0.0"
@@ -758,11 +736,6 @@
   resolved "https://registry.yarnpkg.com/@formkit/auto-animate/-/auto-animate-1.0.0-beta.5.tgz#3fe4d520a82909cdcffa8854f26bc26ca4562045"
   integrity sha512-WoSwyhAZPOe6RB/IgicOtCHtrWwEpfKIZ/H/nxpKfnZL9CB6hhhBGU5bCdMRw7YpAUF2CDlQa+WWh+gCqz5lDg==
 
-"@graphql-typed-document-node/core@^3.1.1":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
-  integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
-
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
@@ -826,22 +799,7 @@
   dependencies:
     "@lezer/common" "^1.0.0"
 
-"@lezer/highlight@^1.1.3":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@lezer/highlight/-/highlight-1.1.4.tgz#98ed821e89f72981b7ba590474e6ee86c8185619"
-  integrity sha512-IECkFmw2l7sFcYXrV8iT9GeY4W0fU4CxX0WMwhmhMIVjoDdD1Hr6q3G2NqVtLg/yVe5n7i4menG3tJ2r4eCrPQ==
-  dependencies:
-    "@lezer/common" "^1.0.0"
-
-"@lezer/javascript@^1.0.0":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@lezer/javascript/-/javascript-1.4.2.tgz#aee4e18f573b496756294c558965d36320bfca47"
-  integrity sha512-77qdAD4zanmImPiAu4ibrMUzRc79UHoccdPa+Ey5iwS891TAkhnMAodUe17T7zV7tnF7e9HXM0pfmjoGEhrppg==
-  dependencies:
-    "@lezer/highlight" "^1.1.3"
-    "@lezer/lr" "^1.3.0"
-
-"@lezer/lr@^1.0.0", "@lezer/lr@^1.3.0", "@lezer/lr@^1.3.3":
+"@lezer/lr@^1.0.0":
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/@lezer/lr/-/lr-1.3.3.tgz#0ac6c889f1235874f33c45a1b9785d7054f60708"
   integrity sha512-JPQe3mwJlzEVqy67iQiiGozhcngbO8QBgpqZM6oL1Wj/dXckrEexpBLeFkq0edtW5IqnPRFxA24BHJni8Js69w==
@@ -910,42 +868,19 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@rainprotocol/interpreter-ts@git+https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51":
+"@rainprotocol/interpreter-ts@https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51":
   version "0.0.0"
-  resolved "git+https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51"
+  resolved "https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51"
   dependencies:
     ethers "^5.7.2"
     prettier "^2.7.1"
 
-"@rainprotocol/rainlang-codemirror@git+https://github.com/rainprotocol/rainlang-codemirror#0ff30cf212dcf5cf9813786b1137fb968253392c":
-  version "0.0.5"
-  resolved "git+https://github.com/rainprotocol/rainlang-codemirror#0ff30cf212dcf5cf9813786b1137fb968253392c"
+"@rainprotocol/rainlang@https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1":
+  version "1.0.0"
+  resolved "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
   dependencies:
-    "@codemirror/autocomplete" "^6.4.2"
-    "@codemirror/lint" "^6.2.0"
-    "@codemirror/state" "^6.2.0"
-    "@codemirror/view" "^6.9.3"
-    "@lezer/highlight" "^1.1.3"
-    "@lezer/lr" "^1.3.3"
-    "@rainprotocol/rainlang" "git+https://github.com/rainprotocol/rainlang#c1ccd54db174125acbfba7dbe28c9d79ae6cc643"
-
-"@rainprotocol/rainlang@git+https://github.com/rainprotocol/rainlang#c1ccd54db174125acbfba7dbe28c9d79ae6cc643":
-  version "1.2.3"
-  resolved "git+https://github.com/rainprotocol/rainlang#c1ccd54db174125acbfba7dbe28c9d79ae6cc643"
-  dependencies:
-    ajv "^8.12.0"
-    algebra.js rouzwelt/algebra.js
-    buffer "^6.0.3"
-    cbor-web "https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd"
     ethers "^5.7.2"
-    graphql "^16.6.0"
-    graphql-request "^5.2.0"
-    pako "^2.1.0"
-    prettier "^2.8.3"
-    prettier-standalone "^1.3.1-0"
-    string-math "^1.2.2"
-    vscode-languageserver-textdocument "^1.0.8"
-    vscode-languageserver-types "^3.17.3"
+    prettier "^2.7.1"
 
 "@rollup/pluginutils@^4.0.0":
   version "4.2.1"
@@ -1702,20 +1637,6 @@ ajv@^8.11.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-ajv@^8.12.0:
-  version "8.12.0"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.12.0.tgz#d1a0527323e22f53562c567c00991577dfbe19d1"
-  integrity sha512-sRu1kpcO9yLtYxBKvqfTeh9KzZEwO3STyX1HT+4CaDzC6HpTGYhIhPIzj9XuKU7KYDwnaeh5hcOwjy1QuJzBPA==
-  dependencies:
-    fast-deep-equal "^3.1.1"
-    json-schema-traverse "^1.0.0"
-    require-from-string "^2.0.2"
-    uri-js "^4.2.2"
-
-algebra.js@rouzwelt/algebra.js:
-  version "0.2.6"
-  resolved "https://codeload.github.com/rouzwelt/algebra.js/tar.gz/dd6e79a88e86f06befb5b489f03ca1fac1939401"
-
 ansi-align@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-3.0.1.tgz#0cdf12e111ace773a86e9a1fad1225c43cb19a59"
@@ -2114,14 +2035,6 @@ buffer@^5.4.3:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
-buffer@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
-  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
-  dependencies:
-    base64-js "^1.3.1"
-    ieee754 "^1.2.1"
-
 bufferutil@^4.0.1:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/bufferutil/-/bufferutil-4.0.7.tgz#60c0d19ba2c992dd8273d3f73772ffc894c153ad"
@@ -2180,10 +2093,6 @@ cbor-web@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/cbor-web/-/cbor-web-8.1.0.tgz#c1148e91ca6bfc0f5c07c1df164854596e2e33d6"
   integrity sha512-2hWHHMVrfffgoEmsAUh8vCxHoLa1vgodtC73+C5cSarkJlwTapnqAzcHINlP6Ej0DXuP4OmmJ9LF+JaNM5Lj/g==
-
-"cbor-web@https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd":
-  version "8.1.0"
-  resolved "https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd#2d9674275dafdb1d11a27b14678636a96db2efff"
 
 chalk-template@0.4.0:
   version "0.4.0"
@@ -2350,7 +2259,7 @@ color@^0.11.3:
     color-convert "^1.3.0"
     color-string "^0.3.0"
 
-combined-stream@^1.0.6, combined-stream@^1.0.8, combined-stream@~1.0.6:
+combined-stream@^1.0.6, combined-stream@~1.0.6:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
@@ -3236,11 +3145,6 @@ extend@~3.0.2:
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
 
-extract-files@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-9.0.0.tgz#8a7744f2437f81f5ed3250ed9f1550de902fe54a"
-  integrity sha512-CvdFfHkC95B4bBBk36hcEmvdR2awOdhhVUYH6S/zrVj3477zven/fJMYg7121h4T1xHZC+tetUpubpAhxwI7hQ==
-
 extsprintf@1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.3.0.tgz#96918440e3041a7a414f8c52e3c574eb3c3e1e05"
@@ -3367,15 +3271,6 @@ forever-agent@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha512-j0KLYPhm6zeac4lz3oJ3o65qvgQCcPubiyotZrXqEaG4hNagNYO8qdlUrX5vwqv9ohqeT/Z3j6+yW067yWWdUw==
-
-form-data@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-3.0.1.tgz#ebd53791b78356a99af9a300d4282c4d5eb9755f"
-  integrity sha512-RHkBKtLWUVwd7SqRIvCZMEvAMoGUp0XU+seQiZejj0COz3RI3hWP4sCv3gZWWLjJTd7rGwcsF5eKZGii0r/hbg==
-  dependencies:
-    asynckit "^0.4.0"
-    combined-stream "^1.0.8"
-    mime-types "^2.1.12"
 
 form-data@~2.3.2:
   version "2.3.3"
@@ -3535,16 +3430,6 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-graphql-request@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-5.2.0.tgz#a05fb54a517d91bb2d7aefa17ade4523dc5ebdca"
-  integrity sha512-pLhKIvnMyBERL0dtFI3medKqWOz/RhHdcgbZ+hMMIb32mEPa5MJSzS4AuXxfI4sRAu6JVVk5tvXuGfCWl9JYWQ==
-  dependencies:
-    "@graphql-typed-document-node/core" "^3.1.1"
-    cross-fetch "^3.1.5"
-    extract-files "^9.0.0"
-    form-data "^3.0.0"
-
 graphql@^16.6.0:
   version "16.6.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.6.0.tgz#c2dcffa4649db149f6282af726c8c83f1c7c5fdb"
@@ -3640,7 +3525,7 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-ieee754@^1.1.13, ieee754@^1.2.1:
+ieee754@^1.1.13:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
@@ -4557,11 +4442,6 @@ p-try@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
-pako@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/pako/-/pako-2.1.0.tgz#266cc37f98c7d883545d11335c00fbd4062c9a86"
-  integrity sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==
-
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -4764,11 +4644,6 @@ prettier-plugin-tailwindcss@^0.2.1:
   resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.2.1.tgz#989b35afd86c550cb671da69891aba4f4a051159"
   integrity sha512-aIO8IguumORyRsmT+E7JfJ3A9FEoyhqZR7Au7TBOege3VZkgMvHJMkufeYp4zjnDK2iq4ktkvGMNOQR9T8lisQ==
 
-prettier-standalone@^1.3.1-0:
-  version "1.3.1-0"
-  resolved "https://registry.yarnpkg.com/prettier-standalone/-/prettier-standalone-1.3.1-0.tgz#8c302549316c723015642e66fd4192db68514d0c"
-  integrity sha512-wxJiwE5XS45BQD8QTXcTeqnWzsYrCliIYOYrURM8MiJaw8NA5q+BSd9UBhM5QPDFShn+pFWa8X2XH3y5A47q+Q==
-
 prettier@^2.6.2, prettier@^2.7.1:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.1.tgz#4e1fd11c34e2421bc1da9aea9bd8127cd0a35efc"
@@ -4899,32 +4774,27 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#f32e001b9935a220e77fa45c2bdedbd23a49c4c0":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#9e72bf736bb8869ae38728502ef1de34d140a90c":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#f32e001b9935a220e77fa45c2bdedbd23a49c4c0"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#9e72bf736bb8869ae38728502ef1de34d140a90c"
   dependencies:
-    "@codemirror/lang-javascript" "^6.1.4"
     "@formkit/auto-animate" "^1.0.0-beta.3"
     "@metamask/jazzicon" "^2.0.0"
-    "@rainprotocol/interpreter-ts" "git+https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51"
-    "@rainprotocol/rainlang" "git+https://github.com/rainprotocol/rainlang#c1ccd54db174125acbfba7dbe28c9d79ae6cc643"
-    "@rainprotocol/rainlang-codemirror" "git+https://github.com/rainprotocol/rainlang-codemirror#0ff30cf212dcf5cf9813786b1137fb968253392c"
+    "@rainprotocol/interpreter-ts" "https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51"
+    "@rainprotocol/rainlang" "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
     "@steeze-ui/heroicons" "^2.1.0"
     "@steeze-ui/svelte-icon" "^1.3.2"
     "@types/lodash" "^4.14.186"
     abitype "^0.1.7"
     ajv "^8.11.0"
-    codemirror "^6.0.1"
     ethers "^5.7.1"
     lodash-es "^4.17.21"
     rain-metadata "git+https://github.com/rainprotocol/rain-metadata.git"
     rain-sdk "git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
     slate "^0.85.0"
     slate-history "^0.86.0"
-    svelte-codemirror-editor "^1.1.0"
     svelte-ethers-store "^2.5.8"
     svelte-slate "^0.1.62"
-    thememirror "^2.0.1"
 
 randombytes@^2.1.0:
   version "2.1.0"
@@ -5432,11 +5302,6 @@ strict-uri-encode@^2.0.0:
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz#b9c7330c7042862f6b142dc274bbcc5866ce3546"
   integrity sha512-QwiXZgpRcKkhTj2Scnn++4PKtWsH0kpzZ62L2R6c/LUVYv7hVnZqcg2+sMuT6R7Jusu1vviK/MFsu6kNJfWlEQ==
 
-string-math@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/string-math/-/string-math-1.2.2.tgz#c6a9362fac81476092f6f920e5379df00313c1e3"
-  integrity sha512-rfRZpMZbIy+0pepaW8iDCR+iW+GONxyi0jXfdyW4MgpFATH/Vlz+d3vt8UMu/a1RjA9xiejBDFayvTXzs/ROTw==
-
 "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
@@ -5596,11 +5461,6 @@ svelte-check@^2.7.1:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-codemirror-editor@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/svelte-codemirror-editor/-/svelte-codemirror-editor-1.1.0.tgz#97796abb60bb22241f3e69708ba096d73894496f"
-  integrity sha512-wFdMIsZds5qzn3x2NbFUxDVU6Cn3rwFdq0035ypaFVgzTjJ90bnPm6IbrFA4OJz1ngIyfbIuPAPDjm7rJIr0gg==
-
 svelte-ethers-store@^2.5.8:
   version "2.5.8"
   resolved "https://registry.yarnpkg.com/svelte-ethers-store/-/svelte-ethers-store-2.5.8.tgz#f8be1be6f10eb2bc3e1a7ce6bb6e42c469235d5c"
@@ -5715,11 +5575,6 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
-
-thememirror@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/thememirror/-/thememirror-2.0.1.tgz#ae9eb4ce7e8d0303d4fbabcc860ed38a0b45b079"
-  integrity sha512-d5i6FVvWWPkwrm4cHLI3t9AT1OrkAt7Ig8dtdYSofgF7C/eiyNuq6zQzSTusWTde3jpW9WLvA9J/fzNKMUsd0w==
 
 tiny-glob@^0.2.9:
   version "0.2.9"
@@ -5944,16 +5799,6 @@ vitefu@^0.2.3:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/vitefu/-/vitefu-0.2.4.tgz#212dc1a9d0254afe65e579351bed4e25d81e0b35"
   integrity sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==
-
-vscode-languageserver-textdocument@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.8.tgz#9eae94509cbd945ea44bca8dcfe4bb0c15bb3ac0"
-  integrity sha512-1bonkGqQs5/fxGT5UchTgjGVnfysL0O8v1AYMBjqTbWQTFn721zaPGDYFkOKtfDgFiSgXM3KwaG3FMGfW4Ed9Q==
-
-vscode-languageserver-types@^3.17.3:
-  version "3.17.3"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.17.3.tgz#72d05e47b73be93acb84d6e311b5786390f13f64"
-  integrity sha512-SYU4z1dL0PyIMd4Vj8YOqFvHu7Hz/enbWtpfnVbJHU4Nd1YNYx8u0ennumc6h48GQNeOLxmwySmnADouT/AuZA==
 
 w3c-keyname@^2.2.4:
   version "2.2.6"
