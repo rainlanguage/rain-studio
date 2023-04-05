@@ -4813,9 +4813,9 @@ quick-lru@^5.1.1:
     ethers "^5.5.2"
     prettier "^2.6.2"
 
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#ebd2f3698d3b90d132a0011a48caeb87385d9788":
+"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#cca9a63f1661d445d674ffa440d8e655e56bb91d":
   version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#ebd2f3698d3b90d132a0011a48caeb87385d9788"
+  resolved "https://github.com/rainprotocol/rain-svelte-components#cca9a63f1661d445d674ffa440d8e655e56bb91d"
   dependencies:
     "@codemirror/lang-javascript" "^6.1.4"
     "@formkit/auto-animate" "^1.0.0-beta.3"
@@ -4832,7 +4832,7 @@ quick-lru@^5.1.1:
     lodash-es "^4.17.21"
     rain-metadata "git+https://github.com/rainprotocol/rain-metadata.git"
     rain-sdk "git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
-    rainlang-codemirror "https://gitpkg.now.sh/rainprotocol/rainlang-codemirror?0ff30cf212dcf5cf9813786b1137fb968253392c"
+    rainlang-codemirror "git+https://github.com/rainprotocol/rainlang-codemirror#0ff30cf212dcf5cf9813786b1137fb968253392c"
     slate "^0.85.0"
     slate-history "^0.86.0"
     svelte-codemirror-editor "^1.1.0"
@@ -4840,9 +4840,9 @@ quick-lru@^5.1.1:
     svelte-slate "^0.1.62"
     thememirror "^2.0.1"
 
-"rainlang-codemirror@https://gitpkg.now.sh/rainprotocol/rainlang-codemirror?0ff30cf212dcf5cf9813786b1137fb968253392c":
+"rainlang-codemirror@git+https://github.com/rainprotocol/rainlang-codemirror#0ff30cf212dcf5cf9813786b1137fb968253392c":
   version "0.0.5"
-  resolved "https://gitpkg.now.sh/rainprotocol/rainlang-codemirror?0ff30cf212dcf5cf9813786b1137fb968253392c#2edd647f49af5220bf39ae8241d7c4f1f63c07bf"
+  resolved "git+https://github.com/rainprotocol/rainlang-codemirror#0ff30cf212dcf5cf9813786b1137fb968253392c"
   dependencies:
     "@codemirror/autocomplete" "^6.4.2"
     "@codemirror/lint" "^6.2.0"
