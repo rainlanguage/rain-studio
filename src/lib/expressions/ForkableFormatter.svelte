@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Formatter as RainlangFormatter, rainterpreterOpMeta } from '@rainprotocol/rainlang';
+	// import { Formatter as RainlangFormatter} from '@rainprotocol/rainlang';
 	import { Modal } from 'rain-svelte-components/package';
 	import type { StateConfig } from 'rain-metadata/type-definitions/expression';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
@@ -19,8 +19,8 @@
 	let expression: ExpressionInsert;
 	let open: boolean = false;
 
-	$: if (stateConfig)
-		buildExpression(RainlangFormatter.get(stateConfig, { opmeta: rainterpreterOpMeta }));
+	// $: if (stateConfig)
+	// 	buildExpression(RainlangFormatter.get(stateConfig, { opmeta: rainterpreterOpMeta }));
 
 	$: if (raw) buildExpression(raw);
 
