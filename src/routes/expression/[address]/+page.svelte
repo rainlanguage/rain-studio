@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Formatter as RainlangFormatter } from '@rainprotocol/rainlang';
+	// import { Formatter as RainlangFormatter } from '@rainprotocol/rainlang';
 	import { Button, Modal } from 'rain-svelte-components/package';
 	import { page } from '$app/stores';
 	import PageHeader from '$lib/PageHeader.svelte';
@@ -21,7 +21,7 @@
 
 	$: expressionToFork = {
 		...expression,
-		raw_expression: RainlangFormatter.get(expression.stateConfig)
+		raw_expression: null //RainlangFormatter.get(expression.stateConfig)
 	};
 	$: session = $page.data.session;
 
