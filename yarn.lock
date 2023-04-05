@@ -4860,12 +4860,7 @@ quick-lru@^5.1.1:
 
 "rain-metadata@git+https://github.com/rainprotocol/rain-metadata.git":
   version "0.0.0"
-  uid aeef8dda333a176e1cb69449c545c90f16ab3ae6
   resolved "git+https://github.com/rainprotocol/rain-metadata.git#aeef8dda333a176e1cb69449c545c90f16ab3ae6"
-
-"rain-metadata@https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6":
-  version "0.0.0"
-  resolved "https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6"
 
 "rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#8df8528595d136db3b51b91ac278c182261ba741":
   version "0.0.1"
