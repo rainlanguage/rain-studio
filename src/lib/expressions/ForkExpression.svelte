@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { Button } from 'rain-svelte-components/package';
+	import { Button } from 'rain-svelte-components';
 	import { createEventDispatcher } from 'svelte';
 	import type { ExpressionInsert } from '$lib/types/types';
 	import { saveExpressionCopy } from '$lib/expressions/expressions';

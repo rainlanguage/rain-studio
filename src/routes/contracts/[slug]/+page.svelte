@@ -3,8 +3,7 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import Pills from 'rain-svelte-components/package/Pills.svelte';
-	import { Tabs, TabList, TabPanel, Tab } from 'rain-svelte-components/package/tabs/tabs';
+	import { Tabs, TabList, TabPanel, Tab, Pills } from 'rain-svelte-components';
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import Write from './Write.svelte';
 	import Summary from './Summary.svelte';
@@ -29,7 +28,7 @@
 </PageHeader>
 <Tabs>
 	<div class="w-full bg-gray-100">
-		<div class="container mx-auto px-4 sm:px-0 ">
+		<div class="container mx-auto px-4 sm:px-0">
 			<TabList>
 				<Tab>Contract</Tab>
 				<Tab>Write</Tab>
@@ -38,7 +37,7 @@
 			</TabList>
 		</div>
 	</div>
-	<div class="justify-stretch container mx-auto flex flex-col gap-y-8 px-4 sm:px-0 lg:flex-row">
+	<div class="container mx-auto flex flex-col justify-stretch gap-y-8 px-4 sm:px-0 lg:flex-row">
 		<div class="flex flex-col gap-y-8 py-10 lg:w-2/3 lg:pr-6">
 			<TabPanel>
 				<Summary {abi} {metadata} contractAddresses={contract_addresses_new} />

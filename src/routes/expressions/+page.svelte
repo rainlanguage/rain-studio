@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { AcademicCap, Plus, UserGroup } from '@steeze-ui/heroicons';
-	import { Button } from 'rain-svelte-components/package';
+	import { Button } from 'rain-svelte-components';
 	import { popularTags } from './popular-tags';
 	import type { PageData } from './$types';
 	import { lessons } from './lessons';
@@ -53,7 +53,7 @@
 	</div>
 	<div class="xl:container-pr flex flex-shrink-0 justify-start bg-gray-100 xl:bg-white">
 		<div
-			class="xl:container-1/3 container mx-auto h-full w-full flex-shrink-0 py-2 px-4 pb-8 pt-8 sm:px-0 xl:mx-0 xl:pl-8"
+			class="xl:container-1/3 container mx-auto h-full w-full flex-shrink-0 px-4 py-2 pb-8 pt-8 sm:px-0 xl:mx-0 xl:pl-8"
 		>
 			<div class="flex flex-col gap-y-6">
 				<span class="text-2xl font-semibold">Learn</span>

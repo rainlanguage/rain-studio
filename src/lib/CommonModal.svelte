@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Modal } from 'rain-svelte-components/package';
+	import { Button, Modal } from 'rain-svelte-components';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import type { IconSource } from '@steeze-ui/heroicons/types';
 
@@ -13,13 +13,13 @@
 </script>
 
 <Modal bind:open>
-	<div class="flex flex-col gap-5 w-full">
-		<div class="flex flex-col gap-2.5 w-fit items-center">
+	<div class="flex w-full flex-col gap-5">
+		<div class="flex w-fit flex-col items-center gap-2.5">
 			{#if icon != undefined}
 				<Icon
 					src={icon}
 					theme={solidIcon ? 'solid' : ''}
-					class={`w-16 h-16 py-0.5 mr-1.5 ${iconColor}`}
+					class={`mr-1.5 h-16 w-16 py-0.5 ${iconColor}`}
 				/>
 			{/if}
 			<p class={`text-[${textSize}]`}>{message}</p>

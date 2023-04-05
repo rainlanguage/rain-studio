@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { Input } from 'rain-svelte-components/package';
+	import { Input } from 'rain-svelte-components';
 	import { onMount } from 'svelte';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
 	import { connected } from 'svelte-ethers-store';
@@ -81,7 +81,7 @@
 				{#if profileMenuOpen}
 					<div
 						transition:fly={{ duration: 300, y: 10 }}
-						class="absolute right-0 -bottom-4 flex w-56 translate-y-full flex-col gap-y-2 rounded-xl border border-gray-100 bg-white py-3 shadow-md"
+						class="absolute -bottom-4 right-0 flex w-56 translate-y-full flex-col gap-y-2 rounded-xl border border-gray-100 bg-white py-3 shadow-md"
 					>
 						<ProfileLinks />
 					</div>

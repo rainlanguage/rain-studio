@@ -5,7 +5,7 @@ published: true
 
 <script>
 	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
-	import { Parser } from 'rain-svelte-components/package'
+	import { Parser } from 'rain-svelte-components'
 
 	const expression1 = `toAddress: context\<0 1>()`
 	const expression2 = `toAddress: context\<0 1>(),

@@ -6,7 +6,7 @@
 	import type { ContractRowFull, InterpreterRowFull } from '$lib/types/types';
 	import type { Database } from '$lib/types/generated-db-types';
 	import type { ExpressionMetadata } from 'rain-metadata/type-definitions/expression';
-	import { Button } from 'rain-svelte-components/package';
+	import { Button } from 'rain-svelte-components';
 	import { ArrowUturnLeft, PlusCircle } from '@steeze-ui/heroicons';
 	import { createNewExpression } from '$lib/expressions/expressions';
 	import { goto } from '$app/navigation';

@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { Formatter as RainlangFormatter } from '@rainprotocol/rainlang';
-	import { Button, Modal } from 'rain-svelte-components/package';
+	import { rld as RainlangFormatter } from '@rainprotocol/rainlang';
+	import { Button, Modal, Formatter } from 'rain-svelte-components';
 	import { page } from '$app/stores';
 	import PageHeader from '$lib/PageHeader.svelte';
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import { DocumentDuplicate, Heart } from '@steeze-ui/heroicons';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import Auth from '$lib/Auth.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import SocialButton from '$lib/SocialButton.svelte';
@@ -21,7 +20,7 @@
 
 	$: expressionToFork = {
 		...expression,
-		raw_expression: RainlangFormatter.get(expression.stateConfig)
+		raw_expression: null // RainlangFormatter.get(expression.stateConfig)
 	};
 	$: session = $page.data.session;
 

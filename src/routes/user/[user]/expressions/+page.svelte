@@ -4,20 +4,11 @@
 	import ExpressionSummaryRow from '$lib/expressions/ExpressionSummaryRow.svelte';
 	import PageHeader from '$lib/PageHeader.svelte';
 	import { MagnifyingGlass, Plus } from '@steeze-ui/heroicons';
-	import {
-		Button,
-		Input,
-		Select,
-		Tab,
-		TabList,
-		TabPanel,
-		Tabs
-	} from 'rain-svelte-components/package';
+	import { Button, Input, Select, Tab, TabList, TabPanel, Tabs } from 'rain-svelte-components';
 	import autoAnimate from '@formkit/auto-animate';
 	import { goto } from '$app/navigation';
 	import DeployedExpressionSummaryRow from '$lib/expressions/DeployedExpressionSummaryRow.svelte';
-	import FilterGroup from 'rain-svelte-components/package/filter/FilterGroup.svelte';
-	import FilterSet from 'rain-svelte-components/package/filter/FilterSet.svelte';
+	import {FilterGroup, FilterSet} from 'rain-svelte-components';
 	import type { ContractRowFull, InterpreterRowFull } from '$lib/types/types';
 	import { everyAfter } from '$lib/utils/everyAfter';
 
@@ -139,7 +130,7 @@
 			</TabList>
 		</div>
 	</div>
-	<div class="justify-stretch container mx-auto flex px-4 sm:px-0">
+	<div class="container mx-auto flex justify-stretch px-4 sm:px-0">
 		{#if $page.data.currentUser}
 			<TabPanel>
 				<div class="container mx-auto flex flex-col gap-y-4">

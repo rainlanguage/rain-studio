@@ -35,9 +35,9 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { throttle } from 'lodash-es';
 	import type { StateConfig } from 'rain-metadata/type-definitions/expression';
-	import { Button, Modal, OpDocs, ParserInput } from 'rain-svelte-components/package';
-	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components/package/overflow-menu';
-	import SimulatedOutput from 'rain-svelte-components/package/parser/SimulatedOutput.svelte';
+	import { Button, Modal, OpDocs, ParserInput } from 'rain-svelte-components';
+	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components';
+	import {SimulatedOutput} from 'rain-svelte-components';
 	import { tick } from 'svelte';
 	import { Pane, Splitpanes } from 'svelte-splitpanes';
 	import type { Writable } from 'svelte/store';
@@ -173,7 +173,7 @@
 			{/if}
 			{#if saving}
 				<div
-					class="fixed left-0 right-0 bottom-3 flex flex-row justify-center self-center md:relative md:bottom-auto md:left-auto md:right-auto md:flex-col md:items-center"
+					class="fixed bottom-3 left-0 right-0 flex flex-row justify-center self-center md:relative md:bottom-auto md:left-auto md:right-auto md:flex-col md:items-center"
 				>
 					<div
 						transition:fade={{ duration: 100 }}
@@ -187,7 +187,7 @@
 				</div>
 			{/if}
 		</div>
-		<div class="flex gap-x-2 py-3 px-3">
+		<div class="flex gap-x-2 px-3 py-3">
 			{#if !asModal}
 				<OverflowMenu position="right">
 					<OverflowMenuItem icon={Eye} href={`/expression/draft/${expression.sharable_slug}`}>
@@ -240,7 +240,7 @@
 				{#if !(isMobile && !(mobileActivePane == ShowPane.Environment))}
 					<Pane size={isMobile ? 100 : 25} minSize={15}>
 						<div class="flex flex-col border-t border-gray-300 bg-white">
-							<div class="flex flex-col gap-y-2 border-b border-gray-300 py-4 px-2">
+							<div class="flex flex-col gap-y-2 border-b border-gray-300 px-2 py-4">
 								<span class="text-[10px] uppercase text-gray-600">Writing for</span>
 								<ExpressionEnv {expression} />
 							</div>
@@ -266,11 +266,11 @@
 										<PanelHeader>Mock data</PanelHeader>
 										<div class="h-full overflow-scroll p-2">
 											{#if contextColumns}
-												<div class="pt-4 pb-2 text-xs uppercase text-gray-500">Context</div>
+												<div class="pb-2 pt-4 text-xs uppercase text-gray-500">Context</div>
 												<ContextGrid {contextColumns} bind:mockContext />
 											{/if}
 											{#if hasSignedContext}
-												<div class="pt-4 pb-2 text-xs uppercase text-gray-500">
+												<div class="pb-2 pt-4 text-xs uppercase text-gray-500">
 													{expression.contract ? 'Signed context' : 'Context'}
 												</div>
 												<SignedContext bind:signedContext />

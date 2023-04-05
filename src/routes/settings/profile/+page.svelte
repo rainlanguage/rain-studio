@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { Button, Input } from 'rain-svelte-components/package';
+	import { Button, Input } from 'rain-svelte-components';
 	import UserAvatar from '$lib/UserAvatar.svelte';
 
 	let user = $page.data.profile;

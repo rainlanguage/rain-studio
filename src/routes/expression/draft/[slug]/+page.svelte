@@ -9,9 +9,9 @@
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import ViewTags from '$lib/ViewTags.svelte';
 	import { DocumentDuplicate, Pencil, LockOpen, LockClosed, Heart } from '@steeze-ui/heroicons';
-	import { Button, HoverTooltip } from 'rain-svelte-components/package';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
-	import Modal from 'rain-svelte-components/package/Modal.svelte';
+	import { Button, HoverTooltip } from 'rain-svelte-components';
+	import Formatter from 'rain-svelte-components';
+	import Modal from 'rain-svelte-components';
 	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import SocialButton from '$lib/SocialButton.svelte';

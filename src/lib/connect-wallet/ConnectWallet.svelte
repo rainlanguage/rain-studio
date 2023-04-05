@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { connectWallet } from '$lib/connect-wallet';
-	import { Button } from 'rain-svelte-components/package';
+	import { Button } from 'rain-svelte-components';
 
 	export let variant = 'primary';
 </script>

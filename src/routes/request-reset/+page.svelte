@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Background from '$lib/Background.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { Button, Input } from 'rain-svelte-components/package';
+	import { Button, Input } from 'rain-svelte-components';
 
 	let email: string;
 	const requestReset = () => {
@@ -12,7 +12,7 @@
 </script>
 
 <Background>
-	<div class="bg-white rounded-xl p-8 border border-gray-200 -mt-20 space-y-4">
+	<div class="-mt-20 space-y-4 rounded-xl border border-gray-200 bg-white p-8">
 		<span>Reset your password</span>
 		<Input bind:value={email} />
 		<Button on:click={requestReset}>Request reset</Button>

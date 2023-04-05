@@ -1,8 +1,7 @@
 <script lang="ts">
 	import ModalIDE from './../../../lib/full-ide/ModalIDE.svelte';
 	import { page } from '$app/stores';
-	import { Button, Select, Modal } from 'rain-svelte-components/package';
-	import AutoAbiFormSeparated from 'rain-svelte-components/package/auto-abi-form/AutoAbiFormSeparated.svelte';
+	import { Button, Select, Modal, AutoAbiFormSeparated } from 'rain-svelte-components';
 	import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 	import { ethers } from 'ethers';
 	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';

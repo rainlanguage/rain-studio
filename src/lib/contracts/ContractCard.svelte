@@ -1,7 +1,7 @@
 <script lang="ts">
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
-	import Pills from 'rain-svelte-components/package/Pills.svelte';
+	import { Pills } from 'rain-svelte-components';
 	import SvelteMarkdown from 'svelte-markdown';
 
 	export let contract: any;

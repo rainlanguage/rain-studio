@@ -1,11 +1,10 @@
 <script lang="ts">
 	import autoAnimate from '@formkit/auto-animate';
 	import { fade, fly } from 'svelte/transition';
-	import { Button } from 'rain-svelte-components/package';
+	import { Button } from 'rain-svelte-components';
 	import SplineScene from '$lib/homepage/SplineScene.svelte';
 	import { onMount } from 'svelte';
 	import { ecosystemProjects, expressionExamples, features, rainLinks } from '$lib/homepage/data';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowUpRight } from '@steeze-ui/heroicons';
 	import { goto } from '$app/navigation';
@@ -54,7 +53,7 @@
 	</div>
 
 	<!-- express yourself -->
-	<div class="container mx-auto flex flex-col items-center gap-y-20 py-32 px-8 sm:px-0">
+	<div class="container mx-auto flex flex-col items-center gap-y-20 px-8 py-32 sm:px-0">
 		<div class="flex flex-col items-center gap-y-8">
 			<span class="text-4xl font-semibold">Express yourself.</span>
 			<span class="w-full max-w-3xl text-center text-xl"
