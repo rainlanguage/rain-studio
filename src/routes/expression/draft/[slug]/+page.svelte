@@ -10,7 +10,7 @@
 	import ViewTags from '$lib/ViewTags.svelte';
 	import { DocumentDuplicate, Pencil, LockOpen, LockClosed, Heart } from '@steeze-ui/heroicons';
 	import { Button, HoverTooltip } from 'rain-svelte-components';
-	import Formatter from 'rain-svelte-components';
+	import {Formatter} from 'rain-svelte-components';
 	import Modal from 'rain-svelte-components';
 	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';

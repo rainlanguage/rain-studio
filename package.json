@@ -64,7 +64,7 @@
 		"install": "^0.13.0",
 		"javascript-time-ago": "^2.5.9",
 		"jsonwebtoken": "^8.5.1",
-		"rain-svelte-components": "https://github.com/rainprotocol/rain-svelte-components#5fddaaa375aa2d81b637c46df9c8d734683c58f0",
+		"rain-svelte-components": "https://github.com/rainprotocol/rain-svelte-components#1abb0a59dd9b06ef54597963d523a5d5faa8ca7b",
 		"supabase": "^1.15.0",
 		"svelte-ethers-store": "^2.5.8",
 		"svelte-markdown": "^0.2.3",
