@@ -116,7 +116,8 @@ serve(async (req) => {
 		// Use reduce to avoid duplicated data on Cross Chain tables (like contracts
 		// and deployers).The other items for entities like `contractAddresses` do
 		// not need this filter since they are already have an unique ID because
-		// use the ChainId for generate their ID.
+		// use the ChainId for generate their ID. Ready the `filterUniqueIDs` for
+		// similar explanation.
 		contractsToAdd = filterUniqueIDs(contractsToAdd);
 		deployerToAdd = filterUniqueIDs(deployerToAdd);
 		rainterpretersToAdd = filterUniqueIDs(rainterpretersToAdd);

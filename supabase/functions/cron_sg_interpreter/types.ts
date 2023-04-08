@@ -2,6 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Database } from '../../../src/lib/types/generated-db-types.ts';
+import type { Client } from 'https://esm.sh/v111/@urql/core@3.2.0';
+import type { SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.0.0-rc.12';
+
+export { Client as SubgraphClient, SupabaseClient };
 
 export type ContractDB = Database['public']['Tables']['contracts_new']['Row'] & {
 	contract_addresses_new: Array<Database['public']['Tables']['contract_addresses_new']['Row']>;
@@ -21,31 +25,90 @@ export type Rainterpreter_storesDB = Database['public']['Tables']['rainterpreter
 	>;
 };
 
+/**
+ * @type
+ * The contract format that comes from the SG query
+ */
 export type ContractSG = {
+	/**
+	 * ID of the entity from the subgraph
+	 */
 	id: string;
+	/**
+	 * Hash of the bytcode of the this contract
+	 */
 	bytecodeHash: string;
+	/**
+	 * MetaV1 document decoded
+	 */
 	meta: MetaDocumentSG;
 };
 
+/**
+ * @type
+ * The meta document format that comes from the SG query
+ */
 export type MetaDocumentSG = {
+	/**
+	 * Raw meta bytes emited by the contract
+	 */
 	metaBytes: string;
+	/**
+	 * Array of the meta content decoded from the Meta emited by the contract
+	 */
 	content: Array<MetaContentV1SG>;
 };
 
+/**
+ * @type
+ * The meta content V1 format that comes from the SG query
+ */
 export type MetaContentV1SG = {
+	/**
+	 * Payload bytes of this part of the RainDocument
+	 */
 	payload: string;
+	/**
+	 * MagicNumber to identify and filter each enty of the RainDocument
+	 */
 	magicNumber: string;
+	/**
+	 * The content type of the payload
+	 */
 	contentType: string;
+	/**
+	 * The content encoding that is using the payload
+	 */
 	contentEncoding: string;
+	/**
+	 * The content language that is using the payload
+	 */
 	contentLanguage: string;
 };
 
+/**
+ * @type
+ * The expression deployer format that comes from the SG query
+ */
 export type ExpressionDeployerSG = {
+	/**
+	 * ID of the entity from the subgraph
+	 */
 	id: string;
+	/**
+	 * Hash of the bytcode of the this contract
+	 */
 	bytecodeHash: string;
+	/**
+	 * MetaV1 document decoded
+	 */
 	meta: MetaDocumentSG;
 };
 
+/**
+ * @type
+ * The rainterpreter format that comes from the SG query
+ */
 export type InterpreterSG = {
 	/**
 	 * The ID is the bytecode hash of all the Interpreters Instances
@@ -62,6 +125,10 @@ export type InterpreterSG = {
 	}>;
 };
 
+/**
+ * @type
+ * The rainterpreterStore format that comes from the SG query
+ */
 export type RainterpreterStoreSG = {
 	/**
 	 * The ID is the bytecode hash of all the RainterpreterStore Instances

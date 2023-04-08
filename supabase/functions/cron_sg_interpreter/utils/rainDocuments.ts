@@ -6,6 +6,7 @@ import { ABI, ContractMeta } from '../types.ts';
 import { inflateJson } from './index.ts';
 
 /**
+ * @public
  * Magic numbers used to identify Rain documents as an hex string
  *
  * See more abour Magic numbers:
@@ -31,6 +32,7 @@ export const MAGIC_NUMBERS = {
 };
 
 /**
+ * @public
  * Use a decoded array of Maps from CBOR and return an specific item that met the
  * `compareValue_` in the magic number key (1).
  *
@@ -54,6 +56,7 @@ export function findDocInDecodedArray(
 }
 
 /**
+ * @public
  * Get an CBOR sequence and decode it
  * @param meta_ Hex string CBOR sequence to decode
  */
@@ -81,6 +84,7 @@ export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMe
 }
 
 /**
+ * @public
  * Get an CBOR sequence that have opmeta and decode it
  * @param meta_ Hex string CBOR sequence to decode
  */
@@ -113,6 +117,7 @@ export function decodedMetaOPMETA(
 }
 
 /**
+ * @public
  * From a possible given Map instace try to decoded using the Rain Document design
  * @param map_
  * @returns
