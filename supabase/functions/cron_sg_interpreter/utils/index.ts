@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { arrayify, isBytesLike, inflate, uuidv5 } from '../deps.ts';
-import { decodedMeta, decodedMetaOPMETA } from './rainDocuments.ts';
+import { decodedMeta, decodedMetaOPMETA, MAGIC_NUMBERS } from './rainDocuments.ts';
 
 import type { Client } from 'https://esm.sh/v111/@urql/core@3.2.0';
 import type { SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.0.0-rc.12';
@@ -23,7 +23,10 @@ import type {
 	DataRainterpreterUpload,
 	DataRainterpreterAddressUpload,
 	DataRainterpreterStoreUpload,
-	DataRainterpreterStoreAddressUpload
+	DataRainterpreterStoreAddressUpload,
+	MetaDocumentSG,
+	ABI,
+	MetaContentV1SG
 } from '../types.ts';
 
 /**
@@ -104,7 +107,16 @@ export async function getSGInterpreters(subgraphClient_: Client) {
 			expressionDeployers {
 				id
 				bytecodeHash
-				meta
+				meta {
+					metaBytes
+					content {
+						payload
+						magicNumber
+						contentType
+						contentEncoding
+						contentLanguage
+					}
+				}
 			}
 			interpreters {
 				id
@@ -154,7 +166,7 @@ export const inflateJson = (bytes: unknown) => {
 };
 
 /**
- * TODO: At the moment only Mumbai
+ * TODO: At the moment only Mumbai and Polygon
  * Return all the subgraphs endpoint that are currently on use.
  */
 export function getSubgraph(): Array<{
@@ -162,6 +174,11 @@ export function getSubgraph(): Array<{
 	chainId: number;
 }> {
 	return [
+		{
+			subgraph_url:
+				'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry-polygon',
+			chainId: 137
+		},
 		{
 			subgraph_url: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry',
 			chainId: 80001
@@ -223,16 +240,16 @@ export function filterNonAddedContracts(
 				addAddress(SGcontract.id, contractID);
 			} else {
 				// Decoded the meta
-				const metaDecoded = decodedMeta(SGcontract.meta);
+				const metaContent = manageContractMetaSg(SGcontract.meta);
 
 				// Use the values decoded to prepare to insert
-				if (metaDecoded) {
+				if (metaContent) {
 					// To insert the new Contracts
 					contractsToAdd[contractID] = {
 						id: contractID,
-						abi: metaDecoded.abi,
-						contract_meta: metaDecoded.contractMeta,
-						metadata: buildMetadataFromMeta(metaDecoded.contractMeta),
+						abi: metaContent.abi,
+						contract_meta: metaContent.contractMeta,
+						metadata: buildMetadataFromMeta(metaContent.contractMeta),
 						slug: SGcontract.bytecodeHash
 					};
 
@@ -296,7 +313,7 @@ export function filterNonAddedDeployers(
 				addAddress(SGdeployer.id, deployerID);
 			} else {
 				// Decoded the CBOR sequence into the opmeta (the opmeta decoded and the bytes)
-				const opmetaData = decodedMetaOPMETA(SGdeployer.meta);
+				const opmetaData = manageDeployerMetaSg(SGdeployer.meta);
 				// opmetaDecoded
 				// const a = opsMetaMap?.get(0); //0
 				// Use the values decoded to prepare to insert
@@ -491,7 +508,16 @@ async function _getSGContracts(subgraphClient_: Client): Promise<ContractSG[]> {
 			contracts {
 				id
 				bytecodeHash
-				meta
+				meta {
+					metaBytes
+					content {
+						payload
+						magicNumber
+						contentType
+						contentEncoding
+						contentLanguage
+					}
+				}
 			}
 		}
 	`;
@@ -500,4 +526,140 @@ async function _getSGContracts(subgraphClient_: Client): Promise<ContractSG[]> {
 	if (resp.error) throw new Error(`Cannot query from SG:  ${resp.error.message}`);
 
 	return resp.data.contracts as Array<ContractSG>;
+}
+
+/**
+ * Use the meta from the SG and get the Meta content required for the Contract
+ *
+ */
+export function manageContractMetaSg(
+	meta_: MetaDocumentSG
+): { abi: ABI; contractMeta: ContractMeta } | null {
+	if (!meta_) return null;
+
+	if (!meta_.content || meta_.content.length == 0) {
+		if (!meta_.metaBytes) return null;
+
+		return decodedMeta(meta_.metaBytes);
+	}
+
+	const metaContent = meta_.content;
+
+	const mnABI = hexToDecimalString(MAGIC_NUMBERS.SolidityABI);
+	const mnContractMeta = hexToDecimalString(MAGIC_NUMBERS.ContractMeta);
+
+	const _solidityAbiContent = metaContent.find((elem) => elem.magicNumber == mnABI);
+	const _contractMetaContent = metaContent.find((elem) => elem.magicNumber == mnContractMeta);
+
+	// If some Content was not found, the data and it wil be ignored
+	if (!_solidityAbiContent || !_contractMetaContent) return null;
+
+	const solidityAbiJson = deserializeContent(_solidityAbiContent);
+	const metaContentJson = deserializeContent(_contractMetaContent);
+
+	return {
+		abi: solidityAbiJson,
+		contractMeta: metaContentJson
+	};
+}
+
+/**
+ * Use the meta from the SG and get the Meta content required for the ExpressionDeployers
+ *
+ */
+export function manageDeployerMetaSg(
+	meta_: MetaDocumentSG
+	// deno-lint-ignore no-explicit-any
+): { opmetaDecoded: any; opmeta_bytes: string } | null {
+	if (!meta_) return null;
+
+	if (!meta_.content || meta_.content.length == 0) {
+		if (!meta_.metaBytes) return null;
+
+		return decodedMetaOPMETA(meta_.metaBytes);
+	}
+
+	const metaContent = meta_.content;
+
+	const mnOpsMeta = hexToDecimalString(MAGIC_NUMBERS.OpsMeta);
+
+	const _opsMetaContent = metaContent.find((elem) => elem.magicNumber == mnOpsMeta);
+
+	// If the Content was not found, the data and it wil be ignored
+	if (!_opsMetaContent) return null;
+
+	const opmetaDecoded = deserializeContent(_opsMetaContent);
+
+	return {
+		opmetaDecoded,
+		opmeta_bytes: _opsMetaContent.payload
+	};
+}
+
+export function deserializeContent(content_1: MetaContentV1SG) {
+	const { payload, contentType, contentEncoding } = content_1;
+
+	if (contentType === 'application/json') {
+		if (!contentEncoding) {
+			// Decode using UTF-8
+			const _uint8Arr = arrayify(payload, { allowMissingPrefix: true });
+			const decoded = textDecoder.decode(_uint8Arr);
+			const parsed = JSON.parse(decoded);
+			return parsed;
+		}
+		//
+		else if (contentEncoding === 'deflate') {
+			// Inflate JSON
+			return inflateJson(payload);
+		}
+	} else {
+		// TODO: Support more content types
+		return null;
+	}
+}
+
+export function hexToDecimalString(hexString_: string): string {
+	hexString_ = hexString_.toLowerCase();
+	if (!hexString_.startsWith('0x')) hexString_ = '0x' + hexString_;
+
+	const decimalString = BigInt(hexString_).toString(10);
+	return decimalString;
+}
+
+// Using overloading
+export function filterUniqueIDs(arr_: DataContractUpload[]): DataContractUpload[];
+export function filterUniqueIDs(arr_: DataDeployerUpload[]): DataDeployerUpload[];
+export function filterUniqueIDs(arr_: DataRainterpreterUpload[]): DataRainterpreterUpload[];
+export function filterUniqueIDs(
+	arr_: DataRainterpreterStoreUpload[]
+): DataRainterpreterStoreUpload[];
+
+export function filterUniqueIDs(
+	arr_: (
+		| DataContractUpload
+		| DataDeployerUpload
+		| DataRainterpreterUpload
+		| DataRainterpreterStoreUpload
+	)[]
+) {
+	const uniqueObjects = Object.values(
+		arr_.reduce(
+			(
+				acc: {
+					[key: string]:
+						| DataContractUpload
+						| DataDeployerUpload
+						| DataRainterpreterUpload
+						| DataRainterpreterStoreUpload;
+				},
+				cur
+			) => {
+				acc[cur.id] = cur;
+				return acc;
+			},
+			{}
+		)
+	);
+
+	return uniqueObjects;
 }

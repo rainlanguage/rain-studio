@@ -24,13 +24,26 @@ export type Rainterpreter_storesDB = Database['public']['Tables']['rainterpreter
 export type ContractSG = {
 	id: string;
 	bytecodeHash: string;
-	meta: string;
+	meta: MetaDocumentSG;
+};
+
+export type MetaDocumentSG = {
+	metaBytes: string;
+	content: Array<MetaContentV1SG>;
+};
+
+export type MetaContentV1SG = {
+	payload: string;
+	magicNumber: string;
+	contentType: string;
+	contentEncoding: string;
+	contentLanguage: string;
 };
 
 export type ExpressionDeployerSG = {
 	id: string;
 	bytecodeHash: string;
-	meta: string;
+	meta: MetaDocumentSG;
 };
 
 export type InterpreterSG = {
