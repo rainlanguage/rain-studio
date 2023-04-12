@@ -16,10 +16,13 @@
 		LockOpen,
 		LockClosed
 	} from '@steeze-ui/heroicons';
-	import { Button } from 'rain-svelte-components/package';
-	import Modal from 'rain-svelte-components/package/Modal.svelte';
+	import { Button } from '@rainprotocol/rain-svelte-components';
+	import Modal from '@rainprotocol/rain-svelte-components/Modal.svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components/package/overflow-menu';
+	import {
+		OverflowMenu,
+		OverflowMenuItem
+	} from '@rainprotocol/rain-svelte-components/overflow-menu';
 	import type { ExpressionRowFull } from '$lib/types/types';
 	import AuthInner from '$lib/AuthInner.svelte';
 

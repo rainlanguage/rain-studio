@@ -4,8 +4,8 @@
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import { DocumentDuplicate, Eye } from '@steeze-ui/heroicons';
-	import { Button } from 'rain-svelte-components/package';
-	import Modal from 'rain-svelte-components/package/Modal.svelte';
+	import { Button } from '@rainprotocol/rain-svelte-components';
+	import Modal from '@rainprotocol/rain-svelte-components/Modal.svelte';
 	// import { Formatter } from '@rainprotocol/rainlang';
 	import { goto } from '$app/navigation';
 	import AuthInner from '$lib/AuthInner.svelte';

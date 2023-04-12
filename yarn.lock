@@ -910,6 +910,29 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
+"@rainprotocol/rain-svelte-components@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@rainprotocol/rain-svelte-components/-/rain-svelte-components-0.0.2.tgz#ef31bb9bb4521d0f94550fc9d844cb488f6ba172"
+  integrity sha512-GHVlOzUUTs7TezKT9eMfvbQsM1hdiN750HN5lxwv0Wtfa+Dxx79/KUoSwTyD9C9WFrv8gNMhFxpkFZyoEGk6aw==
+  dependencies:
+    "@codemirror/lang-javascript" "^6.1.4"
+    "@formkit/auto-animate" "^1.0.0-beta.3"
+    "@metamask/jazzicon" "^2.0.0"
+    "@steeze-ui/heroicons" "^2.1.0"
+    "@steeze-ui/svelte-icon" "^1.3.2"
+    "@sveltejs/kit" "1.15.4"
+    "@types/lodash" "^4.14.186"
+    abitype "^0.1.7"
+    ajv "^8.11.0"
+    codemirror "^6.0.1"
+    codemirror-rainlang "^0.0.9"
+    ethers "^5.7.1"
+    lodash-es "^4.17.21"
+    svelte "^3.44.0"
+    svelte-codemirror-editor "^1.1.0"
+    svelte-ethers-store "^2.5.8"
+    thememirror "^2.0.1"
+
 "@rainprotocol/rainlang@^1.2.11":
   version "1.2.11"
   resolved "https://registry.yarnpkg.com/@rainprotocol/rainlang/-/rainlang-1.2.11.tgz#ddf8de0c1a2ba77d498f01e6bed79ae192f1c291"
@@ -1133,6 +1156,25 @@
   dependencies:
     "@vercel/nft" "^0.22.1"
     esbuild "^0.16.3"
+
+"@sveltejs/kit@1.15.4":
+  version "1.15.4"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.15.4.tgz#2e80dd336e5b2b1e5b20fdd5daff61433dc41cbb"
+  integrity sha512-m+Tid9nbtFawmiu85lDlal0AQ7UeuV48UsuKMe06QLr3ntMQSUzIPqyswNRZqFrar6NhVTUXQ0aO61M3U4MWpQ==
+  dependencies:
+    "@sveltejs/vite-plugin-svelte" "^2.0.0"
+    "@types/cookie" "^0.5.1"
+    cookie "^0.5.0"
+    devalue "^4.3.0"
+    esm-env "^1.0.0"
+    kleur "^4.1.5"
+    magic-string "^0.30.0"
+    mime "^3.0.0"
+    sade "^1.8.1"
+    set-cookie-parser "^2.5.1"
+    sirv "^2.0.2"
+    tiny-glob "^0.2.9"
+    undici "5.20.0"
 
 "@sveltejs/kit@next":
   version "1.0.0-next.589"
@@ -2149,12 +2191,7 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
 
-cbor-web@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/cbor-web/-/cbor-web-8.1.0.tgz#c1148e91ca6bfc0f5c07c1df164854596e2e33d6"
-  integrity sha512-2hWHHMVrfffgoEmsAUh8vCxHoLa1vgodtC73+C5cSarkJlwTapnqAzcHINlP6Ej0DXuP4OmmJ9LF+JaNM5Lj/g==
-
-"cbor-web@https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd":
+cbor-web@^8.1.0, "cbor-web@https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd":
   version "8.1.0"
   resolved "https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd#2d9674275dafdb1d11a27b14678636a96db2efff"
 
@@ -2607,6 +2644,11 @@ devalue@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/devalue/-/devalue-4.2.0.tgz#3f542d7c828e317bab5fd3bcecde210af8f83d4b"
   integrity sha512-mbjoAaCL2qogBKgeFxFPOXAUsZchircF+B/79LD4sHH0+NHfYm8gZpQrskKDn5gENGt35+5OI1GUF7hLVnkPDw==
+
+devalue@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/devalue/-/devalue-4.3.0.tgz#d86db8fee63a70317c2355be0d3d1b4d8f89a44e"
+  integrity sha512-n94yQo4LI3w7erwf84mhRUkUJfhLoCZiLyoOZ/QFsDbcWNZePrLwbQpvZBUG2TNxwV3VjCKPxkiiQA6pe3TrTA==
 
 didyoumean@^1.2.2:
   version "1.2.2"
@@ -4132,6 +4174,13 @@ magic-string@^0.26.2:
   dependencies:
     sourcemap-codec "^1.4.8"
 
+magic-string@^0.30.0:
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.0.tgz#fd58a4748c5c4547338a424e90fa5dd17f4de529"
+  integrity sha512-LA+31JYDJLs82r2ScLrlz1GjSgu66ZV518eyWT+S8VhyQn/JL0u9MeBOvQMGYiPk1DBiSN9DDMOcXvigJZaViQ==
+  dependencies:
+    "@jridgewell/sourcemap-codec" "^1.4.13"
+
 make-dir@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-3.1.0.tgz#415e967046b3a7f1d185277d84aa58203726a13f"
@@ -4848,26 +4897,6 @@ quick-lru@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
-
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#81994e7d9a729acc4d7799c1323feb91dca178d3":
-  version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#81994e7d9a729acc4d7799c1323feb91dca178d3"
-  dependencies:
-    "@codemirror/lang-javascript" "^6.1.4"
-    "@formkit/auto-animate" "^1.0.0-beta.3"
-    "@metamask/jazzicon" "^2.0.0"
-    "@steeze-ui/heroicons" "^2.1.0"
-    "@steeze-ui/svelte-icon" "^1.3.2"
-    "@types/lodash" "^4.14.186"
-    abitype "^0.1.7"
-    ajv "^8.11.0"
-    codemirror "^6.0.1"
-    codemirror-rainlang "^0.0.9"
-    ethers "^5.7.1"
-    lodash-es "^4.17.21"
-    svelte-codemirror-editor "^1.1.0"
-    svelte-ethers-store "^2.5.8"
-    thememirror "^2.0.1"
 
 randombytes@^2.1.0:
   version "2.1.0"
@@ -5753,6 +5782,13 @@ undici@5.14.0:
   version "5.14.0"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.14.0.tgz#1169d0cdee06a4ffdd30810f6228d57998884d00"
   integrity sha512-yJlHYw6yXPPsuOH0x2Ib1Km61vu4hLiRRQoafs+WUgX1vO64vgnxiCEN9dpIrhZyHFsai3F0AEj4P9zy19enEQ==
+  dependencies:
+    busboy "^1.6.0"
+
+undici@5.20.0:
+  version "5.20.0"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.20.0.tgz#6327462f5ce1d3646bcdac99da7317f455bcc263"
+  integrity sha512-J3j60dYzuo6Eevbawwp1sdg16k5Tf768bxYK4TUJRH7cBM4kFCbf3mOnM/0E3vQYXvpxITbbWmBafaDbxLDz3g==
   dependencies:
     busboy "^1.6.0"
 

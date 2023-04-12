@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Background from '$lib/Background.svelte';
-	import { Button, Input } from 'rain-svelte-components/package';
+	import { Button, Input } from '@rainprotocol/rain-svelte-components';
 	import { supabaseClient } from '$lib/supabaseClient';
 
 	$: session = $page.data.session;

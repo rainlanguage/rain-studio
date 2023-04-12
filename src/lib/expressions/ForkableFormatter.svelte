@@ -1,10 +1,10 @@
 <script lang="ts">
 	// import { Formatter as RainlangFormatter} from '@rainprotocol/rainlang';
-	import { Modal } from 'rain-svelte-components/package';
+	import { Modal } from '@rainprotocol/rain-svelte-components';
 	import type { StateConfig } from 'rain-metadata/type-definitions/expression';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import { page } from '$app/stores';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
+	import { Formatter } from '@rainprotocol/rain-svelte-components';
 	import type { ExpressionInsert } from '$lib/types/types';
 	import AuthInner from '$lib/AuthInner.svelte';
 

@@ -1,11 +1,10 @@
 <script lang="ts">
 	import autoAnimate from '@formkit/auto-animate';
 	import { fade, fly } from 'svelte/transition';
-	import { Button } from 'rain-svelte-components/package';
+	import { Button } from '@rainprotocol/rain-svelte-components';
 	import SplineScene from '$lib/homepage/SplineScene.svelte';
 	import { onMount } from 'svelte';
 	import { ecosystemProjects, expressionExamples, features, rainLinks } from '$lib/homepage/data';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowUpRight } from '@steeze-ui/heroicons';
 	import { goto } from '$app/navigation';

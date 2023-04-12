@@ -35,9 +35,12 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { throttle } from 'lodash-es';
 	import type { StateConfig } from 'rain-metadata/type-definitions/expression';
-	import { Button, Modal, OpDocs, ParserInput } from 'rain-svelte-components/package';
-	import { OverflowMenu, OverflowMenuItem } from 'rain-svelte-components/package/overflow-menu';
-	import SimulatedOutput from 'rain-svelte-components/package/parser/SimulatedOutput.svelte';
+	import { Button, Modal, OpDocs, ParserInput } from '@rainprotocol/rain-svelte-components';
+	import {
+		OverflowMenu,
+		OverflowMenuItem
+	} from '@rainprotocol/rain-svelte-components/overflow-menu';
+	import SimulatedOutput from '@rainprotocol/rain-svelte-components/parser/SimulatedOutput.svelte';
 	import { tick } from 'svelte';
 	import { Pane, Splitpanes } from 'svelte-splitpanes';
 	import type { Writable } from 'svelte/store';
