@@ -1,9 +1,5 @@
 <script lang="ts">
-	import {
-		Section,
-		SectionBody,
-		SectionHeading
-	} from '@rainprotocol/rain-svelte-components/section';
+	import { Section, SectionBody, SectionHeading } from '@rainprotocol/rain-svelte-components';
 	import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 	import { allChainsData } from 'svelte-ethers-store';
 	import SvelteMarkdown from 'svelte-markdown';

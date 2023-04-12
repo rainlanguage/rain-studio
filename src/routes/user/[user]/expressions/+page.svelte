@@ -16,8 +16,8 @@
 	import autoAnimate from '@formkit/auto-animate';
 	import { goto } from '$app/navigation';
 	import DeployedExpressionSummaryRow from '$lib/expressions/DeployedExpressionSummaryRow.svelte';
-	import FilterGroup from '@rainprotocol/rain-svelte-components/filter/FilterGroup.svelte';
-	import FilterSet from '@rainprotocol/rain-svelte-components/filter/FilterSet.svelte';
+	import {FilterGroup} from '@rainprotocol/rain-svelte-components';
+	import {FilterSet} from '@rainprotocol/rain-svelte-components';
 	import type { ContractRowFull, InterpreterRowFull } from '$lib/types/types';
 	import { everyAfter } from '$lib/utils/everyAfter';
 

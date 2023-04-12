@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Heart, ArrowUp, ArrowDown, ChatBubbleLeft } from '@steeze-ui/heroicons';
-	import { Section, SectionBody } from '@rainprotocol/rain-svelte-components/section';
+	import { Section, SectionBody } from '@rainprotocol/rain-svelte-components';
 	import { DisplayAddress, Ring, Modal } from '@rainprotocol/rain-svelte-components';
 
 	import { page } from '$app/stores';

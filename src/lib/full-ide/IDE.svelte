@@ -36,11 +36,8 @@
 	import { throttle } from 'lodash-es';
 	import type { StateConfig } from 'rain-metadata/type-definitions/expression';
 	import { Button, Modal, OpDocs, ParserInput } from '@rainprotocol/rain-svelte-components';
-	import {
-		OverflowMenu,
-		OverflowMenuItem
-	} from '@rainprotocol/rain-svelte-components/overflow-menu';
-	import SimulatedOutput from '@rainprotocol/rain-svelte-components/parser/SimulatedOutput.svelte';
+	import { OverflowMenu, OverflowMenuItem } from '@rainprotocol/rain-svelte-components';
+	import {SimulatedOutput} from '@rainprotocol/rain-svelte-components';
 	import { tick } from 'svelte';
 	import { Pane, Splitpanes } from 'svelte-splitpanes';
 	import type { Writable } from 'svelte/store';

@@ -17,12 +17,9 @@
 		LockClosed
 	} from '@steeze-ui/heroicons';
 	import { Button } from '@rainprotocol/rain-svelte-components';
-	import Modal from '@rainprotocol/rain-svelte-components/Modal.svelte';
+	import { Modal } from '@rainprotocol/rain-svelte-components';
 	import { createEventDispatcher } from 'svelte';
-	import {
-		OverflowMenu,
-		OverflowMenuItem
-	} from '@rainprotocol/rain-svelte-components/overflow-menu';
+	import { OverflowMenu, OverflowMenuItem } from '@rainprotocol/rain-svelte-components';
 	import type { ExpressionRowFull } from '$lib/types/types';
 	import AuthInner from '$lib/AuthInner.svelte';
 

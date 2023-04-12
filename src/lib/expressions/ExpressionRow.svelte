@@ -3,7 +3,7 @@
 	import TimeAgo from '$lib/TimeAgo.svelte';
 	import ViewTags from '$lib/ViewTags.svelte';
 	import { DisplayAddress, HoverTooltip } from '@rainprotocol/rain-svelte-components';
-	import Formatter from '@rainprotocol/rain-svelte-components/formatter/Formatter.svelte';
+	import { Formatter } from '@rainprotocol/rain-svelte-components';
 	import { LockOpen, LockClosed } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import type { ExpressionRowFull } from '$lib/types/types';

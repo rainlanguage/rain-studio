@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import Auth from '$lib/Auth.svelte';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import PageHeader from '$lib/PageHeader.svelte';
@@ -10,8 +9,8 @@
 	import ViewTags from '$lib/ViewTags.svelte';
 	import { DocumentDuplicate, Pencil, LockOpen, LockClosed, Heart } from '@steeze-ui/heroicons';
 	import { Button, HoverTooltip } from '@rainprotocol/rain-svelte-components';
-	import Formatter from '@rainprotocol/rain-svelte-components/formatter/Formatter.svelte';
-	import Modal from '@rainprotocol/rain-svelte-components/Modal.svelte';
+	import { Formatter } from '@rainprotocol/rain-svelte-components';
+	import { Modal } from '@rainprotocol/rain-svelte-components';
 	import ModalChangeVisibilty from '$lib/expressions/ModalChangeVisibilty.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import SocialButton from '$lib/SocialButton.svelte';

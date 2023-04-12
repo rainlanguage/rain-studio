@@ -13,8 +13,8 @@
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { Button, Input } from '@rainprotocol/rain-svelte-components';
-	import Formatter from '@rainprotocol/rain-svelte-components/formatter/Formatter.svelte';
-	import Pills from '@rainprotocol/rain-svelte-components/Pills.svelte';
+	import { Formatter } from '@rainprotocol/rain-svelte-components';
+	import { Pills } from '@rainprotocol/rain-svelte-components';
 	import { createEventDispatcher } from 'svelte';
 
 	export let presaveExpression: PresaveExpression;

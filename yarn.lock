@@ -910,10 +910,10 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@rainprotocol/rain-svelte-components@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@rainprotocol/rain-svelte-components/-/rain-svelte-components-0.0.2.tgz#ef31bb9bb4521d0f94550fc9d844cb488f6ba172"
-  integrity sha512-GHVlOzUUTs7TezKT9eMfvbQsM1hdiN750HN5lxwv0Wtfa+Dxx79/KUoSwTyD9C9WFrv8gNMhFxpkFZyoEGk6aw==
+"@rainprotocol/rain-svelte-components@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@rainprotocol/rain-svelte-components/-/rain-svelte-components-0.0.6.tgz#749f9dc073cb16c6967d744c0ff2fa9f8c141428"
+  integrity sha512-xg20DutdtfLT/TSR2onxpwe3W/O7I+xitRtdvvPUvse5Bx3xwmCHAn2Uuiafdzse4JC2Q2KjMPEhHrVmm0NoHw==
   dependencies:
     "@codemirror/lang-javascript" "^6.1.4"
     "@formkit/auto-animate" "^1.0.0-beta.3"
@@ -1175,25 +1175,6 @@
     sirv "^2.0.2"
     tiny-glob "^0.2.9"
     undici "5.20.0"
-
-"@sveltejs/kit@next":
-  version "1.0.0-next.589"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.589.tgz#4a6201c4be5d01f802085d157c78ca9b825519ca"
-  integrity sha512-5ABRw46z9B+cCe/YWhcx+I/azNZg1NCDEkVJifZn8ToFoJ3a1eP0OexNIrvMEWpllMbNMPcJm2TC9tnz9oPfWQ==
-  dependencies:
-    "@sveltejs/vite-plugin-svelte" "^2.0.0"
-    "@types/cookie" "^0.5.1"
-    cookie "^0.5.0"
-    devalue "^4.2.0"
-    esm-env "^1.0.0"
-    kleur "^4.1.5"
-    magic-string "^0.27.0"
-    mime "^3.0.0"
-    sade "^1.8.1"
-    set-cookie-parser "^2.5.1"
-    sirv "^2.0.2"
-    tiny-glob "^0.2.9"
-    undici "5.14.0"
 
 "@sveltejs/vite-plugin-svelte@^2.0.0":
   version "2.0.2"
@@ -2400,11 +2381,6 @@ compression@1.7.4:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-compute-scroll-into-view@^1.0.17:
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.20.tgz#1768b5522d1172754f5d0c9b02de3af6be506a43"
-  integrity sha512-UCB0ioiyj8CRjtrvaceBLqqhZCVP+1B8+NWQhmdsm0VXOJtobBCf1dBQmebCCo34qZmUwZfIH2MZLqNHazrfjg==
-
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -2639,11 +2615,6 @@ detective@^5.2.1:
     acorn-node "^1.8.2"
     defined "^1.0.0"
     minimist "^1.2.6"
-
-devalue@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/devalue/-/devalue-4.2.0.tgz#3f542d7c828e317bab5fd3bcecde210af8f83d4b"
-  integrity sha512-mbjoAaCL2qogBKgeFxFPOXAUsZchircF+B/79LD4sHH0+NHfYm8gZpQrskKDn5gENGt35+5OI1GUF7hLVnkPDw==
 
 devalue@^4.3.0:
   version "4.3.0"
@@ -5195,13 +5166,6 @@ scheduler@^0.19.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-scroll-into-view-if-needed@2.2.28:
-  version "2.2.28"
-  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.28.tgz#5a15b2f58a52642c88c8eca584644e01703d645a"
-  integrity sha512-8LuxJSuFVc92+0AdNv4QOxRL4Abeo1DgLnGNkn1XlaujPH/3cCFz3QI60r2VNu4obJJROzgnIUw5TKQkZvZI1w==
-  dependencies:
-    compute-scroll-into-view "^1.0.17"
-
 scrypt-js@3.0.1, scrypt-js@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-3.0.1.tgz#d314a57c2aef69d1ad98a138a21fe9eafa9ee312"
@@ -5777,13 +5741,6 @@ typescript@*, typescript@^4.7.4:
   version "4.9.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.4.tgz#a2a3d2756c079abda241d75f149df9d561091e78"
   integrity sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==
-
-undici@5.14.0:
-  version "5.14.0"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-5.14.0.tgz#1169d0cdee06a4ffdd30810f6228d57998884d00"
-  integrity sha512-yJlHYw6yXPPsuOH0x2Ib1Km61vu4hLiRRQoafs+WUgX1vO64vgnxiCEN9dpIrhZyHFsai3F0AEj4P9zy19enEQ==
-  dependencies:
-    busboy "^1.6.0"
 
 undici@5.20.0:
   version "5.20.0"

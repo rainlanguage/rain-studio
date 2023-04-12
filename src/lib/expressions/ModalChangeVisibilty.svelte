@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { Button } from '@rainprotocol/rain-svelte-components';
-	import Modal from '@rainprotocol/rain-svelte-components/Modal.svelte';
+	import { Modal } from '@rainprotocol/rain-svelte-components';
 	import { createEventDispatcher } from 'svelte';
 	import { CheckCircle, ExclamationCircle } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';

@@ -3,8 +3,8 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import Pills from '@rainprotocol/rain-svelte-components/Pills.svelte';
-	import { Tabs, TabList, TabPanel, Tab } from '@rainprotocol/rain-svelte-components/tabs/tabs';
+	import { Pills } from '@rainprotocol/rain-svelte-components';
+	import { Tabs, TabList, TabPanel, Tab } from '@rainprotocol/rain-svelte-components';
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import Write from './Write.svelte';
 	import Summary from './Summary.svelte';

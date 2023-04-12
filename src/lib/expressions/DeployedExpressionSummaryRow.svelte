@@ -5,7 +5,7 @@
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import { DocumentDuplicate, Eye } from '@steeze-ui/heroicons';
 	import { Button } from '@rainprotocol/rain-svelte-components';
-	import Modal from '@rainprotocol/rain-svelte-components/Modal.svelte';
+	import { Modal } from '@rainprotocol/rain-svelte-components';
 	// import { Formatter } from '@rainprotocol/rainlang';
 	import { goto } from '$app/navigation';
 	import AuthInner from '$lib/AuthInner.svelte';

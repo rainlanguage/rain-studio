@@ -7,7 +7,7 @@
 	import UserAvatar from '$lib/UserAvatar.svelte';
 	import { DocumentDuplicate, Heart } from '@steeze-ui/heroicons';
 	import ExpressionEnv from '$lib/expressions/ExpressionEnv.svelte';
-	import Formatter from '@rainprotocol/rain-svelte-components/formatter/Formatter.svelte';
+	import { Formatter } from '@rainprotocol/rain-svelte-components';
 	import Auth from '$lib/Auth.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import SocialButton from '$lib/SocialButton.svelte';
