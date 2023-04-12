@@ -5,7 +5,7 @@ published: true
 
 <script>
 	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
-	import { Parser } from 'rain-svelte-components/package'
+	import { Parser } from '@rainprotocol/rain-svelte-components'
 </script>
 
 ## Understanding the Stack in Rainlang

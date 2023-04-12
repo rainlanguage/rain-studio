@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { signer, signerAddress, connected } from 'svelte-ethers-store';
 	import { enhance } from '$app/forms';
-	import { Button } from 'rain-svelte-components/package';
+	import { Button } from '@rainprotocol/rain-svelte-components';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 
 	// Types

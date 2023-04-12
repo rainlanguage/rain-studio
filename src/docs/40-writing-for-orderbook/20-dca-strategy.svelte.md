@@ -5,7 +5,7 @@ published: true
 
 <script>
 	import ForkableFormatter from '$lib/expressions/ForkableFormatter.svelte';
-	import { Parser } from 'rain-svelte-components/package'
+	import { Parser } from '@rainprotocol/rain-svelte-components'
 
 	const expression = `/* Calculate the number of seconds in a month */
 seconds-in-month: mul(60 60 24 30),

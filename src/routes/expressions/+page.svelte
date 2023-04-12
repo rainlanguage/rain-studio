@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { AcademicCap, Plus, UserGroup } from '@steeze-ui/heroicons';
-	import { Button } from 'rain-svelte-components/package';
+	import { Button } from '@rainprotocol/rain-svelte-components';
 	import { popularTags } from './popular-tags';
 	import type { PageData } from './$types';
 	import { lessons } from './lessons';
