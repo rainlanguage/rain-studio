@@ -4,14 +4,14 @@
 	import ExpressionRow from '$lib/expressions/ExpressionRow.svelte';
 	import ForkExpression from '$lib/expressions/ForkExpression.svelte';
 	import { DocumentDuplicate, Eye } from '@steeze-ui/heroicons';
-	import { Button } from 'rain-svelte-components/package';
-	import Modal from 'rain-svelte-components/package/Modal.svelte';
-	import { Formatter } from '@rainprotocol/rainlang';
+	import { Button } from '@rainprotocol/rain-svelte-components';
+	import { Modal } from '@rainprotocol/rain-svelte-components';
+	// import { Formatter } from '@rainprotocol/rainlang';
 	import { goto } from '$app/navigation';
 	import AuthInner from '$lib/AuthInner.svelte';
 
 	export let expression: any;
-	$: expressionToFork = { ...expression, raw_expression: Formatter.get(expression.stateConfig) };
+	$: expressionToFork = { ...expression, raw_expression: null }; //Formatter.get(expression.stateConfig) };
 	let newExpModal: boolean = false;
 </script>
 

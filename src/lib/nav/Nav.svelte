@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import UserAvatar from '$lib/UserAvatar.svelte';
-	import { Input } from 'rain-svelte-components/package';
+	import { Input } from '@rainprotocol/rain-svelte-components';
 	import { onMount } from 'svelte';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
 	import { connected } from 'svelte-ethers-store';

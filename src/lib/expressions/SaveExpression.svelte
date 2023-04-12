@@ -12,9 +12,9 @@
 <script lang="ts">
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { Button, Input } from 'rain-svelte-components/package';
-	import Formatter from 'rain-svelte-components/package/formatter/Formatter.svelte';
-	import Pills from 'rain-svelte-components/package/Pills.svelte';
+	import { Button, Input } from '@rainprotocol/rain-svelte-components';
+	import { Formatter } from '@rainprotocol/rain-svelte-components';
+	import { Pills } from '@rainprotocol/rain-svelte-components';
 	import { createEventDispatcher } from 'svelte';
 
 	export let presaveExpression: PresaveExpression;
