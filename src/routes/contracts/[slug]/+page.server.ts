@@ -49,8 +49,9 @@ export const load: PageServerLoad = async (event) => {
 
 	if (contractQuery.error) throw error(404, 'Not found');
 
-	const deployersQuery = await supabaseClient.from('deployers_addresses').select('*');
+	const deployersQuery = await supabaseClient.from('deployers_addresses').select('*, deployer(opmeta_bytes)');
 	if (deployersQuery.error) throw error(500, 'Something went wrong :(');
+	const deployerData = deployersQuery.data.map((deployer) => ({ ...deployer, opmeta: deployer.deployer.opmeta_bytes }));
 
 	// Aaddresses filtered with the proper chain ID in an array
 	const addresses = contractQuery.data.contract_addresses_new ? contractQuery.data.contract_addresses_new
@@ -175,7 +176,7 @@ export const load: PageServerLoad = async (event) => {
 
 	return {
 		contract: contractQuery.data,
-		deployers: deployersQuery.data,
+		deployers: deployerData,
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,
 		userLikes: _userLikes,

@@ -55,6 +55,8 @@
 	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
 
+	$: console.log(result);
+
 	setContext('EVALUABLE_ADDRESSES', {
 		getDeployers: async () => {
 			return deployerAddresses.filter((address) => selectedChain == address.chainId);

@@ -910,10 +910,10 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@rainprotocol/rain-svelte-components@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@rainprotocol/rain-svelte-components/-/rain-svelte-components-0.0.6.tgz#749f9dc073cb16c6967d744c0ff2fa9f8c141428"
-  integrity sha512-xg20DutdtfLT/TSR2onxpwe3W/O7I+xitRtdvvPUvse5Bx3xwmCHAn2Uuiafdzse4JC2Q2KjMPEhHrVmm0NoHw==
+"@rainprotocol/rain-svelte-components@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@rainprotocol/rain-svelte-components/-/rain-svelte-components-0.0.9.tgz#277c403d08c63514b5cacc92e6d56e16e4c456cd"
+  integrity sha512-4HYZTT6x2cK39GY3b529RNnBqfaKJiiL2YkhV/D1//4JwyBaQCdkBdCPUaz+Dm4hEFBbM4GtlI3QecU3nJjW5A==
   dependencies:
     "@codemirror/lang-javascript" "^6.1.4"
     "@formkit/auto-animate" "^1.0.0-beta.3"
