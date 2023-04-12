@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Ring, DisplayAddress, HoverTooltip } from 'rain-svelte-components/package';
+	import { Button, Ring, DisplayAddress, HoverTooltip } from '@rainprotocol/rain-svelte-components';
 	import { signerAddress, connected, allChainsData, chainId } from 'svelte-ethers-store';
 	import { page } from '$app/stores';
 	import { supabaseClient } from '$lib/supabaseClient';
@@ -69,13 +69,13 @@
 
 <ModalLinkAddress bind:openedModal={openedModalLink} address={$signerAddress} />
 
-<div class="flex flex-col items-start gap-y-2.5 w-full">
+<div class="flex w-full flex-col items-start gap-y-2.5">
 	<p class="small-regular text-gray-600">
 		{$connected ? 'Connected' : 'Not connected'}
 		<span class={$connected ? 'green' : 'red'}>•</span>
 	</p>
 	{#if $connected}
-		<div class="border-[1px] border-gray-300 rounded-[10px] p-[10px] w-full">
+		<div class="w-full rounded-[10px] border-[1px] border-gray-300 p-[10px]">
 			<p class="leading-[21px] tracking-[-0.01em] text-gray-500">
 				{networkName}
 			</p>

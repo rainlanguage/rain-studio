@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@aicacia/debounce@0":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@aicacia/debounce/-/debounce-0.1.21.tgz#2e4c197e174a43d21fa9f0c7992c6eb0e6f34f8b"
-  integrity sha512-S7k4LGuS015T7jahPW0J0i3k7PdgKKIErrKr+EDw9sap5DoaL+Okz0uG5fa4kjojvAb5aMuJwi7Vu6GaFvdeKg==
-
 "@babel/code-frame@^7.18.6":
   version "7.18.6"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.18.6.tgz#3b25d38c89600baa2dcc219edfa88a74eb2c427a"
@@ -855,6 +850,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@nohns/algebra.js@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@nohns/algebra.js/-/algebra.js-0.2.9.tgz#d24faf0d4b85fb7697ccf4d7cc80039c69aa1cf1"
+  integrity sha512-L9+AXigZJHrRgggYTPXZE6p6nnUoQHvnOJwKcrEBZlv3UV3PShnJFV9zyWPkJnuaYdHuZROjY36MTSDzyVm8hw==
+
 "@playwright/test@1.29.1":
   version "1.29.1"
   resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.29.1.tgz#f2ed4dc143b9c7825a7ad2703b2f1ac4354e1145"
@@ -868,17 +868,38 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@rainprotocol/interpreter-ts@https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51":
-  version "0.0.0"
-  resolved "https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51"
+"@rainprotocol/rain-svelte-components@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@rainprotocol/rain-svelte-components/-/rain-svelte-components-0.0.6.tgz#749f9dc073cb16c6967d744c0ff2fa9f8c141428"
+  integrity sha512-xg20DutdtfLT/TSR2onxpwe3W/O7I+xitRtdvvPUvse5Bx3xwmCHAn2Uuiafdzse4JC2Q2KjMPEhHrVmm0NoHw==
   dependencies:
-    ethers "^5.7.2"
-    prettier "^2.7.1"
+    "@codemirror/lang-javascript" "^6.1.4"
+    "@formkit/auto-animate" "^1.0.0-beta.3"
+    "@metamask/jazzicon" "^2.0.0"
+    "@steeze-ui/heroicons" "^2.1.0"
+    "@steeze-ui/svelte-icon" "^1.3.2"
+    "@sveltejs/kit" "1.15.4"
+    "@types/lodash" "^4.14.186"
+    abitype "^0.1.7"
+    ajv "^8.11.0"
+    codemirror "^6.0.1"
+    codemirror-rainlang "^0.0.9"
+    ethers "^5.7.1"
+    lodash-es "^4.17.21"
+    svelte "^3.44.0"
+    svelte-codemirror-editor "^1.1.0"
+    svelte-ethers-store "^2.5.8"
+    thememirror "^2.0.1"
 
-"@rainprotocol/rainlang@https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1":
-  version "1.0.0"
-  resolved "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
+"@rainprotocol/rainlang@^1.2.11":
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/@rainprotocol/rainlang/-/rainlang-1.2.11.tgz#ddf8de0c1a2ba77d498f01e6bed79ae192f1c291"
+  integrity sha512-/gAA67++Jfi1/xsbAtmdQz50WfF8DI4Aocxl/Y02XzSFti7CWBUBR0/uedUFUr+DRGCh6RJvxjbJ6pZaf12FvA==
   dependencies:
+    "@nohns/algebra.js" "^0.2.9"
+    ajv "^8.12.0"
+    buffer "^6.0.3"
+    cbor-web "https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd"
     ethers "^5.7.2"
     prettier "^2.7.1"
 
@@ -1072,11 +1093,6 @@
     "@supabase/storage-js" "^2.1.0"
     cross-fetch "^3.1.5"
 
-"@svelte-put/clickoutside@1":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@svelte-put/clickoutside/-/clickoutside-1.1.2.tgz#c5d27c303c0e34ce6d76445b57b01f09d5810726"
-  integrity sha512-W+35saLYr5zVEE2loqAzsarwjvLdwOv4TPXTMDNmerctBi31VFNMUxcyMPAm5XMVrQb3qzLsw7rlEHtxrlbtuQ==
-
 "@sveltejs/adapter-auto@next":
   version "1.0.0-next.91"
   resolved "https://registry.yarnpkg.com/@sveltejs/adapter-auto/-/adapter-auto-1.0.0-next.91.tgz#9d8cc0254ef64646b94de5752ffc08c92490ba92"
@@ -1092,24 +1108,24 @@
     "@vercel/nft" "^0.22.1"
     esbuild "^0.16.3"
 
-"@sveltejs/kit@next":
-  version "1.0.0-next.589"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.0.0-next.589.tgz#4a6201c4be5d01f802085d157c78ca9b825519ca"
-  integrity sha512-5ABRw46z9B+cCe/YWhcx+I/azNZg1NCDEkVJifZn8ToFoJ3a1eP0OexNIrvMEWpllMbNMPcJm2TC9tnz9oPfWQ==
+"@sveltejs/kit@1.15.4":
+  version "1.15.4"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.15.4.tgz#2e80dd336e5b2b1e5b20fdd5daff61433dc41cbb"
+  integrity sha512-m+Tid9nbtFawmiu85lDlal0AQ7UeuV48UsuKMe06QLr3ntMQSUzIPqyswNRZqFrar6NhVTUXQ0aO61M3U4MWpQ==
   dependencies:
     "@sveltejs/vite-plugin-svelte" "^2.0.0"
     "@types/cookie" "^0.5.1"
     cookie "^0.5.0"
-    devalue "^4.2.0"
+    devalue "^4.3.0"
     esm-env "^1.0.0"
     kleur "^4.1.5"
-    magic-string "^0.27.0"
+    magic-string "^0.30.0"
     mime "^3.0.0"
     sade "^1.8.1"
     set-cookie-parser "^2.5.1"
     sirv "^2.0.2"
     tiny-glob "^0.2.9"
-    undici "5.14.0"
+    undici "5.20.0"
 
 "@sveltejs/vite-plugin-svelte@^2.0.0":
   version "2.0.2"
@@ -1637,6 +1653,16 @@ ajv@^8.11.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
+ajv@^8.12.0:
+  version "8.12.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.12.0.tgz#d1a0527323e22f53562c567c00991577dfbe19d1"
+  integrity sha512-sRu1kpcO9yLtYxBKvqfTeh9KzZEwO3STyX1HT+4CaDzC6HpTGYhIhPIzj9XuKU7KYDwnaeh5hcOwjy1QuJzBPA==
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    json-schema-traverse "^1.0.0"
+    require-from-string "^2.0.2"
+    uri-js "^4.2.2"
+
 ansi-align@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-3.0.1.tgz#0cdf12e111ace773a86e9a1fad1225c43cb19a59"
@@ -2089,10 +2115,9 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
 
-cbor-web@^8.1.0:
+cbor-web@^8.1.0, "cbor-web@https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd":
   version "8.1.0"
-  resolved "https://registry.yarnpkg.com/cbor-web/-/cbor-web-8.1.0.tgz#c1148e91ca6bfc0f5c07c1df164854596e2e33d6"
-  integrity sha512-2hWHHMVrfffgoEmsAUh8vCxHoLa1vgodtC73+C5cSarkJlwTapnqAzcHINlP6Ej0DXuP4OmmJ9LF+JaNM5Lj/g==
+  resolved "https://gitpkg.now.sh/hildjj/node-cbor/packages/cbor-web?e593ce09b34cc1420f402b27ab0dd38a1306cecd#2d9674275dafdb1d11a27b14678636a96db2efff"
 
 chalk-template@0.4.0:
   version "0.4.0"
@@ -2201,6 +2226,19 @@ cmd-shim@^6.0.0:
   resolved "https://registry.yarnpkg.com/cmd-shim/-/cmd-shim-6.0.1.tgz#a65878080548e1dca760b3aea1e21ed05194da9d"
   integrity sha512-S9iI9y0nKR4hwEQsVWpyxld/6kRfGepGfzff83FcaiEBpmvlbA2nnGe7Cylgrx2f/p1P5S5wpRm9oL8z1PbS3Q==
 
+codemirror-rainlang@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/codemirror-rainlang/-/codemirror-rainlang-0.0.9.tgz#adf7b9b3b282566db266c7ab3e5ffe16e16bf18f"
+  integrity sha512-nbwQ8V9E6OV0LaeJzcsPv78BXtupY71IqNXgSMm3sP9Q6a6mR2Tau+nFKcYaqI4NfUZKEyW7R8Brh8j1sRoB2g==
+  dependencies:
+    "@codemirror/autocomplete" "^6.4.2"
+    "@codemirror/lint" "^6.2.0"
+    "@codemirror/state" "^6.2.0"
+    "@codemirror/view" "^6.9.3"
+    "@lezer/highlight" "^1.1.3"
+    "@lezer/lr" "^1.3.3"
+    "@rainprotocol/rainlang" "^1.2.11"
+
 codemirror@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-6.0.1.tgz#62b91142d45904547ee3e0e0e4c1a79158035a29"
@@ -2285,11 +2323,6 @@ compression@1.7.4:
     on-headers "~1.0.2"
     safe-buffer "5.1.2"
     vary "~1.1.2"
-
-compute-scroll-into-view@^1.0.17:
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.20.tgz#1768b5522d1172754f5d0c9b02de3af6be506a43"
-  integrity sha512-UCB0ioiyj8CRjtrvaceBLqqhZCVP+1B8+NWQhmdsm0VXOJtobBCf1dBQmebCCo34qZmUwZfIH2MZLqNHazrfjg==
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -2526,10 +2559,10 @@ detective@^5.2.1:
     defined "^1.0.0"
     minimist "^1.2.6"
 
-devalue@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/devalue/-/devalue-4.2.0.tgz#3f542d7c828e317bab5fd3bcecde210af8f83d4b"
-  integrity sha512-mbjoAaCL2qogBKgeFxFPOXAUsZchircF+B/79LD4sHH0+NHfYm8gZpQrskKDn5gENGt35+5OI1GUF7hLVnkPDw==
+devalue@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/devalue/-/devalue-4.3.0.tgz#d86db8fee63a70317c2355be0d3d1b4d8f89a44e"
+  integrity sha512-n94yQo4LI3w7erwf84mhRUkUJfhLoCZiLyoOZ/QFsDbcWNZePrLwbQpvZBUG2TNxwV3VjCKPxkiiQA6pe3TrTA==
 
 didyoumean@^1.2.2:
   version "1.2.2"
@@ -3056,7 +3089,7 @@ ethereumjs-vm@^2.3.4:
     rustbn.js "~0.2.0"
     safe-buffer "^5.1.1"
 
-ethers@^5.0.0, ethers@^5.5.2, ethers@^5.7.1, ethers@^5.7.2:
+ethers@^5.0.0, ethers@^5.7.1, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
@@ -3166,11 +3199,6 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
-
-fast-equals@4:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/fast-equals/-/fast-equals-4.0.3.tgz#72884cc805ec3c6679b99875f6b7654f39f0e8c7"
-  integrity sha512-G3BSX9cfKttjr+2o1O22tYMLq0DPluZnYtq1rXumE1SpL/F/SLIfHx08WYQoWSIpeMYf8sRbJ8++71+v6Pnxfg==
 
 fast-glob@^3.2.12, fast-glob@^3.2.7, fast-glob@^3.2.9:
   version "3.2.12"
@@ -3540,11 +3568,6 @@ immediate@^3.2.3:
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.3.0.tgz#1aef225517836bcdf7f2a2de2600c79ff0269266"
   integrity sha512-HR7EVodfFUdQCTIeySw+WDRFJlPcLOJbXfwwZ7Oom6tjsvZ3bOkCDJHehQC3nxJrv7+f9XecwazynjU8e4Vw3Q==
 
-immer@^9.0.6:
-  version "9.0.16"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.16.tgz#8e7caab80118c2b54b37ad43e05758cdefad0198"
-  integrity sha512-qenGE7CstVm1NrHQbMh8YaSzTZTFNP3zPqr3YU0S0UY441j4bJTg4A2Hh5KAhwgaiU6ZZ1Ar6y/2f4TblnMReQ==
-
 import-fresh@^3.0.0, import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -3651,11 +3674,6 @@ is-path-inside@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/is-path-inside/-/is-path-inside-3.0.3.tgz#d231362e53a07ff2b0e0ea7fed049161ffd16283"
   integrity sha512-Fd4gABb+ycGAmKou8eMftCupSir5lRxqf4aD/vd0cD2qc4HL07OjCeuHMr8Ro4CoMaeCKDB0/ECBOVWjTwUvPQ==
-
-is-plain-object@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/is-plain-object/-/is-plain-object-5.0.0.tgz#4427f50ab3429e9025ea7d52e9043a9ef4159344"
-  integrity sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==
 
 is-port-reachable@4.0.0:
   version "4.0.0"
@@ -4045,6 +4063,13 @@ magic-string@^0.26.2:
   integrity sha512-hX9XH3ziStPoPhJxLq1syWuZMxbDvGNbVchfrdCtanC7D13888bMFow61x8axrx+GfHLtVeAx2kxL7tTGRl+Ow==
   dependencies:
     sourcemap-codec "^1.4.8"
+
+magic-string@^0.30.0:
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.0.tgz#fd58a4748c5c4547338a424e90fa5dd17f4de529"
+  integrity sha512-LA+31JYDJLs82r2ScLrlz1GjSgu66ZV518eyWT+S8VhyQn/JL0u9MeBOvQMGYiPk1DBiSN9DDMOcXvigJZaViQ==
+  dependencies:
+    "@jridgewell/sourcemap-codec" "^1.4.13"
 
 make-dir@^3.1.0:
   version "3.1.0"
@@ -4644,10 +4669,10 @@ prettier-plugin-tailwindcss@^0.2.1:
   resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.2.1.tgz#989b35afd86c550cb671da69891aba4f4a051159"
   integrity sha512-aIO8IguumORyRsmT+E7JfJ3A9FEoyhqZR7Au7TBOege3VZkgMvHJMkufeYp4zjnDK2iq4ktkvGMNOQR9T8lisQ==
 
-prettier@^2.6.2, prettier@^2.7.1:
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.1.tgz#4e1fd11c34e2421bc1da9aea9bd8127cd0a35efc"
-  integrity sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==
+prettier-standalone@^1.3.1-0:
+  version "1.3.1-0"
+  resolved "https://registry.yarnpkg.com/prettier-standalone/-/prettier-standalone-1.3.1-0.tgz#8c302549316c723015642e66fd4192db68514d0c"
+  integrity sha512-wxJiwE5XS45BQD8QTXcTeqnWzsYrCliIYOYrURM8MiJaw8NA5q+BSd9UBhM5QPDFShn+pFWa8X2XH3y5A47q+Q==
 
 prettier@^2.8.3:
   version "2.8.3"
@@ -4757,44 +4782,6 @@ quick-lru@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
-
-"rain-metadata@git+https://github.com/rainprotocol/rain-metadata.git":
-  version "0.0.0"
-  uid aeef8dda333a176e1cb69449c545c90f16ab3ae6
-  resolved "git+https://github.com/rainprotocol/rain-metadata.git#aeef8dda333a176e1cb69449c545c90f16ab3ae6"
-
-"rain-metadata@https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6":
-  version "0.0.0"
-  resolved "https://github.com/rainprotocol/rain-metadata#aeef8dda333a176e1cb69449c545c90f16ab3ae6"
-
-"rain-sdk@git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a":
-  version "2.1.2-beta"
-  resolved "git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
-  dependencies:
-    ethers "^5.5.2"
-    prettier "^2.6.2"
-
-"rain-svelte-components@https://github.com/rainprotocol/rain-svelte-components#9e72bf736bb8869ae38728502ef1de34d140a90c":
-  version "0.0.1"
-  resolved "https://github.com/rainprotocol/rain-svelte-components#9e72bf736bb8869ae38728502ef1de34d140a90c"
-  dependencies:
-    "@formkit/auto-animate" "^1.0.0-beta.3"
-    "@metamask/jazzicon" "^2.0.0"
-    "@rainprotocol/interpreter-ts" "https://github.com/rainprotocol/interpreter-ts.git#e1af5cff5178fb09b04afa46283470e04f0b7a51"
-    "@rainprotocol/rainlang" "https://github.com/rainprotocol/rainlang#0a5b41016d89ba1d0a375a52a75a0ada3b2c6ec1"
-    "@steeze-ui/heroicons" "^2.1.0"
-    "@steeze-ui/svelte-icon" "^1.3.2"
-    "@types/lodash" "^4.14.186"
-    abitype "^0.1.7"
-    ajv "^8.11.0"
-    ethers "^5.7.1"
-    lodash-es "^4.17.21"
-    rain-metadata "git+https://github.com/rainprotocol/rain-metadata.git"
-    rain-sdk "git+https://github.com/rainprotocol/rain-sdk.git#f6710e64a7d6c47110e3e584cd17e947c1d7313a"
-    slate "^0.85.0"
-    slate-history "^0.86.0"
-    svelte-ethers-store "^2.5.8"
-    svelte-slate "^0.1.62"
 
 randombytes@^2.1.0:
   version "2.1.0"
@@ -5093,13 +5080,6 @@ scheduler@^0.19.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-scroll-into-view-if-needed@2, scroll-into-view-if-needed@2.2.28:
-  version "2.2.28"
-  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.28.tgz#5a15b2f58a52642c88c8eca584644e01703d645a"
-  integrity sha512-8LuxJSuFVc92+0AdNv4QOxRL4Abeo1DgLnGNkn1XlaujPH/3cCFz3QI60r2VNu4obJJROzgnIUw5TKQkZvZI1w==
-  dependencies:
-    compute-scroll-into-view "^1.0.17"
-
 scrypt-js@3.0.1, scrypt-js@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-3.0.1.tgz#d314a57c2aef69d1ad98a138a21fe9eafa9ee312"
@@ -5235,22 +5215,6 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
-
-slate-history@^0.86.0:
-  version "0.86.0"
-  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.86.0.tgz#5554612271d2fc1018a7918be3961bb66e620c58"
-  integrity sha512-OxObL9tbhgwvSlnKSCpGIh7wnuaqvOj5jRExGjEyCU2Ke8ctf22HjT+jw7GEi9ttLzNTUmTEU3YIzqKGeqN+og==
-  dependencies:
-    is-plain-object "^5.0.0"
-
-slate@^0.85.0:
-  version "0.85.0"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.85.0.tgz#1e922dce13a7b37816670312f5caac70aa2a8d1c"
-  integrity sha512-SHlgOI7fDG50sL+lfAI+nXF9FQpoqf7KNRofggyyE4ngsj1nINOEpFSYKGPkZgVUUkPflWK6PuBJMR6nEuUiKg==
-  dependencies:
-    immer "^9.0.6"
-    is-plain-object "^5.0.0"
-    tiny-warning "^1.0.3"
 
 sorcery@^0.10.0:
   version "0.10.0"
@@ -5502,16 +5466,6 @@ svelte-proxied-store@^1.1.4:
   resolved "https://registry.yarnpkg.com/svelte-proxied-store/-/svelte-proxied-store-1.1.5.tgz#c7db6b70073501cab785cf27193bd7c0b6005eb6"
   integrity sha512-1hJyVy5AJigC8l2RLs9xIa7qdm10P/7juzAS/gW8zSPEs9XxT30i3XLMYxmd7NKjwqrOYo01dOfMQdz8eGgEOw==
 
-svelte-slate@^0.1.62:
-  version "0.1.77"
-  resolved "https://registry.yarnpkg.com/svelte-slate/-/svelte-slate-0.1.77.tgz#85b8f3e49b2e9fc4dc822c2c79ec3deeafcbc398"
-  integrity sha512-HYhgMSRR2RaXuwHNe8LkeNacsYm8c5+cs9dYNARFpWXO5QjKwDdnMIpNhKOP0SFJ9NE3YXHUGUHMTtZ5KqX3bw==
-  dependencies:
-    "@aicacia/debounce" "0"
-    "@svelte-put/clickoutside" "1"
-    fast-equals "4"
-    scroll-into-view-if-needed "2"
-
 svelte-splitpanes@^0.7.10:
   version "0.7.10"
   resolved "https://registry.yarnpkg.com/svelte-splitpanes/-/svelte-splitpanes-0.7.10.tgz#be75b0fd66f7b31a2609e3f562c71f460c66bdc6"
@@ -5583,11 +5537,6 @@ tiny-glob@^0.2.9:
   dependencies:
     globalyzer "0.1.0"
     globrex "^0.1.2"
-
-tiny-warning@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
-  integrity sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"
@@ -5692,10 +5641,10 @@ typescript@*, typescript@^4.7.4:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.4.tgz#a2a3d2756c079abda241d75f149df9d561091e78"
   integrity sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==
 
-undici@5.14.0:
-  version "5.14.0"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-5.14.0.tgz#1169d0cdee06a4ffdd30810f6228d57998884d00"
-  integrity sha512-yJlHYw6yXPPsuOH0x2Ib1Km61vu4hLiRRQoafs+WUgX1vO64vgnxiCEN9dpIrhZyHFsai3F0AEj4P9zy19enEQ==
+undici@5.20.0:
+  version "5.20.0"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.20.0.tgz#6327462f5ce1d3646bcdac99da7317f455bcc263"
+  integrity sha512-J3j60dYzuo6Eevbawwp1sdg16k5Tf768bxYK4TUJRH7cBM4kFCbf3mOnM/0E3vQYXvpxITbbWmBafaDbxLDz3g==
   dependencies:
     busboy "^1.6.0"
 
