@@ -39,7 +39,7 @@
 		</div>
 	</div>
 	<div class="justify-stretch container mx-auto flex flex-col gap-y-8 px-4 sm:px-0 lg:flex-row">
-		<div class="flex flex-col gap-y-8 py-10 lg:w-2/3 lg:pr-6">
+		<div class="flex flex-col gap-y-8 py-10 lg:pr-6">
 			<TabPanel>
 				<Summary {abi} {metadata} contractAddresses={contract_addresses_new} />
 			</TabPanel>
@@ -53,6 +53,6 @@
 				/>
 			</TabPanel>
 		</div>
-		<div class="py-8 lg:w-1/3"><Sidebar {contract} /></div>
+		<!-- <div class="py-8 lg:w-1/3"><Sidebar {contract} /></div> -->
 	</div>
 </Tabs>
