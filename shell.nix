@@ -8,11 +8,11 @@ let
     { };
 
   dev = pkgs.writeShellScriptBin "dev" ''
-    yarn dev
+    npm run dev
   '';
 
-  yarn-install-serial = pkgs.writeShellScriptBin "yarn-install-serial" ''
-    yarn cache clean && while ! yarn install --network-timeout 1000000 --skip-integrity-check --network-concurrency 1; do echo --- ; done
+  npm-install-serial = pkgs.writeShellScriptBin "npm-install-serial" ''
+    npm cache clean && while ! npm install --network-timeout 1000000 --skip-integrity-check --network-concurrency 1; do echo --- ; done
   '';
 in
 pkgs.stdenv.mkDerivation {
@@ -21,14 +21,13 @@ pkgs.stdenv.mkDerivation {
     pkgs.nixpkgs-fmt
     pkgs.nodejs-16_x
     pkgs.typescript
-    pkgs.yarn
     dev
-    yarn-install-serial
+    npm-install-serial
   ];
 
   shellHook = ''
-    export PATH=$( yarn bin ):$PATH
+    export PATH=$( npm bin ):$PATH
     # keep it fresh
-    yarn
+    npm
   '';
 }
