@@ -12,7 +12,7 @@ let
   '';
 
   npm-install-serial = pkgs.writeShellScriptBin "npm-install-serial" ''
-    npm cache clean --force && while ! npm install --network-timeout 1000000 --skip-integrity-check --network-concurrency 1; do echo --- ; done
+    npm cache clean --force && while ! npm install --network-timeout=1000000 --skip-integrity-check --network-concurrency=1; do echo --- ; done
   '';
 in
 pkgs.stdenv.mkDerivation {
