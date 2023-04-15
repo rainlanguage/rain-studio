@@ -52,6 +52,8 @@
 
 	let openHelpModal: boolean = false;
 
+	let transactionError: any;
+
 	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
 
@@ -76,7 +78,12 @@
 		// handling error cases
 		if (selectedMethod == -1) throw Error('No method selected');
 
-		await $contracts.selectedContract[selectedMethod.name](...result);
+		try {
+			await $contracts.selectedContract[selectedMethod.name](...result);
+		} catch (error) {
+			// Maybe we need to handle each type of error?
+			transactionError = error;
+		}
 	};
 
 	const saveExpression = async ({ detail: { raw } }: { detail: { raw: string } }) => {
@@ -179,6 +186,11 @@
 							>Submit</Button
 						>
 					</div>
+					{#if transactionError}
+						<p class="font-regular break-words p-2 text-sm text-red-500">
+							{transactionError}
+						</p>
+					{/if}
 				{/if}
 			</div>
 		</div>
