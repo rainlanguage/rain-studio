@@ -60,7 +60,7 @@
 
 	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
-	$: knowAddresThisChain = getKnownContractAddressesForChain(contractAddresses, selectedChain);
+	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, selectedChain);
 
 	// To only show the column to write expressions
 	// TODO: Until have eval onchain. Maybe add some button to turn on/off the eval column
@@ -159,7 +159,7 @@
 		bind:value={selectedChain}
 	/>
 	{#if selectedChain && selectedChain !== -1}
-		{#if knowAddresThisChain.length == 0}
+		{#if knownAddressesForThisChain.length == 0}
 			<span class="text-yellow-600">No known deployments for this chain.</span>
 		{/if}
 
@@ -196,14 +196,14 @@
 							<span>Connected to {connectedChainName}</span>
 						</div>
 						<div class="flex flex-col gap-y-2">
-							{#if getKnownContractAddressesForChain(contractAddresses, selectedChain)?.length}
+							{#if knownAddressesForThisChain.length}
 								<span
 									>Select from known addresses for this contract on {allChainsData.find(
 										(chain) => chain.chainId == $chainId
 									)?.name}</span
 								>
 								<Select
-									items={getKnownContractAddressesForChain(contractAddresses, selectedChain)}
+									items={knownAddressesForThisChain}
 									bind:value={selectedContract}
 								/>
 							{:else}
