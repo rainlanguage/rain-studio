@@ -57,7 +57,9 @@
 	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
 
-	$: console.log(result);
+	// To only show the column to write expressions
+	// TODO: Until have eval onchain. Maybe add some button to turn on/off the eval column
+	setContext('onlyExpressionParser', true);
 
 	setContext('EVALUABLE_ADDRESSES', {
 		getDeployers: async () => {
@@ -127,12 +129,20 @@
 </script>
 
 <div class="flex flex-col gap-y-4">
+	<!-- {#if }
+		
+	{/if} -->
+
 	<span>Select a chain</span>
 	<Select
-		items={availableChains.map((chainId) => ({
-			label: getNameFromChainId(chainId),
-			value: chainId
+		items={availableChains.map((chainId_) => ({
+			label: getNameFromChainId(chainId_),
+			value: chainId_
 		}))}
+		on:change={async () => {
+			// TODO: Validate and ask for change/add network
+			console.log('see');
+		}}
 		bind:value={selectedChain}
 	/>
 	{#if selectedChain && selectedChain !== -1}

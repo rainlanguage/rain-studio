@@ -3,7 +3,7 @@
 	import '../app.postcss';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import { afterNavigate, beforeNavigate, invalidate } from '$app/navigation';
-	import { afterUpdate, onMount } from 'svelte';
+	import { afterUpdate, onMount, setContext } from 'svelte';
 	import Nav from '$lib/nav/Nav.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import * as Sentry from '@sentry/svelte';
@@ -20,13 +20,31 @@
 	} from '$lib/connected-table';
 	import Footer from '$lib/Footer.svelte';
 	import { viewportWidth } from '$lib/breakpoint-stores';
+	import { writable } from 'svelte/store';
 
 	let openedModalLink = false;
 	let _address = '';
 
+	// Hide some buttons if not user found
+	// TODO: Until user is logged (we need to )
+	let isLogged = writable(false);
+	setContext('isLogged', isLogged);
+
 	afterUpdate(() => {
 		if (_address != $signerAddress) {
 			_address = $signerAddress;
+		}
+	});
+
+	afterUpdate(async () => {
+		const {
+			data: { session }
+		} = await supabaseClient.auth.getSession();
+
+		if (session) {
+			isLogged.set(true);
+		} else {
+			isLogged.set(false);
 		}
 	});
 
