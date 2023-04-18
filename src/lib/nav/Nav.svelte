@@ -62,7 +62,8 @@
 		<button on:click={toggleMobileNav} class="w-8 md:hidden">
 			<Icon src={mobileNavOpen ? XMark : Bars3} />
 		</button>
-		{#if !$page.data.session}
+		<!-- TODO: Fix -->
+		<!-- {#if !$page.data.session}
 			<a
 				href="/sign-in"
 				on:click={() => {
@@ -87,7 +88,7 @@
 					</div>
 				{/if}
 			</div>
-		{/if}
+		{/if} -->
 	</div>
 </div>
 
@@ -103,7 +104,8 @@
 				<span class="font-semibold">Explore Rain</span>
 				<MainNavLinks />
 			</div>
-			{#if !$page.data.session}
+			<!-- TODO: Fix -->
+			<!-- {#if !$page.data.session}
 				<a
 					href="/sign-in"
 					on:click={() => {
@@ -116,7 +118,7 @@
 					<span class="font-semibold">Profile</span>
 					<ProfileLinks mobileContext />
 				</div>
-			{/if}
+			{/if} -->
 		</div>
 		<form on:submit|preventDefault={searchAddressOrText}>
 			<Input placeholder="Search Rain" bind:value={addressOrText} />

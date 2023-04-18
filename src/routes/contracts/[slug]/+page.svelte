@@ -33,8 +33,9 @@
 			<TabList>
 				<Tab>Contract</Tab>
 				<Tab>Write</Tab>
-				<Tab>Examples</Tab>
-				<Tab>Community</Tab>
+				<!-- TODO: FIX -->
+				<!-- <Tab>Examples</Tab>
+				<Tab>Community</Tab> -->
 			</TabList>
 		</div>
 	</div>
@@ -53,6 +54,6 @@
 				/>
 			</TabPanel>
 		</div>
-		<div class="py-8 lg:w-1/3"><Sidebar {contract} /></div>
+		<!-- <div class="py-8 lg:w-1/3"><Sidebar {contract} /></div> -->
 	</div>
 </Tabs>

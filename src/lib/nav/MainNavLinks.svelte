@@ -9,13 +9,14 @@
 		goto('/contracts');
 	}}>Contracts</a
 >
-<a
+<!-- TODO: Fix -->
+<!-- <a
 	href="/expressions"
 	class="nav-link"
 	on:click|preventDefault={() => {
 		goto('/expressions');
 	}}>Expressions</a
->
+> -->
 <a
 	href="/docs"
 	class="nav-link"

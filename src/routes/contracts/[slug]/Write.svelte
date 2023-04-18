@@ -26,6 +26,7 @@
 	import HelpPanel from '$lib/HelpPanel.svelte';
 	import AuthInner from '$lib/AuthInner.svelte';
 	import { setContext } from 'svelte';
+	import { changeNetwork } from '$lib/connect-wallet';
 
 	export let metadata: ContractMetadata,
 		abi: Abi,
@@ -52,10 +53,18 @@
 
 	let openHelpModal: boolean = false;
 
+	let transactionError: any;
+
+	// Variable used to save old chain selected in case the change chain fail
+	let oldChain = -1;
+
 	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
+	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, selectedChain);
 
-	$: console.log(result);
+	// To only show the column to write expressions
+	// TODO: Until have eval onchain. Maybe add some button to turn on/off the eval column
+	setContext('onlyExpressionParser', true);
 
 	setContext('EVALUABLE_ADDRESSES', {
 		getDeployers: async () => {
@@ -76,7 +85,12 @@
 		// handling error cases
 		if (selectedMethod == -1) throw Error('No method selected');
 
-		await $contracts.selectedContract[selectedMethod.name](...result);
+		try {
+			await $contracts.selectedContract[selectedMethod.name](...result);
+		} catch (error) {
+			// Maybe we need to handle each type of error?
+			transactionError = error;
+		}
 	};
 
 	const saveExpression = async ({ detail: { raw } }: { detail: { raw: string } }) => {
@@ -116,73 +130,101 @@
 		openHelpModal = true;
 	};
 
+	const changeChain = async (event_: Event) => {
+		const chainIdSelected = (event_.target as HTMLSelectElement).value;
+
+		if ($chainId != chainIdSelected) {
+			const resp = await changeNetwork(chainIdSelected);
+			if (!resp.success) {
+				selectedChain = oldChain;
+			} else {
+				// Reset current contract selected
+				selectedContract = -1;
+				oldChain = selectedChain;
+			}
+		}
+	};
+
 	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
 </script>
 
 <div class="flex flex-col gap-y-4">
 	<span>Select a chain</span>
 	<Select
-		items={availableChains.map((chainId) => ({
-			label: getNameFromChainId(chainId),
-			value: chainId
+		items={availableChains.map((chainId_) => ({
+			label: getNameFromChainId(chainId_),
+			value: chainId_
 		}))}
+		on:change={changeChain}
 		bind:value={selectedChain}
 	/>
 	{#if selectedChain && selectedChain !== -1}
+		{#if knownAddressesForThisChain.length == 0}
+			<span class="text-yellow-600">No known deployments for this chain.</span>
+		{/if}
+
 		<span>Select a method to write</span>
 		<Select items={writeMethods} bind:value={selectedMethod} />
 	{/if}
 </div>
-{#key selectedMethod}
-	{#if selectedMethod && selectedMethod !== -1}
-		<div in:fade class="mb-12">
-			{#key selectedMethod}
-				<AutoAbiFormSeparated
-					{abi}
-					{metadata}
-					methodName={selectedMethod.name}
-					bind:result
-					on:save={saveExpression}
-					on:load={loadExpression}
-					on:expand={expandExpression}
-					on:help={handleHelp}
-					showInterpreterFields={false}
-				/>
-			{/key}
-			<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
-				{#if !$signer}
-					<div class="self-center">
-						<ConnectWallet />
-					</div>
-				{:else}
-					<div class="flex items-center gap-x-2">
-						<div class="h-3 w-3 rounded-full bg-green-600" />
-						<span>Connected to {connectedChainName}</span>
-					</div>
-					<div class="flex flex-col gap-y-2">
-						{#if getKnownContractAddressesForChain(contractAddresses, selectedChain)?.length}
-							<span
-								>Select from known addresses for this contract on {allChainsData.find(
-									(chain) => chain.chainId == $chainId
-								)?.name}</span
+
+{#key selectedChain}
+	{#key selectedMethod}
+		{#if selectedMethod && selectedMethod !== -1}
+			<div in:fade class="mb-12">
+				{#key selectedMethod}
+					<AutoAbiFormSeparated
+						{abi}
+						{metadata}
+						methodName={selectedMethod.name}
+						bind:result
+						on:save={saveExpression}
+						on:load={loadExpression}
+						on:expand={expandExpression}
+						on:help={handleHelp}
+						showInterpreterFields={false}
+					/>
+				{/key}
+				<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
+					{#if !$signer}
+						<div class="self-center">
+							<ConnectWallet />
+						</div>
+					{:else}
+						<div class="flex items-center gap-x-2">
+							<div class="h-3 w-3 rounded-full bg-green-600" />
+							<span>Connected to {connectedChainName}</span>
+						</div>
+						<div class="flex flex-col gap-y-2">
+							{#if knownAddressesForThisChain.length}
+								<span
+									>Select from known addresses for this contract on {allChainsData.find(
+										(chain) => chain.chainId == $chainId
+									)?.name}</span
+								>
+								<Select
+									items={knownAddressesForThisChain}
+									bind:value={selectedContract}
+								/>
+							{:else}
+								<span class="text-gray-500">No known deployments for this chain.</span>
+							{/if}
+						</div>
+						<div class="self-start">
+							<Button disabled={selectedContract == -1} on:click={submit} variant="primary"
+								>Submit</Button
 							>
-							<Select
-								items={getKnownContractAddressesForChain(contractAddresses, selectedChain)}
-								bind:value={selectedContract}
-							/>
-						{:else}
-							<span class="text-gray-500">No known deployments for this chain.</span>
+						</div>
+						{#if transactionError}
+							<p class="font-regular break-words p-2 text-sm text-red-500">
+								{transactionError}
+							</p>
 						{/if}
-					</div>
-					<div class="self-start">
-						<Button disabled={selectedContract == -1} on:click={submit} variant="primary"
-							>Submit</Button
-						>
-					</div>
-				{/if}
+					{/if}
+				</div>
 			</div>
-		</div>
-	{/if}
+		{/if}
+	{/key}
 {/key}
 
 <Modal bind:open={openNewExpModal}>
