@@ -26,6 +26,7 @@
 	import HelpPanel from '$lib/HelpPanel.svelte';
 	import AuthInner from '$lib/AuthInner.svelte';
 	import { setContext } from 'svelte';
+	import { changeNetwork } from '$lib/connect-wallet';
 
 	export let metadata: ContractMetadata,
 		abi: Abi,
@@ -125,6 +126,14 @@
 		openHelpModal = true;
 	};
 
+	const changeChain = async (event_: Event) => {
+		const chainIdSelected = (event_.target as HTMLSelectElement).value;
+
+		if ($chainId != chainIdSelected) {
+			const resp = await changeNetwork(chainIdSelected);
+		}
+	};
+
 	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
 </script>
 
@@ -139,10 +148,7 @@
 			label: getNameFromChainId(chainId_),
 			value: chainId_
 		}))}
-		on:change={async () => {
-			// TODO: Validate and ask for change/add network
-			console.log('see');
-		}}
+		on:change={changeChain}
 		bind:value={selectedChain}
 	/>
 	{#if selectedChain && selectedChain !== -1}
