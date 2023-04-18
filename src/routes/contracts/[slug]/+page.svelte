@@ -33,8 +33,9 @@
 			<TabList>
 				<Tab>Contract</Tab>
 				<Tab>Write</Tab>
-				<Tab>Examples</Tab>
-				<Tab>Community</Tab>
+				<!-- TODO: FIX -->
+				<!-- <Tab>Examples</Tab>
+				<Tab>Community</Tab> -->
 			</TabList>
 		</div>
 	</div>
