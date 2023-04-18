@@ -55,8 +55,12 @@
 
 	let transactionError: any;
 
+	// Variable used to save old chain selected in case the change chain fail
+	let oldChain = -1;
+
 	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
+	$: knowAddresThisChain = getKnownContractAddressesForChain(contractAddresses, selectedChain);
 
 	// To only show the column to write expressions
 	// TODO: Until have eval onchain. Maybe add some button to turn on/off the eval column
@@ -131,6 +135,13 @@
 
 		if ($chainId != chainIdSelected) {
 			const resp = await changeNetwork(chainIdSelected);
+			if (!resp.success) {
+				selectedChain = oldChain;
+			} else {
+				// Reset current contract selected
+				selectedContract = -1;
+				oldChain = selectedChain;
+			}
 		}
 	};
 
@@ -138,10 +149,6 @@
 </script>
 
 <div class="flex flex-col gap-y-4">
-	<!-- {#if }
-		
-	{/if} -->
-
 	<span>Select a chain</span>
 	<Select
 		items={availableChains.map((chainId_) => ({
@@ -152,65 +159,72 @@
 		bind:value={selectedChain}
 	/>
 	{#if selectedChain && selectedChain !== -1}
+		{#if knowAddresThisChain.length == 0}
+			<span class="text-yellow-600">No known deployments for this chain.</span>
+		{/if}
+
 		<span>Select a method to write</span>
 		<Select items={writeMethods} bind:value={selectedMethod} />
 	{/if}
 </div>
-{#key selectedMethod}
-	{#if selectedMethod && selectedMethod !== -1}
-		<div in:fade class="mb-12">
-			{#key selectedMethod}
-				<AutoAbiFormSeparated
-					{abi}
-					{metadata}
-					methodName={selectedMethod.name}
-					bind:result
-					on:save={saveExpression}
-					on:load={loadExpression}
-					on:expand={expandExpression}
-					on:help={handleHelp}
-					showInterpreterFields={false}
-				/>
-			{/key}
-			<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
-				{#if !$signer}
-					<div class="self-center">
-						<ConnectWallet />
-					</div>
-				{:else}
-					<div class="flex items-center gap-x-2">
-						<div class="h-3 w-3 rounded-full bg-green-600" />
-						<span>Connected to {connectedChainName}</span>
-					</div>
-					<div class="flex flex-col gap-y-2">
-						{#if getKnownContractAddressesForChain(contractAddresses, selectedChain)?.length}
-							<span
-								>Select from known addresses for this contract on {allChainsData.find(
-									(chain) => chain.chainId == $chainId
-								)?.name}</span
+
+{#key selectedChain}
+	{#key selectedMethod}
+		{#if selectedMethod && selectedMethod !== -1}
+			<div in:fade class="mb-12">
+				{#key selectedMethod}
+					<AutoAbiFormSeparated
+						{abi}
+						{metadata}
+						methodName={selectedMethod.name}
+						bind:result
+						on:save={saveExpression}
+						on:load={loadExpression}
+						on:expand={expandExpression}
+						on:help={handleHelp}
+						showInterpreterFields={false}
+					/>
+				{/key}
+				<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
+					{#if !$signer}
+						<div class="self-center">
+							<ConnectWallet />
+						</div>
+					{:else}
+						<div class="flex items-center gap-x-2">
+							<div class="h-3 w-3 rounded-full bg-green-600" />
+							<span>Connected to {connectedChainName}</span>
+						</div>
+						<div class="flex flex-col gap-y-2">
+							{#if getKnownContractAddressesForChain(contractAddresses, selectedChain)?.length}
+								<span
+									>Select from known addresses for this contract on {allChainsData.find(
+										(chain) => chain.chainId == $chainId
+									)?.name}</span
+								>
+								<Select
+									items={getKnownContractAddressesForChain(contractAddresses, selectedChain)}
+									bind:value={selectedContract}
+								/>
+							{:else}
+								<span class="text-gray-500">No known deployments for this chain.</span>
+							{/if}
+						</div>
+						<div class="self-start">
+							<Button disabled={selectedContract == -1} on:click={submit} variant="primary"
+								>Submit</Button
 							>
-							<Select
-								items={getKnownContractAddressesForChain(contractAddresses, selectedChain)}
-								bind:value={selectedContract}
-							/>
-						{:else}
-							<span class="text-gray-500">No known deployments for this chain.</span>
+						</div>
+						{#if transactionError}
+							<p class="font-regular break-words p-2 text-sm text-red-500">
+								{transactionError}
+							</p>
 						{/if}
-					</div>
-					<div class="self-start">
-						<Button disabled={selectedContract == -1} on:click={submit} variant="primary"
-							>Submit</Button
-						>
-					</div>
-					{#if transactionError}
-						<p class="font-regular break-words p-2 text-sm text-red-500">
-							{transactionError}
-						</p>
 					{/if}
-				{/if}
+				</div>
 			</div>
-		</div>
-	{/if}
+		{/if}
+	{/key}
 {/key}
 
 <Modal bind:open={openNewExpModal}>
