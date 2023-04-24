@@ -25,14 +25,8 @@
 	} from '$lib/types/types';
 	import HelpPanel from '$lib/HelpPanel.svelte';
 	import AuthInner from '$lib/AuthInner.svelte';
-	import { getContext, setContext } from 'svelte';
+	import { setContext } from 'svelte';
 	import { changeNetwork } from '$lib/connect-wallet';
-	import type {
-		Deployer,
-		GetDeployers
-	} from '@rainprotocol/rain-svelte-components/dist/parser/types';
-
-	import InputDropdown from './InputDropdown.svelte';
 
 	export let metadata: ContractMetadata,
 		abi: Abi,
@@ -155,38 +149,7 @@
 	};
 
 	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
-
-	//////////////////////
-	// User should add an function that retrieve the array with addresses
-	const { getDeployers } = getContext('EVALUABLE_ADDRESSES') as { getDeployers: GetDeployers };
-	const formatDeployerOptions = (deployers: Deployer[]) => {
-		return deployers.map((e) => ({
-			label: e.address,
-			value: e
-		}));
-	};
-	let items: any;
-	let selectedDeployer: any;
-	let selectedItem: any;
 </script>
-
-<button
-	on:click={async () => {
-		const deployers = await getDeployers();
-		items = formatDeployerOptions(deployers);
-		//
-		// console.log(deployers);
-		// console.log(deployerAddresses);
-	}}>Click</button
->
-<InputDropdown
-	bind:value={selectedDeployer}
-	bind:selectedItem
-	{items}
-	placeholder="Select interpreter"
-	classInput="text-neutral-600 border border-neutral-100 bg-white rounded-md px-0 py-1 text-xs w-full"
-	classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md text-xs shadow cursor-default font-mono"
-/>
 
 <div class="flex flex-col gap-y-4">
 	<span>Select a chain</span>
