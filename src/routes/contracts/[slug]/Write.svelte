@@ -60,7 +60,10 @@
 
 	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
-	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, selectedChain);
+	$: knownAddressesForThisChain = getKnownContractAddressesForChain(
+		contractAddresses,
+		selectedChain
+	);
 
 	// To only show the column to write expressions
 	// TODO: Until have eval onchain. Maybe add some button to turn on/off the eval column
@@ -202,10 +205,7 @@
 										(chain) => chain.chainId == $chainId
 									)?.name}</span
 								>
-								<Select
-									items={knownAddressesForThisChain}
-									bind:value={selectedContract}
-								/>
+								<Select items={knownAddressesForThisChain} bind:value={selectedContract} />
 							{:else}
 								<span class="text-gray-500">No known deployments for this chain.</span>
 							{/if}
