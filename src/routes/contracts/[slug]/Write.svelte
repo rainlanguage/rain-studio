@@ -28,6 +28,8 @@
 	import { setContext } from 'svelte';
 	import { changeNetwork } from '$lib/connect-wallet';
 
+	import { InputDropdown } from '@rainprotocol/rain-svelte-components';
+
 	export let metadata: ContractMetadata,
 		abi: Abi,
 		contract: ContractRowFull,
