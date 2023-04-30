@@ -2,9 +2,11 @@
 	import { page } from '$app/stores';
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
 	import Background from '$lib/Background.svelte';
+	import { ethers } from 'ethers';
 	import { FilterSet, FilterGroup, Input, Button } from '@rainprotocol/rain-svelte-components';
 
 	import { everyAfter } from '$lib/utils/everyAfter';
+	import { supabaseClient } from '$lib/supabaseClient';
 
 	$: contracts = $page.data.contract;
 
@@ -79,7 +81,7 @@
 		<div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			{#each contracts as contract}
 				<a href={`/contracts/${contract.slug}`}>
-					<ContractCard {contract} />
+					<ContractCard {contract} showDetailedInfo />
 				</a>
 			{/each}
 		</div>

@@ -5,6 +5,8 @@
 	import SvelteMarkdown from 'svelte-markdown';
 
 	export let contract: any;
+	export let showDetailedInfo: boolean = false;
+	console.log(contract);
 </script>
 
 <div
@@ -22,4 +24,12 @@
 	<span class="mt-2 h-24 overflow-clip text-sm text-gray-900">
 		<SvelteMarkdown source={contract.metadata.description} />
 	</span>
+
+	{#if showDetailedInfo}
+		<span
+			class="mt-3 self-center overflow-clip rounded-xl border border-gray-400 bg-gray-200 px-2 py-1 text-sm text-gray-900"
+		>
+			<KnownAddresses contract_addresses={contract.contract_addresses_new} />
+		</span>
+	{/if}
 </div>
