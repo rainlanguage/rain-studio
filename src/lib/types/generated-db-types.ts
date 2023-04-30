@@ -64,7 +64,6 @@ export interface Database {
       contracts_new: {
         Row: {
           abi: Json
-          bytecode_hash: string
           contract_meta: Json
           created_at: string
           id: string
@@ -74,7 +73,6 @@ export interface Database {
         }
         Insert: {
           abi: Json
-          bytecode_hash: string
           contract_meta: Json
           created_at?: string
           id: string
@@ -84,7 +82,6 @@ export interface Database {
         }
         Update: {
           abi?: Json
-          bytecode_hash?: string
           contract_meta?: Json
           created_at?: string
           id?: string
