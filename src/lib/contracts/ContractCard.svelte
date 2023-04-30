@@ -6,7 +6,6 @@
 
 	export let contract: any;
 	export let showDetailedInfo: boolean = false;
-	console.log(contract);
 </script>
 
 <div
