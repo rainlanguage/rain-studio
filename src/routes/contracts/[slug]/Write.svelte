@@ -5,7 +5,13 @@
 	import { AutoAbiFormSeparated } from '@rainprotocol/rain-svelte-components';
 	import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 	import { ethers } from 'ethers';
-	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';
+	import {
+		chainId,
+		defaultEvmStores,
+		contracts,
+		signer,
+		allChainsData
+	} from 'svelte-ethers-store';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
 	import LoadExpressionModal from '$lib/expressions/LoadExpressionModal.svelte';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
@@ -60,7 +66,10 @@
 
 	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: writeMethods = getWriteMethods(abi);
-	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, selectedChain);
+	$: knownAddressesForThisChain = getKnownContractAddressesForChain(
+		contractAddresses,
+		selectedChain
+	);
 
 	// To only show the column to write expressions
 	// TODO: Until have eval onchain. Maybe add some button to turn on/off the eval column
@@ -68,7 +77,7 @@
 
 	setContext('EVALUABLE_ADDRESSES', {
 		getDeployers: async () => {
-			return deployerAddresses.filter((address) => selectedChain == address.chainId);
+			return deployerAddresses.filter((address) => selectedChain == address.chain_id);
 		}
 	});
 
@@ -202,10 +211,7 @@
 										(chain) => chain.chainId == $chainId
 									)?.name}</span
 								>
-								<Select
-									items={knownAddressesForThisChain}
-									bind:value={selectedContract}
-								/>
+								<Select items={knownAddressesForThisChain} bind:value={selectedContract} />
 							{:else}
 								<span class="text-gray-500">No known deployments for this chain.</span>
 							{/if}

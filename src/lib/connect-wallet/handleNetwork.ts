@@ -7,7 +7,7 @@ import { get_store_value } from 'svelte/internal';
  */
 export const changeNetwork = async (
 	chainId_: number | string
-): Promise<{ success: boolean; message: string; }> => {
+): Promise<{ success: boolean; message: string }> => {
 	// Read the store
 	const _currentChain = get_store_value(chainId);
 
@@ -22,7 +22,7 @@ export const changeNetwork = async (
 	try {
 		await ethereum.request({
 			method: 'wallet_switchEthereumChain',
-			params: [{ chainId: ethers.utils.hexValue(chainData.chainId) }]
+			params: [{ chain_id: ethers.utils.hexValue(chainData.chainId) }]
 		});
 
 		return { success: true, message: 'Chain was switched succesfully' };
@@ -34,7 +34,7 @@ export const changeNetwork = async (
 					method: 'wallet_addEthereumChain',
 					params: [
 						{
-							chainId: ethers.utils.hexValue(chainData.chainId),
+							chain_id: ethers.utils.hexValue(chainData.chainId),
 							rpcUrls: chainData.rpc,
 							blockExplorerUrls: chainData.explorers.map((explorer) => explorer.url),
 							chainName: chainData.name,

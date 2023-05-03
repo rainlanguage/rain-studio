@@ -15,17 +15,17 @@ import {
  */
 export function getSubgraph(): Array<{
 	subgraph_url: string;
-	chainId: number;
+	chain_id: number;
 }> {
 	return [
 		{
 			subgraph_url:
 				'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry-polygon',
-			chainId: 137
+			chain_id: 137
 		},
 		{
 			subgraph_url: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry',
-			chainId: 80001
+			chain_id: 80001
 		}
 	];
 }

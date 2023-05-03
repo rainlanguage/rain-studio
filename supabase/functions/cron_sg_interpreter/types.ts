@@ -189,7 +189,7 @@ export type DataContractUpload = {
 export type DataAddressUpload = {
 	id: string;
 	address: string;
-	chainId: number;
+	chain_id: number;
 	contract: string;
 	type: string;
 };
@@ -205,7 +205,7 @@ export type DataDeployerAddressUpload = {
 	id: string;
 	deployer: string;
 	address: string;
-	chainId: number;
+	chain_id: number;
 };
 
 export type DataRainterpreterUpload = {
@@ -217,7 +217,7 @@ export type DataRainterpreterAddressUpload = {
 	id: string;
 	rainterpreter: string;
 	address: string;
-	chainId: number;
+	chain_id: number;
 };
 
 export type DataRainterpreterStoreUpload = {
@@ -229,5 +229,5 @@ export type DataRainterpreterStoreAddressUpload = {
 	id: string;
 	rainterpreter_store: string;
 	address: string;
-	chainId: number;
+	chain_id: number;
 };
