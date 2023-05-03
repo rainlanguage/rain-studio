@@ -12,7 +12,7 @@ export interface Database {
       contract_addresses_new: {
         Row: {
           address: string
-          chainId: number
+          chain_id: number
           contract: string
           created_at: string | null
           id: string
@@ -20,7 +20,7 @@ export interface Database {
         }
         Insert: {
           address: string
-          chainId: number
+          chain_id: number
           contract: string
           created_at?: string | null
           id: string
@@ -28,7 +28,7 @@ export interface Database {
         }
         Update: {
           address?: string
-          chainId?: number
+          chain_id?: number
           contract?: string
           created_at?: string | null
           id?: string
@@ -433,6 +433,145 @@ export interface Database {
         }
         Returns: undefined
       }
+      get_contracts_address_by_search_value_address_filter:
+        | {
+            Args: {
+              search_value: string
+            }
+            Returns: {
+              id: string
+              abi: Json
+              contract_meta: Json
+              project: string
+              created_at: string
+              slug: string
+              metadata: Json
+              contract_addresses_new: Json
+            }[]
+          }
+        | {
+            Args: {
+              search_value: string
+              selected_networks: number[]
+            }
+            Returns: {
+              id: string
+              abi: Json
+              contract_meta: Json
+              project: string
+              created_at: string
+              slug: string
+              metadata: Json
+              contract_addresses_new: Json
+            }[]
+          }
+      get_contracts_address_by_search_value_and_network_filter: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          abi: Json
+          contract_meta: Json
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_address_by_search_value_metadata_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          abi: Json
+          contract_meta: Json
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_address_by_search_value_metadata_filter: {
+        Args: {
+          search_value: string
+        }
+        Returns: {
+          id: string
+          abi: Json
+          contract_meta: Json
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_address_by_selected_networks: {
+        Args: {
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          abi: Json
+          contract_meta: Json
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_address_no_filters: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          abi: Json
+          contract_meta: Json
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_addressby_search_value_address_and_network_filter: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          abi: Json
+          contract_meta: Json
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          abi: Json
+          contract_meta: Json
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
       get_expression_by_slug_w: {
         Args: {
           slug: string
@@ -511,7 +650,16 @@ export interface Database {
       [_ in never]: never
     }
     CompositeTypes: {
-      [_ in never]: never
+      filter_contracts_output: {
+        id: string
+        abi: Json
+        contract_meta: Json
+        project: string
+        created_at: string
+        slug: string
+        metadata: Json
+        contract_addresses_new: Json
+      }
     }
   }
 }
