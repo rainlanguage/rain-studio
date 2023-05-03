@@ -14,7 +14,7 @@
 	let searchValue: string;
 	let loading_: boolean = false;
 
-	const _getContractsFiltered = async (searchValue_: string, selectedNetworks_: Array<number>) => {
+	const getContractsFiltered = async (searchValue_: string, selectedNetworks_: Array<number>) => {
 		const resp = await fetch(`${$page.url.origin}/contracts`, {
 			method: 'POST',
 			body: JSON.stringify({
@@ -30,7 +30,7 @@
 	};
 
 	// Use debounce instead of 'everyAfter' to avoid accumulative calls.
-	const getContractsFilteredDebounced = debounce(_getContractsFiltered, 250);
+	const getContractsFilteredDebounced = debounce(getContractsFiltered, 250);
 
 	const callFilterWithDebounce = (searchValue_: string, selectedNetworks_: Array<number>) => {
 		loading_ = true;
