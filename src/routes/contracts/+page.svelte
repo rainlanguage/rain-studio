@@ -4,14 +4,9 @@
 	import Background from '$lib/Background.svelte';
 	import { FilterSet, FilterGroup, Input } from '@rainprotocol/rain-svelte-components';
 	import { debounce } from 'lodash-es';
+	import { networkOptions } from '$lib/utils';
 
 	$: contracts = $page.data.contract;
-
-	const networkOptions = [
-		{ label: 'All', value: -1 },
-		{ label: 'Polygon', value: 137 },
-		{ label: 'Mumbai', value: 80001 }
-	];
 
 	// Inital value "default" all networks
 	let selectedNetworks: Array<number> = [networkOptions[0].value];
@@ -32,6 +27,7 @@
 		}
 	};
 
+	// Use debounce instead of 'everyAfter' to avoid accumulative calls.
 	const getContractsFilteredDebounced = debounce(getContractsFiltered, 500);
 
 	$: networkFilterToShow = () => {
@@ -45,9 +41,10 @@
 			.join(', ');
 	};
 
-	// $: searchValue, selectedNetworks, getContractsFiltered(searchValue, selectedNetworks);
 	$: searchValue, selectedNetworks, getContractsFilteredDebounced(searchValue, selectedNetworks);
 </script>
+
+<button on:click={() => console.log(contracts)}>CHHERHEA</button>
 
 <div class="m-2 flex w-3/4 flex-row gap-x-10 self-center">
 	<div class="ml-4 w-3/4">

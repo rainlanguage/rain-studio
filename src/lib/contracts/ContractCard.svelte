@@ -3,9 +3,12 @@
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { Pills } from '@rainprotocol/rain-svelte-components';
 	import SvelteMarkdown from 'svelte-markdown';
+	import { getChainsFromAddresses } from '$lib/contracts';
 
 	export let contract: any;
 	export let showDetailedInfo: boolean = false;
+
+	$: chainsData = getChainsFromAddresses(contract.contract_addresses_new);
 </script>
 
 <div
@@ -25,10 +28,18 @@
 	</span>
 
 	{#if showDetailedInfo}
-		<span
-			class="mt-3 self-center overflow-clip rounded-xl border border-gray-400 bg-gray-200 px-2 py-1 text-sm text-gray-900"
-		>
-			<KnownAddresses contract_addresses={contract.contract_addresses_new} />
-		</span>
+		{#if chainsData.length}
+			<div class="flex gap-x-1">
+				{#each chainsData as chain}
+					<span
+						class="mt-3 self-center overflow-clip rounded-xl border border-gray-400 bg-gray-200 px-2 py-1 text-sm text-gray-900"
+					>
+						{chain.name}
+					</span>
+				{/each}
+			</div>
+		{:else}
+			There are not addresses for this contract
+		{/if}
 	{/if}
 </div>

@@ -1,5 +1,6 @@
+import { getNetworkByChainId } from '$lib/utils';
 import { ethers } from 'ethers';
-import { allChainsData, chainId } from 'svelte-ethers-store';
+import { chainId } from 'svelte-ethers-store';
 import { get_store_value } from 'svelte/internal';
 
 /**
@@ -13,7 +14,7 @@ export const changeNetwork = async (
 
 	if (_currentChain == chainId_) return { success: true, message: 'Chain is currently selected' };
 
-	const chainData = allChainsData.find((chain_) => chain_.chainId == chainId_);
+	const chainData = getNetworkByChainId(chainId_);
 
 	if (!chainData) {
 		return { success: false, message: 'Rain Studio cannot handle this chain' };
