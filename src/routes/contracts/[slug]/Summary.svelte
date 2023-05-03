@@ -4,7 +4,7 @@
 	import { allChainsData } from 'svelte-ethers-store';
 	import SvelteMarkdown from 'svelte-markdown';
 	import type { ContractAddressRow } from '$lib/types/types';
-	export let abi: any, metadata: ContractMetadata, contractAddresses: ContractAddressRow;
+	export let abi: any, metadata: ContractMetadata, contractAddresses: ContractAddressRow[];
 </script>
 
 <div><SvelteMarkdown source={metadata.description} /></div>
@@ -23,9 +23,9 @@
 						<!-- {#each chain.knownAddresses as knownAddress} -->
 						<tr>
 							<td class="pt-3"
-								>{allChainsData.find((_chain) => _chain.chainId == el.chainId)?.name}</td
+								>{allChainsData.find((_chain) => _chain.chainId == el.chain_id)?.name}</td
 							>
-							<td class="pt-3">{el.chainId}</td>
+							<td class="pt-3">{el.chain_id}</td>
 							<td class="block w-48 truncate pt-3 md:w-full">{el.address}</td>
 						</tr>
 						<!-- {/each} -->

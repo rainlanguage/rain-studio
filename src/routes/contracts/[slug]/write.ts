@@ -39,7 +39,7 @@ export const getCommonChains = (
 		chains.add(deployer.chainId);
 	});
 	contractAddresses.forEach((el) => {
-		chains.add(el.chainId);
+		chains.add(el.chain_id);
 	});
 	return Array.from(chains.values());
 };
@@ -53,7 +53,7 @@ export const getInterpretersForChain = (
 		id: string;
 		deployerAddress: string;
 		deployer: DeployerAddressesRow;
-	}
+	};
 }[] => {
 	const deployersForSelect: {
 		label: string;
@@ -70,18 +70,21 @@ export const getInterpretersForChain = (
 				value: {
 					id: deployer.id,
 					deployer,
-					deployerAddress: deployer.address,
+					deployerAddress: deployer.address
 				}
-			})
+			});
 		}
-	})
+	});
 	return deployersForSelect;
 };
 
 // filtering to the known addresses for the selected chain
-export const getKnownContractAddressesForChain = (contractAddresses: ContractAddressRow[], chainId: number) => {
+export const getKnownContractAddressesForChain = (
+	contractAddresses: ContractAddressRow[],
+	chainId: number
+) => {
 	return contractAddresses
-		.filter((contractAddress) => contractAddress.chainId == chainId)
+		.filter((contractAddress) => contractAddress.chain_id == chainId)
 		?.map((contractAddress) => {
 			return { label: contractAddress.address, value: contractAddress.address };
 		});
