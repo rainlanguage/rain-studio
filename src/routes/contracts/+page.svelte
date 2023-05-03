@@ -2,11 +2,8 @@
 	import { page } from '$app/stores';
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
 	import Background from '$lib/Background.svelte';
-	import { ethers } from 'ethers';
-	import { FilterSet, FilterGroup, Input, Button } from '@rainprotocol/rain-svelte-components';
-
-	import { everyAfter } from '$lib/utils/everyAfter';
-	import { supabaseClient } from '$lib/supabaseClient';
+	import { FilterSet, FilterGroup, Input } from '@rainprotocol/rain-svelte-components';
+	import { debounce } from 'lodash-es';
 
 	$: contracts = $page.data.contract;
 
@@ -21,21 +18,21 @@
 
 	let searchValue: string;
 
-	const getContractsFiltered = everyAfter(
-		async (searchValue_: string, selectedNetworks_: Array<number>) => {
-			const resp = await fetch(`${$page.url.origin}/contracts`, {
-				method: 'POST',
-				body: JSON.stringify({
-					searchValue: searchValue_,
-					selectedNetworks: selectedNetworks_
-				})
-			});
+	const getContractsFiltered = async (searchValue_: string, selectedNetworks_: Array<number>) => {
+		const resp = await fetch(`${$page.url.origin}/contracts`, {
+			method: 'POST',
+			body: JSON.stringify({
+				searchValue: searchValue_,
+				selectedNetworks: selectedNetworks_
+			})
+		});
 
-			if (resp.ok) {
-				({ contractsFiltered: contracts } = await resp.json());
-			}
+		if (resp.ok) {
+			({ contractsFiltered: contracts } = await resp.json());
 		}
-	);
+	};
+
+	const getContractsFilteredDebounced = debounce(getContractsFiltered, 500);
 
 	$: networkFilterToShow = () => {
 		// If no network selected (component initialization) OR length is 1 and is -1 (which means)
@@ -48,13 +45,14 @@
 			.join(', ');
 	};
 
-	$: getContractsFiltered(searchValue, selectedNetworks);
+	// $: searchValue, selectedNetworks, getContractsFiltered(searchValue, selectedNetworks);
+	$: searchValue, selectedNetworks, getContractsFilteredDebounced(searchValue, selectedNetworks);
 </script>
 
 <div class="m-2 flex w-3/4 flex-row gap-x-10 self-center">
 	<div class="ml-4 w-3/4">
 		<!-- If I write an address or name, should search with alls to find a match -->
-		<Input placeholder="Search a contract" bind:value={searchValue} />
+		<Input placeholder="Search by contract name or address" bind:value={searchValue} />
 		<p class="mt-4 w-full">
 			<strong>Networks:</strong>
 			{networkFilterToShow()}

@@ -24,7 +24,7 @@ export const getWriteMethods = (
 
 export const getNameFromChainId = (id: number): string => {
 	const name = allChainsData.find((chain) => chain.chainId == id)?.name;
-	if (!name) throw Error('Unknown chainId');
+	if (!name) throw Error('Unknown chain_id');
 	return name;
 };
 
@@ -39,21 +39,21 @@ export const getCommonChains = (
 		chains.add(deployer.chainId);
 	});
 	contractAddresses.forEach((el) => {
-		chains.add(el.chainId);
+		chains.add(el.chain_id);
 	});
 	return Array.from(chains.values());
 };
 
 export const getInterpretersForChain = (
 	deployers: DeployerAddressesRow[],
-	chainId: number
+	chain_id: number
 ): {
 	label: string;
 	value: {
 		id: string;
 		deployerAddress: string;
 		deployer: DeployerAddressesRow;
-	}
+	};
 }[] => {
 	const deployersForSelect: {
 		label: string;
@@ -64,24 +64,27 @@ export const getInterpretersForChain = (
 		};
 	}[] = [];
 	deployers.forEach((deployer) => {
-		if (deployer.chainId == chainId) {
+		if (deployer.chainId == chain_id) {
 			deployersForSelect.push({
 				label: `${deployer.address}`,
 				value: {
 					id: deployer.id,
 					deployer,
-					deployerAddress: deployer.address,
+					deployerAddress: deployer.address
 				}
-			})
+			});
 		}
-	})
+	});
 	return deployersForSelect;
 };
 
 // filtering to the known addresses for the selected chain
-export const getKnownContractAddressesForChain = (contractAddresses: ContractAddressRow[], chainId: number) => {
+export const getKnownContractAddressesForChain = (
+	contractAddresses: ContractAddressRow[],
+	chain_id: number
+) => {
 	return contractAddresses
-		.filter((contractAddress) => contractAddress.chainId == chainId)
+		.filter((contractAddress) => contractAddress.chain_id == chain_id)
 		?.map((contractAddress) => {
 			return { label: contractAddress.address, value: contractAddress.address };
 		});
