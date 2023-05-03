@@ -12,7 +12,7 @@ export interface Database {
       contract_addresses_new: {
         Row: {
           address: string
-          chainId: number
+          chain_id: number
           contract: string
           created_at: string | null
           id: string
@@ -20,7 +20,7 @@ export interface Database {
         }
         Insert: {
           address: string
-          chainId: number
+          chain_id: number
           contract: string
           created_at?: string | null
           id: string
@@ -28,7 +28,7 @@ export interface Database {
         }
         Update: {
           address?: string
-          chainId?: number
+          chain_id?: number
           contract?: string
           created_at?: string | null
           id?: string
@@ -64,7 +64,6 @@ export interface Database {
       contracts_new: {
         Row: {
           abi: Json
-          bytecode_hash: string
           contract_meta: Json
           created_at: string
           id: string
@@ -74,7 +73,6 @@ export interface Database {
         }
         Insert: {
           abi: Json
-          bytecode_hash: string
           contract_meta: Json
           created_at?: string
           id: string
@@ -84,7 +82,6 @@ export interface Database {
         }
         Update: {
           abi?: Json
-          bytecode_hash?: string
           contract_meta?: Json
           created_at?: string
           id?: string
@@ -436,6 +433,19 @@ export interface Database {
         }
         Returns: undefined
       }
+      get_contracts_address_no_filters: {
+        Args: {
+          offset_: number
+        }
+        Returns: {
+          id: string
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
       get_expression_by_slug_w: {
         Args: {
           slug: string
@@ -514,7 +524,16 @@ export interface Database {
       [_ in never]: never
     }
     CompositeTypes: {
-      [_ in never]: never
+      filter_contracts_output: {
+        id: string
+        abi: Json
+        contract_meta: Json
+        project: string
+        created_at: string
+        slug: string
+        metadata: Json
+        contract_addresses_new: Json
+      }
     }
   }
 }

@@ -1,11 +1,14 @@
 import { supabaseClient } from '$lib/supabaseClient';
-import { error } from '@sveltejs/kit';
+import { error as errorKit } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-	const query = await supabaseClient.from('contracts_new').select('*, contract_addresses_new(id, address, chain_id)');
+	// Using this function to retrieve 52 (limit) contract starting with the 0 offset
+	const { data, error } = await supabaseClient.rpc('get_contracts_address_no_filters', {
+		offset_: 0
+	});
 
-	if (query.error) throw error(404, 'Not found');
+	if (error) throw errorKit(404, 'Not found');
 
-	return { contract: query.data };
+	return { contract: data };
 }
