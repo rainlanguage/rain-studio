@@ -4,7 +4,6 @@
 	import Background from '$lib/Background.svelte';
 
 	$: contracts = $page.data.contract;
-	$: console.log(contracts);
 </script>
 
 <Background alignItems="items-start">
