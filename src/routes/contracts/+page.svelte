@@ -8,7 +8,7 @@
 
 	$: contracts = $page.data.contract;
 	$: counterContracts = $page.data.counterContracts;
-	$: contractsL = counterContracts / 52;
+	$: contractsL = Math.ceil(counterContracts / 52);
 
 	// Inital value "default" all networks
 	let selectedNetworks: Array<number> = [networkOptions[0].value];
@@ -27,8 +27,14 @@
 			})
 		});
 
+		console.log(searchValue_);
+		console.log(selectedNetworks_);
+
 		if (resp.ok) {
-			({ contractsFiltered: contracts, counterFiltered: counterContracts } = await resp.json());
+			const { contractsFiltered, counterFiltered } = await resp.json();
+
+			contracts = contractsFiltered;
+			counterContracts = counterFiltered;
 		}
 		loading_ = false;
 	};
@@ -99,7 +105,7 @@
 					{/each}
 				</div>
 				<div class="flex justify-center gap-x-2">
-					Next page element:
+					Next page elements to create:
 					<p>{contractsL}</p>
 				</div>
 			</div>
