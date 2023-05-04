@@ -2,13 +2,7 @@
 	import { page } from '$app/stores';
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
 	import Background from '$lib/Background.svelte';
-	import {
-		FilterSet,
-		FilterGroup,
-		Input,
-		Ring,
-		Button
-	} from '@rainprotocol/rain-svelte-components';
+	import { FilterSet, FilterGroup, Input, Ring } from '@rainprotocol/rain-svelte-components';
 	import { debounce } from 'lodash-es';
 	import { networkOptions } from '$lib/utils';
 
@@ -58,10 +52,8 @@
 			.join(', ');
 	};
 
-	// $: searchValue, selectedNetworks, callFilterWithDebounce(searchValue, selectedNetworks);
+	$: searchValue, selectedNetworks, callFilterWithDebounce(searchValue, selectedNetworks);
 </script>
-
-<Button on:click={() => callFilterWithDebounce(searchValue, selectedNetworks)}>Click me</Button>
 
 <div class="m-2 flex w-3/4 flex-row gap-x-10 self-center">
 	<div class="ml-4 w-3/4">
