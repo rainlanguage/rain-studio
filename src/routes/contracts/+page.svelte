@@ -19,7 +19,9 @@
 			method: 'POST',
 			body: JSON.stringify({
 				searchValue: searchValue_,
-				selectedNetworks: selectedNetworks_
+				selectedNetworks: selectedNetworks_,
+				// TODO: Add tracking offset for the pagination FE
+				offset_: 0
 			})
 		});
 

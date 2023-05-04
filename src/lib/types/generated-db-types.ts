@@ -433,8 +433,95 @@ export interface Database {
         }
         Returns: undefined
       }
+      get_contracts_address_by_search_value_address_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_address_by_search_value_address_filter: {
+        Args: {
+          search_value: string
+          offset_: number
+        }
+        Returns: {
+          id: string
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_address_by_search_value_metadata_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_address_by_search_value_metadata_filter: {
+        Args: {
+          search_value: string
+          offset_: number
+        }
+        Returns: {
+          id: string
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_address_by_selected_networks: {
+        Args: {
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
       get_contracts_address_no_filters: {
         Args: {
+          offset_: number
+        }
+        Returns: {
+          id: string
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
           offset_: number
         }
         Returns: {
