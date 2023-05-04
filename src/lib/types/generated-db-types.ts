@@ -437,7 +437,6 @@ export interface Database {
         Args: {
           search_value: string
           selected_networks: number[]
-          offset_: number
         }
         Returns: {
           id: string
@@ -451,7 +450,6 @@ export interface Database {
       get_contracts_address_by_search_value_address_filter: {
         Args: {
           search_value: string
-          offset_: number
         }
         Returns: {
           id: string
@@ -466,7 +464,6 @@ export interface Database {
         Args: {
           search_value: string
           selected_networks: number[]
-          offset_: number
         }
         Returns: {
           id: string
@@ -480,7 +477,6 @@ export interface Database {
       get_contracts_address_by_search_value_metadata_filter: {
         Args: {
           search_value: string
-          offset_: number
         }
         Returns: {
           id: string
@@ -494,7 +490,6 @@ export interface Database {
       get_contracts_address_by_selected_networks: {
         Args: {
           selected_networks: number[]
-          offset_: number
         }
         Returns: {
           id: string
@@ -506,9 +501,7 @@ export interface Database {
         }[]
       }
       get_contracts_address_no_filters: {
-        Args: {
-          offset_: number
-        }
+        Args: Record<PropertyKey, never>
         Returns: {
           id: string
           project: string
@@ -519,6 +512,27 @@ export interface Database {
         }[]
       }
       get_contracts_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          project: string
+          created_at: string
+          slug: string
+          metadata: Json
+          contract_addresses_new: Json
+        }[]
+      }
+      get_contracts_with_addresses_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: number
+      }
+      get_contracts_with_addresses_by_filters_pagination: {
         Args: {
           search_value: string
           selected_networks: number[]
@@ -606,6 +620,40 @@ export interface Database {
         }
         Returns: undefined
       }
+      test_c: {
+        Args: {
+          search_value: string
+        }
+        Returns: number
+      }
+      test_pag:
+        | {
+            Args: {
+              search_value: string
+            }
+            Returns: {
+              id: string
+              project: string
+              created_at: string
+              slug: string
+              metadata: Json
+              contract_addresses_new: Json
+            }[]
+          }
+        | {
+            Args: {
+              search_value: string
+              offset_: number
+            }
+            Returns: {
+              id: string
+              project: string
+              created_at: string
+              slug: string
+              metadata: Json
+              contract_addresses_new: Json
+            }[]
+          }
     }
     Enums: {
       [_ in never]: never

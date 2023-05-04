@@ -10,13 +10,28 @@ export const POST: RequestHandler = async (event) => {
 	};
 	const { supabaseClient } = await getSupabase(event);
 
-	const { data, error } = await supabaseClient.rpc('get_contracts_with_addresses_by_filters', {
-		search_value: searchValue,
-		selected_networks: selectedNetworks,
-		offset_
-	});
+	// Using this function to retrieve 52 (limit) contract starting with the 0 offset
+	const { data: contractsData, error: contractsError } = await supabaseClient.rpc(
+		'get_contracts_with_addresses_by_filters_pagination',
+		{
+			search_value: searchValue,
+			selected_networks: selectedNetworks,
+			offset_
+		}
+	);
 
-	if (error) throw kitError(404, 'Not found');
+	const { data: counterData, error: counterError } = await supabaseClient.rpc(
+		'get_contracts_with_addresses_by_filters_count',
+		{
+			search_value: searchValue,
+			selected_networks: selectedNetworks
+		}
+	);
 
-	return jsonResponse({ contractsFiltered: data });
+	if (contractsError || counterError) {
+		console.log(contractsError ?? counterError);
+		throw kitError(404, 'Not found');
+	}
+
+	return jsonResponse({ contractsFiltered: contractsData, counterFiltered: counterData });
 };

@@ -2,11 +2,19 @@
 	import { page } from '$app/stores';
 	import ContractCard from '$lib/contracts/ContractCard.svelte';
 	import Background from '$lib/Background.svelte';
-	import { FilterSet, FilterGroup, Input, Ring } from '@rainprotocol/rain-svelte-components';
+	import {
+		FilterSet,
+		FilterGroup,
+		Input,
+		Ring,
+		Button
+	} from '@rainprotocol/rain-svelte-components';
 	import { debounce } from 'lodash-es';
 	import { networkOptions } from '$lib/utils';
 
 	$: contracts = $page.data.contract;
+	$: counterContracts = $page.data.counterContracts;
+	$: contractsL = counterContracts / 52;
 
 	// Inital value "default" all networks
 	let selectedNetworks: Array<number> = [networkOptions[0].value];
@@ -26,7 +34,7 @@
 		});
 
 		if (resp.ok) {
-			({ contractsFiltered: contracts } = await resp.json());
+			({ contractsFiltered: contracts, counterFiltered: counterContracts } = await resp.json());
 		}
 		loading_ = false;
 	};
@@ -50,8 +58,10 @@
 			.join(', ');
 	};
 
-	$: searchValue, selectedNetworks, callFilterWithDebounce(searchValue, selectedNetworks);
+	// $: searchValue, selectedNetworks, callFilterWithDebounce(searchValue, selectedNetworks);
 </script>
+
+<Button on:click={() => callFilterWithDebounce(searchValue, selectedNetworks)}>Click me</Button>
 
 <div class="m-2 flex w-3/4 flex-row gap-x-10 self-center">
 	<div class="ml-4 w-3/4">
@@ -88,12 +98,18 @@
 	<div class="container mx-auto flex py-8 px-4 sm:px-0">
 		<!-- <div class="w-1/3" /> -->
 		{#if contracts && contracts.length}
-			<div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{#each contracts as contract}
-					<a href={`/contracts/${contract.slug}`}>
-						<ContractCard {contract} showDetailedInfo />
-					</a>
-				{/each}
+			<div class="justify-self-center">
+				<div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+					{#each contracts as contract}
+						<a href={`/contracts/${contract.slug}`}>
+							<ContractCard {contract} showDetailedInfo />
+						</a>
+					{/each}
+				</div>
+				<div class="flex justify-center gap-x-2">
+					Next page element:
+					<p>{contractsL}</p>
+				</div>
 			</div>
 		{:else}
 			<span class="w-full self-center pt-8 text-center text-xl text-gray-600"
