@@ -189,7 +189,7 @@ export type DataContractUpload = {
 export type DataAddressUpload = {
 	id: string;
 	address: string;
-	chainId: number;
+	chain_id: number;
 	contract: string;
 	type: string;
 };

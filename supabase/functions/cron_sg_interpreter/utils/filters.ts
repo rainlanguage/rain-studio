@@ -46,7 +46,7 @@ export function filterNonAddedContracts(
 		addressesToAdd[addressID] = {
 			id: addressID,
 			address: address_,
-			chainId: chainId,
+			chain_id: chainId,
 			contract: contractId_,
 			type: type_ ?? 'contract'
 		};
