@@ -1,11 +1,33 @@
 import { supabaseClient } from '$lib/supabaseClient';
-import { error } from '@sveltejs/kit';
+import { error as errorKit } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-	const query = await supabaseClient.from('contracts_new').select('*, contract_addresses_new(id, address, chainId)');
+	const search_value = '';
+	const selected_networks = [-1];
 
-	if (query.error) throw error(404, 'Not found');
+	// Using this function to retrieve 52 (limit) contract starting with the 0 offset
+	const { data: contractsData, error: contractsError } = await supabaseClient.rpc(
+		'get_contracts_with_addresses_by_filters_pagination',
+		{
+			search_value,
+			selected_networks,
+			offset_: 0
+		}
+	);
 
-	return { contract: query.data };
+	const { data: counterData, error: counterError } = await supabaseClient.rpc(
+		'get_contracts_with_addresses_by_filters_count',
+		{
+			search_value,
+			selected_networks
+		}
+	);
+
+	if (contractsError || counterError) {
+		console.log(contractsError ?? counterError);
+		throw errorKit(404, 'Not found');
+	}
+
+	return { contract: contractsData, counterContracts: counterData };
 }
