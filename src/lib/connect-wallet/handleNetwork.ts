@@ -23,7 +23,7 @@ export const changeNetwork = async (
 	try {
 		await ethereum.request({
 			method: 'wallet_switchEthereumChain',
-			params: [{ chain_id: ethers.utils.hexValue(chainData.chainId) }]
+			params: [{ chainId: ethers.utils.hexValue(chainData.chainId) }]
 		});
 
 		return { success: true, message: 'Chain was switched succesfully' };
