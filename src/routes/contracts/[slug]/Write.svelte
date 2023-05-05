@@ -34,6 +34,8 @@
 	import { setContext } from 'svelte';
 	import { changeNetwork } from '$lib/connect-wallet';
 
+	import { InputDropdown } from '@rainprotocol/rain-svelte-components';
+
 	export let metadata: ContractMetadata,
 		abi: Abi,
 		contract: ContractRowFull,
@@ -155,7 +157,23 @@
 	};
 
 	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
+
+	let items: any;
+	let selectedDeployer: any;
+	let selectedItem: any;
 </script>
+
+<!-- TODO: For some reason when importing and using the components fix the issue. Search deeply the reason -->
+<div hidden>
+	<InputDropdown
+		bind:value={selectedDeployer}
+		bind:selectedItem
+		{items}
+		placeholder="Select interpreter"
+		classInput="text-neutral-600 border border-neutral-100 bg-white rounded-md px-0 py-1 text-xs w-full pl-2"
+		classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md text-xs shadow cursor-default font-mono"
+	/>
+</div>
 
 <div class="flex flex-col gap-y-4">
 	<span>Select a chain</span>
