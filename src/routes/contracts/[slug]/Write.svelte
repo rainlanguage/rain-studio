@@ -5,13 +5,7 @@
 	import { AutoAbiFormSeparated } from '@rainprotocol/rain-svelte-components';
 	import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 	import { ethers } from 'ethers';
-	import {
-		chainId,
-		defaultEvmStores,
-		contracts,
-		signer,
-		allChainsData
-	} from 'svelte-ethers-store';
+	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
 	import LoadExpressionModal from '$lib/expressions/LoadExpressionModal.svelte';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
@@ -79,7 +73,7 @@
 
 	setContext('EVALUABLE_ADDRESSES', {
 		getDeployers: async () => {
-			return deployerAddresses.filter((address) => selectedChain == address.chain_id);
+			return deployerAddresses.filter((address) => selectedChain == address.chainId);
 		}
 	});
 
