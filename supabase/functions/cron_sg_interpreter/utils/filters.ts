@@ -75,7 +75,9 @@ export function filterNonAddedContracts(
 						abi: metaContent.abi,
 						contract_meta: metaContent.contractMeta,
 						metadata: buildMetadataFromMeta(metaContent.contractMeta),
-						slug: SGcontract.bytecodeHash
+						slug: SGcontract.bytecodeHash,
+						meta_bytes: SGcontract.meta.metaBytes,
+						contract_meta_hash: SGcontract.contractMetaHash
 					};
 
 					// To insert the new address with the Contract referece
@@ -153,7 +155,8 @@ export function filterNonAddedDeployers(
 						id: deployerID,
 						bytecode_hash: SGdeployer.bytecodeHash,
 						opmeta: opmetaData.opmetaDecoded,
-						opmeta_bytes: opmetaData.opmeta_bytes
+						opmeta_bytes: opmetaData.opmeta_bytes,
+						opmeta_hash: SGdeployer.opmetaHash
 					};
 
 					// To insert the new address with the Contract referece

@@ -64,6 +64,7 @@ export async function getSGContracts(subgraphClient_: SubgraphClient): Promise<C
 				contracts(first: 1000, where: { id_gt: "${lastId}" }) {
 					id
 					bytecodeHash
+					contractMetaHash
 					meta {
 						metaBytes
 						content {
@@ -130,6 +131,8 @@ export async function getSGInterpreters(subgraphClient_: SubgraphClient) {
 				expressionDeployers(first: 1000, where: {id_gt: "${lastDeployerId}"}) {
 					id
 					bytecodeHash
+					opmeta
+					opmetaHash
 					meta {
 						metaBytes
 						content {

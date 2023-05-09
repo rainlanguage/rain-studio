@@ -39,6 +39,14 @@ export type ContractSG = {
 	 */
 	bytecodeHash: string;
 	/**
+	 * Contract meta bytes of this contract
+	 */
+	contractMeta: string;
+	/**
+	 * Hash of  the contract meta bytes of this contract
+	 */
+	contractMetaHash: string;
+	/**
 	 * MetaV1 document decoded
 	 */
 	meta: MetaDocumentSG;
@@ -96,9 +104,17 @@ export type ExpressionDeployerSG = {
 	 */
 	id: string;
 	/**
-	 * Hash of the bytcode of the this contract
+	 * Hash of the bytecode of the this contract
 	 */
 	bytecodeHash: string;
+	/**
+	 * Opmeta of this ExpressionDeployer
+	 */
+	opmeta: string
+	/**
+	 * Hash of the opmeta of this ExpressionDeployer
+	 */;
+	opmetaHash: string;
 	/**
 	 * MetaV1 document decoded
 	 */
@@ -184,6 +200,8 @@ export type DataContractUpload = {
 	contract_meta: any;
 	metadata: any;
 	slug: string;
+	meta_bytes: string;
+	contract_meta_hash: string;
 };
 
 export type DataAddressUpload = {
@@ -199,6 +217,7 @@ export type DataDeployerUpload = {
 	bytecode_hash: string;
 	opmeta: any;
 	opmeta_bytes: string;
+	opmeta_hash: string;
 };
 
 export type DataDeployerAddressUpload = {
