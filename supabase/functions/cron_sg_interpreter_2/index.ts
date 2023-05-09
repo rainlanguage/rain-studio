@@ -133,7 +133,7 @@ serve(async (req) => {
 			: nonChanged;
 
 		const respContractAddresses = contractAddressesToAdd.length
-			? await supabaseClient.from('contract_addresses').insert(contractAddressesToAdd)
+			? await supabaseClient.from('contract_addresses_new').insert(contractAddressesToAdd)
 			: nonChanged;
 
 		// - Deployers
