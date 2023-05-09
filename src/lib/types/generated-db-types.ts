@@ -65,8 +65,10 @@ export interface Database {
         Row: {
           abi: Json
           contract_meta: Json
+          contract_meta_hash: string | null
           created_at: string
           id: string
+          meta_bytes: string | null
           metadata: Json
           project: string | null
           slug: string
@@ -74,8 +76,10 @@ export interface Database {
         Insert: {
           abi: Json
           contract_meta: Json
+          contract_meta_hash?: string | null
           created_at?: string
           id: string
+          meta_bytes?: string | null
           metadata: Json
           project?: string | null
           slug: string
@@ -83,8 +87,10 @@ export interface Database {
         Update: {
           abi?: Json
           contract_meta?: Json
+          contract_meta_hash?: string | null
           created_at?: string
           id?: string
+          meta_bytes?: string | null
           metadata?: Json
           project?: string | null
           slug?: string
@@ -97,6 +103,7 @@ export interface Database {
           id: string
           opmeta: Json
           opmeta_bytes: string
+          opmeta_hash: string | null
         }
         Insert: {
           bytecode_hash: string
@@ -104,6 +111,7 @@ export interface Database {
           id: string
           opmeta: Json
           opmeta_bytes: string
+          opmeta_hash?: string | null
         }
         Update: {
           bytecode_hash?: string
@@ -111,6 +119,7 @@ export interface Database {
           id?: string
           opmeta?: Json
           opmeta_bytes?: string
+          opmeta_hash?: string | null
         }
       }
       deployers_addresses: {
