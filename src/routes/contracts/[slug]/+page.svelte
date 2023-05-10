@@ -8,6 +8,7 @@
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import Write from './Write.svelte';
 	import Summary from './Summary.svelte';
+	import Deploy from './Deploy.svelte';
 
 	$: contract = $page.data.contract;
 	$: ({ project, metadata, abi, contract_addresses_new } = contract);
@@ -33,6 +34,7 @@
 			<TabList>
 				<Tab>Contract</Tab>
 				<Tab>Write</Tab>
+				<Tab>Deploy</Tab>
 				<!-- TODO: FIX -->
 				<!-- <Tab>Examples</Tab>
 				<Tab>Community</Tab> -->
@@ -52,6 +54,9 @@
 					contractAddresses={contract_addresses_new}
 					deployerAddresses={$page.data.deployers}
 				/>
+			</TabPanel>
+			<TabPanel>
+				<Deploy />
 			</TabPanel>
 		</div>
 		<!-- <div class="py-8 lg:w-1/3"><Sidebar {contract} /></div> -->
