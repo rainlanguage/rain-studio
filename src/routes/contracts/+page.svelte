@@ -152,7 +152,7 @@
 					{#each Array(contractsL) as _, index}
 						<button
 							class={`disabled flex items-center border border-neutral-200 px-2 text-neutral-600 ${
-								index == indexSelected_ ? '' : 'hover:bg-neutral-200'
+								index == indexSelected_ ? 'bg-neutral-300' : 'hover:bg-neutral-200'
 							}`}
 							on:click={() => changePagination(index)}
 							disabled={index == indexSelected_}
