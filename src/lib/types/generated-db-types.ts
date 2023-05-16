@@ -129,8 +129,8 @@ export interface Database {
           created_at: string
           deployer: string
           id: string
-          interpreter_address: string | null
-          store_address: string | null
+          interpreter_address: string
+          store_address: string
         }
         Insert: {
           address: string
@@ -138,8 +138,8 @@ export interface Database {
           created_at?: string
           deployer: string
           id: string
-          interpreter_address?: string | null
-          store_address?: string | null
+          interpreter_address: string
+          store_address: string
         }
         Update: {
           address?: string
@@ -147,8 +147,8 @@ export interface Database {
           created_at?: string
           deployer?: string
           id?: string
-          interpreter_address?: string | null
-          store_address?: string | null
+          interpreter_address?: string
+          store_address?: string
         }
       }
       draft_expressions_w: {
