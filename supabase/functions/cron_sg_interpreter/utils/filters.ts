@@ -134,24 +134,20 @@ export function filterNonAddedDeployers(
 	 * @param deployerId_ The deployer ID that will have the relation with this
 	 * address. The ID is genenrated from the bytecode hash and an UUID namespace.
 	 * @param interpreter_ The Rainterpreter instance ID that is used with this Expression
-	 * deployer. The ID is generated from a combination of the address with the chainID
-	 * plus an UUID namespace.
-	 * @param store The Store interpreter instance ID that is used with this Expression
-	 * deployer. The ID is generated from a combination of the address with the chainID
-	 * plus an UUID namespace.
+	 * deployer.
+	 * @param store_ The Store interpreter instance ID that is used with this Expression
+	 * deployer.
 	 */
-	function addAddress(address_: string, deployerId_: string, interpreter_: string, store: string) {
+	function addAddress(address_: string, deployerId_: string, interpreter_: string, store_: string) {
 		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
-		const interpreterID = uuidv5(interpreter_ + chain_id.toString(), UUIDnamespace);
-		const storeID = uuidv5(store + chain_id.toString(), UUIDnamespace);
 
 		deployersAddressesToAdd[addressID] = {
 			id: addressID,
 			deployer: deployerId_,
 			address: address_,
 			chainId: chain_id,
-			interpreter_address: interpreterID,
-			store_address: storeID
+			interpreter_address: interpreter_,
+			store_address: store_
 		};
 	}
 
