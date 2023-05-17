@@ -47,6 +47,10 @@ export type ContractSG = {
 	 */
 	contractMetaHash: string;
 	/**
+	 * The ExpressionDeployer used on the Constructor of the contract
+	 */
+	initialDeployer: Instance;
+	/**
 	 * MetaV1 document decoded
 	 */
 	meta: MetaDocumentSG;
@@ -208,6 +212,7 @@ export type DataAddressUpload = {
 	chain_id: number;
 	contract: string;
 	type: string;
+	initial_deployer: string;
 };
 
 export type DataDeployerUpload = {

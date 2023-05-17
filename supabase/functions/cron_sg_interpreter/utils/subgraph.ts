@@ -65,6 +65,9 @@ export async function getSGContracts(subgraphClient_: SubgraphClient): Promise<C
 					id
 					bytecodeHash
 					contractMetaHash
+					initialDeployer {
+						id
+					}
 					meta {
 						metaBytes
 						content {

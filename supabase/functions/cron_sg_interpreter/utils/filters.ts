@@ -41,14 +41,22 @@ export function filterNonAddedContracts(
 	/**
 	 * Add a new address to `addressesToAdd` using this local scope
 	 */
-	function addAddress(address_: string, contractId_: string, type_?: string) {
+	function addAddress(
+		address_: string,
+		contractId_: string,
+		deployerAddress_: string,
+		type_?: string
+	) {
 		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
+		const deployerAddressID = uuidv5(deployerAddress_ + chain_id.toString(), UUIDnamespace);
+
 		addressesToAdd[addressID] = {
 			id: addressID,
 			address: address_,
 			chain_id: chain_id,
 			contract: contractId_,
-			type: type_ ?? 'contract'
+			type: type_ ?? 'contract',
+			initial_deployer: deployerAddressID
 		};
 	}
 
@@ -62,7 +70,7 @@ export function filterNonAddedContracts(
 			// Check if it is already cached
 			if (contractsToAdd[contractID]) {
 				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGcontract.id, contractID);
+				addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 			} else {
 				// Decoded the meta
 				const metaContent = manageContractMetaSg(SGcontract.meta);
@@ -81,7 +89,7 @@ export function filterNonAddedContracts(
 					};
 
 					// To insert the new address with the Contract referece
-					addAddress(SGcontract.id, contractID);
+					addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 				}
 			}
 		} else {
@@ -93,7 +101,7 @@ export function filterNonAddedContracts(
 
 			// If does not exist in the DB, prepare data to insert
 			if (!addressContract) {
-				addAddress(SGcontract.id, contractID);
+				addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 			}
 		}
 	}
