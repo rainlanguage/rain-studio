@@ -29,7 +29,7 @@ export const getNameFromChainId = (id: number): string => {
 };
 
 // getting the chains for which there's both a known address for contract and interpreter
-export const getCommonChains = (
+export const  getCommonChains = (
 	deployers: DeployerAddressesRow[],
 	contractAddresses: ContractAddressRow[]
 ): number[] => {

@@ -56,7 +56,10 @@
 				/>
 			</TabPanel>
 			<TabPanel>
-				<Deploy />
+				<Deploy
+					contractAddresses={contract_addresses_new}
+					deployerAddresses={$page.data.deployers}
+				/>
 			</TabPanel>
 		</div>
 		<!-- <div class="py-8 lg:w-1/3"><Sidebar {contract} /></div> -->
