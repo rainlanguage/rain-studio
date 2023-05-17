@@ -16,6 +16,7 @@ export interface Database {
           contract: string
           created_at: string | null
           id: string
+          initial_deployer: string | null
           type: string
         }
         Insert: {
@@ -24,6 +25,7 @@ export interface Database {
           contract: string
           created_at?: string | null
           id: string
+          initial_deployer?: string | null
           type: string
         }
         Update: {
@@ -32,6 +34,7 @@ export interface Database {
           contract?: string
           created_at?: string | null
           id?: string
+          initial_deployer?: string | null
           type?: string
         }
       }
@@ -65,8 +68,10 @@ export interface Database {
         Row: {
           abi: Json
           contract_meta: Json
+          contract_meta_hash: string | null
           created_at: string
           id: string
+          meta_bytes: string | null
           metadata: Json
           project: string | null
           slug: string
@@ -74,8 +79,10 @@ export interface Database {
         Insert: {
           abi: Json
           contract_meta: Json
+          contract_meta_hash?: string | null
           created_at?: string
           id: string
+          meta_bytes?: string | null
           metadata: Json
           project?: string | null
           slug: string
@@ -83,8 +90,10 @@ export interface Database {
         Update: {
           abi?: Json
           contract_meta?: Json
+          contract_meta_hash?: string | null
           created_at?: string
           id?: string
+          meta_bytes?: string | null
           metadata?: Json
           project?: string | null
           slug?: string
@@ -97,6 +106,7 @@ export interface Database {
           id: string
           opmeta: Json
           opmeta_bytes: string
+          opmeta_hash: string | null
         }
         Insert: {
           bytecode_hash: string
@@ -104,6 +114,7 @@ export interface Database {
           id: string
           opmeta: Json
           opmeta_bytes: string
+          opmeta_hash?: string | null
         }
         Update: {
           bytecode_hash?: string
@@ -111,6 +122,7 @@ export interface Database {
           id?: string
           opmeta?: Json
           opmeta_bytes?: string
+          opmeta_hash?: string | null
         }
       }
       deployers_addresses: {
@@ -120,6 +132,8 @@ export interface Database {
           created_at: string
           deployer: string
           id: string
+          interpreter_address: string | null
+          store_address: string | null
         }
         Insert: {
           address: string
@@ -127,6 +141,8 @@ export interface Database {
           created_at?: string
           deployer: string
           id: string
+          interpreter_address?: string | null
+          store_address?: string | null
         }
         Update: {
           address?: string
@@ -134,6 +150,8 @@ export interface Database {
           created_at?: string
           deployer?: string
           id?: string
+          interpreter_address?: string | null
+          store_address?: string | null
         }
       }
       draft_expressions_w: {

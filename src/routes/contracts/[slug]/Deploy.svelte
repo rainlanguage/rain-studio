@@ -3,23 +3,40 @@
 	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
 	import { Button, InputDropdown, Select } from '@rainprotocol/rain-svelte-components';
 	import { getContractDeployTxData, RainNetworks, type DISpair } from 'rain-x-deploy';
-	import { chainId, provider, signer } from 'svelte-ethers-store';
-	import { getCommonChains, getNameFromChainId } from './write';
+	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
+	import { getCommonChains, getKnownContractAddressesForChain, getNameFromChainId } from './write';
 	import { changeNetwork } from '$lib/connect-wallet';
+	import { createClient } from '@urql/core';
+	import { Subgraphs } from '$lib/utils';
+	import { supabaseClient } from '$lib/supabaseClient';
 
 	export let contractAddresses: ContractAddressRow[], deployerAddresses: DeployerAddressesRow[];
-
-	const pave = async () => {
-		const addr_ = await $signer.getAddress();
-		console.log('addr: ', addr_);
-	};
 
 	let selectedDeployer: any;
 	let selectedItem: any;
 	let items: any;
 
+	let originChain: number;
 	let selectedChain: number;
 	let oldChain = -1;
+	let selectedContractAddress: string;
+
+	let txHash: string;
+	let dispair: DISpair;
+
+	const getContractChains = (contractAddresses: ContractAddressRow[]): number[] => {
+		// will only include unique chains for the contract
+		const chains: Set<number> = new Set();
+		contractAddresses.forEach((el) => {
+			chains.add(el.chain_id);
+		});
+		return Array.from(chains.values());
+	};
+
+	const changeOriginChain = async (event_: Event) => {
+		const chainIdSelected = (event_.target as HTMLSelectElement).value;
+		originChain = parseInt(chainIdSelected, 10);
+	};
 
 	const changeChain = async (event_: Event) => {
 		const chainIdSelected = (event_.target as HTMLSelectElement).value;
@@ -35,8 +52,62 @@
 		}
 	};
 
-	$: availableChains = getCommonChains(deployerAddresses, contractAddresses);
+	const getContractInfo = async (address_: string) => {
+		const client_ = createClient({
+			url: Subgraphs[0].url
+		});
+
+		const query_ = `
+			{
+				contract (id: "${address_}") {
+					deployTransaction {
+						id
+					}
+				}
+			}
+		`;
+		const { data: dataSg, error: errorSg } = await client_.query(query_, {}).toPromise();
+
+		const { data: dataDb, error: errorDb } = await supabaseClient
+			.from('contract_addresses_new')
+			.select(
+				'deployer:initial_deployer(address, interpreter_address(address), store_address(address))'
+			)
+			.eq('address', address_)
+			.single();
+
+		if (errorSg) {
+			console.log('Errow when fetching from SG: ', errorSg.message);
+		}
+
+		if (errorDb) {
+			console.log('Errow when fetching from DB: ', errorDb.message);
+		}
+
+		txHash = dataSg.contract.deployTransaction.id;
+		dispair = {
+			deployer: dataDb?.deployer.address,
+			interpreter: dataDb?.deployer.interpreter_address.address,
+			store: dataDb?.deployer.store_address.address
+		};
+	};
+
+	$: commonChains = getCommonChains(deployerAddresses, contractAddresses);
+	$: contractChains = getContractChains(contractAddresses);
+	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, originChain);
+	$: console.log(contractAddresses);
+
+	$: availableAddresses = knownAddressesForThisChain.length ? true : false;
 </script>
+
+<div class="">
+	<p>
+		txHash: {txHash}
+	</p>
+	<p>
+		dispair: {JSON.stringify(dispair, null, 4)}
+	</p>
+</div>
 
 {#if !$signer}
 	<div class="flex flex-col gap-y-6 self-center">
@@ -45,17 +116,30 @@
 	</div>
 {:else}
 	<div class="flex flex-col gap-y-4">
-		<span>Select a chain</span>
+		<span>Select an origin chain:</span>
 		<Select
-			items={availableChains.map((chainId_) => ({
+			items={contractChains.map((chainId_) => ({
 				label: getNameFromChainId(chainId_),
 				value: chainId_
 			}))}
-			on:change={changeChain}
+			on:change={changeOriginChain}
 			bind:value={selectedChain}
 		/>
 
-		<Button on:click={pave}>Click here</Button>
+		{#if availableAddresses}
+			<Select
+				items={knownAddressesForThisChain}
+				on:change={() => getContractInfo(selectedContractAddress)}
+				bind:value={selectedContractAddress}
+			/>
+		{/if}
+
+		<Button disabled={!availableAddresses} on:click={getContractInfo}>Deploy</Button>
+
+		{#if !availableAddresses && originChain}
+			<span class="text-yellow-600">No known deployments for this chain.</span>
+		{/if}
+
 		<div>
 			<InputDropdown
 				bind:value={selectedDeployer}
