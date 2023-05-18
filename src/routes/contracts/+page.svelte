@@ -17,8 +17,10 @@
 	$: counterContracts = $page.data.counterContracts;
 	$: contractsL = Math.ceil(counterContracts / 52);
 
+	const networkOptions_ = [{ label: 'All', value: -1 }].concat(networkOptions);
+
 	// Inital value "default" all networks
-	let selectedNetworks: Array<number> = [networkOptions[0].value];
+	let selectedNetworks: Array<number> = [-1];
 
 	let searchValue: string;
 	let loading_: boolean = false;
@@ -91,7 +93,7 @@
 			return 'All';
 
 		return selectedNetworks
-			.map((item_) => networkOptions.find((network_) => network_.value === item_)?.label)
+			.map((item_) => networkOptions_.find((network_) => network_.value === item_)?.label)
 			.join(', ');
 	};
 
@@ -122,7 +124,7 @@
 			<FilterSet
 				defaultOption={1}
 				exclusiveOptions={[0]}
-				options={networkOptions}
+				options={networkOptions_}
 				bind:value={selectedNetworks}
 			/>
 		</FilterGroup>

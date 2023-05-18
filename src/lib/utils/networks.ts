@@ -1,7 +1,7 @@
 import { allChainsData, type ChainData } from 'svelte-ethers-store';
 
 export const networkOptions = [
-	{ label: 'All', value: -1 },
+	{ label: 'Ethereum', value: 1 },
 	{ label: 'Polygon', value: 137 },
 	{ label: 'Mumbai', value: 80001 }
 ];
