@@ -14,11 +14,13 @@
 		"deploy-cron": "supabase functions deploy cron_sg_interpreter --project-ref wjjqadgrfglmanlweats --legacy-bundle"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.34.1",
 		"@sentry/vite-plugin": "^0.3.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-vercel": "^1.0.0-next.84",
 		"@sveltejs/kit": "1.15.4",
 		"@tailwindcss/typography": "^0.5.8",
+		"@tenkeylabs/dappwright": "^2.3.1",
 		"@types/prettier": "^2.7.2",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
