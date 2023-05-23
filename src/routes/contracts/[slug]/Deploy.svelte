@@ -183,13 +183,13 @@
 <!-- TODO: Add styling and modal when waiting for the deployment transaction and show the results -->
 
 {#if !$signer}
-	<div class="flex flex-col gap-y-6 self-center">
+	<div class="flex w-1/2 flex-col gap-y-4">
 		<p>You should connect your wallet before interacting with the newtork</p>
 		<ConnectWallet />
 	</div>
 {:else}
-	<div class="flex flex-col gap-y-4">
-		<div>
+	<div class="flex w-1/2 flex-col gap-y-6">
+		<div class="flex flex-col gap-y-4">
 			<span>Select an origin chain:</span>
 			<Select
 				items={contractChains.map((chainId_) => ({
@@ -202,7 +202,7 @@
 		</div>
 
 		{#if availableAddresses}
-			<div>
+			<div class="flex flex-col gap-y-4">
 				<span>Select a contract address:</span>
 				<InputDropdown
 					disabled={originChain == -1}
@@ -217,13 +217,14 @@
 		{/if}
 
 		{#if selectedContractAddress && selectedContractAddress != ''}
-			<div>
+			<div class="flex flex-col gap-y-4">
 				<span>Select a target chain:</span>
 				<Select items={networkOptions} on:change={changeTargetChain} bind:value={targetChain} />
 			</div>
 			{#if targetChain && targetChain != -1 && originChain != targetChain}
-				<div>
-					<span>Specify a deployer address on target network:</span>
+				<div class="flex flex-col gap-y-4">
+					<span>Select a deployer address on target network:</span>
+
 					{#key targetChain}
 						<InputDropdown
 							disabled={targetChain == -1}
@@ -235,16 +236,28 @@
 							classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
 						/>
 					{/key}
+					<span class="mt-[-4px] text-sm text-yellow-600"
+						>This deployer will be used only for registering the new contract. It doesn't matter
+						which you choose.</span
+					>
 					{#if !subgraphInfoTarget}
-						<span class="text-yellow-600">'There is no SG url available for that network yet</span>
+						<span class="text-sm text-red-600"
+							>'There is no Subgraph url available for that network yet</span
+						>
 					{/if}
 				</div>
 			{/if}
 		{/if}
 
-		<Button
-			disabled={!targetChain || targetChain == -1 || !subgraphInfoTarget}
-			on:click={crossDeploy}>Deploy</Button
-		>
+		<div class="self-center">
+			<Button
+				disabled={!targetChain ||
+					targetChain == -1 ||
+					!subgraphInfoTarget ||
+					(originChain != targetChain &&
+						(!selectedDeployerAddress || selectedDeployerAddress == -1))}
+				on:click={crossDeploy}>Deploy</Button
+			>
+		</div>
 	</div>
 {/if}
