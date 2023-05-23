@@ -1,22 +1,25 @@
 <script lang="ts">
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
-	import { Button, InputDropdown, Select } from '@rainprotocol/rain-svelte-components';
+	import { Button, InputDropdown, Modal, Ring, Select } from '@rainprotocol/rain-svelte-components';
 	import { getContractDeployTxData, RainNetworks, type DISpair } from 'rain-x-deploy';
 	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
 	import { getCommonChains, getKnownContractAddressesForChain, getNameFromChainId } from './write';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import { createClient } from '@urql/core';
-	import { Subgraphs, networkOptions } from '$lib/utils';
+	import { Subgraphs, getNetworkByChainId, networkOptions } from '$lib/utils';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import type { Item } from '@rainprotocol/rain-svelte-components/dist/input-dropdown/InputDropdown.svelte';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { ExclamationTriangle } from '@steeze-ui/heroicons';
 
-	export let contractAddresses: ContractAddressRow[], deployerAddresses: DeployerAddressesRow[];
+	export let contractAddresses: ContractAddressRow[],
+		deployerAddresses: DeployerAddressesRow[],
+		metadata: any;
 
 	let originChain: number;
 	let selectedContractAddress: string;
 	let selectedContractItem: Item;
-	let txHash: string;
 	let dispairOrigin: DISpair;
 
 	// Selected chain (provider to deploy)
@@ -25,6 +28,15 @@
 	let selectedDeployerAddress: any;
 	let selectedDeployerItem: Item;
 	let dispairTarget: DISpair;
+
+	// Handle send transaction
+	let openWaitTx = false;
+	let waitTx = false;
+	let urlTx: string;
+
+	// Error tx info
+	let errorTx = false;
+	let errorMsg: string;
 
 	$: subgraphInfoOrigin = Subgraphs.find((sg_) => sg_.chain == originChain);
 	$: subgraphInfoTarget = Subgraphs.find((sg_) => sg_.chain == targetChain);
@@ -104,7 +116,6 @@
 			throw new Error(`Errow when fetching from DB: ${errorDb.message}`);
 		}
 
-		txHash = dataSg.contract.deployTransaction.id;
 		dispairOrigin = {
 			deployer: dataDb?.deployer.address,
 			interpreter: dataDb?.deployer.interpreter_address.address,
@@ -155,7 +166,15 @@
 		};
 	};
 
+	const closeModalTx = () => {
+		openWaitTx = false;
+		errorTx = false;
+	};
+
 	const crossDeploy = async () => {
+		openWaitTx = true;
+		waitTx = true;
+		let tx_;
 		let network: RainNetworks | null = null;
 		if (originChain == 1) network = RainNetworks.Ethereum;
 		if (originChain == 137) network = RainNetworks.Polygon;
@@ -168,8 +187,37 @@
 		const toDIS = originChain == targetChain ? dispairOrigin : dispairTarget;
 		const txData = await getContractDeployTxData(network, fromDIS, toDIS, selectedContractAddress);
 
-		await $signer.sendTransaction({ data: txData });
+		try {
+			tx_ = await $signer.sendTransaction({ data: txData });
+			// Do not wait anymore
+			waitTx = false;
+			txHash_ = tx_.hash;
+
+			const networkInfo = getNetworkByChainId($chainId);
+
+			console.log(await tx_.wait());
+		} catch (error) {
+			// Do not wait anymore
+			waitTx = false;
+			if (error.code == 'ACTION_REJECTED') {
+				// The user rejected the transaction
+				errorMsg = 'Transaction rejected or cancelled';
+			} else {
+				// Other error
+				if (error.reason) {
+					errorMsg = error.reason;
+				} else if (error.message) {
+					errorMsg = error.message;
+				} else {
+					errorMsg = JSON.stringify(error);
+				}
+			}
+			console.log(JSON.stringify(error));
+			errorTx = true;
+		}
 	};
+
+	let txHash_: string;
 
 	// $: commonChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: contractChains = getContractChains(contractAddresses);
@@ -238,7 +286,7 @@
 					{/key}
 					<span class="mt-[-4px] text-sm text-yellow-600"
 						>This deployer will be used only for registering the new contract. It doesn't matter
-						which you choose.</span
+						which one you choose.</span
 					>
 					{#if !subgraphInfoTarget}
 						<span class="text-sm text-red-600"
@@ -261,3 +309,59 @@
 		</div>
 	</div>
 {/if}
+
+<div class="self-center">
+	<Button on:click={() => (openWaitTx = true)}>Open modal</Button>
+</div>
+
+<Modal bind:open={openWaitTx} disableOutsideClickClose>
+	<div class="flex w-full flex-col gap-5">
+		{#if waitTx}
+			<div class="flex flex-col gap-5">
+				<p>Waiting for transaction...</p>
+				<div class="mx-auto">
+					<Ring size="40px" color="#cbd5e1" />
+				</div>
+			</div>
+		{:else if errorTx}
+			<div class="flex flex-col items-center gap-1">
+				<Icon
+					src={ExclamationTriangle}
+					theme="solid"
+					class={`mr-1.5 h-16 w-16 py-0.5 text-red-500`}
+				/>
+				<p>
+					{errorMsg}
+				</p>
+			</div>
+		{:else}
+			<!-- TODO: Add a waiter for the transaction to be mined -->
+			<div class="flex flex-col items-center gap-1">
+				<span class="text-lg font-semibold">{metadata.name}</span>
+				<p>
+					Tx hash: {txHash_}
+				</p>
+				<p>See the status: {urlTx}</p>
+			</div>
+		{/if}
+
+		<div class="flex justify-center">
+			<Button variant="primary" on:click={closeModalTx}>Close</Button>
+		</div>
+	</div>
+	<!-- <div class="flex w-full flex-col gap-5">
+		<div class="flex w-fit flex-col items-center gap-2.5">
+			{#if icon != undefined}
+				<Icon
+					src={icon}
+					theme={solidIcon ? 'solid' : ''}
+					class={`mr-1.5 h-16 w-16 py-0.5 ${iconColor}`}
+				/>
+			{/if}
+			<p class={`text-[${textSize}]`}>{message}</p>
+		</div>
+		<div class="flex justify-center">
+			<Button variant="primary" on:click={() => (open = false)}>Continue</Button>
+		</div>
+	</div> -->
+</Modal>

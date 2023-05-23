@@ -59,6 +59,7 @@
 				<Deploy
 					contractAddresses={contract_addresses_new}
 					deployerAddresses={$page.data.deployers}
+					{metadata}
 				/>
 			</TabPanel>
 		</div>
