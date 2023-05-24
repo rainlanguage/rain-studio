@@ -11,7 +11,10 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import type { Item } from '@rainprotocol/rain-svelte-components/dist/input-dropdown/InputDropdown.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { ExclamationTriangle } from '@steeze-ui/heroicons';
+	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
+
+	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
+	import { matchContracts } from '$lib/match-addresses';
 
 	export let contractAddresses: ContractAddressRow[],
 		deployerAddresses: DeployerAddressesRow[],
@@ -30,9 +33,13 @@
 	let dispairTarget: DISpair;
 
 	// Handle send transaction
+	let txReceipt: TransactionReceipt | undefined;
+	let txHash_: string;
 	let openWaitTx = false;
-	let waitTx = false;
-	let urlTx: string;
+	let waitTxResp = false;
+	let waitTxReceipt = false;
+	let showTxReceipt = false;
+	let urlExplorer: string;
 
 	// Error tx info
 	let errorTx = false;
@@ -167,13 +174,20 @@
 	};
 
 	const closeModalTx = () => {
+		txReceipt = undefined;
 		openWaitTx = false;
+		waitTxResp = false;
+		waitTxReceipt = false;
+		showTxReceipt = false;
+		urlExplorer = '';
+
 		errorTx = false;
+		errorMsg = '';
 	};
 
 	const crossDeploy = async () => {
 		openWaitTx = true;
-		waitTx = true;
+		waitTxResp = true;
 		let tx_;
 		let network: RainNetworks | null = null;
 		if (originChain == 1) network = RainNetworks.Ethereum;
@@ -190,15 +204,22 @@
 		try {
 			tx_ = await $signer.sendTransaction({ data: txData });
 			// Do not wait anymore
-			waitTx = false;
+			waitTxResp = false;
 			txHash_ = tx_.hash;
+			waitTxReceipt = true;
 
 			const networkInfo = getNetworkByChainId($chainId);
+			if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
+				urlExplorer = networkInfo.explorers[0].url;
+			}
 
-			console.log(await tx_.wait());
+			txReceipt = await tx_.wait();
+
+			waitTxReceipt = false;
+			showTxReceipt = true;
 		} catch (error) {
 			// Do not wait anymore
-			waitTx = false;
+			waitTxResp = false;
 			if (error.code == 'ACTION_REJECTED') {
 				// The user rejected the transaction
 				errorMsg = 'Transaction rejected or cancelled';
@@ -217,8 +238,6 @@
 		}
 	};
 
-	let txHash_: string;
-
 	// $: commonChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: contractChains = getContractChains(contractAddresses);
 	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, originChain);
@@ -227,8 +246,6 @@
 	$: selectedContractAddress, getContractInfo(selectedContractAddress);
 	$: selectedDeployerAddress, targetChain, getDeployerInfo(selectedDeployerAddress, targetChain);
 </script>
-
-<!-- TODO: Add styling and modal when waiting for the deployment transaction and show the results -->
 
 {#if !$signer}
 	<div class="flex w-1/2 flex-col gap-y-4">
@@ -316,7 +333,7 @@
 
 <Modal bind:open={openWaitTx} disableOutsideClickClose>
 	<div class="flex w-full flex-col gap-5">
-		{#if waitTx}
+		{#if waitTxResp}
 			<div class="flex flex-col gap-5">
 				<p>Waiting for transaction...</p>
 				<div class="mx-auto">
@@ -334,14 +351,58 @@
 					{errorMsg}
 				</p>
 			</div>
-		{:else}
-			<!-- TODO: Add a waiter for the transaction to be mined -->
-			<div class="flex flex-col items-center gap-1">
-				<span class="text-lg font-semibold">{metadata.name}</span>
-				<p>
-					Tx hash: {txHash_}
-				</p>
-				<p>See the status: {urlTx}</p>
+		{:else if waitTxReceipt}
+			<div class="flex flex-col gap-5">
+				<p>Waiting for the transaction to be mined...</p>
+				<div class="flex flex-col gap-2">
+					<p>See the status:</p>
+					<a
+						class="text-blue-600"
+						target="_blank"
+						rel="noreferrer"
+						href={`${urlExplorer}/tx/${txHash_}`}
+					>
+						{txHash_}
+					</a>
+				</div>
+				<div class="mx-auto">
+					<Ring size="40px" color="#cbd5e1" />
+				</div>
+			</div>
+		{:else if showTxReceipt}
+			{#if txReceipt?.status}
+				<div class="flex flex-col items-center gap-1">
+					<Icon src={CheckCircle} theme="solid" class={`mr-1.5 h-16 w-16 py-0.5 text-green-500`} />
+					<p>Contract created successfully</p>
+					<a
+						class="text-blue-600"
+						target="_blank"
+						rel="noreferrer"
+						href={`${urlExplorer}/address/${txReceipt.contractAddress}`}
+					>
+						{txReceipt.contractAddress}
+					</a>
+				</div>
+			{:else}
+				<div class="flex flex-col items-center gap-1">
+					<Icon
+						src={ExclamationTriangle}
+						theme="solid"
+						class={`mr-1.5 h-16 w-16 py-0.5 text-red-500`}
+					/>
+					<p>Contract creation reverted</p>
+				</div>
+			{/if}
+			<div class="flex flex-col gap-2">
+				<p>Transaction result:</p>
+				<a
+					class="text-blue-600"
+					target="_blank"
+					rel="noreferrer"
+					href={`${urlExplorer}/tx/${txHash_}`}
+				>
+					{txHash_}
+				</a>
 			</div>
 		{/if}
 
