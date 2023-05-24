@@ -36,10 +36,20 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright tests
+      
+      - name: Build UI
         run: |
           export NODE_OPTIONS="--max_old_space_size=4096"
-          npx playwright test
+          npm run build
+        
+      - name: Start UI
+        run: npm run preview &
+        
+      - name: Wait for UI to start
+        run: sleep 10
+      
+      - name: Run Playwright tests
+        run: npx playwright test
 
       - uses: actions/upload-artifact@v3
         if: always()
