@@ -26,8 +26,8 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     
-    baseURL: 'http://127.0.0.1:4173',
-    // baseURL: 'https://studio.rainprotocol.xyz',
+    // baseURL: 'http://localhost:4173',
+    baseURL: 'https://studio.rainprotocol.xyz',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

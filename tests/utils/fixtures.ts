@@ -20,7 +20,7 @@ export const test = baseTest.extend<{
       // Add Hardhat as a custom network
       await wallet.addNetwork({
         networkName: "Hardhat",
-        rpc: "http://hardhat:8545",
+        rpc: "http://127.0.0.1:8545",
         chainId: 31337,
         symbol: "ETH",
       });
