@@ -1,10 +1,12 @@
 import { expect } from "@playwright/test";
 import { test } from "../utils/fixtures";
-import { assertKeyValuePair, getLocalStorageItems } from "../utils/helpers";
+import { assertKeyValuePair, getLocalStorageItems, screenshotOnFailure } from "../utils/helpers";
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
+
+test.afterEach(screenshotOnFailure);
 
 test.describe('Studio Sign In Page test', () => {
 
