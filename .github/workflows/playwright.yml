@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     services:
-      docker:
+      hardhat:
         image: docker/compose:1.29.2
         options: --entrypoint=docker-compose --env DOCKER_COMPOSE_VERSION=1.29.2
 
