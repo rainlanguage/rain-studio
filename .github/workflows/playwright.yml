@@ -26,9 +26,6 @@ jobs:
         with:
           node-version: 16
 
-      - name: Start Docker services
-        run: docker-compose -f "docker/docker-compose.yml" up -d
-
       - name: Wait for Docker services to start
         run: sleep 5
 
@@ -44,7 +41,10 @@ jobs:
         
       - name: Start UI
         run: npm run preview &
-        
+
+      - name: Start Docker services
+        run: docker-compose -f "docker/docker-compose.yml" up -d
+
       - name: Wait for UI to start
         run: sleep 10
       
