@@ -4,6 +4,10 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+env:
+  SUPABASE_JWT: ${{ secrets.SUPABASE_JWT }}
+  PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+  HASH_KEY: ${{ secrets.HASH_KEY }}
 jobs:
   test:
     timeout-minutes: 60

@@ -1,4 +1,4 @@
-// import { HASH_KEY } from '$env/static/private';
+import { HASH_KEY } from '$env/static/private';
 import { json, error as sveltekitError } from '@sveltejs/kit';
 import { utils } from 'ethers';
 
@@ -23,7 +23,7 @@ const createMessage = ({
 };
 
 async function requestMessage(address: string) {
-	const nonce = utils.hexDataSlice(utils.computeHmac('sha256', "0xd96a03d0bb", address), 0, 8);
+	const nonce = utils.hexDataSlice(utils.computeHmac('sha256', HASH_KEY, address), 0, 8);
 
 	return createMessage({ address, nonce });
 }
