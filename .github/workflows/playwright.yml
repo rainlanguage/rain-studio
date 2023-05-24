@@ -10,8 +10,7 @@ env:
   HASH_KEY: ${{ secrets.HASH_KEY }}
   VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
   VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-  NODE_OPTIONS: "--max_old_space_size=4096"
-  
+
 jobs:
   test:
     timeout-minutes: 60
@@ -38,7 +37,10 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: |
+          export NODE_OPTIONS="--max_old_space_size=4096"
+          npx playwright test
+
       - uses: actions/upload-artifact@v3
         if: always()
         with:
