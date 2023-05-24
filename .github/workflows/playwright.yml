@@ -8,6 +8,9 @@ env:
   SUPABASE_JWT: ${{ secrets.SUPABASE_JWT }}
   PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
   HASH_KEY: ${{ secrets.HASH_KEY }}
+  VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+  VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+  
 jobs:
   test:
     timeout-minutes: 60
