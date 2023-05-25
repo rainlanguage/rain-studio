@@ -15,8 +15,6 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.34.0-jammy
 
     steps:
       - uses: actions/checkout@v3
@@ -38,12 +36,15 @@ jobs:
       - name: Wait for UI to start
         run: sleep 10
       
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
       - name: Install linux deps
         run: |
           sudo apt-get install --no-install-recommends -y \
           fluxbox \
           xvfb
-
+      
       - name: Run Playwright tests
         run: |
           Xvfb :0 -screen 0 1024x768x24 -listen tcp -ac &
