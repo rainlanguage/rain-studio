@@ -1,8 +1,11 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { screenshotOnFailure } from '../../utils/helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
+
+test.afterEach(screenshotOnFailure);
 
 test.describe('Studio Homepage test', () => {
 

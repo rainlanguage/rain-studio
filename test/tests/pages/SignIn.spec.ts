@@ -1,6 +1,7 @@
-import { expect } from "@playwright/test";
-import { test } from "../utils/fixtures";
-import { assertKeyValuePair, getLocalStorageItems, screenshotOnFailure } from "../utils/helpers";
+import { test, expect } from "../../fixtures/test.fixtures";
+import metamask from "@synthetixio/synpress/commands/metamask.js";
+
+import { assertKeyValuePair, getLocalStorageItems, screenshotOnFailure } from "../../utils/helpers";
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -10,7 +11,7 @@ test.afterEach(screenshotOnFailure);
 
 test.describe('Studio Sign In Page test', () => {
 
-  test('connect wallet using metamask', async ({ wallet, page }) => {
+  test('connect wallet using metamask', async ({ page }) => {
     // Navigate to sign-in page
     await page.getByRole('button', { name: 'Sign up' }).click();
     await expect(page).toHaveURL(/sign-in/);
@@ -31,7 +32,7 @@ test.describe('Studio Sign In Page test', () => {
     await web3Modal[0]?.click();
 
     // Connect with metamask
-    await wallet.approve();
+    await metamask.acceptAccess();
 
     // Assert localStorage
     assertKeyValuePair(await getLocalStorageItems(page), 'WEB3_CONNECT_CACHED_PROVIDER', '"injected"');

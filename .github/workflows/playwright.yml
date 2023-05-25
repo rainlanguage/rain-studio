@@ -15,19 +15,12 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    services:
-      hardhat:
-        image: docker/compose:1.29.2
-        options: --entrypoint=docker-compose --env DOCKER_COMPOSE_VERSION=1.29.2
 
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      - name: Wait for Docker services to start
-        run: sleep 5
 
       - name: Install dependencies
         run: npm ci
@@ -41,9 +34,6 @@ jobs:
         
       - name: Start UI
         run: npm run preview &
-
-      - name: Start Docker services
-        run: docker-compose -f "docker/docker-compose.yml" up -d
 
       - name: Wait for UI to start
         run: sleep 10

@@ -1,6 +1,6 @@
 import type { Page, TestInfo } from "@playwright/test";
-import type { Dappwright } from "@tenkeylabs/dappwright";
 import assert from 'assert';
+import metamask from "@synthetixio/synpress/commands/metamask.js";
 
 /**
  * Function to get the localStorage key value pairs
@@ -35,9 +35,8 @@ export function assertKeyValuePair(obj: Record<string, any>, key: string, value:
 /**
  * Function to signin to studio using metamask
  * @param page Currently open playwright page
- * @param wallet Configured Hardhat wallet
  */
-export async function signInUsingMetamask(page: Page, wallet: Dappwright) {
+export async function signInUsingMetamask(page: Page) {
 
     // Navigate to sign-in page
     await page.goto('/sign-in');
@@ -52,7 +51,7 @@ export async function signInUsingMetamask(page: Page, wallet: Dappwright) {
     await web3Modal[0]?.click();
 
     // Connect with metamask
-    await wallet.approve();
+    await metamask.acceptAccess();
 
     // Assert localStorage
     assertKeyValuePair(await getLocalStorageItems(page), 'WEB3_CONNECT_CACHED_PROVIDER', '"injected"');
@@ -60,11 +59,11 @@ export async function signInUsingMetamask(page: Page, wallet: Dappwright) {
 
 export async function screenshotOnFailure({ page }: { page: Page }, testInfo: TestInfo) {
     if (testInfo.status !== testInfo.expectedStatus) {
-      // Get a unique place for the screenshot.
-      const screenshotPath = testInfo.outputPath(`failure.png`);
-      // Add it to the report.
-      testInfo.attachments.push({ name: 'screenshot', path: screenshotPath, contentType: 'image/png' });
-      // Take the screenshot itself.
-      await page.screenshot({ path: screenshotPath, timeout: 5000 });
+        // Get a unique place for the screenshot.
+        const screenshotPath = testInfo.outputPath(`failure.png`);
+        // Add it to the report.
+        testInfo.attachments.push({ name: 'screenshot', path: screenshotPath, contentType: 'image/png' });
+        // Take the screenshot itself.
+        await page.screenshot({ path: screenshotPath, timeout: 5000 });
     }
-  }
+}
