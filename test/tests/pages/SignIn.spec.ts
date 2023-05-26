@@ -12,7 +12,7 @@ test.afterEach(screenshotOnFailure);
 
 test.describe('Studio Sign In Page test', () => {
 
-  test('connect wallet using metamask', async ({ page }) => {
+  test.only('connect wallet using metamask', async ({ page }) => {
     // Navigate to sign-in page
     await page.getByRole('button', { name: 'Sign up' }).click();
     await expect(page).toHaveURL(/sign-in/);
