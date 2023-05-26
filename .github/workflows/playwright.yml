@@ -32,17 +32,8 @@ jobs:
           
       - name: Install linux deps
         run: |
-          sudo apt-get install --no-install-recommends -y \
-          fluxbox \
-          xvfb
+          sudo apt-get install -y xvfb
 
-      - name: Run xvfb and fluxbox
-        run: |
-          Xvfb :0 -screen 0 1024x768x24 -listen tcp -ac &
-          fluxbox &
-        env:
-          DISPLAY: :0.0
-          
       - name: Install dependencies
         run: npm ci
 
@@ -58,12 +49,10 @@ jobs:
         run: sleep 10
       
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install
       
       - name: Run Playwright tests
-        run: npx playwright test
-        env:
-          DISPLAY: :0.0
+        run: xvfb-run npm run test
 
       - uses: actions/upload-artifact@v3
         if: always()
