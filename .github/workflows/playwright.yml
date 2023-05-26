@@ -32,22 +32,25 @@ jobs:
         with:
           node-version: 16
 
+      - name: Clean cache
+        run: sudo npm cache clean --force 
+
       - name: Install dependencies
-        run: npm ci
+        run: sudo npm ci
 
       - name: Build UI
         run: |
           export NODE_OPTIONS="--max_old_space_size=4096"
-          npm run build
+          sudo npm run build
         
       - name: Start UI
-        run: npm run preview &
+        run: sudo npm run preview &
 
       - name: Wait for UI to start
         run: sleep 10
       
       - name: Run Playwright tests
-        run: xvfb-run npm run test
+        run: sudo xvfb-run npm run test
 
       - uses: actions/upload-artifact@v3
         if: always()
