@@ -21,6 +21,7 @@ export const test = base.extend<TestFixtures>({
 
     // prepare browser args
     const browserArgs = [
+      "--headless=new", 
       "--accept-lang=en",
       `--disable-extensions-except=${metamaskPath}`,
       `--load-extension=${metamaskPath}`,
