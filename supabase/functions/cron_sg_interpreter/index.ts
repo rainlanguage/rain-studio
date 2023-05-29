@@ -49,7 +49,7 @@ serve(async (req) => {
 		let storeAddressesToAdd: DataRainterpreterStoreAddressUpload[] = [];
 
 		for (let i = 0; i < subgraphs.length; i++) {
-			const { subgraph_url, chainId } = subgraphs[i];
+			const { subgraph_url, chain_id } = subgraphs[i];
 
 			// Create connection the current subgraph (chainID)
 			const subgraphClient = createSgClient({
@@ -61,7 +61,7 @@ serve(async (req) => {
 			const { sgContracts, dBContracts } = await getContracts(supabaseClient, subgraphClient);
 
 			// Filter non added contracts
-			const filteredContracts = filterNonAddedContracts(sgContracts, dBContracts, chainId);
+			const filteredContracts = filterNonAddedContracts(sgContracts, dBContracts, chain_id);
 
 			// Concat to the arrays, so we can use less insert queries
 			contractsToAdd = contractsToAdd.concat(Object.values(filteredContracts.contractsToAdd));
@@ -79,16 +79,16 @@ serve(async (req) => {
 				subgraphClient
 			);
 
-			const filteredDeployers = filterNonAddedDeployers(deployersSG, deployersDB, chainId);
+			const filteredDeployers = filterNonAddedDeployers(deployersSG, deployersDB, chain_id);
 			const filteredRainterpreters = filterNonAddedRainterpreters(
 				rainterpretersSG,
 				rainterpretersDB,
-				chainId
+				chain_id
 			);
 			const filteredStores = filterNonAddedStores(
 				rainterpreter_storesSG,
 				rainterpreter_storesDB,
-				chainId
+				chain_id
 			);
 
 			// Concat and filling the arrays
@@ -136,15 +136,6 @@ serve(async (req) => {
 			? await supabaseClient.from('contract_addresses_new').insert(contractAddressesToAdd)
 			: nonChanged;
 
-		// - Deployers
-		const respDeployers = deployerToAdd.length
-			? await supabaseClient.from('deployers').insert(deployerToAdd)
-			: nonChanged;
-
-		const respDeployerAddresses = deployerAddressesToAdd.length
-			? await supabaseClient.from('deployers_addresses').insert(deployerAddressesToAdd)
-			: nonChanged;
-
 		// - Rainterpreters;
 		const respRainterpreters = rainterpretersToAdd.length
 			? await supabaseClient.from('rainterpreters').insert(rainterpretersToAdd)
@@ -161,6 +152,15 @@ serve(async (req) => {
 
 		const respStoreAddresses = storeAddressesToAdd.length
 			? await supabaseClient.from('rainterpreter_store_addresses').insert(storeAddressesToAdd)
+			: nonChanged;
+
+		// - Deployers: They are added/updated at the end since have a dependency with Rainterpreters and Storess
+		const respDeployers = deployerToAdd.length
+			? await supabaseClient.from('deployers').insert(deployerToAdd)
+			: nonChanged;
+
+		const respDeployerAddresses = deployerAddressesToAdd.length
+			? await supabaseClient.from('deployers_addresses').insert(deployerAddressesToAdd)
 			: nonChanged;
 
 		// Return a response with the fully information about any result and well formatted for readability

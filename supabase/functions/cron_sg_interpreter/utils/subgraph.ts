@@ -15,17 +15,17 @@ import {
  */
 export function getSubgraph(): Array<{
 	subgraph_url: string;
-	chainId: number;
+	chain_id: number;
 }> {
 	return [
 		{
 			subgraph_url:
 				'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry-polygon',
-			chainId: 137
+			chain_id: 137
 		},
 		{
 			subgraph_url: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry',
-			chainId: 80001
+			chain_id: 80001
 		}
 	];
 }
@@ -65,6 +65,9 @@ export async function getSGContracts(subgraphClient_: SubgraphClient): Promise<C
 					id
 					bytecodeHash
 					contractMetaHash
+					initialDeployer {
+						id
+					}
 					meta {
 						metaBytes
 						content {
@@ -133,6 +136,12 @@ export async function getSGInterpreters(subgraphClient_: SubgraphClient) {
 					bytecodeHash
 					opmeta
 					opmetaHash
+					interpreter {
+						id
+					}
+					store {
+						id
+					}
 					meta {
 						metaBytes
 						content {

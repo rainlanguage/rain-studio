@@ -5,7 +5,7 @@
 
 	$: addressCount = contract_addresses.length;
 	$: chainCount = contract_addresses.reduce(
-		(pre: Set<number>, curr: any) => pre.add(curr.chainId),
+		(pre: Set<number>, curr: any) => pre.add(curr.chain_id),
 		new Set()
 	).size;
 </script>

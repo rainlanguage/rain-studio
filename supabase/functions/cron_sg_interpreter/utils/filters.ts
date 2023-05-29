@@ -28,7 +28,7 @@ import { manageContractMetaSg, manageDeployerMetaSg } from './meta.ts';
 export function filterNonAddedContracts(
 	sgContracts_: Array<ContractSG>,
 	dbContracts_: ContractDB[],
-	chainId: number
+	chain_id: number
 ) {
 	const contractsToAdd: {
 		[key: string]: DataContractUpload;
@@ -41,14 +41,22 @@ export function filterNonAddedContracts(
 	/**
 	 * Add a new address to `addressesToAdd` using this local scope
 	 */
-	function addAddress(address_: string, contractId_: string, type_?: string) {
-		const addressID = uuidv5(address_ + chainId.toString(), UUIDnamespace);
+	function addAddress(
+		address_: string,
+		contractId_: string,
+		deployerAddress_: string,
+		type_?: string
+	) {
+		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
+		const deployerAddressID = uuidv5(deployerAddress_ + chain_id.toString(), UUIDnamespace);
+
 		addressesToAdd[addressID] = {
 			id: addressID,
 			address: address_,
-			chain_id: chainId,
+			chain_id: chain_id,
 			contract: contractId_,
-			type: type_ ?? 'contract'
+			type: type_ ?? 'contract',
+			initial_deployer: deployerAddressID
 		};
 	}
 
@@ -62,7 +70,7 @@ export function filterNonAddedContracts(
 			// Check if it is already cached
 			if (contractsToAdd[contractID]) {
 				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGcontract.id, contractID);
+				addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 			} else {
 				// Decoded the meta
 				const metaContent = manageContractMetaSg(SGcontract.meta);
@@ -81,11 +89,11 @@ export function filterNonAddedContracts(
 					};
 
 					// To insert the new address with the Contract referece
-					addAddress(SGcontract.id, contractID);
+					addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 				}
 			}
 		} else {
-			const addressID = uuidv5(SGcontract.id + chainId.toString(), UUIDnamespace);
+			const addressID = uuidv5(SGcontract.id + chain_id.toString(), UUIDnamespace);
 
 			const addressContract = contractMatched.contract_addresses_new.find(
 				(item_) => item_.id === addressID
@@ -93,7 +101,7 @@ export function filterNonAddedContracts(
 
 			// If does not exist in the DB, prepare data to insert
 			if (!addressContract) {
-				addAddress(SGcontract.id, contractID);
+				addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 			}
 		}
 	}
@@ -109,7 +117,7 @@ export function filterNonAddedContracts(
 export function filterNonAddedDeployers(
 	sgDeployers_: ExpressionDeployerSG[],
 	dbDeployers_: DeployerDB[],
-	chainId: number
+	chain_id: number
 ) {
 	const deployersToAdd: {
 		[key: string]: DataDeployerUpload;
@@ -121,14 +129,29 @@ export function filterNonAddedDeployers(
 
 	/**
 	 * Add a new address to `deployersAddressesToAdd` using this local scope
+	 *
+	 * @param address_ The ExpressionDeployer address
+	 * @param deployerId_ The deployer ID that will have the relation with this
+	 * address. The ID is genenrated from the bytecode hash and an UUID namespace.
+	 * @param interpreter_ The Rainterpreter instance ID that is used with this Expression
+	 * deployer. The ID is generated from a combination of the address with the chainID
+	 * plus an UUID namespace.
+	 * @param store The Store interpreter instance ID that is used with this Expression
+	 * deployer. The ID is generated from a combination of the address with the chainID
+	 * plus an UUID namespace.
 	 */
-	function addAddress(address_: string, deployerId_: string) {
-		const addressID = uuidv5(address_ + chainId.toString(), UUIDnamespace);
+	function addAddress(address_: string, deployerId_: string, interpreter_: string, store: string) {
+		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
+		const interpreterID = uuidv5(interpreter_ + chain_id.toString(), UUIDnamespace);
+		const storeID = uuidv5(store + chain_id.toString(), UUIDnamespace);
+
 		deployersAddressesToAdd[addressID] = {
 			id: addressID,
 			deployer: deployerId_,
 			address: address_,
-			chainId: chainId
+			chainId: chain_id,
+			interpreter_address: interpreterID,
+			store_address: storeID
 		};
 	}
 
@@ -142,7 +165,7 @@ export function filterNonAddedDeployers(
 			// Check if it is already cached
 			if (deployersToAdd[deployerID]) {
 				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGdeployer.id, deployerID);
+				addAddress(SGdeployer.id, deployerID, SGdeployer.interpreter.id, SGdeployer.store.id);
 			} else {
 				// Decoded the CBOR sequence into the opmeta (the opmeta decoded and the bytes)
 				const opmetaData = manageDeployerMetaSg(SGdeployer.meta);
@@ -160,11 +183,11 @@ export function filterNonAddedDeployers(
 					};
 
 					// To insert the new address with the Contract referece
-					addAddress(SGdeployer.id, deployerID);
+					addAddress(SGdeployer.id, deployerID, SGdeployer.interpreter.id, SGdeployer.store.id);
 				}
 			}
 		} else {
-			const addressID = uuidv5(SGdeployer.id + chainId.toString(), UUIDnamespace);
+			const addressID = uuidv5(SGdeployer.id + chain_id.toString(), UUIDnamespace);
 
 			const addressDeployer = deployerMatched.deployers_addresses.find(
 				(item_) => item_.id === addressID
@@ -172,7 +195,7 @@ export function filterNonAddedDeployers(
 
 			// If does not exist in the DB, prepare data to insert
 			if (!addressDeployer) {
-				addAddress(SGdeployer.id, deployerID);
+				addAddress(SGdeployer.id, deployerID, SGdeployer.interpreter.id, SGdeployer.store.id);
 			}
 		}
 	}
@@ -188,7 +211,7 @@ export function filterNonAddedDeployers(
 export function filterNonAddedRainterpreters(
 	sgRainterpreters_: InterpreterSG[],
 	dbRainterpreters_: RainterpreterDB[],
-	chainId: number
+	chain_id: number
 ) {
 	const rainterpretersToAdd: {
 		[key: string]: DataRainterpreterUpload;
@@ -202,12 +225,12 @@ export function filterNonAddedRainterpreters(
 	 * Add a new address to `rainterpreterAddressesToAdd` using this local scope
 	 */
 	function addAddress(address_: string, rainterpreterId_: string) {
-		const addressID = uuidv5(address_ + chainId.toString(), UUIDnamespace);
+		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
 		rainterpreterAddressesToAdd[addressID] = {
 			id: addressID,
 			rainterpreter: rainterpreterId_,
 			address: address_,
-			chainId: chainId
+			chainId: chain_id
 		};
 	}
 
@@ -243,7 +266,7 @@ export function filterNonAddedRainterpreters(
 			// Filter the addresses (instances) from the SG that does not exist in the DB
 			const addressesFiltered = SGinterpreterInstances.filter((instances_) => {
 				// Generate the addressID that (will) have the rainterpreter
-				const addressID = uuidv5(instances_.id + chainId.toString(), UUIDnamespace);
+				const addressID = uuidv5(instances_.id + chain_id.toString(), UUIDnamespace);
 
 				// Search for those instances (address) that does not exist in the DB.
 				// If the index returned is `-1`, does not exist in DB and it should be added.
@@ -268,7 +291,7 @@ export function filterNonAddedRainterpreters(
 export function filterNonAddedStores(
 	sgStores_: RainterpreterStoreSG[],
 	dbStores_: Rainterpreter_storesDB[],
-	chainId: number
+	chain_id: number
 ) {
 	const storesToAdd: {
 		[key: string]: DataRainterpreterStoreUpload;
@@ -282,12 +305,12 @@ export function filterNonAddedStores(
 	 * Add a new address to `storeAddressesToAdd` using this local scope
 	 */
 	function addAddress(address_: string, storeId_: string) {
-		const addressID = uuidv5(address_ + chainId.toString(), UUIDnamespace);
+		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
 		storeAddressesToAdd[addressID] = {
 			id: addressID,
 			rainterpreter_store: storeId_,
 			address: address_,
-			chainId: chainId
+			chainId: chain_id
 		};
 	}
 
@@ -321,7 +344,7 @@ export function filterNonAddedStores(
 			// Filter the addresses (instances) from the SG that does not exist in the DB
 			const addressesFiltered = SGstoreInstances.filter((instances_) => {
 				// Generate the addressID that (will) have the store
-				const addressID = uuidv5(instances_.id + chainId.toString(), UUIDnamespace);
+				const addressID = uuidv5(instances_.id + chain_id.toString(), UUIDnamespace);
 
 				// Search for those instances (address) that does not exist in the DB.
 				// If the index returned is `-1`, does not exist in DB and it should be added.
