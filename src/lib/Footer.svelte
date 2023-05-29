@@ -2,7 +2,7 @@
 	import Logo from './Logo.svelte';
 </script>
 
-<div class="bg-rainsecondary">
+<div class="footer-container bg-rainsecondary ">
 	<div class="container mx-auto flex flex-col gap-8 px-4 pt-8 pb-20 sm:px-0 md:flex-row md:pt-14">
 		<div class="w-48">
 			<Logo />
@@ -10,8 +10,8 @@
 		<div class="flex w-48 flex-col">
 			<span class="mb-2 font-semibold">Explore</span>
 			<a href="/contracts">Contracts</a>
-		<!-- TODO: Fix -->
-		<!-- <a href="/expressions">Expressions</a> -->
+			<!-- TODO: Fix -->
+			<!-- <a href="/expressions">Expressions</a> -->
 		</div>
 		<div class="flex w-48 flex-col">
 			<span class="mb-2 font-semibold">Documentation</span>
@@ -31,5 +31,8 @@
 <style lang="postcss">
 	a {
 		@apply hover:opacity-80;
+	}
+	.footer-container {
+		@apply absolute bottom-0 h-4 w-full;
 	}
 </style>
