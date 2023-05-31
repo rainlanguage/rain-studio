@@ -2,7 +2,7 @@
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
 	import { Button, InputDropdown, Modal, Ring, Select } from '@rainprotocol/rain-svelte-components';
-	import { getContractDeployTxData, RainNetworks, type DISpair } from 'rain-x-deploy';
+	import { getContractDeployTxData, RainNetworks, type DISpair } from '@rainprotocol/cross-deploy';
 	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
 	import { getCommonChains, getKnownContractAddressesForChain, getNameFromChainId } from './write';
 	import { changeNetwork } from '$lib/connect-wallet';
