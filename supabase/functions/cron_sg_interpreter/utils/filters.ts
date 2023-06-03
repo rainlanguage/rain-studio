@@ -149,7 +149,7 @@ export function filterNonAddedDeployers(
 			id: addressID,
 			deployer: deployerId_,
 			address: address_,
-			chainId: chain_id,
+			chain_id: chain_id,
 			interpreter_address: interpreterID,
 			store_address: storeID
 		};
@@ -230,7 +230,7 @@ export function filterNonAddedRainterpreters(
 			id: addressID,
 			rainterpreter: rainterpreterId_,
 			address: address_,
-			chainId: chain_id
+			chain_id: chain_id
 		};
 	}
 
@@ -310,7 +310,7 @@ export function filterNonAddedStores(
 			id: addressID,
 			rainterpreter_store: storeId_,
 			address: address_,
-			chainId: chain_id
+			chain_id: chain_id
 		};
 	}
 
