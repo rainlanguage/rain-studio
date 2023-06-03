@@ -2,7 +2,15 @@
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
 	import { Button, InputDropdown, Modal, Ring, Select } from '@rainprotocol/rain-svelte-components';
-	import { getContractDeployTxData, RainNetworks, type DISpair } from '@rainprotocol/cross-deploy';
+	import {
+		type DISpair,
+		getRainNetworkForChainId,
+		getDeployTxData,
+		getContractDeployTxData,
+		NetworkProvider,
+		BlockScannerAPI,
+		RegistrySubgraph
+	} from '@rainprotocol/cross-deploy';
 	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
 	import { getCommonChains, getKnownContractAddressesForChain, getNameFromChainId } from './write';
 	import { changeNetwork } from '$lib/connect-wallet';
@@ -188,20 +196,33 @@
 	const crossDeploy = async () => {
 		openWaitTx = true;
 		waitTxResp = true;
+
+		const network = getRainNetworkForChainId(originChain);
 		let tx_;
-		let network: RainNetworks | null = null;
-		if (originChain == 1) network = RainNetworks.Ethereum;
-		if (originChain == 137) network = RainNetworks.Polygon;
-		if (originChain == 80001) network = RainNetworks.Mumbai;
 
 		if (network == null) {
 			throw new Error('Not network valid to get data');
 		}
+
 		const fromDIS = dispairOrigin;
 		const toDIS = originChain == targetChain ? dispairOrigin : dispairTarget;
-		const txData = await getContractDeployTxData(network, fromDIS, toDIS, selectedContractAddress);
+
+		const DISInstances = {
+			from: fromDIS,
+			to: toDIS
+		};
+
+		// const txData = await getContractDeployTxData(network, fromDIS, toDIS, selectedContractAddress);
+
+		const txData = await getDeployTxData(network, selectedContractAddress, {
+			DIS: DISInstances
+		});
 
 		try {
+			if (!txData) {
+				throw new Error('It cannot retrieve the contract information');
+			}
+
 			tx_ = await $signer.sendTransaction({ data: txData });
 			// Do not wait anymore
 			waitTxResp = false;
@@ -326,10 +347,6 @@
 		</div>
 	</div>
 {/if}
-
-<div class="self-center">
-	<Button on:click={() => (openWaitTx = true)}>Open modal</Button>
-</div>
 
 <Modal bind:open={openWaitTx} disableOutsideClickClose>
 	<div class="flex w-full flex-col gap-5">
