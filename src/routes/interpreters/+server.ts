@@ -3,7 +3,6 @@ import { error as kitError, json as jsonResponse } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async (event) => {
-	console.log('alo');
 	const { searchValue, selectedNetworks, offset_ } = (await event.request.json()) as {
 		searchValue: string;
 		selectedNetworks: Array<number>;
