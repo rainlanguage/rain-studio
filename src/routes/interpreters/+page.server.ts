@@ -5,29 +5,32 @@ import { error as errorKit } from '@sveltejs/kit';
 export async function load() {
 	const search_value = '';
 	const selected_networks = [-1];
+	const selected_interpreters = ['All'];
 
-	// Using this function to retrieve 52 (limit) contracts starting with the 0 offset
-	const { data: deployersData, error: deployersError } = await supabaseClient.rpc(
-		'get_deployers_with_addresses_by_filters_pagination',
+	// Using this function to retrieve 52 (limit) contract starting with the 0 offset
+	const { data: interpretersData, error: errorInterpreters } = await supabaseClient.rpc(
+		'get_combined_interpreters_by_filters_pagination',
 		{
 			search_value,
 			selected_networks,
+			selected_interpreters,
 			offset_: 0
 		}
 	);
 
 	const { data: counterData, error: counterError } = await supabaseClient.rpc(
-		'get_deployers_with_addresses_by_filters_count',
+		'get_combined_interpreters_by_filters_count',
 		{
 			search_value,
-			selected_networks
+			selected_networks,
+			selected_interpreters
 		}
 	);
 
-	if (deployersError || counterError) {
-		console.log(deployersError ?? counterError);
+	if (errorInterpreters || counterError) {
+		console.log(errorInterpreters ?? counterError);
 		throw errorKit(404, 'Not found');
 	}
 
-	return { interpreters: deployersData, counterInterpreters: counterData };
+	return { interpreters: interpretersData, counterInterpreters: counterData };
 }

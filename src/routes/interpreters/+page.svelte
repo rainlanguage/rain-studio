@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import Background from '$lib/Background.svelte';
+	import InterpreterCard from '$lib/interpreters/InterpreterCard.svelte';
 	import { supabaseClient } from '$lib/supabaseClient';
-	import { networkOptions } from '$lib/utils';
+	import { interpreterOptions, networkOptions } from '$lib/utils';
 	import {
 		Button,
 		FilterGroup,
@@ -9,13 +11,13 @@
 		Input,
 		Ring
 	} from '@rainprotocol/rain-svelte-components';
+	import { ChevronLeft, ChevronRight } from '@steeze-ui/heroicons';
+	import { debounce } from 'lodash-es';
 
-	const interpreterOptions = [
-		{ label: 'All', value: -1 },
-		{ label: 'Expression Deployers', value: 'deployers' },
-		{ label: 'Rainterpreters', value: 'rainterpreters' },
-		{ label: 'Stores', value: 'stores' }
-	];
+	$: interpreters = $page.data.interpreters;
+	$: counterInterpreters = $page.data.counterInterpreters;
+	$: interpretersLength = Math.ceil(counterInterpreters / 52);
+
 	const networkOptions_ = [{ label: 'All', value: -1 }].concat(networkOptions);
 
 	// Inital value "default"
@@ -23,6 +25,8 @@
 	let selectedNetworks: Array<number> = [-1];
 	let searchValue: string;
 	let loading_: boolean = false;
+	let offset_: number = 0;
+	let indexSelected_: number = 0;
 
 	const getInterpreters = async (
 		searchValue_: string,
@@ -41,10 +45,56 @@
 		});
 
 		if (resp.ok) {
-			const data_ = await resp.json();
-			console.log(data_);
+			const { interpretersFiltered, counterFiltered } = await resp.json();
+
+			interpreters = interpretersFiltered;
+			counterInterpreters = counterFiltered;
 		}
 		loading_ = false;
+	};
+
+	// Use debounce instead of 'everyAfter' to avoid accumulative calls.
+	const getInterpretersFilteredDebounced = debounce(getInterpreters, 250);
+
+	const callFilterWithDebounce = (
+		searchValue_: string,
+		selectedNetworks_: Array<number>,
+		selectedInterpreter_: Array<string>
+	) => {
+		loading_ = true;
+		getInterpretersFilteredDebounced(searchValue_, selectedNetworks_, selectedInterpreter_);
+	};
+
+	const changePagination = (num_: number, single_?: 'prev' | 'next') => {
+		const _minOffset = 0;
+		const _maxOffset = (interpretersLength - 1) * 52;
+
+		if (!single_) {
+			offset_ = num_ * 52;
+			indexSelected_ = num_;
+		}
+
+		if (single_ == 'prev') {
+			const aux = offset_ - 52;
+
+			if (aux < _minOffset) {
+				offset_ = _minOffset;
+			} else {
+				offset_ = aux;
+				indexSelected_ -= 1;
+			}
+		}
+
+		if (single_ == 'next') {
+			const aux = offset_ + 52;
+
+			if (aux > _maxOffset) {
+				offset_ = _maxOffset;
+			} else {
+				offset_ = aux;
+				indexSelected_ += 1;
+			}
+		}
 	};
 
 	$: networkFilterToShow = () => {
@@ -70,14 +120,13 @@
 			)
 			.join(', ');
 	};
-</script>
 
-Interpreters
-<div>
-	<Button on:click={() => getInterpreters(searchValue, selectedNetworks, selectedInterpreter)}
-		>Fetch</Button
-	>
-</div>
+	$: searchValue,
+		selectedNetworks,
+		selectedInterpreter,
+		offset_,
+		callFilterWithDebounce(searchValue, selectedNetworks, selectedInterpreter);
+</script>
 
 <div class="m-2 flex w-3/4 flex-row gap-x-10 self-center">
 	<div class="ml-4 w-3/4">
@@ -121,4 +170,62 @@ Interpreters
 			/>
 		</FilterGroup>
 	</div>
+</div>
+
+<div class="m-auto">
+	<Background alignItems="items-start">
+		<div class="container mx-auto flex py-8 px-4 sm:px-0 ">
+			{#if interpreters && interpreters.length}
+				<div class="flex flex-col gap-y-8 justify-self-center">
+					<div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+						{#each interpreters as interpreter}
+							<a href={`/interpreters/${interpreter.type}/${interpreter.slug}`}>
+								<InterpreterCard {interpreter} showDetailedInfo />
+							</a>
+						{/each}
+					</div>
+					<div class="flex justify-center">
+						<Button
+							classes="text-neutral-600 border border-neutral-200 hover:bg-neutral-200"
+							dual={'left'}
+							size="small"
+							icon={ChevronLeft}
+							on:click={() => changePagination(0, 'prev')}
+						/>
+
+						{#each Array(interpretersLength) as _, index}
+							<button
+								class={`disabled flex items-center border border-neutral-200 px-2 text-neutral-600 ${
+									index == indexSelected_ ? 'bg-neutral-300' : 'hover:bg-neutral-200'
+								}`}
+								on:click={() => changePagination(index)}
+								disabled={index == indexSelected_}
+							>
+								{index + 1}
+							</button>
+						{/each}
+
+						<Button
+							size="small"
+							classes="text-neutral-600 border border-neutral-200 hover:bg-neutral-200"
+							dual={'right'}
+							icon={ChevronRight}
+							iconPosition={'right'}
+							on:click={() => changePagination(0, 'next')}
+						/>
+					</div>
+				</div>
+			{:else}
+				<span class="w-full self-center pt-8 text-center text-xl text-gray-600"
+					>Oops! None contract found 🙁</span
+				>
+			{/if}
+		</div>
+	</Background>
+</div>
+
+<div>
+	<Button on:click={() => getInterpreters(searchValue, selectedNetworks, selectedInterpreter)}
+		>Fetch</Button
+	>
 </div>

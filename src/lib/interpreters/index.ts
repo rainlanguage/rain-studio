@@ -16,19 +16,3 @@ export const getChainsFromAddresses = (
 
 	return getNetworksByChainIds(uniqueChainIds);
 };
-/**
- *
- * Get all the chains from a DB response or similar structure of 'addresses' row
- */
-export const getChainsFromInterpreterAddresses = (interpreter_addresses: {
-	[key: string]: any;
-	addresses: Database['public']['Tables']['deployers_addresses']['Row'];
-}[]): ChainData[] => {
-	if (!interpreter_addresses.length) return [];
-
-	const uniqueChainIds = Array.from(
-		new Set(interpreter_addresses.map((address_) => address_.chain_id))
-	).sort();
-
-	return getNetworksByChainIds(uniqueChainIds);
-};

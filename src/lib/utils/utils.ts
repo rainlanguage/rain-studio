@@ -36,3 +36,10 @@ export const getMessage = async (address_: string) => {
 	}
 	return (await resp.json()).message;
 };
+
+export const interpreterOptions = [
+	{ label: 'All', value: '' },
+	{ label: 'Expression Deployers', value: 'deployers' },
+	{ label: 'Rainterpreters', value: 'rainterpreters' },
+	{ label: 'Stores', value: 'stores' }
+];
