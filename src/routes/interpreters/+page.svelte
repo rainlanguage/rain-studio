@@ -109,9 +109,14 @@
 	};
 
 	$: interpreterFilterToShow = () => {
+		console.log('selectedInterpreter: ', selectedInterpreter);
 		// If no type selected (component initialization) OR length is 1 and is -1 (which means)
 		// `All` the types are selected because that option is exclusive
-		if (!selectedInterpreter || (selectedInterpreter.length === 1 && selectedInterpreter[0] === ''))
+		if (
+			!selectedInterpreter ||
+			(selectedInterpreter.length === 1 &&
+				(selectedInterpreter[0] === '' || selectedInterpreter[0] === 'All'))
+		)
 			return 'All';
 
 		return selectedInterpreter
