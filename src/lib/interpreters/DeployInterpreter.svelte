@@ -5,32 +5,27 @@
 	import {
 		type DISpair,
 		getRainNetworkForChainId,
-		getDeployTxData,
-		getContractDeployTxData,
-		NetworkProvider,
-		BlockScannerAPI,
-		RegistrySubgraph
+		getDeployTxData
 	} from '@rainprotocol/cross-deploy';
-	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
+	import { chainId, signer } from 'svelte-ethers-store';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import { createClient } from '@urql/core';
-	import { Subgraphs, getNetworkByChainId, networkOptions } from '$lib/utils';
+	import {
+		Subgraphs,
+		getChainsFromAddresses,
+		getNetworkByChainId,
+		networkOptions
+	} from '$lib/utils';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import type { Item } from '@rainprotocol/rain-svelte-components/dist/input-dropdown/InputDropdown.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 
 	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
-	import { matchContracts } from '$lib/match-addresses';
-	import {
-		getKnownContractAddressesForChain,
-		getNameFromChainId,
-		getCommonChains
-	} from '$lib/contracts';
+	import { getKnownContractAddressesForChain } from '$lib/contracts';
 
-	export let contractAddresses: ContractAddressRow[],
-		deployerAddresses: DeployerAddressesRow[],
-		metadata: any;
+	export let contractAddresses: ContractAddressRow[];
+	export let interpreterType: string;
 
 	let originChain: number;
 	let selectedContractAddress: string;
@@ -57,7 +52,6 @@
 	let errorTx = false;
 	let errorMsg: string;
 
-	$: subgraphInfoOrigin = Subgraphs.find((sg_) => sg_.chain == originChain);
 	$: subgraphInfoTarget = Subgraphs.find((sg_) => sg_.chain == targetChain);
 
 	const getContractChains = (contractAddresses: ContractAddressRow[]): number[] => {
@@ -87,70 +81,6 @@
 				oldChain = targetChain;
 			}
 		}
-	};
-
-	const getContractInfo = async (address_: string) => {
-		if (!address_ || !originChain || originChain == -1) return;
-
-		const sgUrl = Subgraphs.find((sg_) => sg_.chain == originChain)?.url;
-
-		if (!sgUrl) {
-			// errorContractOrigin = 'There is no SG url available for that network yet';
-			console.log(`There is no SG url available for that network yet: ${originChain}`);
-			return;
-		}
-
-		const client_ = createClient({
-			url: sgUrl
-		});
-
-		const query_ = `
-			{
-				contract (id: "${address_}") {
-					deployTransaction {
-						id
-					}
-				}
-			}
-		`;
-		const { data: dataSg, error: errorSg } = await client_.query(query_, {}).toPromise();
-
-		const { data: dataDb, error: errorDb } = await supabaseClient
-			.from('contract_addresses_new')
-			.select(
-				'deployer:initial_deployer(address, interpreter_address(address), store_address(address))'
-			)
-			.eq('address', address_)
-			.single();
-
-		if (errorSg || !dataSg.contract) {
-			if (errorSg) {
-				throw new Error(`Errow when fetching from SG: ${errorSg.message}`);
-			} else {
-				throw new Error(`Invalid or not tracked address: ${address_}`);
-			}
-		}
-
-		if (errorDb) {
-			throw new Error(`Errow when fetching from DB: ${errorDb.message}`);
-		}
-
-		dispairOrigin = {
-			deployer: dataDb?.deployer.address,
-			interpreter: dataDb?.deployer.interpreter_address.address,
-			store: dataDb?.deployer.store_address.address
-		};
-	};
-
-	const filterDeployers = (chain_: number): Item[] => {
-		const deployers_ = deployerAddresses.filter((address) => chain_ == address.chain_id);
-
-		return deployers_.map((deployer_) => {
-			return {
-				label: deployer_.address,
-				value: deployer_.address
-			};
-		});
 	};
 
 	const getDeployerInfo = async (address_: string, chainId_: number) => {
@@ -263,12 +193,10 @@
 		}
 	};
 
-	// $: commonChains = getCommonChains(deployerAddresses, contractAddresses);
-	$: contractChains = getContractChains(contractAddresses);
+	$: contractChains = getChainsFromAddresses(contractAddresses);
 	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, originChain);
 	$: availableAddresses = knownAddressesForThisChain.length ? true : false;
 
-	$: selectedContractAddress, getContractInfo(selectedContractAddress);
 	$: selectedDeployerAddress, targetChain, getDeployerInfo(selectedDeployerAddress, targetChain);
 </script>
 
@@ -282,63 +210,68 @@
 		<div class="flex flex-col gap-y-4">
 			<span>Select an origin chain:</span>
 			<Select
-				items={contractChains.map((chainId_) => ({
-					label: getNameFromChainId(chainId_),
-					value: chainId_
-				}))}
+				items={contractChains.map(({ name, chainId }) => {
+					return { label: name, value: chainId };
+				})}
 				on:change={changeOriginChain}
 				bind:value={originChain}
 			/>
 		</div>
+	</div>
+	{#if availableAddresses}
+		<div class="flex flex-col gap-y-4">
+			<span>Select a contract address:</span>
+			<InputDropdown
+				disabled={originChain == -1}
+				bind:value={selectedContractAddress}
+				bind:selectedItem={selectedContractItem}
+				items={knownAddressesForThisChain}
+				placeholder="Select or paste an address"
+				classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
+				classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
+			/>
+		</div>
+	{/if}
 
-		{#if availableAddresses}
+	{#if selectedContractAddress && selectedContractAddress != ''}
+		<div class="flex flex-col gap-y-4">
+			<span>Select a target chain:</span>
+			<Select items={networkOptions} on:change={changeTargetChain} bind:value={targetChain} />
+		</div>
+		{#if targetChain && targetChain != -1 && originChain != targetChain}
 			<div class="flex flex-col gap-y-4">
-				<span>Select a contract address:</span>
-				<InputDropdown
-					disabled={originChain == -1}
-					bind:value={selectedContractAddress}
-					bind:selectedItem={selectedContractItem}
-					items={knownAddressesForThisChain}
-					placeholder="Select or paste an address"
-					classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
-					classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
-				/>
-			</div>
-		{/if}
+				{#key targetChain}
+					{#if interpreterType === 'deployer'}
+						<span>Select a rainterpreter and store address on target network:</span>
+						Deployer
+					{:else}
+						Rainterpreter or store, should deploy directly from tx hash
+					{/if}
 
-		{#if selectedContractAddress && selectedContractAddress != ''}
-			<div class="flex flex-col gap-y-4">
-				<span>Select a target chain:</span>
-				<Select items={networkOptions} on:change={changeTargetChain} bind:value={targetChain} />
-			</div>
-			{#if targetChain && targetChain != -1 && originChain != targetChain}
-				<div class="flex flex-col gap-y-4">
-					<span>Select a deployer address on target network:</span>
-
-					{#key targetChain}
-						<InputDropdown
-							disabled={targetChain == -1}
-							bind:value={selectedDeployerAddress}
-							bind:selectedItem={selectedDeployerItem}
-							items={filterDeployers(targetChain)}
-							placeholder="Select a deployer address"
-							classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
-							classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
-						/>
-					{/key}
-					<span class="mt-[-4px] text-sm text-yellow-600"
-						>This deployer will be used only for registering the new contract. It doesn't matter
-						which one you choose.</span
-					>
+					<!-- <InputDropdown
+						disabled={targetChain == -1}
+						bind:value={selectedDeployerAddress}
+						bind:selectedItem={selectedDeployerItem}
+						items={filterDeployers(targetChain)}
+						placeholder="Select a deployer address"
+						classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
+						classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
+					/> -->
+					<!-- <span class="mt-[-4px] text-sm text-yellow-600"
+					>This deployer will be used only for registering the new contract. It doesn't matter which
+					one you choose.</span
+				> -->
 					{#if !subgraphInfoTarget}
 						<span class="text-sm text-red-600"
 							>'There is no Subgraph url available for that network yet</span
 						>
 					{/if}
-				</div>
-			{/if}
+				{/key}
+			</div>
 		{/if}
-
+	{/if}
+{/if}
+<!-- 
 		<div class="self-center">
 			<Button
 				disabled={!targetChain ||
@@ -349,9 +282,9 @@
 				on:click={crossDeploy}>Deploy</Button
 			>
 		</div>
-	</div>
-{/if}
-
+	</div> -->
+<!-- {/if} -->
+<!-- 
 <Modal bind:open={openWaitTx} disableOutsideClickClose>
 	<div class="flex w-full flex-col gap-5">
 		{#if waitTxResp}
@@ -431,19 +364,4 @@
 			<Button variant="primary" on:click={closeModalTx}>Close</Button>
 		</div>
 	</div>
-	<!-- <div class="flex w-full flex-col gap-5">
-		<div class="flex w-fit flex-col items-center gap-2.5">
-			{#if icon != undefined}
-				<Icon
-					src={icon}
-					theme={solidIcon ? 'solid' : ''}
-					class={`mr-1.5 h-16 w-16 py-0.5 ${iconColor}`}
-				/>
-			{/if}
-			<p class={`text-[${textSize}]`}>{message}</p>
-		</div>
-		<div class="flex justify-center">
-			<Button variant="primary" on:click={() => (open = false)}>Continue</Button>
-		</div>
-	</div> -->
-</Modal>
+</Modal> -->

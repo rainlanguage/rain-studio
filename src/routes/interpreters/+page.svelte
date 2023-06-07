@@ -40,7 +40,7 @@
 				searchValue: searchValue_,
 				selectedNetworks: selectedNetworks_,
 				selectedInterpreter: selectedInterpreter_,
-				offset_: 0
+				offset_: indexSelected_
 			})
 		});
 
@@ -109,7 +109,6 @@
 	};
 
 	$: interpreterFilterToShow = () => {
-		console.log('selectedInterpreter: ', selectedInterpreter);
 		// If no type selected (component initialization) OR length is 1 and is -1 (which means)
 		// `All` the types are selected because that option is exclusive
 		if (

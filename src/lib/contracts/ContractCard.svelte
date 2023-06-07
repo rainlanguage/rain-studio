@@ -3,7 +3,7 @@
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { Pills } from '@rainprotocol/rain-svelte-components';
 	import SvelteMarkdown from 'svelte-markdown';
-	import { getChainsFromAddresses } from '$lib/contracts';
+	import { getChainsFromAddresses } from '$lib/utils';
 
 	export let contract: any;
 	export let showDetailedInfo: boolean = false;
