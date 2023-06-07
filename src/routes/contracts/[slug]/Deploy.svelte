@@ -12,7 +12,6 @@
 		RegistrySubgraph
 	} from '@rainprotocol/cross-deploy';
 	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
-	import { getCommonChains, getKnownContractAddressesForChain, getNameFromChainId } from './write';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import { createClient } from '@urql/core';
 	import { Subgraphs, getNetworkByChainId, networkOptions } from '$lib/utils';
@@ -23,6 +22,11 @@
 
 	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
 	import { matchContracts } from '$lib/match-addresses';
+	import {
+		getKnownContractAddressesForChain,
+		getNameFromChainId,
+		getCommonChains
+	} from '$lib/contracts';
 
 	export let contractAddresses: ContractAddressRow[],
 		deployerAddresses: DeployerAddressesRow[],
