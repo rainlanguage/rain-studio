@@ -29,14 +29,14 @@ export const getNameFromChainId = (id: number): string => {
 };
 
 // getting the chains for which there's both a known address for contract and interpreter
-export const  getCommonChains = (
+export const getCommonChains = (
 	deployers: DeployerAddressesRow[],
 	contractAddresses: ContractAddressRow[]
 ): number[] => {
 	// will only include unique chains
 	const chains: Set<number> = new Set();
 	deployers.forEach((deployer) => {
-		chains.add(deployer.chainId);
+		chains.add(deployer.chain_id);
 	});
 	contractAddresses.forEach((el) => {
 		chains.add(el.chain_id);
