@@ -1,6 +1,5 @@
-import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
+import type { DeployerAddressesRow } from '$lib/types/types';
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
-import { allChainsData } from 'svelte-ethers-store';
 
 // getting all of the state changing methods for this abi
 export const getWriteMethods = (
@@ -20,28 +19,6 @@ export const getWriteMethods = (
 			value: { name: method.name, def: method },
 			index
 		}));
-};
-
-export const getNameFromChainId = (id: number): string => {
-	const name = allChainsData.find((chain) => chain.chainId == id)?.name;
-	if (!name) throw Error('Unknown chain_id');
-	return name;
-};
-
-// getting the chains for which there's both a known address for contract and interpreter
-export const  getCommonChains = (
-	deployers: DeployerAddressesRow[],
-	contractAddresses: ContractAddressRow[]
-): number[] => {
-	// will only include unique chains
-	const chains: Set<number> = new Set();
-	deployers.forEach((deployer) => {
-		chains.add(deployer.chainId);
-	});
-	contractAddresses.forEach((el) => {
-		chains.add(el.chain_id);
-	});
-	return Array.from(chains.values());
 };
 
 export const getInterpretersForChain = (
@@ -64,7 +41,7 @@ export const getInterpretersForChain = (
 		};
 	}[] = [];
 	deployers.forEach((deployer) => {
-		if (deployer.chainId == chain_id) {
+		if (deployer.chain_id == chain_id) {
 			deployersForSelect.push({
 				label: `${deployer.address}`,
 				value: {
@@ -76,16 +53,4 @@ export const getInterpretersForChain = (
 		}
 	});
 	return deployersForSelect;
-};
-
-// filtering to the known addresses for the selected chain
-export const getKnownContractAddressesForChain = (
-	contractAddresses: ContractAddressRow[],
-	chain_id: number
-) => {
-	return contractAddresses
-		.filter((contractAddress) => contractAddress.chain_id == chain_id)
-		?.map((contractAddress) => {
-			return { label: contractAddress.address, value: contractAddress.address };
-		});
 };

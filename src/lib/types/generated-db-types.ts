@@ -128,7 +128,7 @@ export interface Database {
       deployers_addresses: {
         Row: {
           address: string
-          chainId: number
+          chain_id: number
           created_at: string
           deployer: string
           id: string
@@ -137,7 +137,7 @@ export interface Database {
         }
         Insert: {
           address: string
-          chainId: number
+          chain_id: number
           created_at?: string
           deployer: string
           id: string
@@ -146,7 +146,7 @@ export interface Database {
         }
         Update: {
           address?: string
-          chainId?: number
+          chain_id?: number
           created_at?: string
           deployer?: string
           id?: string
@@ -293,21 +293,21 @@ export interface Database {
       rainterpreter_addresses: {
         Row: {
           address: string
-          chainId: number
+          chain_id: number
           created_at: string
           id: string
           rainterpreter: string
         }
         Insert: {
           address: string
-          chainId: number
+          chain_id: number
           created_at?: string
           id: string
           rainterpreter: string
         }
         Update: {
           address?: string
-          chainId?: number
+          chain_id?: number
           created_at?: string
           id?: string
           rainterpreter?: string
@@ -316,21 +316,21 @@ export interface Database {
       rainterpreter_store_addresses: {
         Row: {
           address: string
-          chainId: number
+          chain_id: number
           created_at: string
           id: string
           rainterpreter_store: string
         }
         Insert: {
           address: string
-          chainId: number
+          chain_id: number
           created_at?: string
           id: string
           rainterpreter_store: string
         }
         Update: {
           address?: string
-          chainId?: number
+          chain_id?: number
           created_at?: string
           id?: string
           rainterpreter_store?: string
@@ -451,6 +451,43 @@ export interface Database {
         }
         Returns: undefined
       }
+      get_combined_interpreters_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          selected_interpreters: string[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_combined_interpreters_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          selected_interpreters: string[]
+        }
+        Returns: number
+      }
+      get_combined_interpreters_by_filters_pagination: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          selected_interpreters: string[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
       get_contracts_address_by_search_value_address_and_networks: {
         Args: {
           search_value: string
@@ -565,6 +602,87 @@ export interface Database {
           contract_addresses_new: Json
         }[]
       }
+      get_deployers_address_by_address_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_address_by_networks: {
+        Args: {
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_address_no_filters: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_by_address: {
+        Args: {
+          search_value: string
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_with_addresses_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: number
+      }
+      get_deployers_with_addresses_by_filters_pagination: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
       get_expression_by_slug_w: {
         Args: {
           slug: string
@@ -593,6 +711,168 @@ export interface Database {
       get_org_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_rainterpreter_stores_address_by_address_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_address_by_networks: {
+        Args: {
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_address_no_filters: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_by_address: {
+        Args: {
+          search_value: string
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_with_addresses_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: number
+      }
+      get_rainterpreter_stores_with_addresses_by_filters_pagination: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_address_by_address_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_address_by_networks: {
+        Args: {
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_address_no_filters: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_by_address: {
+        Args: {
+          search_value: string
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_with_addresses_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: number
+      }
+      get_rainterpreters_with_addresses_by_filters_pagination: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
       }
       get_unique_tags_for_user_w: {
         Args: Record<PropertyKey, never>
@@ -638,40 +918,6 @@ export interface Database {
         }
         Returns: undefined
       }
-      test_c: {
-        Args: {
-          search_value: string
-        }
-        Returns: number
-      }
-      test_pag:
-        | {
-            Args: {
-              search_value: string
-            }
-            Returns: {
-              id: string
-              project: string
-              created_at: string
-              slug: string
-              metadata: Json
-              contract_addresses_new: Json
-            }[]
-          }
-        | {
-            Args: {
-              search_value: string
-              offset_: number
-            }
-            Returns: {
-              id: string
-              project: string
-              created_at: string
-              slug: string
-              metadata: Json
-              contract_addresses_new: Json
-            }[]
-          }
     }
     Enums: {
       [_ in never]: never

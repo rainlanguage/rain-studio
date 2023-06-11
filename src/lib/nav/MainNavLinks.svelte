@@ -9,6 +9,13 @@
 		goto('/contracts');
 	}}>Contracts</a
 >
+<a
+	href="/interpreters"
+	class="nav-link"
+	on:click|preventDefault={() => {
+		goto('/interpreters');
+	}}>Interpreters</a
+>
 <!-- TODO: Fix -->
 <!-- <a
 	href="/expressions"

@@ -2,9 +2,16 @@
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
 	import { Button, InputDropdown, Modal, Ring, Select } from '@rainprotocol/rain-svelte-components';
-	import { getContractDeployTxData, RainNetworks, type DISpair } from 'rain-x-deploy';
+	import {
+		type DISpair,
+		getRainNetworkForChainId,
+		getDeployTxData,
+		getContractDeployTxData,
+		NetworkProvider,
+		BlockScannerAPI,
+		RegistrySubgraph
+	} from '@rainprotocol/cross-deploy';
 	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
-	import { getCommonChains, getKnownContractAddressesForChain, getNameFromChainId } from './write';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import { createClient } from '@urql/core';
 	import { Subgraphs, getNetworkByChainId, networkOptions } from '$lib/utils';
@@ -15,6 +22,11 @@
 
 	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
 	import { matchContracts } from '$lib/match-addresses';
+	import {
+		getKnownContractAddressesForChain,
+		getNameFromChainId,
+		getCommonChains
+	} from '$lib/contracts';
 
 	export let contractAddresses: ContractAddressRow[],
 		deployerAddresses: DeployerAddressesRow[],
@@ -80,29 +92,6 @@
 	const getContractInfo = async (address_: string) => {
 		if (!address_ || !originChain || originChain == -1) return;
 
-		const sgUrl = Subgraphs.find((sg_) => sg_.chain == originChain)?.url;
-
-		if (!sgUrl) {
-			// errorContractOrigin = 'There is no SG url available for that network yet';
-			console.log(`There is no SG url available for that network yet: ${originChain}`);
-			return;
-		}
-
-		const client_ = createClient({
-			url: sgUrl
-		});
-
-		const query_ = `
-			{
-				contract (id: "${address_}") {
-					deployTransaction {
-						id
-					}
-				}
-			}
-		`;
-		const { data: dataSg, error: errorSg } = await client_.query(query_, {}).toPromise();
-
 		const { data: dataDb, error: errorDb } = await supabaseClient
 			.from('contract_addresses_new')
 			.select(
@@ -110,14 +99,6 @@
 			)
 			.eq('address', address_)
 			.single();
-
-		if (errorSg || !dataSg.contract) {
-			if (errorSg) {
-				throw new Error(`Errow when fetching from SG: ${errorSg.message}`);
-			} else {
-				throw new Error(`Invalid or not tracked address: ${address_}`);
-			}
-		}
 
 		if (errorDb) {
 			throw new Error(`Errow when fetching from DB: ${errorDb.message}`);
@@ -131,7 +112,7 @@
 	};
 
 	const filterDeployers = (chain_: number): Item[] => {
-		const deployers_ = deployerAddresses.filter((address) => chain_ == address.chainId);
+		const deployers_ = deployerAddresses.filter((address) => chain_ == address.chain_id);
 
 		return deployers_.map((deployer_) => {
 			return {
@@ -144,18 +125,11 @@
 	const getDeployerInfo = async (address_: string, chainId_: number) => {
 		if (!address_ || !chainId_ || chainId_ == -1) return;
 
-		const sgUrl = subgraphInfoTarget?.url;
-
-		if (!sgUrl) {
-			console.log(`There is no SG url available for that network yet: ${chainId_}`);
-			return;
-		}
-
 		const { data: dataDb, error: errorDb } = await supabaseClient
 			.from('deployers_addresses')
 			.select('address, interpreter_address(address), store_address(address)')
 			.eq('address', address_)
-			.eq('chainId', chainId_)
+			.eq('chain_id', chainId_)
 			.single();
 
 		if (errorDb) {
@@ -163,7 +137,7 @@
 			return;
 		}
 		if (!dataDb) {
-			throw new Error(`Not data found for this address "${address_}" and chainId "${chainId_}"`);
+			throw new Error(`Not data found for this address "${address_}" and chain_id "${chainId_}"`);
 		}
 
 		dispairTarget = {
@@ -188,20 +162,33 @@
 	const crossDeploy = async () => {
 		openWaitTx = true;
 		waitTxResp = true;
+
+		const network = getRainNetworkForChainId(originChain);
 		let tx_;
-		let network: RainNetworks | null = null;
-		if (originChain == 1) network = RainNetworks.Ethereum;
-		if (originChain == 137) network = RainNetworks.Polygon;
-		if (originChain == 80001) network = RainNetworks.Mumbai;
 
 		if (network == null) {
 			throw new Error('Not network valid to get data');
 		}
+
 		const fromDIS = dispairOrigin;
 		const toDIS = originChain == targetChain ? dispairOrigin : dispairTarget;
-		const txData = await getContractDeployTxData(network, fromDIS, toDIS, selectedContractAddress);
+
+		const DISInstances = {
+			from: fromDIS,
+			to: toDIS
+		};
+
+		// const txData = await getContractDeployTxData(network, fromDIS, toDIS, selectedContractAddress);
+
+		const txData = await getDeployTxData(network, selectedContractAddress, {
+			DIS: DISInstances
+		});
 
 		try {
+			if (!txData) {
+				throw new Error('It cannot retrieve the contract information');
+			}
+
 			tx_ = await $signer.sendTransaction({ data: txData });
 			// Do not wait anymore
 			waitTxResp = false;
@@ -326,10 +313,6 @@
 		</div>
 	</div>
 {/if}
-
-<div class="self-center">
-	<Button on:click={() => (openWaitTx = true)}>Open modal</Button>
-</div>
 
 <Modal bind:open={openWaitTx} disableOutsideClickClose>
 	<div class="flex w-full flex-col gap-5">

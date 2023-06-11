@@ -104,7 +104,7 @@
 	<div class="ml-4 w-3/4">
 		<!-- If I write an address or name, should search with alls to find a match -->
 		<Input placeholder="Search by contract name or address" bind:value={searchValue} />
-		<div class="flex gap-x-4">
+		<div class="flex flex-col gap-x-4">
 			<p class="mt-4">
 				<strong>Networks:</strong>
 				{networkFilterToShow()}
