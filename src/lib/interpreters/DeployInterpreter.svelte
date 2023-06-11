@@ -1,15 +1,22 @@
 <script lang="ts">
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
-	import { Button, InputDropdown, Modal, Ring, Select } from '@rainprotocol/rain-svelte-components';
+	import {
+		Button,
+		Input,
+		InputDropdown,
+		Modal,
+		Ring,
+		Select
+	} from '@rainprotocol/rain-svelte-components';
 	import {
 		type DISpair,
 		getRainNetworkForChainId,
-		getDeployTxData
+		getDeployTxData,
+		checkObtainTxHash
 	} from '@rainprotocol/cross-deploy';
 	import { chainId, signer } from 'svelte-ethers-store';
 	import { changeNetwork } from '$lib/connect-wallet';
-	import { createClient } from '@urql/core';
 	import {
 		Subgraphs,
 		getChainsFromAddresses,
@@ -19,25 +26,34 @@
 	import { supabaseClient } from '$lib/supabaseClient';
 	import type { Item } from '@rainprotocol/rain-svelte-components/dist/input-dropdown/InputDropdown.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
+	import { ArrowTopRightOnSquare, CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 
 	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
 	import { getKnownContractAddressesForChain } from '$lib/contracts';
+	import { interpreterName } from '$lib/interpreters';
+	import { flip } from 'lodash-es';
+	import { ethers } from 'ethers';
 
-	export let contractAddresses: ContractAddressRow[];
+	export let interpreterAddresses: ContractAddressRow[];
 	export let interpreterType: string;
 
 	let originChain: number;
-	let selectedContractAddress: string;
-	let selectedContractItem: Item;
+	let selectedInterpreterAddress: string;
+	let selectedInterpretertItem: Item;
 	let dispairOrigin: DISpair;
 
 	// Selected chain (provider to deploy)
 	let targetChain: number;
 	let oldChain = -1;
-	let selectedDeployerAddress: any;
-	let selectedDeployerItem: Item;
 	let dispairTarget: DISpair;
+
+	// Only if it's a 'deployer' type
+	let selectedRainterpreterAddress: string;
+	let selectedRainterpretertItem: Item;
+	let rainterpreterAddresses: Item[];
+	let selectedStoreAddress: string;
+	let selectedStoretItem: Item;
+	let storeAddresses: Item[];
 
 	// Handle send transaction
 	let txReceipt: TransactionReceipt | undefined;
@@ -52,16 +68,15 @@
 	let errorTx = false;
 	let errorMsg: string;
 
-	$: subgraphInfoTarget = Subgraphs.find((sg_) => sg_.chain == targetChain);
+	// Check cross deploy
+	// Flag if can deploy with tx hash provided by user
+	let canCrossDeploy: boolean;
+	let checking: boolean = false;
+	// Required if `canCrossDeploy` is false
+	let requiredTxhash: string;
+	let isValidTxHash: boolean = false;
 
-	const getContractChains = (contractAddresses: ContractAddressRow[]): number[] => {
-		// will only include unique chains for the contract
-		const chains: Set<number> = new Set();
-		contractAddresses.forEach((el) => {
-			chains.add(el.chain_id);
-		});
-		return Array.from(chains.values());
-	};
+	$: subgraphInfoTarget = Subgraphs.find((sg_) => sg_.chain == targetChain);
 
 	const changeOriginChain = async (event_: Event) => {
 		const chainIdSelected = (event_.target as HTMLSelectElement).value;
@@ -76,8 +91,6 @@
 				targetChain = oldChain;
 			} else {
 				// Reset current target selected
-				selectedDeployerAddress = null;
-				selectedDeployerItem = { label: null, value: null };
 				oldChain = targetChain;
 			}
 		}
@@ -86,18 +99,11 @@
 	const getDeployerInfo = async (address_: string, chainId_: number) => {
 		if (!address_ || !chainId_ || chainId_ == -1) return;
 
-		const sgUrl = subgraphInfoTarget?.url;
-
-		if (!sgUrl) {
-			console.log(`There is no SG url available for that network yet: ${chainId_}`);
-			return;
-		}
-
 		const { data: dataDb, error: errorDb } = await supabaseClient
 			.from('deployers_addresses')
 			.select('address, interpreter_address(address), store_address(address)')
 			.eq('address', address_)
-			.eq('chainId', chainId_)
+			.eq('chain_id', chainId_)
 			.single();
 
 		if (errorDb) {
@@ -105,14 +111,78 @@
 			return;
 		}
 		if (!dataDb) {
-			throw new Error(`Not data found for this address "${address_}" and chainId "${chainId_}"`);
+			throw new Error(`Not data found for this address "${address_}" and chain_id "${chainId_}"`);
 		}
 
-		dispairTarget = {
-			deployer: dataDb.address,
+		dispairOrigin = {
 			interpreter: dataDb.interpreter_address?.address,
 			store: dataDb.store_address?.address
 		};
+	};
+
+	const getInterpreters = async (chainId_: number) => {
+		if (!chainId_ || chainId_ == -1) return;
+
+		const { data: dataRainterpreters, error: errorRainterpreters } = await supabaseClient
+			.from('rainterpreter_addresses')
+			.select('address')
+			.eq('chain_id', chainId_);
+
+		const { data: dataStores, error: errorStores } = await supabaseClient
+			.from('rainterpreter_store_addresses')
+			.select('address')
+			.eq('chain_id', chainId_);
+
+		if (errorRainterpreters || errorStores) {
+			const _message = errorRainterpreters ? errorRainterpreters.message : errorStores?.message;
+
+			console.log(`Error when fetching from DB: ${_message}`);
+			return;
+		}
+
+		rainterpreterAddresses = dataRainterpreters.map((rainterpreter_) => {
+			return { value: rainterpreter_.address, label: rainterpreter_.address };
+		});
+		storeAddresses = dataStores.map((store_) => {
+			return { value: store_.address, label: store_.address };
+		});
+	};
+
+	const assignDisInstances = (
+		selectedRainterpreterAddress_: string,
+		selectedStoreAddress_: string
+	) => {
+		// If are empties, does not assign them
+		if (!selectedRainterpreterAddress_ || !selectedStoreAddress_) return;
+
+		dispairTarget = {
+			interpreter: selectedRainterpreterAddress_,
+			store: selectedStoreAddress_
+		};
+	};
+
+	const checkTxHash = async (hash_: string) => {
+		isValidTxHash = ethers.utils.isHexString(hash_, 32);
+		return isValidTxHash;
+	};
+
+	const txHashValidator = async (value_: any) => {
+		if (!ethers.utils.isHexString(value_, 32)) {
+			return { error: 'It is not a valid tx hash.' };
+		}
+
+		return true;
+	};
+
+	const getContractUrl = (address_: string, chainId_: number): string => {
+		const networkInfo = getNetworkByChainId(chainId_);
+		if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
+			const urlExplorer = networkInfo.explorers[0].url;
+
+			return `${urlExplorer}/address/${address_}`;
+		}
+
+		return '';
 	};
 
 	const closeModalTx = () => {
@@ -141,18 +211,22 @@
 		const fromDIS = dispairOrigin;
 		const toDIS = originChain == targetChain ? dispairOrigin : dispairTarget;
 
-		const DISInstances = {
-			from: fromDIS,
-			to: toDIS
-		};
+		const _options: { DIS?: { from: DISpair; to: DISpair }; txHash?: string } = {};
 
-		// const txData = await getContractDeployTxData(network, fromDIS, toDIS, selectedContractAddress);
+		// If it's a deployer interpreter type, will need the DIS instnaces.
+		if (interpreterType == 'deployer') {
+			_options.DIS = {
+				from: fromDIS,
+				to: toDIS
+			};
+		}
 
-		const txData = await getDeployTxData(network, selectedContractAddress, {
-			DIS: DISInstances
-		});
+		if (requiredTxhash) {
+			_options.txHash = requiredTxhash;
+		}
 
 		try {
+			const txData = await getDeployTxData(network, selectedInterpreterAddress, _options);
 			if (!txData) {
 				throw new Error('It cannot retrieve the contract information');
 			}
@@ -188,16 +262,51 @@
 					errorMsg = JSON.stringify(error);
 				}
 			}
+			console.log(error);
 			console.log(JSON.stringify(error));
 			errorTx = true;
 		}
 	};
 
-	$: contractChains = getChainsFromAddresses(contractAddresses);
-	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, originChain);
+	const checkDeploy = async (chain_: number, address_: string) => {
+		checking = true;
+		const _network = getRainNetworkForChainId(chain_);
+		if (!_network) {
+			return false;
+		}
+
+		canCrossDeploy = await checkObtainTxHash(_network, address_);
+		checking = false;
+	};
+
+	$: contractChains = getChainsFromAddresses(interpreterAddresses);
+
+	$: knownAddressesForThisChain = getKnownContractAddressesForChain(
+		interpreterAddresses,
+		originChain
+	);
+
 	$: availableAddresses = knownAddressesForThisChain.length ? true : false;
 
-	$: selectedDeployerAddress, targetChain, getDeployerInfo(selectedDeployerAddress, targetChain);
+	$: originChain &&
+		selectedInterpreterAddress &&
+		checkDeploy(originChain, selectedInterpreterAddress);
+
+	$: interpreterType == 'deployer', targetChain, getInterpreters(targetChain);
+
+	$: interpreterType == 'deployer',
+		originChain,
+		selectedInterpreterAddress,
+		getDeployerInfo(selectedInterpreterAddress, originChain);
+
+	$: interpreterType == 'deployer' &&
+		selectedRainterpreterAddress &&
+		selectedRainterpreterAddress != '' &&
+		selectedStoreAddress &&
+		selectedStoreAddress != '' &&
+		assignDisInstances(selectedRainterpreterAddress, selectedStoreAddress);
+
+	$: requiredTxhash && checkTxHash(requiredTxhash);
 </script>
 
 {#if !$signer}
@@ -217,74 +326,111 @@
 				bind:value={originChain}
 			/>
 		</div>
-	</div>
-	{#if availableAddresses}
-		<div class="flex flex-col gap-y-4">
-			<span>Select a contract address:</span>
-			<InputDropdown
-				disabled={originChain == -1}
-				bind:value={selectedContractAddress}
-				bind:selectedItem={selectedContractItem}
-				items={knownAddressesForThisChain}
-				placeholder="Select or paste an address"
-				classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
-				classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
-			/>
-		</div>
-	{/if}
-
-	{#if selectedContractAddress && selectedContractAddress != ''}
-		<div class="flex flex-col gap-y-4">
-			<span>Select a target chain:</span>
-			<Select items={networkOptions} on:change={changeTargetChain} bind:value={targetChain} />
-		</div>
-		{#if targetChain && targetChain != -1 && originChain != targetChain}
+		{#if availableAddresses}
 			<div class="flex flex-col gap-y-4">
-				{#key targetChain}
-					{#if interpreterType === 'deployer'}
-						<span>Select a rainterpreter and store address on target network:</span>
-						Deployer
-					{:else}
-						Rainterpreter or store, should deploy directly from tx hash
-					{/if}
-
-					<!-- <InputDropdown
-						disabled={targetChain == -1}
-						bind:value={selectedDeployerAddress}
-						bind:selectedItem={selectedDeployerItem}
-						items={filterDeployers(targetChain)}
-						placeholder="Select a deployer address"
-						classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
-						classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
-					/> -->
-					<!-- <span class="mt-[-4px] text-sm text-yellow-600"
-					>This deployer will be used only for registering the new contract. It doesn't matter which
-					one you choose.</span
-				> -->
-					{#if !subgraphInfoTarget}
-						<span class="text-sm text-red-600"
-							>'There is no Subgraph url available for that network yet</span
-						>
-					{/if}
-				{/key}
+				<span>Select {interpreterName(interpreterType, { addArticle: true })} address:</span>
+				<InputDropdown
+					disabled={originChain == -1}
+					bind:value={selectedInterpreterAddress}
+					bind:selectedItem={selectedInterpretertItem}
+					items={knownAddressesForThisChain}
+					placeholder="Select or paste an address"
+					classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
+					classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
+				/>
+				{#if selectedInterpreterAddress && selectedInterpreterAddress != '' && !checking && !canCrossDeploy}
+					<p class="text-yellow-600">
+						The deploy transaction hash of this address cannot be obtained automatically. Please
+						provide the transaction hash.
+					</p>
+				{/if}
 			</div>
 		{/if}
-	{/if}
-{/if}
-<!-- 
+
+		{#if checking}
+			<div class="flex flex-col">
+				<Ring size="40px" color="#cbd5e1" />
+			</div>
+		{/if}
+
+		{#if selectedInterpreterAddress && selectedInterpreterAddress != '' && !checking && !canCrossDeploy}
+			<div class="flex flex-col gap-y-4">
+				<Input bind:value={requiredTxhash} validator={txHashValidator}>
+					<span slot="label">Transaction hash</span>
+				</Input>
+				<a
+					class="flex flex max-w-fit items-center items-center justify-center gap-x-1 rounded-[10px] bg-blue-500 px-2.5 py-[5px] text-sm text-white hover:bg-blue-400 hover:underline"
+					target="_blank"
+					rel="noreferrer"
+					href={getContractUrl(selectedInterpreterAddress, originChain)}
+				>
+					<p>Go to contract address</p>
+					<Icon src={ArrowTopRightOnSquare} class="h-4 w-4" />
+				</a>
+			</div>
+		{/if}
+
+		{#if selectedInterpreterAddress && selectedInterpreterAddress != '' && !checking && ((!canCrossDeploy && requiredTxhash && isValidTxHash) || canCrossDeploy)}
+			<div class="flex flex-col gap-y-4">
+				<span>Select a target chain:</span>
+				<Select items={networkOptions} on:change={changeTargetChain} bind:value={targetChain} />
+			</div>
+			{#key targetChain}
+				{#if targetChain && targetChain != -1 && originChain != targetChain}
+					<div class="flex flex-col gap-y-4">
+						{#if interpreterType === 'deployer'}
+							<div class="flex flex-col gap-y-4">
+								<span>Select a Rainterpreter address on target network:</span>
+								<InputDropdown
+									disabled={targetChain == -1}
+									bind:value={selectedRainterpreterAddress}
+									bind:selectedItem={selectedRainterpretertItem}
+									items={rainterpreterAddresses}
+									placeholder="Select a rainterpreter address"
+									classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
+									classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
+								/>
+							</div>
+							<div class="flex flex-col gap-y-4">
+								<span>Select a Store address on target network:</span>
+								<InputDropdown
+									disabled={targetChain == -1}
+									bind:value={selectedStoreAddress}
+									bind:selectedItem={selectedStoretItem}
+									items={storeAddresses}
+									placeholder="Select a store address"
+									classInput="bg-neutral-100 text-neutral-600 border border-neutral-100 bg-white rounded-md py-1 pl-2 disabled:cursor-not-allowed"
+									classContainer="max-h-28 text-neutral-600 border-[1px] border-gray-400 bg-white rounded-md shadow cursor-default"
+								/>
+							</div>
+						{/if}
+						{#if !subgraphInfoTarget}
+							<span class="text-sm text-red-600"
+								>'There is no Subgraph url available for that network yet</span
+							>
+						{/if}
+					</div>
+				{/if}
+			{/key}
+		{/if}
+
 		<div class="self-center">
 			<Button
 				disabled={!targetChain ||
 					targetChain == -1 ||
 					!subgraphInfoTarget ||
 					(originChain != targetChain &&
-						(!selectedDeployerAddress || selectedDeployerAddress == -1))}
+						interpreterType == 'deployer' &&
+						(!selectedRainterpreterAddress ||
+							selectedRainterpreterAddress == '' ||
+							!selectedStoreAddress ||
+							selectedStoreAddress == ''))}
 				on:click={crossDeploy}>Deploy</Button
 			>
 		</div>
-	</div> -->
-<!-- {/if} -->
-<!-- 
+	</div>
+{/if}
+
 <Modal bind:open={openWaitTx} disableOutsideClickClose>
 	<div class="flex w-full flex-col gap-5">
 		{#if waitTxResp}
@@ -364,4 +510,4 @@
 			<Button variant="primary" on:click={closeModalTx}>Close</Button>
 		</div>
 	</div>
-</Modal> -->
+</Modal>

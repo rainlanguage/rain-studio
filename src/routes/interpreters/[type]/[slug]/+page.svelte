@@ -4,51 +4,19 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 
 	import SummaryContract from '$lib/contracts/SummaryContract.svelte';
+	import { interpreterName } from '$lib/interpreters';
 	import DeployInterpreter from '$lib/interpreters/DeployInterpreter.svelte';
-	import {
-		Button,
-		Section,
-		SectionBody,
-		SectionHeading,
-		Tab,
-		TabList,
-		TabPanel,
-		Tabs
-	} from '@rainprotocol/rain-svelte-components';
-	import { allChainsData } from 'svelte-ethers-store';
-	//
-	//
-	//
-	//
-	//
+	import { Tab, TabList, TabPanel, Tabs } from '@rainprotocol/rain-svelte-components';
+
 	const interpreter = $page.data.interpreter;
 	const interpreterAddresses = $page.data.interpreter.addresses;
 	const interpreterType = $page.params.type;
-
-	const interpreterName = () => {
-		// Only deployer, rainterpreter and stores should be possible since
-		// the app redirect or throw an error when the `[type]` is not one of those.
-		if (interpreterType === 'deployer') {
-			return 'Expression Deployer';
-		} else {
-			return interpreterType.charAt(0).toUpperCase() + interpreterType.slice(1);
-		}
-	};
 </script>
 
-<div class="mt-2 self-center">
-	<Button
-		on:click={() => {
-			console.log($page);
-			console.log(interpreter);
-			console.log(interpreterType);
-		}}>Click here</Button
-	>
-</div>
 <PageHeader>
 	<div class="container mx-auto flex h-full flex-col items-stretch px-4 sm:px-0">
 		<div class="flex h-full flex-col justify-center gap-y-3 justify-self-stretch">
-			<span class="text-2xl font-semibold">{interpreterName()}</span>
+			<span class="text-2xl font-semibold">{interpreterName(interpreterType)}</span>
 			<div class="flex items-center gap-x-2">
 				<span class="text-gray-500">
 					<KnownAddresses contract_addresses={interpreterAddresses} />
@@ -71,9 +39,9 @@
 			<TabPanel>
 				<SummaryContract contractAddresses={interpreterAddresses} />
 			</TabPanel>
-			<TabPanel
-				><DeployInterpreter {interpreterType} contractAddresses={interpreterAddresses} /></TabPanel
-			>
+			<TabPanel>
+				<DeployInterpreter {interpreterType} {interpreterAddresses} />
+			</TabPanel>
 		</div>
 	</div>
 </Tabs>

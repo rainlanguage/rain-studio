@@ -92,29 +92,6 @@
 	const getContractInfo = async (address_: string) => {
 		if (!address_ || !originChain || originChain == -1) return;
 
-		const sgUrl = Subgraphs.find((sg_) => sg_.chain == originChain)?.url;
-
-		if (!sgUrl) {
-			// errorContractOrigin = 'There is no SG url available for that network yet';
-			console.log(`There is no SG url available for that network yet: ${originChain}`);
-			return;
-		}
-
-		const client_ = createClient({
-			url: sgUrl
-		});
-
-		const query_ = `
-			{
-				contract (id: "${address_}") {
-					deployTransaction {
-						id
-					}
-				}
-			}
-		`;
-		const { data: dataSg, error: errorSg } = await client_.query(query_, {}).toPromise();
-
 		const { data: dataDb, error: errorDb } = await supabaseClient
 			.from('contract_addresses_new')
 			.select(
@@ -122,14 +99,6 @@
 			)
 			.eq('address', address_)
 			.single();
-
-		if (errorSg || !dataSg.contract) {
-			if (errorSg) {
-				throw new Error(`Errow when fetching from SG: ${errorSg.message}`);
-			} else {
-				throw new Error(`Invalid or not tracked address: ${address_}`);
-			}
-		}
 
 		if (errorDb) {
 			throw new Error(`Errow when fetching from DB: ${errorDb.message}`);
@@ -156,18 +125,11 @@
 	const getDeployerInfo = async (address_: string, chainId_: number) => {
 		if (!address_ || !chainId_ || chainId_ == -1) return;
 
-		const sgUrl = subgraphInfoTarget?.url;
-
-		if (!sgUrl) {
-			console.log(`There is no SG url available for that network yet: ${chainId_}`);
-			return;
-		}
-
 		const { data: dataDb, error: errorDb } = await supabaseClient
 			.from('deployers_addresses')
 			.select('address, interpreter_address(address), store_address(address)')
 			.eq('address', address_)
-			.eq('chainId', chainId_)
+			.eq('chain_id', chainId_)
 			.single();
 
 		if (errorDb) {
@@ -175,7 +137,7 @@
 			return;
 		}
 		if (!dataDb) {
-			throw new Error(`Not data found for this address "${address_}" and chainId "${chainId_}"`);
+			throw new Error(`Not data found for this address "${address_}" and chain_id "${chainId_}"`);
 		}
 
 		dispairTarget = {
