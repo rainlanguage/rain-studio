@@ -73,7 +73,7 @@
 
 	setContext('EVALUABLE_ADDRESSES', {
 		getDeployers: async () => {
-			return deployerAddresses.filter((address) => selectedChain == address.chainId);
+			return deployerAddresses.filter((address) => selectedChain == address.chain_id);
 		}
 	});
 
