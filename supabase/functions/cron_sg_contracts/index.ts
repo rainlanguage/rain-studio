@@ -43,6 +43,7 @@ serve(async (req) => {
 			// Filter non added contracts
 			const filteredContracts = filterNonAddedContracts(sgContracts, dBContracts, chain_id);
 
+
 			// Concat to the arrays, so we can use less insert queries
 			contractsToAdd = contractsToAdd.concat(Object.values(filteredContracts.contractsToAdd));
 			contractAddressesToAdd = contractAddressesToAdd.concat(

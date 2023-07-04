@@ -11,20 +11,6 @@ export type ContractDB = Database['public']['Tables']['contracts_new']['Row'] & 
 	contract_addresses_new: Array<Database['public']['Tables']['contract_addresses_new']['Row']>;
 };
 
-export type DeployerDB = Database['public']['Tables']['deployers']['Row'] & {
-	deployers_addresses: Array<Database['public']['Tables']['deployers_addresses']['Row']>;
-};
-
-export type RainterpreterDB = Database['public']['Tables']['rainterpreters']['Row'] & {
-	rainterpreter_addresses: Array<Database['public']['Tables']['rainterpreter_addresses']['Row']>;
-};
-
-export type Rainterpreter_storesDB = Database['public']['Tables']['rainterpreter_stores']['Row'] & {
-	rainterpreter_store_addresses: Array<
-		Database['public']['Tables']['rainterpreter_store_addresses']['Row']
-	>;
-};
-
 /**
  * @type
  * The contract format that comes from the SG query
@@ -51,6 +37,7 @@ export type ContractSG = {
 	 */
 	implementation: {
 		id: string;
+		bytecodeHash: string;
 	} | null;
 };
 
@@ -94,65 +81,6 @@ export type MetaContentV1SG = {
 	 * The content language that is using the payload
 	 */
 	contentLanguage: string;
-};
-
-/**
- * @type
- * The expression deployer format that comes from the SG query
- */
-export type ExpressionDeployerSG = {
-	/**
-	 * ID of the entity from the subgraph
-	 */
-	id: string;
-	/**
-	 * Hash of the bytcode of the this contract
-	 */
-	bytecodeHash: string;
-	/**
-	 * MetaV1 document decoded
-	 */
-	meta: MetaDocumentSG;
-};
-
-/**
- * @type
- * The rainterpreter format that comes from the SG query
- */
-export type InterpreterSG = {
-	/**
-	 * The ID is the bytecode hash of all the Interpreters Instances
-	 */
-	id: string;
-	/**
-	 * The instances are each interpreter address that have the same bytecode
-	 */
-	instances: Array<{
-		/**
-		 * Address of the instance
-		 */
-		id: string;
-	}>;
-};
-
-/**
- * @type
- * The rainterpreterStore format that comes from the SG query
- */
-export type RainterpreterStoreSG = {
-	/**
-	 * The ID is the bytecode hash of all the RainterpreterStore Instances
-	 */
-	id: string;
-	/**
-	 * The instances are each store address that have the same bytecode
-	 */
-	instances: Array<{
-		/**
-		 * Address of the instance
-		 */
-		id: string;
-	}>;
 };
 
 export type ABI = any[];
@@ -203,42 +131,4 @@ export type DataAddressUpload = {
 	contract: string;
 	type: string;
 	implementation?: string;
-};
-
-export type DataDeployerUpload = {
-	id: string;
-	bytecode_hash: string;
-	opmeta: any;
-	opmeta_bytes: string;
-};
-
-export type DataDeployerAddressUpload = {
-	id: string;
-	deployer: string;
-	address: string;
-	chain_id: number;
-};
-
-export type DataRainterpreterUpload = {
-	id: string;
-	bytecode_hash: string;
-};
-
-export type DataRainterpreterAddressUpload = {
-	id: string;
-	rainterpreter: string;
-	address: string;
-	chain_id: number;
-};
-
-export type DataRainterpreterStoreUpload = {
-	id: string;
-	bytecode_hash: string;
-};
-
-export type DataRainterpreterStoreAddressUpload = {
-	id: string;
-	rainterpreter_store: string;
-	address: string;
-	chain_id: number;
 };

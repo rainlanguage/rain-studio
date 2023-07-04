@@ -83,38 +83,7 @@ export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMe
 	};
 }
 
-/**
- * @public
- * Get an CBOR sequence that have opmeta and decode it
- * @param meta_ Hex string CBOR sequence to decode
- */
-export function decodedMetaOPMETA(
-	meta_: string
-): { opmetaDecoded: any; opmeta_bytes: string } | null {
-	// If does not have the magic number, it is not proper
-	if (!meta_.startsWith(MAGIC_NUMBERS.RainMetaDocument)) return null;
 
-	// Remove the RainMetaDocument magic number
-	const meta = meta_.replace(MAGIC_NUMBERS.RainMetaDocument, '');
-
-	// Decoded the CBOR sequence
-	const dataDecoded = cbor.decodeAllSync(meta);
-
-	// Find the ABI Map
-	const opsMetaMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.OpsMeta);
-
-	// If could not find the opmetaMap, return null
-	if (!opsMetaMap) return null;
-
-	// Obtain the the payload from key 0 and use `hexlify` to get the hex string.
-	// CBOR-js parse the bytes as a ArrayByteLikes (Uint8Array)
-	const opmeta_bytes = hexlify(opsMetaMap.get(0));
-
-	// Decoded the map info into a object (from the deflated JSON)
-	const opmetaDecoded = decodedMap(opsMetaMap);
-
-	return { opmetaDecoded, opmeta_bytes };
-}
 
 /**
  * @public
