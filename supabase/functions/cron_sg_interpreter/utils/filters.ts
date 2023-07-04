@@ -41,14 +41,22 @@ export function filterNonAddedContracts(
 	/**
 	 * Add a new address to `addressesToAdd` using this local scope
 	 */
-	function addAddress(address_: string, contractId_: string, type_?: string) {
+	function addAddress(
+		address_: string,
+		contractId_: string,
+		deployerAddress_: string,
+		type_?: string
+	) {
 		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
+		const deployerAddressID = uuidv5(deployerAddress_ + chain_id.toString(), UUIDnamespace);
+
 		addressesToAdd[addressID] = {
 			id: addressID,
 			address: address_,
 			chain_id: chain_id,
 			contract: contractId_,
-			type: type_ ?? 'contract'
+			type: type_ ?? 'contract',
+			initial_deployer: deployerAddressID
 		};
 	}
 
@@ -62,7 +70,7 @@ export function filterNonAddedContracts(
 			// Check if it is already cached
 			if (contractsToAdd[contractID]) {
 				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGcontract.id, contractID);
+				addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 			} else {
 				// Decoded the meta
 				const metaContent = manageContractMetaSg(SGcontract.meta);
@@ -75,11 +83,13 @@ export function filterNonAddedContracts(
 						abi: metaContent.abi,
 						contract_meta: metaContent.contractMeta,
 						metadata: buildMetadataFromMeta(metaContent.contractMeta),
-						slug: SGcontract.bytecodeHash
+						slug: SGcontract.bytecodeHash,
+						meta_bytes: SGcontract.meta.metaBytes,
+						contract_meta_hash: SGcontract.contractMetaHash
 					};
 
 					// To insert the new address with the Contract referece
-					addAddress(SGcontract.id, contractID);
+					addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 				}
 			}
 		} else {
@@ -91,7 +101,7 @@ export function filterNonAddedContracts(
 
 			// If does not exist in the DB, prepare data to insert
 			if (!addressContract) {
-				addAddress(SGcontract.id, contractID);
+				addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
 			}
 		}
 	}
@@ -119,14 +129,29 @@ export function filterNonAddedDeployers(
 
 	/**
 	 * Add a new address to `deployersAddressesToAdd` using this local scope
+	 *
+	 * @param address_ The ExpressionDeployer address
+	 * @param deployerId_ The deployer ID that will have the relation with this
+	 * address. The ID is genenrated from the bytecode hash and an UUID namespace.
+	 * @param interpreter_ The Rainterpreter instance ID that is used with this Expression
+	 * deployer. The ID is generated from a combination of the address with the chainID
+	 * plus an UUID namespace.
+	 * @param store The Store interpreter instance ID that is used with this Expression
+	 * deployer. The ID is generated from a combination of the address with the chainID
+	 * plus an UUID namespace.
 	 */
-	function addAddress(address_: string, deployerId_: string) {
+	function addAddress(address_: string, deployerId_: string, interpreter_: string, store: string) {
 		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
+		const interpreterID = uuidv5(interpreter_ + chain_id.toString(), UUIDnamespace);
+		const storeID = uuidv5(store + chain_id.toString(), UUIDnamespace);
+
 		deployersAddressesToAdd[addressID] = {
 			id: addressID,
 			deployer: deployerId_,
 			address: address_,
-			chain_id: chain_id
+			chain_id: chain_id,
+			interpreter_address: interpreterID,
+			store_address: storeID
 		};
 	}
 
@@ -140,7 +165,7 @@ export function filterNonAddedDeployers(
 			// Check if it is already cached
 			if (deployersToAdd[deployerID]) {
 				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGdeployer.id, deployerID);
+				addAddress(SGdeployer.id, deployerID, SGdeployer.interpreter.id, SGdeployer.store.id);
 			} else {
 				// Decoded the CBOR sequence into the opmeta (the opmeta decoded and the bytes)
 				const opmetaData = manageDeployerMetaSg(SGdeployer.meta);
@@ -153,11 +178,12 @@ export function filterNonAddedDeployers(
 						id: deployerID,
 						bytecode_hash: SGdeployer.bytecodeHash,
 						opmeta: opmetaData.opmetaDecoded,
-						opmeta_bytes: opmetaData.opmeta_bytes
+						opmeta_bytes: opmetaData.opmeta_bytes,
+						opmeta_hash: SGdeployer.opmetaHash
 					};
 
 					// To insert the new address with the Contract referece
-					addAddress(SGdeployer.id, deployerID);
+					addAddress(SGdeployer.id, deployerID, SGdeployer.interpreter.id, SGdeployer.store.id);
 				}
 			}
 		} else {
@@ -169,7 +195,7 @@ export function filterNonAddedDeployers(
 
 			// If does not exist in the DB, prepare data to insert
 			if (!addressDeployer) {
-				addAddress(SGdeployer.id, deployerID);
+				addAddress(SGdeployer.id, deployerID, SGdeployer.interpreter.id, SGdeployer.store.id);
 			}
 		}
 	}

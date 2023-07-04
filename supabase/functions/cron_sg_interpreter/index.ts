@@ -136,15 +136,6 @@ serve(async (req) => {
 			? await supabaseClient.from('contract_addresses_new').insert(contractAddressesToAdd)
 			: nonChanged;
 
-		// - Deployers
-		const respDeployers = deployerToAdd.length
-			? await supabaseClient.from('deployers').insert(deployerToAdd)
-			: nonChanged;
-
-		const respDeployerAddresses = deployerAddressesToAdd.length
-			? await supabaseClient.from('deployers_addresses').insert(deployerAddressesToAdd)
-			: nonChanged;
-
 		// - Rainterpreters;
 		const respRainterpreters = rainterpretersToAdd.length
 			? await supabaseClient.from('rainterpreters').insert(rainterpretersToAdd)
@@ -161,6 +152,15 @@ serve(async (req) => {
 
 		const respStoreAddresses = storeAddressesToAdd.length
 			? await supabaseClient.from('rainterpreter_store_addresses').insert(storeAddressesToAdd)
+			: nonChanged;
+
+		// - Deployers: They are added/updated at the end since have a dependency with Rainterpreters and Storess
+		const respDeployers = deployerToAdd.length
+			? await supabaseClient.from('deployers').insert(deployerToAdd)
+			: nonChanged;
+
+		const respDeployerAddresses = deployerAddressesToAdd.length
+			? await supabaseClient.from('deployers_addresses').insert(deployerAddressesToAdd)
 			: nonChanged;
 
 		// Return a response with the fully information about any result and well formatted for readability

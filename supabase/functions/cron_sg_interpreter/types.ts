@@ -39,6 +39,18 @@ export type ContractSG = {
 	 */
 	bytecodeHash: string;
 	/**
+	 * Contract meta bytes of this contract
+	 */
+	contractMeta: string;
+	/**
+	 * Hash of  the contract meta bytes of this contract
+	 */
+	contractMetaHash: string;
+	/**
+	 * The ExpressionDeployer used on the Constructor of the contract
+	 */
+	initialDeployer: Instance;
+	/**
 	 * MetaV1 document decoded
 	 */
 	meta: MetaDocumentSG;
@@ -96,9 +108,25 @@ export type ExpressionDeployerSG = {
 	 */
 	id: string;
 	/**
-	 * Hash of the bytcode of the this contract
+	 * Hash of the bytecode of the this contract
 	 */
 	bytecodeHash: string;
+	/**
+	 * Opmeta of this ExpressionDeployer
+	 */
+	opmeta: string;
+	/**
+	 * Hash of the opmeta of this ExpressionDeployer
+	 */
+	opmetaHash: string;
+	/**
+	 * Rainterpreter contract instance
+	 */
+	interpreter: Instance;
+	/**
+	 * Store interpreter instance
+	 */
+	store: Instance;
 	/**
 	 * MetaV1 document decoded
 	 */
@@ -117,12 +145,7 @@ export type InterpreterSG = {
 	/**
 	 * The instances are each interpreter address that have the same bytecode
 	 */
-	instances: Array<{
-		/**
-		 * Address of the instance
-		 */
-		id: string;
-	}>;
+	instances: Array<Instance>;
 };
 
 /**
@@ -137,12 +160,7 @@ export type RainterpreterStoreSG = {
 	/**
 	 * The instances are each store address that have the same bytecode
 	 */
-	instances: Array<{
-		/**
-		 * Address of the instance
-		 */
-		id: string;
-	}>;
+	instances: Array<Instance>;
 };
 
 export type ABI = any[];
@@ -184,6 +202,8 @@ export type DataContractUpload = {
 	contract_meta: any;
 	metadata: any;
 	slug: string;
+	meta_bytes: string;
+	contract_meta_hash: string;
 };
 
 export type DataAddressUpload = {
@@ -192,6 +212,7 @@ export type DataAddressUpload = {
 	chain_id: number;
 	contract: string;
 	type: string;
+	initial_deployer: string;
 };
 
 export type DataDeployerUpload = {
@@ -199,6 +220,7 @@ export type DataDeployerUpload = {
 	bytecode_hash: string;
 	opmeta: any;
 	opmeta_bytes: string;
+	opmeta_hash: string;
 };
 
 export type DataDeployerAddressUpload = {
@@ -206,6 +228,8 @@ export type DataDeployerAddressUpload = {
 	deployer: string;
 	address: string;
 	chain_id: number;
+	interpreter_address: string;
+	store_address: string;
 };
 
 export type DataRainterpreterUpload = {
@@ -230,4 +254,14 @@ export type DataRainterpreterStoreAddressUpload = {
 	rainterpreter_store: string;
 	address: string;
 	chain_id: number;
+};
+
+/**
+ * A subgraph entity instances. Generally must refered to a Store, Rainterprer
+ * or ExpressionDeployer instances, which means that the ID is the address of
+ * that instance.
+ */
+type Instance = {
+	/** Address of the instance */
+	id: string;
 };
