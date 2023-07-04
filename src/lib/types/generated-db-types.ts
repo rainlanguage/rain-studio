@@ -3,7 +3,7 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[]
 
 export interface Database {
@@ -16,6 +16,8 @@ export interface Database {
           contract: string
           created_at: string | null
           id: string
+          implementation: string | null
+          initial_deployer: string | null
           type: string
         }
         Insert: {
@@ -24,6 +26,8 @@ export interface Database {
           contract: string
           created_at?: string | null
           id: string
+          implementation?: string | null
+          initial_deployer?: string | null
           type: string
         }
         Update: {
@@ -32,8 +36,30 @@ export interface Database {
           contract?: string
           created_at?: string | null
           id?: string
+          implementation?: string | null
+          initial_deployer?: string | null
           type?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "contract_addresses_new_contract_fkey"
+            columns: ["contract"]
+            referencedRelation: "contracts_new"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_addresses_new_implementation_fkey"
+            columns: ["implementation"]
+            referencedRelation: "contract_addresses_new"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_addresses_new_initial_deployer_fkey"
+            columns: ["initial_deployer"]
+            referencedRelation: "deployers_addresses"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       contracts: {
         Row: {
@@ -60,6 +86,14 @@ export interface Database {
           project?: string | null
           slug?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_project_fkey"
+            columns: ["project"]
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       contracts_new: {
         Row: {
@@ -95,6 +129,14 @@ export interface Database {
           project?: string | null
           slug?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_new_project_fkey"
+            columns: ["project"]
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       deployers: {
         Row: {
@@ -121,35 +163,56 @@ export interface Database {
           opmeta_bytes?: string
           opmeta_hash?: string | null
         }
+        Relationships: []
       }
       deployers_addresses: {
         Row: {
           address: string
-          chainId: number
+          chain_id: number
           created_at: string
           deployer: string
           id: string
-          interpreter_address: string
-          store_address: string
+          interpreter_address: string | null
+          store_address: string | null
         }
         Insert: {
           address: string
-          chainId: number
+          chain_id: number
           created_at?: string
           deployer: string
           id: string
-          interpreter_address: string
-          store_address: string
+          interpreter_address?: string | null
+          store_address?: string | null
         }
         Update: {
           address?: string
-          chainId?: number
+          chain_id?: number
           created_at?: string
           deployer?: string
           id?: string
-          interpreter_address?: string
-          store_address?: string
+          interpreter_address?: string | null
+          store_address?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "deployers_addresses_deployer_fkey"
+            columns: ["deployer"]
+            referencedRelation: "deployers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deployers_addresses_interpreter_address_fkey"
+            columns: ["interpreter_address"]
+            referencedRelation: "rainterpreter_addresses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deployers_addresses_store_address_fkey"
+            columns: ["store_address"]
+            referencedRelation: "rainterpreter_store_addresses"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       draft_expressions_w: {
         Row: {
@@ -200,6 +263,32 @@ export interface Database {
           tags?: string[] | null
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "draft_expressions_w_contract_fkey"
+            columns: ["contract"]
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_expressions_w_interpreter_fkey"
+            columns: ["interpreter"]
+            referencedRelation: "interpreters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_expressions_w_org_id_fkey"
+            columns: ["org_id"]
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_expressions_w_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "wallet_users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       interpreters: {
         Row: {
@@ -217,6 +306,7 @@ export interface Database {
           id?: string
           metadata?: Json
         }
+        Relationships: []
       }
       org_member: {
         Row: {
@@ -240,6 +330,20 @@ export interface Database {
           role?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "org_member_org_id_fkey"
+            columns: ["org_id"]
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "org_member_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "wallet_users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       organizations: {
         Row: {
@@ -266,6 +370,7 @@ export interface Database {
           nickname?: string
           website?: string | null
         }
+        Relationships: []
       }
       projects: {
         Row: {
@@ -286,52 +391,69 @@ export interface Database {
           logo_url?: string
           name?: string
         }
+        Relationships: []
       }
       rainterpreter_addresses: {
         Row: {
           address: string
-          chainId: number
+          chain_id: number
           created_at: string
           id: string
           rainterpreter: string
         }
         Insert: {
           address: string
-          chainId: number
+          chain_id: number
           created_at?: string
           id: string
           rainterpreter: string
         }
         Update: {
           address?: string
-          chainId?: number
+          chain_id?: number
           created_at?: string
           id?: string
           rainterpreter?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "rainterpreter_addresses_rainterpreter_fkey"
+            columns: ["rainterpreter"]
+            referencedRelation: "rainterpreters"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       rainterpreter_store_addresses: {
         Row: {
           address: string
-          chainId: number
+          chain_id: number
           created_at: string
           id: string
           rainterpreter_store: string
         }
         Insert: {
           address: string
-          chainId: number
+          chain_id: number
           created_at?: string
           id: string
           rainterpreter_store: string
         }
         Update: {
           address?: string
-          chainId?: number
+          chain_id?: number
           created_at?: string
           id?: string
           rainterpreter_store?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "rainterpreter_store_addresses_rainterpreter_store_fkey"
+            columns: ["rainterpreter_store"]
+            referencedRelation: "rainterpreter_stores"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       rainterpreter_stores: {
         Row: {
@@ -349,6 +471,7 @@ export interface Database {
           created_at?: string | null
           id?: string
         }
+        Relationships: []
       }
       rainterpreters: {
         Row: {
@@ -366,6 +489,7 @@ export interface Database {
           created_at?: string
           id?: string
         }
+        Relationships: []
       }
       starred: {
         Row: {
@@ -389,6 +513,20 @@ export interface Database {
           starred?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "starred_foreign_key_fkey"
+            columns: ["foreign_key"]
+            referencedRelation: "draft_expressions_w"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "starred_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "wallet_users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       wallet_users: {
         Row: {
@@ -415,6 +553,7 @@ export interface Database {
           username?: string
           website?: string | null
         }
+        Relationships: []
       }
       wallets_linked: {
         Row: {
@@ -435,6 +574,14 @@ export interface Database {
           linked_at?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "wallets_linked_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "wallet_users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
@@ -447,6 +594,43 @@ export interface Database {
           nickname_: string
         }
         Returns: undefined
+      }
+      get_combined_interpreters_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          selected_interpreters: string[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_combined_interpreters_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          selected_interpreters: string[]
+        }
+        Returns: number
+      }
+      get_combined_interpreters_by_filters_pagination: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          selected_interpreters: string[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
       }
       get_contracts_address_by_search_value_address_and_networks: {
         Args: {
@@ -562,6 +746,87 @@ export interface Database {
           contract_addresses_new: Json
         }[]
       }
+      get_deployers_address_by_address_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_address_by_networks: {
+        Args: {
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_address_no_filters: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_by_address: {
+        Args: {
+          search_value: string
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_deployers_with_addresses_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: number
+      }
+      get_deployers_with_addresses_by_filters_pagination: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
       get_expression_by_slug_w: {
         Args: {
           slug: string
@@ -590,6 +855,168 @@ export interface Database {
       get_org_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_rainterpreter_stores_address_by_address_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_address_by_networks: {
+        Args: {
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_address_no_filters: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_by_address: {
+        Args: {
+          search_value: string
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreter_stores_with_addresses_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: number
+      }
+      get_rainterpreter_stores_with_addresses_by_filters_pagination: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_address_by_address_and_networks: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_address_by_networks: {
+        Args: {
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_address_no_filters: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_by_address: {
+        Args: {
+          search_value: string
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_with_addresses_by_filters: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
+      }
+      get_rainterpreters_with_addresses_by_filters_count: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+        }
+        Returns: number
+      }
+      get_rainterpreters_with_addresses_by_filters_pagination: {
+        Args: {
+          search_value: string
+          selected_networks: number[]
+          offset_: number
+        }
+        Returns: {
+          id: string
+          slug: string
+          created_at: string
+          type: string
+          addresses: Json
+        }[]
       }
       get_unique_tags_for_user_w: {
         Args: Record<PropertyKey, never>
@@ -635,40 +1062,6 @@ export interface Database {
         }
         Returns: undefined
       }
-      test_c: {
-        Args: {
-          search_value: string
-        }
-        Returns: number
-      }
-      test_pag:
-        | {
-            Args: {
-              search_value: string
-            }
-            Returns: {
-              id: string
-              project: string
-              created_at: string
-              slug: string
-              metadata: Json
-              contract_addresses_new: Json
-            }[]
-          }
-        | {
-            Args: {
-              search_value: string
-              offset_: number
-            }
-            Returns: {
-              id: string
-              project: string
-              created_at: string
-              slug: string
-              metadata: Json
-              contract_addresses_new: Json
-            }[]
-          }
     }
     Enums: {
       [_ in never]: never

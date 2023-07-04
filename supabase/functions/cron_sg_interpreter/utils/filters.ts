@@ -1,10 +1,5 @@
-import { buildMetadataFromMeta } from './index.ts';
 import { UUIDnamespace, uuidv5 } from './uuid.ts';
 import type {
-	ContractDB,
-	ContractSG,
-	DataAddressUpload,
-	DataContractUpload,
 	DataDeployerAddressUpload,
 	DataDeployerUpload,
 	DataRainterpreterAddressUpload,
@@ -18,96 +13,7 @@ import type {
 	RainterpreterStoreSG,
 	Rainterpreter_storesDB
 } from '../types.ts';
-import { manageContractMetaSg, manageDeployerMetaSg } from './meta.ts';
-
-/**
- * @public
- * Filter the data from Database and the Subgraph prior insert to avoid already
- * added data.
- */
-export function filterNonAddedContracts(
-	sgContracts_: Array<ContractSG>,
-	dbContracts_: ContractDB[],
-	chain_id: number
-) {
-	const contractsToAdd: {
-		[key: string]: DataContractUpload;
-	} = {};
-
-	const addressesToAdd: {
-		[key: string]: DataAddressUpload;
-	} = {};
-
-	/**
-	 * Add a new address to `addressesToAdd` using this local scope
-	 */
-	function addAddress(
-		address_: string,
-		contractId_: string,
-		deployerAddress_: string,
-		type_?: string
-	) {
-		const addressID = uuidv5(address_ + chain_id.toString(), UUIDnamespace);
-		const deployerAddressID = uuidv5(deployerAddress_ + chain_id.toString(), UUIDnamespace);
-
-		addressesToAdd[addressID] = {
-			id: addressID,
-			address: address_,
-			chain_id: chain_id,
-			contract: contractId_,
-			type: type_ ?? 'contract',
-			initial_deployer: deployerAddressID
-		};
-	}
-
-	for (let i = 0; i < sgContracts_.length; i++) {
-		const SGcontract = sgContracts_[i];
-		const contractID = uuidv5(SGcontract.bytecodeHash, UUIDnamespace);
-
-		const contractMatched = dbContracts_.find((contract_) => contract_.id === contractID);
-
-		if (!contractMatched) {
-			// Check if it is already cached
-			if (contractsToAdd[contractID]) {
-				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
-			} else {
-				// Decoded the meta
-				const metaContent = manageContractMetaSg(SGcontract.meta);
-
-				// Use the values decoded to prepare to insert
-				if (metaContent) {
-					// To insert the new Contracts
-					contractsToAdd[contractID] = {
-						id: contractID,
-						abi: metaContent.abi,
-						contract_meta: metaContent.contractMeta,
-						metadata: buildMetadataFromMeta(metaContent.contractMeta),
-						slug: SGcontract.bytecodeHash,
-						meta_bytes: SGcontract.meta.metaBytes,
-						contract_meta_hash: SGcontract.contractMetaHash
-					};
-
-					// To insert the new address with the Contract referece
-					addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
-				}
-			}
-		} else {
-			const addressID = uuidv5(SGcontract.id + chain_id.toString(), UUIDnamespace);
-
-			const addressContract = contractMatched.contract_addresses_new.find(
-				(item_) => item_.id === addressID
-			);
-
-			// If does not exist in the DB, prepare data to insert
-			if (!addressContract) {
-				addAddress(SGcontract.id, contractID, SGcontract.initialDeployer.id);
-			}
-		}
-	}
-
-	return { contractsToAdd, addressesToAdd };
-}
+import { manageDeployerMetaSg } from './meta.ts';
 
 /**
  * @public
@@ -164,7 +70,7 @@ export function filterNonAddedDeployers(
 		if (!deployerMatched) {
 			// Check if it is already cached
 			if (deployersToAdd[deployerID]) {
-				// Add to contract_address table with the reference to `contractID` because a matched was not found before
+				// Add to deployer addresses table with the reference to `deployerID` because a matched was not found before
 				addAddress(SGdeployer.id, deployerID, SGdeployer.interpreter.id, SGdeployer.store.id);
 			} else {
 				// Decoded the CBOR sequence into the opmeta (the opmeta decoded and the bytes)
@@ -173,7 +79,7 @@ export function filterNonAddedDeployers(
 				// const a = opsMetaMap?.get(0); //0
 				// Use the values decoded to prepare to insert
 				if (opmetaData) {
-					// To insert the new Contracts
+					// To insert the new Deployers
 					deployersToAdd[deployerID] = {
 						id: deployerID,
 						bytecode_hash: SGdeployer.bytecodeHash,
@@ -182,7 +88,7 @@ export function filterNonAddedDeployers(
 						opmeta_hash: SGdeployer.opmetaHash
 					};
 
-					// To insert the new address with the Contract referece
+					// To insert the new address with the Deployer referece
 					addAddress(SGdeployer.id, deployerID, SGdeployer.interpreter.id, SGdeployer.store.id);
 				}
 			}
@@ -245,9 +151,9 @@ export function filterNonAddedRainterpreters(
 
 		if (!rainterpreterMatched) {
 			// The Subgraph entity Rainterpreter work with an ID based on the bytecode_hash
-			// of the contract, if there are not match on the DB means that is new contract.
-			// Also, all the addresses (instances) are in the same entity, so they will
-			// be directly added since a previous relation did not existed.
+			// of the rainterpreter, if there are not match on the DB means that is new
+			// rainterpreter. Also, all the addresses (instances) are in the same entity,
+			// so they will be directly added since a previous relation did not existed.
 
 			// To insert the new Rainterpreters
 			rainterpretersToAdd[rainterpreterID] = {
@@ -323,9 +229,10 @@ export function filterNonAddedStores(
 
 		if (!storeMatched) {
 			// The Subgraph entity RainterpreterStore work with an ID based on the bytecode_hash
-			// of the contract, if there are not match on the DB means that is new contract.
-			// Also, all the addresses (instances) are in the same entity, so they will
-			// be directly added since a previous relation did not existed.
+			// of the interpreter store, if there are not match on the DB means that is
+			//  new interpreter store. Also, all the addresses (instances) are in the
+			// same entity, so they will be directly added since a previous relation
+			// did not existed.
 
 			// To insert the new RainterpreterStore (store)
 			storesToAdd[storeID] = {
@@ -360,19 +267,6 @@ export function filterNonAddedStores(
 
 	return { storesToAdd, storeAddressesToAdd };
 }
-
-/**
- * @public
- * Filter an array to remove any duplicated items.
- *
- * @dev
- * This function is useful after all the queries and other filters are done.
- * This is because when the chains are different between filters, it could be
- * duplicated entries on non-chain data like `contract` entities. With entities
- * that are strictly generated for each chain, like `contract_address`, this will
- * not happens since their ID is generated with the chain_id.
- */
-export function filterUniqueIDs(arr_: DataContractUpload[]): DataContractUpload[];
 
 /**
  * @public
@@ -417,19 +311,13 @@ export function filterUniqueIDs(
 
 // Using overloading
 export function filterUniqueIDs(
-	arr_: (
-		| DataContractUpload
-		| DataDeployerUpload
-		| DataRainterpreterUpload
-		| DataRainterpreterStoreUpload
-	)[]
+	arr_: (DataDeployerUpload | DataRainterpreterUpload | DataRainterpreterStoreUpload)[]
 ) {
 	const uniqueObjects = Object.values(
 		arr_.reduce(
 			(
 				acc: {
 					[key: string]:
-						| DataContractUpload
 						| DataDeployerUpload
 						| DataRainterpreterUpload
 						| DataRainterpreterStoreUpload;

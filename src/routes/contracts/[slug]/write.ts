@@ -36,7 +36,7 @@ export const getCommonChains = (
 	// will only include unique chains
 	const chains: Set<number> = new Set();
 	deployers.forEach((deployer) => {
-		chains.add(deployer.chainId);
+		chains.add(deployer.chain_id);
 	});
 	contractAddresses.forEach((el) => {
 		chains.add(el.chain_id);
@@ -64,7 +64,7 @@ export const getInterpretersForChain = (
 		};
 	}[] = [];
 	deployers.forEach((deployer) => {
-		if (deployer.chainId == chain_id) {
+		if (deployer.chain_id == chain_id) {
 			deployersForSelect.push({
 				label: `${deployer.address}`,
 				value: {

@@ -3,9 +3,7 @@ import { serve } from 'https://deno.land/std@0.131.0/http/server.ts';
 import { createDbClient, createSgClient } from './deps.ts';
 import {
 	getSubgraph,
-	filterNonAddedContracts,
 	getSGInterpreters,
-	getContracts,
 	getDBInterpretersData,
 	filterNonAddedDeployers,
 	filterNonAddedRainterpreters,
@@ -14,8 +12,6 @@ import {
 } from './utils/index.ts';
 
 import type {
-	DataAddressUpload,
-	DataContractUpload,
 	DataDeployerAddressUpload,
 	DataDeployerUpload,
 	DataRainterpreterAddressUpload,
@@ -38,9 +34,6 @@ serve(async (req) => {
 		// chains and subgraphs.
 		const subgraphs = getSubgraph();
 
-		// Array to be use to insert into the Database
-		let contractsToAdd: DataContractUpload[] = [];
-		let contractAddressesToAdd: DataAddressUpload[] = [];
 		let deployerToAdd: DataDeployerUpload[] = [];
 		let deployerAddressesToAdd: DataDeployerAddressUpload[] = [];
 		let rainterpretersToAdd: DataRainterpreterUpload[] = [];
@@ -55,19 +48,6 @@ serve(async (req) => {
 			const subgraphClient = createSgClient({
 				url: subgraph_url
 			});
-
-			// ** Filling the `contracts_new` and `contract_addresses_new` tables
-			// Getting data and information about the contracts
-			const { sgContracts, dBContracts } = await getContracts(supabaseClient, subgraphClient);
-
-			// Filter non added contracts
-			const filteredContracts = filterNonAddedContracts(sgContracts, dBContracts, chain_id);
-
-			// Concat to the arrays, so we can use less insert queries
-			contractsToAdd = contractsToAdd.concat(Object.values(filteredContracts.contractsToAdd));
-			contractAddressesToAdd = contractAddressesToAdd.concat(
-				Object.values(filteredContracts.addressesToAdd)
-			);
 
 			// ** Filling the interpreter table
 			// Getting data and information related to interpreters
@@ -113,12 +93,10 @@ serve(async (req) => {
 			);
 		}
 
-		// Use reduce to avoid duplicated data on Cross Chain tables (like contracts
-		// and deployers).The other items for entities like `contractAddresses` do
-		// not need this filter since they are already have an unique ID because
-		// use the ChainId for generate their ID. Ready the `filterUniqueIDs` for
-		// similar explanation.
-		contractsToAdd = filterUniqueIDs(contractsToAdd);
+		// Use reduce to avoid duplicated data on Cross Chain tables on deployers.
+		// The other items for entities like `addresses` do not need this
+		// filter since they are already have an unique ID because use the ChainId
+		// for generate their ID. Read the `filterUniqueIDs` for similar explanation.
 		deployerToAdd = filterUniqueIDs(deployerToAdd);
 		rainterpretersToAdd = filterUniqueIDs(rainterpretersToAdd);
 		storesToAdd = filterUniqueIDs(storesToAdd);
@@ -127,14 +105,6 @@ serve(async (req) => {
 		const nonChanged = 'No new data added';
 
 		// Only send the query if the arrays are filled with data
-		// - Contracts
-		const respContracts = contractsToAdd.length
-			? await supabaseClient.from('contracts_new').insert(contractsToAdd)
-			: nonChanged;
-
-		const respContractAddresses = contractAddressesToAdd.length
-			? await supabaseClient.from('contract_addresses_new').insert(contractAddressesToAdd)
-			: nonChanged;
 
 		// - Rainterpreters;
 		const respRainterpreters = rainterpretersToAdd.length
@@ -168,8 +138,6 @@ serve(async (req) => {
 			JSON.stringify(
 				{
 					responses: {
-						respContracts,
-						respContractAddresses,
 						respDeployers,
 						respDeployerAddresses,
 						respRainterpreters,

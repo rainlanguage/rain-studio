@@ -11,7 +11,8 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"types": "supabase gen types typescript --project-id wjjqadgrfglmanlweats > ./src/lib/types/generated-db-types.ts",
-		"deploy-cron": "supabase functions deploy cron_sg_interpreter --project-ref wjjqadgrfglmanlweats --legacy-bundle"
+		"deploy-cron": "supabase functions deploy cron_sg_interpreter --project-ref wjjqadgrfglmanlweats --legacy-bundle",
+		"deploy-cron-contracts": "supabase functions deploy cron_sg_contracts --project-ref wjjqadgrfglmanlweats --legacy-bundle"
 	},
 	"devDependencies": {
 		"@sentry/vite-plugin": "^0.3.0",
