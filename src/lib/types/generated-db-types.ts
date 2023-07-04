@@ -3,7 +3,7 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[]
 
 export interface Database {
@@ -16,6 +16,7 @@ export interface Database {
           contract: string
           created_at: string | null
           id: string
+          implementation: string | null
           initial_deployer: string | null
           type: string
         }
@@ -25,6 +26,7 @@ export interface Database {
           contract: string
           created_at?: string | null
           id: string
+          implementation?: string | null
           initial_deployer?: string | null
           type: string
         }
@@ -34,6 +36,7 @@ export interface Database {
           contract?: string
           created_at?: string | null
           id?: string
+          implementation?: string | null
           initial_deployer?: string | null
           type?: string
         }
@@ -42,6 +45,12 @@ export interface Database {
             foreignKeyName: "contract_addresses_new_contract_fkey"
             columns: ["contract"]
             referencedRelation: "contracts_new"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_addresses_new_implementation_fkey"
+            columns: ["implementation"]
+            referencedRelation: "contract_addresses_new"
             referencedColumns: ["id"]
           },
           {
