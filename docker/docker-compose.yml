@@ -1,0 +1,6 @@
+version: '3'
+services:
+  hardhat:
+    image: vishalkale151071/hardhat-node
+    ports:
+      - '8545:8545'
