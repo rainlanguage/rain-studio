@@ -8,10 +8,11 @@
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import Write from './Write.svelte';
 	import Deploy from './Deploy.svelte';
+	import DeployProxy from './DeployProxy.svelte';
 	import SummaryContract from '$lib/contracts/SummaryContract.svelte';
 
 	$: contract = $page.data.contract;
-	$: ({ project, metadata, abi, contract_addresses_new } = contract);
+	$: ({ project, metadata, contract_meta, abi, contract_addresses_new } = contract);
 </script>
 
 <PageHeader>
@@ -35,6 +36,7 @@
 				<Tab>Contract</Tab>
 				<Tab>Write</Tab>
 				<Tab>Deploy</Tab>
+				<Tab>Proxies</Tab>
 				<!-- TODO: FIX -->
 				<!-- <Tab>Examples</Tab>
 				<Tab>Community</Tab> -->
@@ -62,6 +64,7 @@
 					{metadata}
 				/>
 			</TabPanel>
+			<TabPanel><DeployProxy {abi} {metadata} {contract_meta} /></TabPanel>
 		</div>
 		<!-- <div class="py-8 lg:w-1/3"><Sidebar {contract} /></div> -->
 	</div>
