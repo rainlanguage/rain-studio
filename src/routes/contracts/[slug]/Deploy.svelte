@@ -225,9 +225,12 @@
 		}
 	};
 
-	// $: commonChains = getCommonChains(deployerAddresses, contractAddresses);
 	$: contractChains = getContractChains(contractAddresses);
-	$: knownAddressesForThisChain = getKnownContractAddressesForChain(contractAddresses, originChain);
+	$: knownAddressesForThisChain = getKnownContractAddressesForChain(
+		contractAddresses,
+		originChain,
+		{ onlyContracts: true }
+	);
 	$: availableAddresses = knownAddressesForThisChain.length ? true : false;
 
 	$: selectedContractAddress, getContractInfo(selectedContractAddress);
