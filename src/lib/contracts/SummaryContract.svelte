@@ -5,9 +5,9 @@
 	import type { ContractAddressRow } from '$lib/types/types';
 	// import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 
-	export let abi: any = null,
-		metadata: any | null = null,
+	export let metadata: any | null = null,
 		contractAddresses: ContractAddressRow[];
+	// abi: any = null;
 	// metadata: ContractMetadata | null = null;
 </script>
 
@@ -31,7 +31,17 @@
 								>{allChainsData.find((_chain) => _chain.chainId == address_.chain_id)?.name}</td
 							>
 							<td class="pt-3">{address_.chain_id}</td>
-							<td class="block w-48 truncate pt-3 md:w-full">{address_.address}</td>
+							<!-- <td class="block w-48 truncate pt-3 md:w-full"> -->
+							<td class="block w-48 truncate pt-3 md:w-full">
+								<div class="flex-column flex gap-x-1">
+									<p>
+										{address_.address}
+									</p>
+									{#if address_.type == 'proxy'}
+										<p class="text-sm text-blue-500">(proxy)</p>
+									{/if}
+								</div>
+							</td>
 						</tr>
 					{/each}
 				{/if}
