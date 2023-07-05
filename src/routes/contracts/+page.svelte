@@ -17,8 +17,10 @@
 	$: counterContracts = $page.data.counterContracts;
 	$: contractsL = Math.ceil(counterContracts / 52);
 
+	const networkOptions_ = [{ label: 'All', value: -1 }].concat(networkOptions);
+
 	// Inital value "default" all networks
-	let selectedNetworks: Array<number> = [networkOptions[0].value];
+	let selectedNetworks: Array<number> = [-1];
 
 	let searchValue: string;
 	let loading_: boolean = false;
@@ -91,7 +93,7 @@
 			return 'All';
 
 		return selectedNetworks
-			.map((item_) => networkOptions.find((network_) => network_.value === item_)?.label)
+			.map((item_) => networkOptions_.find((network_) => network_.value === item_)?.label)
 			.join(', ');
 	};
 
@@ -102,7 +104,7 @@
 	<div class="ml-4 w-3/4">
 		<!-- If I write an address or name, should search with alls to find a match -->
 		<Input placeholder="Search by contract name or address" bind:value={searchValue} />
-		<div class="flex gap-x-4">
+		<div class="flex flex-col gap-x-4">
 			<p class="mt-4">
 				<strong>Networks:</strong>
 				{networkFilterToShow()}
@@ -122,7 +124,7 @@
 			<FilterSet
 				defaultOption={1}
 				exclusiveOptions={[0]}
-				options={networkOptions}
+				options={networkOptions_}
 				bind:value={selectedNetworks}
 			/>
 		</FilterGroup>
@@ -152,7 +154,7 @@
 					{#each Array(contractsL) as _, index}
 						<button
 							class={`disabled flex items-center border border-neutral-200 px-2 text-neutral-600 ${
-								index == indexSelected_ ? '' : 'hover:bg-neutral-200'
+								index == indexSelected_ ? 'bg-neutral-300' : 'hover:bg-neutral-200'
 							}`}
 							on:click={() => changePagination(index)}
 							disabled={index == indexSelected_}

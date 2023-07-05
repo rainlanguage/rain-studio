@@ -7,7 +7,8 @@
 	import { Tabs, TabList, TabPanel, Tab } from '@rainprotocol/rain-svelte-components';
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import Write from './Write.svelte';
-	import Summary from './Summary.svelte';
+	import Deploy from './Deploy.svelte';
+	import SummaryContract from '$lib/contracts/SummaryContract.svelte';
 
 	$: contract = $page.data.contract;
 	$: ({ project, metadata, abi, contract_addresses_new } = contract);
@@ -33,6 +34,7 @@
 			<TabList>
 				<Tab>Contract</Tab>
 				<Tab>Write</Tab>
+				<Tab>Deploy</Tab>
 				<!-- TODO: FIX -->
 				<!-- <Tab>Examples</Tab>
 				<Tab>Community</Tab> -->
@@ -42,7 +44,7 @@
 	<div class="justify-stretch container mx-auto flex flex-col gap-y-8 px-4 sm:px-0 lg:flex-row">
 		<div class="flex flex-col gap-y-8 py-10 lg:w-2/3 lg:pr-6">
 			<TabPanel>
-				<Summary {abi} {metadata} contractAddresses={contract_addresses_new} />
+				<SummaryContract {abi} {metadata} contractAddresses={contract_addresses_new} />
 			</TabPanel>
 			<TabPanel>
 				<Write
@@ -51,6 +53,13 @@
 					{contract}
 					contractAddresses={contract_addresses_new}
 					deployerAddresses={$page.data.deployers}
+				/>
+			</TabPanel>
+			<TabPanel>
+				<Deploy
+					contractAddresses={contract_addresses_new}
+					deployerAddresses={$page.data.deployers}
+					{metadata}
 				/>
 			</TabPanel>
 		</div>

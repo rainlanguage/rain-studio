@@ -11,6 +11,10 @@ let
     npm run dev
   '';
 
+  dev-host = pkgs.writeShellScriptBin "dev-host" ''
+    npm run dev-host
+  '';
+
   npm-install-serial = pkgs.writeShellScriptBin "npm-install-serial" ''
     npm cache clean --force && while ! npm install --network-timeout=1000000 --skip-integrity-check --network-concurrency=1; do echo --- ; done
   '';
@@ -22,6 +26,7 @@ pkgs.stdenv.mkDerivation {
     pkgs.nodejs-16_x
     pkgs.typescript
     dev
+    dev-host
     npm-install-serial
   ];
 

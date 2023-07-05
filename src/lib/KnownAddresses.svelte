@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Database } from '$lib/types/generated-db-types';
 
-	export let contract_addresses: Database['public']['Tables']['contract_addresses_new']['Row'][];
+	export let contract_addresses: { chain_id: number }[];
 
 	$: addressCount = contract_addresses.length;
 	$: chainCount = contract_addresses.reduce(

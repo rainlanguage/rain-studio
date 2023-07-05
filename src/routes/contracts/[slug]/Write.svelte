@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { Button, Select, Modal } from '@rainprotocol/rain-svelte-components';
 	import { AutoAbiFormSeparated } from '@rainprotocol/rain-svelte-components';
-	import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
+	// import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 	import { ethers } from 'ethers';
 	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
@@ -11,12 +11,7 @@
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import { fade } from 'svelte/transition';
 	import type { Abi, AbiFunction } from 'abitype';
-	import {
-		getCommonChains,
-		getKnownContractAddressesForChain,
-		getNameFromChainId,
-		getWriteMethods
-	} from './write';
+	import { getWriteMethods } from './write';
 	import type {
 		ContractAddressRow,
 		ContractRowFull,
@@ -29,8 +24,13 @@
 	import { changeNetwork } from '$lib/connect-wallet';
 
 	import { InputDropdown } from '@rainprotocol/rain-svelte-components';
+	import {
+		getKnownContractAddressesForChain,
+		getNameFromChainId,
+		getCommonChains
+	} from '$lib/contracts';
 
-	export let metadata: ContractMetadata,
+	export let metadata: any,
 		abi: Abi,
 		contract: ContractRowFull,
 		contractAddresses: ContractAddressRow[],
