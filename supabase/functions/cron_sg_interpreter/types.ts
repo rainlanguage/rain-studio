@@ -7,6 +7,10 @@ import type { SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.0.0-
 
 export { Client as SubgraphClient, SupabaseClient };
 
+export type ContractDB = Database['public']['Tables']['contracts_new']['Row'] & {
+	contract_addresses_new: Array<Database['public']['Tables']['contract_addresses_new']['Row']>;
+};
+
 export type DeployerDB = Database['public']['Tables']['deployers']['Row'] & {
 	deployers_addresses: Array<Database['public']['Tables']['deployers_addresses']['Row']>;
 };
@@ -19,6 +23,50 @@ export type Rainterpreter_storesDB = Database['public']['Tables']['rainterpreter
 	rainterpreter_store_addresses: Array<
 		Database['public']['Tables']['rainterpreter_store_addresses']['Row']
 	>;
+};
+
+export type ABI = any[];
+
+/**
+ * @type
+ * The contract format that comes from the SG query
+ */
+export type ContractSG = {
+	/**
+	 * ID of the entity from the subgraph
+	 */
+	id: string;
+	/**
+	 * Hash of the bytcode of the this contract
+	 */
+	bytecodeHash: string;
+	/**
+	 * Contract meta bytes of this contract
+	 */
+	contractMeta: string;
+	/**
+	 * Hash of  the contract meta bytes of this contract
+	 */
+	contractMetaHash: string;
+	/**
+	 * The ExpressionDeployer used on the Constructor of the contract
+	 */
+	initialDeployer: Instance;
+	/**
+	 * MetaV1 document decoded
+	 */
+	meta: MetaDocumentSG;
+	/**
+	 * Type of the contract. It could be 'proxy' or 'contract'
+	 */
+	type: string;
+	/**
+	 * Optional: Implementation information
+	 */
+	implementation: {
+		id: string;
+		bytecodeHash: string;
+	} | null;
 };
 
 /**
@@ -61,6 +109,37 @@ export type MetaContentV1SG = {
 	 * The content language that is using the payload
 	 */
 	contentLanguage: string;
+};
+
+/**
+ * Contract Meta JSON from the Meta
+ */
+export type ContractMeta = {
+	name: string;
+	source: string;
+	desc: string;
+	alias: string;
+	methods: Array<{
+		name: string;
+		desc: string;
+		inputs: any[];
+		expressions: any[];
+	}>;
+};
+
+/**
+ * Metadata format to be stored in the Database
+ */
+export type Metadata = {
+	name: string;
+	source: string;
+	description: string;
+	version: {
+		major: number;
+		minor: number;
+	};
+	inputs: any[];
+	expressions: any[];
 };
 
 /**
@@ -126,6 +205,26 @@ export type RainterpreterStoreSG = {
 	 * The instances are each store address that have the same bytecode
 	 */
 	instances: Array<Instance>;
+};
+
+export type DataContractUpload = {
+	id: string;
+	abi: any;
+	contract_meta: any;
+	metadata: any;
+	slug: string;
+	meta_bytes: string;
+	contract_meta_hash: string;
+};
+
+export type DataAddressUpload = {
+	id: string;
+	contract: string;
+	address: string;
+	chain_id: number;
+	type: string;
+	initial_deployer?: string;
+	implementation?: string;
 };
 
 export type DataDeployerUpload = {
