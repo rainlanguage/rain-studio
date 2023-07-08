@@ -2,6 +2,7 @@
 // deno-lint-ignore-file no-explicit-any
 
 import { hexlify, cbor } from '../deps.ts';
+import { ABI, ContractMeta } from '../types.ts';
 import { inflateJson } from './index.ts';
 
 /**
@@ -52,6 +53,34 @@ export function findDocInDecodedArray(
 		// See: https://github.com/rainprotocol/metadata-spec/blob/main/README.md#header-name-aliases-cbor-map-keys
 		throw new Error('A value in the decoded value is not a map');
 	}
+}
+
+/**
+ * @public
+ * Get an CBOR sequence and decode it
+ * @param meta_ Hex string CBOR sequence to decode
+ */
+export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMeta } | null {
+	// If does not have the magic number, it is not proper
+	if (!meta_.startsWith(MAGIC_NUMBERS.RainMetaDocument)) return null;
+
+	// Remove the RainMetaDocument magic number
+	const meta = meta_.replace(MAGIC_NUMBERS.RainMetaDocument, '');
+
+	// Decoded the CBOR sequence
+	const dataDecoded = cbor.decodeAllSync(meta);
+
+	// Find the ABI Map
+	const solidityAbiMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.SolidityABI);
+	const contractMetaMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.ContractMeta);
+
+	// If some Map was not found, the data and it wil be ignored
+	if (!solidityAbiMap || !contractMetaMap) return null;
+
+	return {
+		abi: decodedMap(solidityAbiMap),
+		contractMeta: decodedMap(contractMetaMap)
+	};
 }
 
 /**
