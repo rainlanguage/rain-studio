@@ -65,6 +65,10 @@
 	$: knownAddressesForThisChain = getKnownContractAddressesForChain(
 		contractAddresses,
 		selectedChain
+		// TODO: It cannot use only proxies since some contracts like OB is not intended
+		// to be cloned, but other contracts like Flow are. So, here is needed an strategy
+		// to only show proxies on those cases were the contracts are initializable.
+		// { onlyProxies: true }
 	);
 
 	// To only show the column to write expressions
