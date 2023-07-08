@@ -77,3 +77,13 @@ export const getCommonChains = (
 	});
 	return Array.from(chains.values());
 };
+
+export const getCommonChainsInAddresses = (addresses: { chain_id: number }[]): number[] => {
+	// will only include unique chains
+	const chains: Set<number> = new Set();
+	addresses.forEach((address_) => {
+		chains.add(address_.chain_id);
+	});
+
+	return Array.from(chains.values());
+};
