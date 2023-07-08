@@ -28,6 +28,7 @@
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"lodash-es": "^4.17.21",
 		"mdsvex": "^0.10.6",
 		"postcss": "^8.4.14",
 		"postcss-load-config": "^4.0.1",
@@ -46,7 +47,7 @@
 	"dependencies": {
 		"@formkit/auto-animate": "^1.0.0-beta.5",
 		"@rainprotocol/cross-deploy": "^2.1.0",
-		"@rainprotocol/rain-svelte-components": "^0.0.34",
+		"@rainprotocol/rain-svelte-components": "^0.0.36",
 		"@sentry/node": "^7.27.0",
 		"@sentry/svelte": "^7.26.0",
 		"@sentry/tracing": "^7.26.0",
