@@ -70,6 +70,7 @@
 					{contract_meta}
 					contractAddresses={contract_addresses_new}
 					deployerAddresses={$page.data.deployers}
+					cloneFactories={$page.data.cloneFactories}
 				/></TabPanel
 			>
 		</div>

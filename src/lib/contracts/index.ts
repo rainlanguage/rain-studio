@@ -32,7 +32,7 @@ export const getChainsFromInterpreterAddresses = (
 
 // filtering to the known addresses for the selected chain
 export const getKnownContractAddressesForChain = (
-	contractAddresses: ContractAddressRow[],
+	contractAddresses: { chain_id: number; address: string; type?: string }[],
 	chain_id: number,
 	options_?: GetKnowContractOptions
 ) => {
@@ -87,3 +87,16 @@ export const getCommonChainsInAddresses = (addresses: { chain_id: number }[]): n
 
 	return Array.from(chains.values());
 };
+
+export const minimalCloneFactoryABI = [
+	{
+		name: 'clone',
+		type: 'function',
+		inputs: [
+			{ name: 'implementation', type: 'address', internalType: 'address' },
+			{ name: 'data', type: 'bytes', internalType: 'bytes' }
+		],
+		outputs: [{ name: '', type: 'address', internalType: 'address' }],
+		stateMutability: 'nonpayable'
+	}
+];

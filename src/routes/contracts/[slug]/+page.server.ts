@@ -181,12 +181,19 @@ export const load: PageServerLoad = async (event) => {
 		});
 	}
 
+	const { data: dataCloneFactories } = await supabaseClient
+		.from('clone_factories_address')
+		.select(`id, address, chain_id`);
+
+	const cloneFactories = dataCloneFactories ? dataCloneFactories : [];
+
 	return {
 		contract: contractQuery.data,
 		deployers: deployerData,
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,
 		userLikes: _userLikes,
-		expressionLikes: _expressionLikes
+		expressionLikes: _expressionLikes,
+		cloneFactories
 	};
 };
