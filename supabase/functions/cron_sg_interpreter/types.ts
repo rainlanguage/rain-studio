@@ -25,7 +25,22 @@ export type Rainterpreter_storesDB = Database['public']['Tables']['rainterpreter
 	>;
 };
 
-export type ABI = any[];
+/**
+ * Reference type to input and output presnet ABI
+ */
+type Data = {
+	internalType: string;
+	name: string;
+	type: string;
+};
+type Component = {
+	inputs?: Array<Data>;
+	name?: string;
+	outputs?: Array<Data>;
+	stateMutability?: string;
+	type: string;
+};
+export type ABI = Array<Component>;
 
 /**
  * @type
@@ -215,6 +230,7 @@ export type DataContractUpload = {
 	slug: string;
 	meta_bytes: string;
 	contract_meta_hash: string;
+	clonable_version: string | null;
 };
 
 export type DataAddressUpload = {

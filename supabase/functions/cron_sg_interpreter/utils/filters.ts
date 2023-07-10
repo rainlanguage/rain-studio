@@ -18,7 +18,7 @@ import type {
 	Rainterpreter_storesDB
 } from '../types.ts';
 import { manageContractMetaSg, manageDeployerMetaSg } from './meta.ts';
-import { buildMetadataFromMeta } from './index.ts';
+import { buildMetadataFromMeta, getClonableVersion } from './index.ts';
 
 /**
  * @public
@@ -96,6 +96,8 @@ export function filterNonAddedContracts(
 
 				// Use the values decoded to prepare to insert
 				if (metaContent) {
+					const clonable_version = getClonableVersion(metaContent.abi);
+
 					// To insert the new Contracts
 					contractsToAdd[contractID] = {
 						id: contractID,
@@ -104,7 +106,8 @@ export function filterNonAddedContracts(
 						metadata: buildMetadataFromMeta(metaContent.contractMeta),
 						slug: SGcontract.bytecodeHash,
 						meta_bytes: SGcontract.meta.metaBytes,
-						contract_meta_hash: SGcontract.contractMetaHash
+						contract_meta_hash: SGcontract.contractMetaHash,
+						clonable_version: clonable_version
 					};
 
 					// To insert the new address with the Contract referece

@@ -94,3 +94,39 @@ export function manageDeployerMetaSg(
 		opmeta_bytes: _opsMetaContent.payload
 	};
 }
+
+export function getClonableVersion(abi_: ABI): 'factory_v1' | 'factory_v2' | null {
+	const initializeComponent = abi_.find((component_) => {
+		const { type, name, inputs } = component_;
+
+		if (type === 'function' && name === 'initialize') {
+			if (inputs && inputs.length === 1 && inputs[0].type === 'bytes') {
+				return true;
+			}
+		}
+	});
+
+	if (initializeComponent) {
+		const { outputs, inputs } = initializeComponent;
+
+		if (!outputs || (outputs && outputs.length === 0)) {
+			// This is ICloneableV1. It's deprecated, but there are contract using it.
+			// Examining all the inputs, since they should match this on ICloneableV1.
+			if (inputs && inputs[0].name == 'data_' && inputs[0].internalType === 'bytes') {
+				return 'factory_v1';
+			}
+		}
+		// This is ICloneableV2. Examining the whole output, since they should match
+		// the ICloneableV2.
+		else if (
+			outputs &&
+			outputs.length === 1 &&
+			outputs[0].type === 'bytes32' &&
+			outputs[0].internalType === 'bytes32'
+		) {
+			return 'factory_v2';
+		}
+	}
+
+	return null;
+}
