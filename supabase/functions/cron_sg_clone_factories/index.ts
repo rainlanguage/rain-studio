@@ -4,16 +4,11 @@ import { createDbClient, createSgClient } from './deps.ts';
 import {
 	getContracts,
 	getSubgraph,
-	filterNonAddedContracts,
+	filterNonAddedCloneFactories,
 	filterUniqueIDs
 } from './utils/index.ts';
 
-import type {
-	DataAddressUpload,
-	DataContractUpload,
-	DataFactoryAddressUpload,
-	DataFactoryUpload
-} from './types.ts';
+import type { DataFactoryAddressUpload, DataFactoryUpload } from './types.ts';
 
 serve(async (req) => {
 	try {
@@ -29,8 +24,8 @@ serve(async (req) => {
 		// chains and subgraphs.
 		const subgraphs = getSubgraph();
 
-		let contractsToAdd: DataFactoryUpload[] = [];
-		let contractAddressesToAdd: DataFactoryAddressUpload[] = [];
+		let factoriesToAdd: DataFactoryUpload[] = [];
+		let factoryAddressesToAdd: DataFactoryAddressUpload[] = [];
 
 		for (let i = 0; i < subgraphs.length; i++) {
 			const { subgraph_url, chain_id } = subgraphs[i];
@@ -45,28 +40,16 @@ serve(async (req) => {
 			const { sgContracts, dBContracts } = await getContracts(supabaseClient, subgraphClient);
 
 			// Filter non added contracts
-			const filteredContracts = filterNonAddedContracts(sgContracts, dBContracts, chain_id);
-			if (chain_id == 80001) {
-				return new Response(
-					JSON.stringify(
-						{
-							responses: {
-								filteredContracts
-							}
-						},
-						null,
-						2
-					),
-					{
-						headers: { 'Content-Type': 'application/json' },
-						status: 200
-					}
-				);
-			}
+			const filteredCloneFactories = filterNonAddedCloneFactories(
+				sgContracts,
+				dBContracts,
+				chain_id
+			);
+
 			// Concat to the arrays, so we can use less insert queries
-			contractsToAdd = contractsToAdd.concat(Object.values(filteredContracts.factoriesToAdd));
-			contractAddressesToAdd = contractAddressesToAdd.concat(
-				Object.values(filteredContracts.factoryAddressesToAdd)
+			factoriesToAdd = factoriesToAdd.concat(Object.values(filteredCloneFactories.factoriesToAdd));
+			factoryAddressesToAdd = factoryAddressesToAdd.concat(
+				Object.values(filteredCloneFactories.factoryAddressesToAdd)
 			);
 		}
 
@@ -75,20 +58,20 @@ serve(async (req) => {
 		// not need this filter since they are already have an unique ID because
 		// use the ChainId for generate their ID. Ready the `filterUniqueIDs` for
 		// similar explanation.
-		contractsToAdd = filterUniqueIDs(contractsToAdd);
+		factoriesToAdd = filterUniqueIDs(factoriesToAdd);
 
 		// Handle and send insert to DB
 		const nonChanged = 'No new data added';
 
 		// Only send the query if the arrays are filled with data
 
-		// - Contracts
-		const respContracts = contractsToAdd.length
-			? await supabaseClient.from('contracts_new').insert(contractsToAdd)
+		// - Factories
+		const respContracts = factoriesToAdd.length
+			? await supabaseClient.from('clone_factories').insert(factoriesToAdd)
 			: nonChanged;
 
-		const respContractAddresses = contractAddressesToAdd.length
-			? await supabaseClient.from('contract_addresses_new').insert(contractAddressesToAdd)
+		const respContractAddresses = factoryAddressesToAdd.length
+			? await supabaseClient.from('clone_factories_address').insert(factoryAddressesToAdd)
 			: nonChanged;
 
 		// Return a response with the fully information about any result and well formatted for readability
@@ -109,15 +92,10 @@ serve(async (req) => {
 			}
 		);
 	} catch (error) {
-		return new Response(JSON.stringify({ error }), {
+		// return new Response(JSON.stringify({ error }), {
+		return new Response(JSON.stringify({ error: error.message }), {
 			headers: { 'Content-Type': 'application/json' },
 			status: 400
 		});
 	}
 });
-
-// To invoke:
-// curl -i --location --request POST 'http://localhost:54321/functions/v1/' \
-//   --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24ifQ.625_WdcF3KHqz5amU0x2X5WWHP-OEs_4qj0ssLNHzTs' \
-//   --header 'Content-Type: application/json' \
-//   --data '{"name":"Functions"}'

@@ -25,25 +25,23 @@ export function buildMetadataFromMeta(contractMeta_: ContractMeta): Metadata {
 }
 
 export function hasCloneMethod(abi: ABI, contractMeta?: ContractMeta): boolean {
-	let _hasCloneMethod = false;
-
-	if (contractMeta) {
-		contractMeta.name == 'CloneFactory';
-		_hasCloneMethod = true;
+	if (contractMeta && contractMeta.name == 'CloneFactory') {
+		return true;
 	} else {
+		let hasMethod = false;
 		abi.forEach((component_: { type: string; name: string; inputs: any[] }) => {
 			if (
 				component_.name == 'clone' &&
 				component_.type == 'function' &&
 				component_.inputs.length == 2
 			) {
-				_hasCloneMethod = true;
+				hasMethod = true;
 				return;
 			}
 		});
-	}
 
-	return _hasCloneMethod;
+		return hasMethod;
+	}
 }
 
 /**
@@ -72,10 +70,12 @@ export function manageContractMetaSg(
 	// We need at least the ABI
 	if (!_solidityAbiContent) return null;
 
-	const solidityAbiJson = deserializeContent(_solidityAbiContent);
+	const solidityAbiJson = deserializeContent(_solidityAbiContent) as ABI | null;
 	const metaContentJson = _contractMetaContent
-		? deserializeContent(_contractMetaContent)
+		? (deserializeContent(_contractMetaContent) as ContractMeta | null)
 		: undefined;
+
+	if (!solidityAbiJson || !metaContentJson) return null;
 
 	return {
 		abi: solidityAbiJson,

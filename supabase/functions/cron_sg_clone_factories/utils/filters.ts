@@ -1,10 +1,7 @@
 import { UUIDnamespace, uuidv5 } from './uuid.ts';
 import type {
 	CloneFactoryDB,
-	ContractDB,
 	ContractSG,
-	DataAddressUpload,
-	DataContractUpload,
 	DataDeployerAddressUpload,
 	DataDeployerUpload,
 	DataFactoryAddressUpload,
@@ -21,9 +18,9 @@ import type {
 	Rainterpreter_storesDB
 } from '../types.ts';
 import { manageContractMetaSg, manageDeployerMetaSg } from './meta.ts';
-import { buildMetadataFromMeta, hasCloneMethod } from './index.ts';
+import { hasCloneMethod } from './index.ts';
 
-export function filterNonAddedContracts(
+export function filterNonAddedCloneFactories(
 	sgContracts_: Array<ContractSG>,
 	dbFactories_: CloneFactoryDB[],
 	chain_id: number
@@ -40,7 +37,7 @@ export function filterNonAddedContracts(
 	 * Add a new address to `factoryAddressesToAdd` using this local scope
 	 */
 	function addAddress(contractData: ContractSG, factoryId_: string) {
-		const { id: address, type, implementation, initialDeployer } = contractData;
+		const { id: address, initialDeployer } = contractData;
 		const contractAddressID = uuidv5(address + chain_id.toString(), UUIDnamespace);
 
 		factoryAddressesToAdd[contractAddressID] = {
