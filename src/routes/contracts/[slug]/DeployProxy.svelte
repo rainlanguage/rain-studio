@@ -164,15 +164,6 @@
 	$: cloneFactoriesForThisChain = getKnownContractAddressesForChain(cloneFactories, selectedChain);
 </script>
 
-<button
-	on:click={() => {
-		console.log(result);
-	}}
-	class="w-fit rounded bg-red-300 p-2 hover:bg-red-500"
->
-	See result
-</button>
-
 <div class="flex flex-col gap-y-4">
 	<span>Select the chain to deploy the proxy</span>
 	<Select
