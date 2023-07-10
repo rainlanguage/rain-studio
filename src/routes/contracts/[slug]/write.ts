@@ -21,6 +21,28 @@ export const getWriteMethods = (
 		}));
 };
 
+export const getNameFromChainId = (id: number): string => {
+	const name = allChainsData.find((chain) => chain.chainId == id)?.name;
+	if (!name) throw Error('Unknown chain_id');
+	return name;
+};
+
+// getting the chains for which there's both a known address for contract and interpreter
+export const getCommonChains = (
+	deployers: DeployerAddressesRow[],
+	contractAddresses: ContractAddressRow[]
+): number[] => {
+	// will only include unique chains
+	const chains: Set<number> = new Set();
+	deployers.forEach((deployer) => {
+		chains.add(deployer.chain_id);
+	});
+	contractAddresses.forEach((el) => {
+		chains.add(el.chain_id);
+	});
+	return Array.from(chains.values());
+};
+
 export const getInterpretersForChain = (
 	deployers: DeployerAddressesRow[],
 	chain_id: number
