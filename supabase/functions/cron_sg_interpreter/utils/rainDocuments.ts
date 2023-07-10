@@ -77,9 +77,14 @@ export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMe
 	// If some Map was not found, the data and it wil be ignored
 	if (!solidityAbiMap || !contractMetaMap) return null;
 
+	const decodedAbi = decodedMap(solidityAbiMap) as ABI | null;
+	const decodedContractMeta = decodedMap(contractMetaMap) as ContractMeta | null;
+
+	if (!decodedAbi || !decodedContractMeta) return null;
+
 	return {
-		abi: decodedMap(solidityAbiMap),
-		contractMeta: decodedMap(contractMetaMap)
+		abi: decodedAbi,
+		contractMeta: decodedContractMeta
 	};
 }
 

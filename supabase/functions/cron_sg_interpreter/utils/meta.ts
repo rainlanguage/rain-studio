@@ -50,8 +50,10 @@ export function manageContractMetaSg(
 	// If some Content was not found, the data and it wil be ignored
 	if (!_solidityAbiContent || !_contractMetaContent) return null;
 
-	const solidityAbiJson = deserializeContent(_solidityAbiContent);
-	const metaContentJson = deserializeContent(_contractMetaContent);
+	const solidityAbiJson = deserializeContent(_solidityAbiContent) as ABI | null;
+	const metaContentJson = deserializeContent(_contractMetaContent) as ContractMeta | null;
+
+	if (!solidityAbiJson || !metaContentJson) return null;
 
 	return {
 		abi: solidityAbiJson,
@@ -84,6 +86,8 @@ export function manageDeployerMetaSg(
 	if (!_opsMetaContent) return null;
 
 	const opmetaDecoded = deserializeContent(_opsMetaContent);
+
+	if (!opmetaDecoded) return null;
 
 	return {
 		opmetaDecoded,
