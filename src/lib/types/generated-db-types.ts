@@ -9,6 +9,86 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      clone_factories: {
+        Row: {
+          abi: Json
+          contract_meta: Json | null
+          contract_meta_hash: string | null
+          created_at: string | null
+          id: string
+          meta_bytes: string
+          project: string | null
+          slug: string
+        }
+        Insert: {
+          abi: Json
+          contract_meta?: Json | null
+          contract_meta_hash?: string | null
+          created_at?: string | null
+          id: string
+          meta_bytes: string
+          project?: string | null
+          slug: string
+        }
+        Update: {
+          abi?: Json
+          contract_meta?: Json | null
+          contract_meta_hash?: string | null
+          created_at?: string | null
+          id?: string
+          meta_bytes?: string
+          project?: string | null
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clone_factories_project_fkey"
+            columns: ["project"]
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      clone_factories_address: {
+        Row: {
+          address: string
+          chain_id: number
+          created_at: string | null
+          factory: string
+          id: string
+          initial_deployer: string | null
+        }
+        Insert: {
+          address: string
+          chain_id: number
+          created_at?: string | null
+          factory: string
+          id: string
+          initial_deployer?: string | null
+        }
+        Update: {
+          address?: string
+          chain_id?: number
+          created_at?: string | null
+          factory?: string
+          id?: string
+          initial_deployer?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clone_factories_address_factory_fkey"
+            columns: ["factory"]
+            referencedRelation: "clone_factories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clone_factories_address_initial_deployer_fkey"
+            columns: ["initial_deployer"]
+            referencedRelation: "deployers_addresses"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       contract_addresses_new: {
         Row: {
           address: string
