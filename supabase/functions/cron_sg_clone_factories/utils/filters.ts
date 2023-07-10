@@ -19,6 +19,7 @@ import type {
 } from '../types.ts';
 import { manageContractMetaSg, manageDeployerMetaSg } from './meta.ts';
 import { hasCloneMethod } from './index.ts';
+import { getClonableVersion } from '../../cron_sg_interpreter/utils/index.ts';
 
 export function filterNonAddedCloneFactories(
 	sgContracts_: Array<ContractSG>,
@@ -79,13 +80,16 @@ export function filterNonAddedCloneFactories(
 					const _hasCloneMethod = hasCloneMethod(abi, contractMeta);
 
 					if (_hasCloneMethod) {
+						const clonable_version = getClonableVersion(metaContent.abi);
+
 						factoriesToAdd[factoryID] = {
 							id: factoryID,
 							abi: abi,
 							contract_meta: contractMeta ? contractMeta : null,
 							contract_meta_hash: SGcontract.contractMetaHash,
 							meta_bytes: SGcontract.meta.metaBytes,
-							slug: SGcontract.bytecodeHash
+							slug: SGcontract.bytecodeHash,
+							clonable_version: clonable_version
 						};
 						// To insert the new address with the Factory reference
 						addAddress(SGcontract, factoryID);

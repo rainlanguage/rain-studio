@@ -66,11 +66,11 @@ serve(async (req) => {
 		// Only send the query if the arrays are filled with data
 
 		// - Factories
-		const respContracts = factoriesToAdd.length
+		const respFactories = factoriesToAdd.length
 			? await supabaseClient.from('clone_factories').insert(factoriesToAdd)
 			: nonChanged;
 
-		const respContractAddresses = factoryAddressesToAdd.length
+		const respFactoryAddresses = factoryAddressesToAdd.length
 			? await supabaseClient.from('clone_factories_address').insert(factoryAddressesToAdd)
 			: nonChanged;
 
@@ -79,8 +79,8 @@ serve(async (req) => {
 			JSON.stringify(
 				{
 					responses: {
-						respContracts,
-						respContractAddresses
+						respFactories,
+						respFactoryAddresses
 					}
 				},
 				null,
