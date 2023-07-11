@@ -11,7 +11,7 @@ import {
  * Return all the subgraphs endpoint that are currently on use.
  *
  * @dev @todo
- * TODO: At the moment only Mumbai and Polygon
+ * TODO: At the moment only Ethereum, Mumbai and Polygon
  */
 export function getSubgraph(): Array<{
 	subgraph_url: string;
@@ -19,11 +19,19 @@ export function getSubgraph(): Array<{
 }> {
 	return [
 		{
+			// Ethereum
+			subgraph_url:
+				'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry-ethereum',
+			chain_id: 1
+		},
+		{
+			// Polygon mainnet
 			subgraph_url:
 				'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry-polygon',
 			chain_id: 137
 		},
 		{
+			// Polygon Matic
 			subgraph_url: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry',
 			chain_id: 80001
 		}
