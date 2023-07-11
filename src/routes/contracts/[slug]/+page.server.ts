@@ -181,11 +181,22 @@ export const load: PageServerLoad = async (event) => {
 		});
 	}
 
-	const { data: dataCloneFactories } = await supabaseClient
-		.from('clone_factories_address')
-		.select(`id, address, chain_id`);
+	// Find CloneableVersion first of this contract
+	const { clonable_version } = contractQuery.data;
+	let cloneFactories: { id: string; address: string; chain_id: number }[] = [];
 
-	const cloneFactories = dataCloneFactories ? dataCloneFactories : [];
+	const { data: dataCloneFactories } = await supabaseClient
+		.from('clone_factories')
+		.select('clone_factories_address(id, address, chain_id)')
+		.eq('clonable_version', clonable_version);
+
+	if (dataCloneFactories) {
+		dataCloneFactories.forEach((value_) => {
+			if (value_.clone_factories_address) {
+				cloneFactories = cloneFactories.concat(value_.clone_factories_address);
+			}
+		});
+	}
 
 	return {
 		contract: contractQuery.data,

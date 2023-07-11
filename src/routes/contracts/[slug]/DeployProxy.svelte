@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Abi } from 'abitype';
 	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
-	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
 	import { allChainsData, chainId, signer, defaultEvmStores, contracts } from 'svelte-ethers-store';
 	import { setContext } from 'svelte';
 	import {
@@ -16,15 +15,14 @@
 		getCommonChainsInAddresses,
 		getKnownContractAddressesForChain,
 		getNameFromChainId,
-		minimalCloneFactoryABI
+		CloneFactoryAbi
 	} from '$lib/contracts';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
-	import { ethers } from 'ethers';
 	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { getRainNetworkForChainId } from '@rainprotocol/cross-deploy';
 	import { getNetworkByChainId } from '$lib/utils';
+	import type { ContractReceipt } from 'ethers';
 
 	export let abi: Abi;
 	export let contract_meta: any;
@@ -41,13 +39,14 @@
 	let selectedImplementation: string | -1; // the selected contract address
 
 	// Handle send transaction
-	let txReceipt: TransactionReceipt | undefined;
+	let txReceipt: ContractReceipt | undefined;
 	let txHash_: string;
 	let openWaitTx = false;
 	let waitTxResp = false;
 	let waitTxReceipt = false;
 	let showTxReceipt = false;
 	let urlExplorer: string;
+	let proxyCloneAddress: string; //THis is for showing the proxy address
 
 	// Error tx info
 	let errorTx = false;
@@ -87,12 +86,39 @@
 		}
 	};
 
+	const findProxyAddress = (txReceipt_: ContractReceipt) => {
+		const contract = $contracts.selectedCloneFactory;
+
+		const eventObj = txReceipt_.events?.find((x) => {
+			if (
+				x.topics[0] == contract.filters['NewClone']().topics?.[0] &&
+				x.address.toLowerCase() == contract.address.toLowerCase()
+			) {
+				return true;
+			}
+		});
+
+		if (!eventObj) {
+			throw new Error(
+				`Could not find event 'NewClone' event on the tx  ${txReceipt_.transactionHash}`
+			);
+		}
+
+		const decodedEvent = contract.interface.decodeEventLog(
+			'NewClone',
+			eventObj.data,
+			eventObj.topics
+		);
+
+		const { clone } = decodedEvent;
+
+		return clone;
+	};
+
 	// submit the transaction
 	const submit = async () => {
 		openWaitTx = true;
 		waitTxResp = true;
-
-		let tx_;
 
 		// handling error cases
 		try {
@@ -101,23 +127,17 @@
 				throw new Error('Not clone factory address selected');
 			}
 
-			// defaultEvmStores.attachContract(
-			// 	'selectedCloneFactory',
-			// 	selectedCloneFactory,
-			// 	JSON.stringify(minimalCloneFactoryABI)
-			// );
-
-			const _cloneFactory = new ethers.Contract(
+			defaultEvmStores.attachContract(
+				'selectedCloneFactory',
 				selectedCloneFactory,
-				minimalCloneFactoryABI,
-				$signer
+				JSON.stringify(CloneFactoryAbi)
 			);
+
 			// Encode based on the config
 			const encodedConfig = InitFormUtils.encodeConfigs(result, abi, contract_meta);
-			console.log('encodedConfig: ', encodedConfig);
 
 			// Send to the clonable
-			tx_ = await _cloneFactory.clone(selectedImplementation, encodedConfig);
+			let tx_ = await $contracts.selectedCloneFactory.clone(selectedImplementation, encodedConfig);
 
 			// Do not wait anymore
 			waitTxResp = false;
@@ -131,19 +151,32 @@
 
 			txReceipt = await tx_.wait();
 
+			if (txReceipt) {
+				proxyCloneAddress = findProxyAddress(txReceipt);
+			}
+
 			waitTxReceipt = false;
 			showTxReceipt = true;
 		} catch (error) {
 			// Do not wait anymore
 			waitTxResp = false;
+
+			// TODO: Work to found how silent the error/red lines checking the error
+			// instances. That would be better, but not sure how should be made here.
+
+			// @ts-expect-error Compile error: There is no instance definition to check
 			if (error.code == 'ACTION_REJECTED') {
 				// The user rejected the transaction
 				errorMsg = 'Transaction rejected or cancelled';
 			} else {
 				// Other error
+				// @ts-expect-error Compile error: There is no instance definition to check
 				if (error.reason) {
+					// @ts-expect-error Compile error: There is no instance definition to check
 					errorMsg = error.reason;
+					// @ts-expect-error Compile error: There is no instance definition to check
 				} else if (error.message) {
+					// @ts-expect-error Compile error: There is no instance definition to check
 					errorMsg = error.message;
 				} else {
 					errorMsg = JSON.stringify(error);
@@ -270,16 +303,17 @@
 				<div class="flex flex-col items-center gap-1">
 					<Icon src={CheckCircle} theme="solid" class={`mr-1.5 h-16 w-16 py-0.5 text-green-500`} />
 					<p>Proxy created successfully</p>
-					<a
-						class="text-blue-600"
-						target="_blank"
-						rel="noreferrer"
-						href={`${urlExplorer}/tx/${txReceipt.transactionHash}`}
-					>
-						<!-- href={`${urlExplorer}/address/${txReceipt.contractAddress}`} -->
-						<!-- {txReceipt.contractAddress} -->
-						{txReceipt.transactionHash}
-					</a>
+					<div class="flex flex-col gap-2">
+						<p>Proxy address:</p>
+						<a
+							class="text-blue-600"
+							target="_blank"
+							rel="noreferrer"
+							href={`${urlExplorer}/address/${proxyCloneAddress}`}
+						>
+							{proxyCloneAddress}
+						</a>
+					</div>
 				</div>
 			{:else}
 				<div class="flex flex-col items-center gap-1">
@@ -308,19 +342,4 @@
 			<Button variant="primary" on:click={closeModalTx}>Close</Button>
 		</div>
 	</div>
-	<!-- <div class="flex w-full flex-col gap-5">
-		<div class="flex w-fit flex-col items-center gap-2.5">
-			{#if icon != undefined}
-				<Icon
-					src={icon}
-					theme={solidIcon ? 'solid' : ''}
-					class={`mr-1.5 h-16 w-16 py-0.5 ${iconColor}`}
-				/>
-			{/if}
-			<p class={`text-[${textSize}]`}>{message}</p>
-		</div>
-		<div class="flex justify-center">
-			<Button variant="primary" on:click={() => (open = false)}>Continue</Button>
-		</div>
-	</div> -->
 </Modal>
