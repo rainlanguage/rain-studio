@@ -292,12 +292,12 @@
 		selectedInterpreterAddress &&
 		checkDeploy(originChain, selectedInterpreterAddress);
 
-	$: interpreterType == 'deployer', targetChain, getInterpreters(targetChain);
+	$: interpreterType == 'deployer' && (targetChain, getInterpreters(targetChain));
 
-	$: interpreterType == 'deployer',
-		originChain,
+	$: interpreterType == 'deployer' &&
+		(originChain,
 		selectedInterpreterAddress,
-		getDeployerInfo(selectedInterpreterAddress, originChain);
+		getDeployerInfo(selectedInterpreterAddress, originChain));
 
 	$: interpreterType == 'deployer' &&
 		selectedRainterpreterAddress &&
