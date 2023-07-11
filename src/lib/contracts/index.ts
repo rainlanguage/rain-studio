@@ -3,6 +3,8 @@ import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types'
 import { getNetworksByChainIds } from '$lib/utils';
 import { allChainsData, type ChainData } from 'svelte-ethers-store';
 
+import CloneFactoryAbi from './CloneFactoryAbi.json';
+
 /** Key of the possible options, but just one should be selected at time. These
  * are mutually exclusive, but typescript will not throw an error, so this just
  * will show a compile error to alert the consumer
@@ -88,15 +90,4 @@ export const getCommonChainsInAddresses = (addresses: { chain_id: number }[]): n
 	return Array.from(chains.values());
 };
 
-export const minimalCloneFactoryABI = [
-	{
-		name: 'clone',
-		type: 'function',
-		inputs: [
-			{ name: 'implementation', type: 'address', internalType: 'address' },
-			{ name: 'data', type: 'bytes', internalType: 'bytes' }
-		],
-		outputs: [{ name: '', type: 'address', internalType: 'address' }],
-		stateMutability: 'nonpayable'
-	}
-];
+export { CloneFactoryAbi };
