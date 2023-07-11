@@ -10,11 +10,11 @@ import { textDecoder } from './textDecoder.ts';
  * @dev @todo
  * `NOTE:` Maybe need support more variations (?)
  */
-export function deserializeContent(content_: MetaContentV1SG) {
+export function deserializeContent(content_: MetaContentV1SG): JSON | null {
 	const { payload, contentType, contentEncoding } = content_;
 
 	if (contentType === 'application/json') {
-		if (!contentEncoding) {
+		if (!contentEncoding || contentEncoding == 'none') {
 			// Decode the bytes directly to JSON
 			const _uint8Arr = arrayify(payload, { allowMissingPrefix: true });
 
@@ -22,16 +22,14 @@ export function deserializeContent(content_: MetaContentV1SG) {
 			const decoded = textDecoder.decode(_uint8Arr);
 
 			return JSON.parse(decoded);
-		}
-		//
-		else if (contentEncoding === 'deflate') {
+		} else if (contentEncoding === 'deflate') {
 			// Inflate JSON
 			return inflateJson(payload);
 		}
-	} else {
-		// TODO: Support more content types
-		return null;
 	}
+
+	// TODO: Support more content types
+	return null;
 }
 
 /**
@@ -41,12 +39,18 @@ export function deserializeContent(content_: MetaContentV1SG) {
  *
  * @param bytes - Bytes to infalte to json
  */
-export const inflateJson = (bytes: unknown) => {
-	if (!isBytesLike(bytes)) throw new Error('invalid bytes');
-	const _uint8Arr = arrayify(bytes, { allowMissingPrefix: true });
+export const inflateJson = (bytes: unknown): JSON | null => {
+	try {
+		if (!isBytesLike(bytes)) throw new Error('invalid bytes');
 
-	const inflated = inflate(_uint8Arr);
-	const decoded = textDecoder.decode(inflated);
-	const parsed = JSON.parse(decoded);
-	return parsed;
+		const _uint8Arr = arrayify(bytes, { allowMissingPrefix: true });
+		const inflated = inflate(_uint8Arr);
+		const decoded = textDecoder.decode(inflated);
+		const parsed = JSON.parse(decoded);
+
+		return parsed;
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
 };

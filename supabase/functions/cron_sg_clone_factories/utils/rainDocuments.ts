@@ -60,7 +60,7 @@ export function findDocInDecodedArray(
  * Get an CBOR sequence and decode it
  * @param meta_ Hex string CBOR sequence to decode
  */
-export function decodedMeta(meta_: string): { abi: ABI; contractMeta?: ContractMeta } | null {
+export function decodedMeta(meta_: string): { abi: ABI; contractMeta: ContractMeta } | null {
 	// If does not have the magic number, it is not proper
 	if (!meta_.startsWith(MAGIC_NUMBERS.RainMetaDocument)) return null;
 
@@ -74,12 +74,17 @@ export function decodedMeta(meta_: string): { abi: ABI; contractMeta?: ContractM
 	const solidityAbiMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.SolidityABI);
 	const contractMetaMap = findDocInDecodedArray(dataDecoded, MAGIC_NUMBERS.ContractMeta);
 
-	// We need at least the ABI
-	if (!solidityAbiMap) return null;
+	// If some Map was not found, the data and it wil be ignored
+	if (!solidityAbiMap || !contractMetaMap) return null;
+
+	const decodedAbi = decodedMap(solidityAbiMap) as ABI | null;
+	const decodedContractMeta = decodedMap(contractMetaMap) as ContractMeta | null;
+
+	if (!decodedAbi || !decodedContractMeta) return null;
 
 	return {
-		abi: decodedMap(solidityAbiMap),
-		contractMeta: contractMetaMap ? decodedMap(contractMetaMap) : undefined
+		abi: decodedAbi,
+		contractMeta: decodedContractMeta
 	};
 }
 

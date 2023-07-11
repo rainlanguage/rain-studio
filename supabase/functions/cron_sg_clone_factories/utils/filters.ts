@@ -1,10 +1,7 @@
 import { UUIDnamespace, uuidv5 } from './uuid.ts';
 import type {
 	CloneFactoryDB,
-	ContractDB,
 	ContractSG,
-	DataAddressUpload,
-	DataContractUpload,
 	DataDeployerAddressUpload,
 	DataDeployerUpload,
 	DataFactoryAddressUpload,
@@ -21,9 +18,10 @@ import type {
 	Rainterpreter_storesDB
 } from '../types.ts';
 import { manageContractMetaSg, manageDeployerMetaSg } from './meta.ts';
-import { buildMetadataFromMeta, hasCloneMethod } from './index.ts';
+import { hasCloneMethod } from './index.ts';
+import { getClonableVersion } from '../../cron_sg_interpreter/utils/index.ts';
 
-export function filterNonAddedContracts(
+export function filterNonAddedCloneFactories(
 	sgContracts_: Array<ContractSG>,
 	dbFactories_: CloneFactoryDB[],
 	chain_id: number
@@ -40,7 +38,7 @@ export function filterNonAddedContracts(
 	 * Add a new address to `factoryAddressesToAdd` using this local scope
 	 */
 	function addAddress(contractData: ContractSG, factoryId_: string) {
-		const { id: address, type, implementation, initialDeployer } = contractData;
+		const { id: address, initialDeployer } = contractData;
 		const contractAddressID = uuidv5(address + chain_id.toString(), UUIDnamespace);
 
 		factoryAddressesToAdd[contractAddressID] = {
@@ -82,13 +80,16 @@ export function filterNonAddedContracts(
 					const _hasCloneMethod = hasCloneMethod(abi, contractMeta);
 
 					if (_hasCloneMethod) {
+						const clonable_version = getClonableVersion(metaContent.abi);
+
 						factoriesToAdd[factoryID] = {
 							id: factoryID,
 							abi: abi,
 							contract_meta: contractMeta ? contractMeta : null,
 							contract_meta_hash: SGcontract.contractMetaHash,
 							meta_bytes: SGcontract.meta.metaBytes,
-							slug: SGcontract.bytecodeHash
+							slug: SGcontract.bytecodeHash,
+							clonable_version: clonable_version
 						};
 						// To insert the new address with the Factory reference
 						addAddress(SGcontract, factoryID);

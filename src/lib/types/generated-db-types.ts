@@ -12,6 +12,7 @@ export interface Database {
       clone_factories: {
         Row: {
           abi: Json
+          clonable_version: string | null
           contract_meta: Json | null
           contract_meta_hash: string | null
           created_at: string | null
@@ -22,6 +23,7 @@ export interface Database {
         }
         Insert: {
           abi: Json
+          clonable_version?: string | null
           contract_meta?: Json | null
           contract_meta_hash?: string | null
           created_at?: string | null
@@ -32,6 +34,7 @@ export interface Database {
         }
         Update: {
           abi?: Json
+          clonable_version?: string | null
           contract_meta?: Json | null
           contract_meta_hash?: string | null
           created_at?: string | null
@@ -178,6 +181,7 @@ export interface Database {
       contracts_new: {
         Row: {
           abi: Json
+          clonable_version: string | null
           contract_meta: Json
           contract_meta_hash: string | null
           created_at: string
@@ -189,6 +193,7 @@ export interface Database {
         }
         Insert: {
           abi: Json
+          clonable_version?: string | null
           contract_meta: Json
           contract_meta_hash?: string | null
           created_at?: string
@@ -200,6 +205,7 @@ export interface Database {
         }
         Update: {
           abi?: Json
+          clonable_version?: string | null
           contract_meta?: Json
           contract_meta_hash?: string | null
           created_at?: string
