@@ -3,14 +3,18 @@
  */
 export const Subgraphs = [
 	{
-		/**
-		 * 	Only mumbai at the moment
-		 */
-		chain: 80001,
-		url: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry'
+		// Ethereum
+		chain: 1,
+		url: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry-ethereum'
 	},
 	{
+		// Polygon mainnet
 		chain: 137,
 		url: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry-polygon'
+	},
+	{
+		// Polygon Matic
+		chain: 80001,
+		url: 'https://api.thegraph.com/subgraphs/name/rainprotocol/interpreter-registry'
 	}
 ];
