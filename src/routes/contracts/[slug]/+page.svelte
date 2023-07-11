@@ -13,6 +13,11 @@
 
 	$: contract = $page.data.contract;
 	$: ({ project, metadata, contract_meta, abi, contract_addresses_new } = contract);
+
+	// Since the CloneFactories are obtained based on the Clonable Version of the
+	// contract, we can assume that if the array is empty, then there is no
+	// way to clone the contract.
+	$: hasCloneFactories = $page.data.cloneFactories.length > 0;
 </script>
 
 <PageHeader>
@@ -36,7 +41,9 @@
 				<Tab>Contract</Tab>
 				<Tab>Write</Tab>
 				<Tab>Deploy</Tab>
-				<Tab>Proxies</Tab>
+				{#if hasCloneFactories}
+					<Tab>Proxies</Tab>
+				{/if}
 				<!-- TODO: FIX -->
 				<!-- <Tab>Examples</Tab>
 				<Tab>Community</Tab> -->
@@ -64,15 +71,17 @@
 					{metadata}
 				/>
 			</TabPanel>
-			<TabPanel
-				><DeployProxy
-					{abi}
-					{contract_meta}
-					contractAddresses={contract_addresses_new}
-					deployerAddresses={$page.data.deployers}
-					cloneFactories={$page.data.cloneFactories}
-				/></TabPanel
-			>
+			{#if hasCloneFactories}
+				<TabPanel>
+					<DeployProxy
+						{abi}
+						{contract_meta}
+						contractAddresses={contract_addresses_new}
+						deployerAddresses={$page.data.deployers}
+						cloneFactories={$page.data.cloneFactories}
+					/>
+				</TabPanel>
+			{/if}
 		</div>
 		<!-- <div class="py-8 lg:w-1/3"><Sidebar {contract} /></div> -->
 	</div>
