@@ -24,13 +24,34 @@ export function buildMetadataFromMeta(contractMeta_: ContractMeta): Metadata {
 	};
 }
 
+export function hasCloneMethod(abi: ABI, contractMeta?: ContractMeta): boolean {
+	if (contractMeta && contractMeta.name == 'CloneFactory') {
+		return true;
+	} else {
+		let hasMethod = false;
+		abi.forEach((component_) => {
+			if (
+				component_.name == 'clone' &&
+				component_.type == 'function' &&
+				component_.inputs &&
+				component_.inputs.length == 2
+			) {
+				hasMethod = true;
+				return;
+			}
+		});
+
+		return hasMethod;
+	}
+}
+
 /**
  * @public
  * Use the meta from the SG and get the Meta content required for the Contract
  */
 export function manageContractMetaSg(
 	meta_: MetaDocumentSG
-): { abi: ABI; contractMeta: ContractMeta } | null {
+): { abi: ABI; contractMeta?: ContractMeta } | null {
 	if (!meta_) return null;
 
 	if (!meta_.content || meta_.content.length == 0) {
@@ -47,11 +68,13 @@ export function manageContractMetaSg(
 	const _solidityAbiContent = metaContent.find((elem) => elem.magicNumber == mnABI);
 	const _contractMetaContent = metaContent.find((elem) => elem.magicNumber == mnContractMeta);
 
-	// If some Content was not found, the data and it wil be ignored
-	if (!_solidityAbiContent || !_contractMetaContent) return null;
+	// We need at least the ABI
+	if (!_solidityAbiContent) return null;
 
 	const solidityAbiJson = deserializeContent(_solidityAbiContent) as ABI | null;
-	const metaContentJson = deserializeContent(_contractMetaContent) as ContractMeta | null;
+	const metaContentJson = _contractMetaContent
+		? (deserializeContent(_contractMetaContent) as ContractMeta | null)
+		: undefined;
 
 	if (!solidityAbiJson || !metaContentJson) return null;
 
@@ -87,45 +110,59 @@ export function manageDeployerMetaSg(
 
 	const opmetaDecoded = deserializeContent(_opsMetaContent);
 
-	if (!opmetaDecoded) return null;
-
 	return {
 		opmetaDecoded,
 		opmeta_bytes: _opsMetaContent.payload
 	};
 }
 
-export function getClonableVersion(abi_: ABI): 'factory_v1' | 'factory_v2' | null {
-	const initializeComponent = abi_.find((component_) => {
-		const { type, name, inputs } = component_;
+export function getClonaFactoryVersion(abi_: ABI): 'factory_v1' | 'factory_v2' | null {
+	/**
+	 * Here the code is trying to reduce the amount conditionals to meet to "identify",
+	 * since anyway the ABIs coud be different or similar in many ways.
+	 *
+	 * - The component "constructor", his inputs should have one element. This input
+	 * must be named `"config_"` to be a CloneFactoryV1. In case of CloneFactoryV2,
+	 * the input must be named `"config"`.
+	 * - The function clone could be used too with the above logic. The inputs should
+	 * have 2 elements, and both inputs will have a suphix "_" on his name, like
+	 * "implementation_" and "data_" to be a CloneFactoryV1. By other hand, without
+	 * suphix, it is a CloneFactoryV2.
+	 *
+	 * This is only a remind of what can be used too, but by now only indentifying the
+	 * error components is enough. This is because CloneFactoryV1 is deprecated, but
+	 * future versions could again combine few components between them.
+	 */
 
-		if (type === 'function' && name === 'initialize') {
-			if (inputs && inputs.length === 1 && inputs[0].type === 'bytes') {
-				return true;
-			}
+	// Giving priority to CloneFactoryV2 since have two components to check, that way
+	// is less possible to get a component but then the ABI also could have another one.
+	const v2Components = abi_.filter((component_) => {
+		const { name, type, inputs } = component_;
+		if (
+			type === 'error' &&
+			(name === 'InitializationFailed' || name === 'ZeroImplementationCodeSize') &&
+			inputs &&
+			inputs.length === 0
+		) {
+			return true;
 		}
 	});
 
-	if (initializeComponent) {
-		const { outputs, inputs } = initializeComponent;
+	// Here, we assume that is a CloneFactoryV2 ONLY if have both components
+	if (v2Components.length === 2) {
+		return 'factory_v2';
+	}
 
-		if (!outputs || (outputs && outputs.length === 0)) {
-			// This is ICloneableV1. It's deprecated, but there are contract using it.
-			// Examining all the inputs, since they should match this on ICloneableV1.
-			if (inputs && inputs[0].name == 'data_' && inputs[0].internalType === 'bytes') {
-				return 'factory_v1';
-			}
+	const v1Component = abi_.find((component_) => {
+		const { name, type, inputs } = component_;
+
+		if (type === 'error' && name === 'ZeroImplementation' && inputs && inputs.length === 0) {
+			return true;
 		}
-		// This is ICloneableV2. Examining the whole output, since they should match
-		// the ICloneableV2.
-		else if (
-			outputs &&
-			outputs.length === 1 &&
-			outputs[0].type === 'bytes32' &&
-			outputs[0].internalType === 'bytes32'
-		) {
-			return 'factory_v2';
-		}
+	});
+
+	if (v1Component) {
+		return 'factory_v1';
 	}
 
 	return null;

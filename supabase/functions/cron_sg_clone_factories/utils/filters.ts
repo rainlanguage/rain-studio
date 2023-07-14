@@ -1,11 +1,11 @@
 import { UUIDnamespace, uuidv5 } from './uuid.ts';
 import type {
-	ContractDB,
+	CloneFactoryDB,
 	ContractSG,
-	DataAddressUpload,
-	DataContractUpload,
 	DataDeployerAddressUpload,
 	DataDeployerUpload,
+	DataFactoryAddressUpload,
+	DataFactoryUpload,
 	DataRainterpreterAddressUpload,
 	DataRainterpreterStoreAddressUpload,
 	DataRainterpreterStoreUpload,
@@ -18,117 +18,99 @@ import type {
 	Rainterpreter_storesDB
 } from '../types.ts';
 import { manageContractMetaSg, manageDeployerMetaSg } from './meta.ts';
-import { buildMetadataFromMeta, getClonableVersion } from './index.ts';
+import { hasCloneMethod } from './index.ts';
+import { getClonableVersion } from '../../cron_sg_interpreter/utils/index.ts';
 
-/**
- * @public
- * Filter the data from Database and the Subgraph prior insert to avoid already
- * added data.
- */
-export function filterNonAddedContracts(
+export function filterNonAddedCloneFactories(
 	sgContracts_: Array<ContractSG>,
-	dbContracts_: ContractDB[],
+	dbFactories_: CloneFactoryDB[],
 	chain_id: number
 ) {
-	const contractsToAdd: {
-		[key: string]: DataContractUpload;
+	const factoriesToAdd: {
+		[key: string]: DataFactoryUpload;
 	} = {};
 
-	const addressesToAdd: {
-		[key: string]: DataAddressUpload;
+	const factoryAddressesToAdd: {
+		[key: string]: DataFactoryAddressUpload;
 	} = {};
 
 	/**
-	 * Add a new address to `addressesToAdd` using this local scope
+	 * Add a new address to `factoryAddressesToAdd` using this local scope
 	 */
-	function addAddress(contractData: ContractSG, contractId_: string) {
-		const { id: address, type, implementation, initialDeployer } = contractData;
+	function addAddress(contractData: ContractSG, factoryId_: string) {
+		const { id: address, initialDeployer } = contractData;
 		const contractAddressID = uuidv5(address + chain_id.toString(), UUIDnamespace);
 
-		addressesToAdd[contractAddressID] = {
+		factoryAddressesToAdd[contractAddressID] = {
 			id: contractAddressID,
 			address: address,
 			chain_id: chain_id,
-			contract: contractId_,
-			type: type
+			factory: factoryId_
 		};
 
 		if (initialDeployer) {
 			const deployerAddressID = uuidv5(initialDeployer.id + chain_id.toString(), UUIDnamespace);
-			addressesToAdd[contractAddressID].initial_deployer = deployerAddressID;
-		}
-
-		// If this contract address is a minima; proxy, then should be assigned the
-		// implementation
-		if (type == 'proxy' && implementation) {
-			// Creating the UUID ID for the implementation
-			const implementationAddressID = uuidv5(
-				implementation.id + chain_id.toString(),
-				UUIDnamespace
-			);
-
-			addressesToAdd[contractAddressID].implementation = implementationAddressID;
+			factoryAddressesToAdd[contractAddressID].initial_deployer = deployerAddressID;
 		}
 	}
 
 	for (let i = 0; i < sgContracts_.length; i++) {
 		const SGcontract = sgContracts_[i];
-		let contractID: string;
 
-		// It's a proxy. The UUID should be the implementation bytecode hash UUID, not
-		// the bytecode hash UUID of the proxy
+		// Avoid reading proxies contract. This even could ignore proxies of a ClonFactory
 		if (SGcontract.type == 'proxy' && SGcontract.implementation) {
-			contractID = uuidv5(SGcontract.implementation.bytecodeHash, UUIDnamespace);
-		} else {
-			contractID = uuidv5(SGcontract.bytecodeHash, UUIDnamespace);
+			continue;
 		}
 
-		const contractMatched = dbContracts_.find((contract_) => contract_.id === contractID);
+		const factoryID = uuidv5(SGcontract.bytecodeHash, UUIDnamespace);
+		const factoryMatched = dbFactories_.find((factory_) => factory_.id === factoryID);
 
-		if (!contractMatched) {
+		if (!factoryMatched) {
 			// Check if it is already cached
-			if (contractsToAdd[contractID]) {
-				// Add to contract_address table with the reference to `contractID` because a matched was not found before
-				addAddress(SGcontract, contractID);
+			if (factoriesToAdd[factoryID]) {
+				// Add to factory address table with the reference to `factoryID` because a matched was not found before
+				// and we can trust that is ok since was already cached.
+				addAddress(SGcontract, factoryID);
 			} else {
 				// Decoded the meta
 				const metaContent = manageContractMetaSg(SGcontract.meta);
-
 				// Use the values decoded to prepare to insert
 				if (metaContent) {
-					const clonable_version = getClonableVersion(metaContent.abi);
+					const { abi, contractMeta } = metaContent;
+					const _hasCloneMethod = hasCloneMethod(abi, contractMeta);
 
-					// To insert the new Contracts
-					contractsToAdd[contractID] = {
-						id: contractID,
-						abi: metaContent.abi,
-						contract_meta: metaContent.contractMeta,
-						metadata: buildMetadataFromMeta(metaContent.contractMeta),
-						slug: SGcontract.bytecodeHash,
-						meta_bytes: SGcontract.meta.metaBytes,
-						contract_meta_hash: SGcontract.contractMetaHash,
-						clonable_version: clonable_version
-					};
+					if (_hasCloneMethod) {
+						const clonable_version = getClonableVersion(metaContent.abi);
 
-					// To insert the new address with the Contract referece
-					addAddress(SGcontract, contractID);
+						factoriesToAdd[factoryID] = {
+							id: factoryID,
+							abi: abi,
+							contract_meta: contractMeta ? contractMeta : null,
+							contract_meta_hash: SGcontract.contractMetaHash,
+							meta_bytes: SGcontract.meta.metaBytes,
+							slug: SGcontract.bytecodeHash,
+							clonable_version: clonable_version
+						};
+						// To insert the new address with the Factory reference
+						addAddress(SGcontract, factoryID);
+					}
 				}
 			}
 		} else {
 			const addressID = uuidv5(SGcontract.id + chain_id.toString(), UUIDnamespace);
 
-			const addressContract = contractMatched.contract_addresses_new.find(
+			const addressFactory = factoryMatched.clone_factories_address.find(
 				(item_) => item_.id === addressID
 			);
 
 			// If does not exist in the DB, prepare data to insert
-			if (!addressContract) {
-				addAddress(SGcontract, contractID);
+			if (!addressFactory) {
+				addAddress(SGcontract, factoryID);
 			}
 		}
 	}
 
-	return { contractsToAdd, addressesToAdd };
+	return { factoriesToAdd, factoryAddressesToAdd };
 }
 
 /**
@@ -394,67 +376,12 @@ export function filterNonAddedStores(
  * that are strictly generated for each chain, like `contract_address`, this will
  * not happens since their ID is generated with the chain_id.
  */
-export function filterUniqueIDs(arr_: DataContractUpload[]): DataContractUpload[];
-
-/**
- * @public
- * Filter an array to remove any duplicated items.
- *
- * @dev
- * This function is useful after all the queries and other filters are done.
- * This is because when the chains are different between filters, it could be
- * duplicated entries on non-chain data like `deployers` entities. With entities
- * that are strictly generated for each chain, like `deployer_address`, this will
- * not happens since their ID is generated with the chain_id.
- */
-export function filterUniqueIDs(arr_: DataDeployerUpload[]): DataDeployerUpload[];
-
-/**
- * @public
- * Filter an array to remove any duplicated items.
- *
- * @dev
- * This function is useful after all the queries and other filters are done.
- * This is because when the chains are different between filters, it could be
- * duplicated entries on non-chain data like `rainterpreter` entities. With entities
- * that are strictly generated for each chain, like `rainterpreter_address`, this will
- * not happens since their ID is generated with the chain_id.
- */
-export function filterUniqueIDs(arr_: DataRainterpreterUpload[]): DataRainterpreterUpload[];
-
-/**
- * @public
- * Filter an array to remove any duplicated items.
- *
- * @dev
- * This function is useful after all the queries and other filters are done.
- * This is because when the chains are different between filters, it could be
- * duplicated entries on non-chain data like `rainterpreterStore` entities. With entities
- * that are strictly generated for each chain, like `rainterpreterStore_address`, this will
- * not happens since their ID is generated with the chain_id.
- */
-export function filterUniqueIDs(
-	arr_: DataRainterpreterStoreUpload[]
-): DataRainterpreterStoreUpload[];
-
-// Using overloading
-export function filterUniqueIDs(
-	arr_: (
-		| DataContractUpload
-		| DataDeployerUpload
-		| DataRainterpreterUpload
-		| DataRainterpreterStoreUpload
-	)[]
-) {
+export function filterUniqueIDs(arr_: DataFactoryUpload[]) {
 	const uniqueObjects = Object.values(
 		arr_.reduce(
 			(
 				acc: {
-					[key: string]:
-						| DataContractUpload
-						| DataDeployerUpload
-						| DataRainterpreterUpload
-						| DataRainterpreterStoreUpload;
+					[key: string]: DataFactoryUpload;
 				},
 				cur
 			) => {
