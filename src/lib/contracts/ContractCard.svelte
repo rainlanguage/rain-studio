@@ -2,7 +2,7 @@
 	import KnownAddresses from '$lib/KnownAddresses.svelte';
 	import ProjectTag from '$lib/ProjectTag.svelte';
 	import { Pills } from '@rainprotocol/rain-svelte-components';
-	import SvelteMarkdown from 'svelte-markdown';
+	import SvelteMarkdown from 'svelte4-markdown';
 	import { getChainsFromAddresses } from '$lib/utils';
 
 	export let contract: any;

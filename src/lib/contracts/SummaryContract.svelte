@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Section, SectionBody, SectionHeading } from '@rainprotocol/rain-svelte-components';
 	import { allChainsData } from 'svelte-ethers-store';
-	import SvelteMarkdown from 'svelte-markdown';
+	import SvelteMarkdown from 'svelte4-markdown';
 	import type { ContractAddressRow } from '$lib/types/types';
 	// import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 
