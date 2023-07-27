@@ -19,8 +19,9 @@
 	import { changeNetwork } from '$lib/connect-wallet';
 	import {
 		Subgraphs,
-		getChainsFromAddresses,
-		getNetworkByChainId,
+		getBlockExplorerUrl,
+		getChainsFromAddresses_,
+		getContractUrl,
 		networkOptions
 	} from '$lib/utils';
 	import { supabaseClient } from '$lib/supabaseClient';
@@ -174,17 +175,6 @@
 		return true;
 	};
 
-	const getContractUrl = (address_: string, chainId_: number): string => {
-		const networkInfo = getNetworkByChainId(chainId_);
-		if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
-			const urlExplorer = networkInfo.explorers[0].url;
-
-			return `${urlExplorer}/address/${address_}`;
-		}
-
-		return '';
-	};
-
 	const closeModalTx = () => {
 		txReceipt = undefined;
 		openWaitTx = false;
@@ -237,10 +227,7 @@
 			txHash_ = tx_.hash;
 			waitTxReceipt = true;
 
-			const networkInfo = getNetworkByChainId($chainId);
-			if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
-				urlExplorer = networkInfo.explorers[0].url;
-			}
+			urlExplorer = getBlockExplorerUrl($chainId);
 
 			txReceipt = await tx_.wait();
 
@@ -279,7 +266,7 @@
 		checking = false;
 	};
 
-	$: contractChains = getChainsFromAddresses(interpreterAddresses);
+	$: contractChains = getChainsFromAddresses_(interpreterAddresses);
 
 	$: knownAddressesForThisChain = getKnownContractAddressesForChain(
 		interpreterAddresses,
@@ -319,8 +306,8 @@
 		<div class="flex flex-col gap-y-4">
 			<span>Select an origin chain:</span>
 			<Select
-				items={contractChains.map(({ name, chainId }) => {
-					return { label: name, value: chainId };
+				items={contractChains.map(({ name, id }) => {
+					return { label: name, value: id };
 				})}
 				on:change={changeOriginChain}
 				bind:value={originChain}
@@ -478,7 +465,7 @@
 						class="text-blue-600"
 						target="_blank"
 						rel="noreferrer"
-						href={`${urlExplorer}/address/${txReceipt.contractAddress}`}
+						href={getContractUrl(txReceipt.contractAddress, targetChain)}
 					>
 						{txReceipt.contractAddress}
 					</a>
