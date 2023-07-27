@@ -7,20 +7,23 @@
 		getRainNetworkForChainId,
 		getDeployTxData
 	} from '@rainprotocol/cross-deploy';
-	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
+	import { chainId, signer } from 'svelte-ethers-store';
 	import { changeNetwork } from '$lib/connect-wallet';
-	import { Subgraphs, getBlockExplorerUrl, getContractUrl, networkOptions } from '$lib/utils';
+	import {
+		Subgraphs,
+		getBlockExplorerUrl,
+		getChainName,
+		getContractUrl,
+		networkOptions
+	} from '$lib/utils';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import type { Item } from '@rainprotocol/rain-svelte-components/dist/input-dropdown/InputDropdown.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 
 	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
-	import {
-		getKnownContractAddressesForChain,
-		getNameFromChainId,
-		getCommonChains
-	} from '$lib/contracts';
+	import { getKnownContractAddressesForChain, getCommonChains } from '$lib/contracts';
+	import { connected } from 'svelte-wagmi';
 
 	export let contractAddresses: ContractAddressRow[],
 		deployerAddresses: DeployerAddressesRow[],
@@ -228,7 +231,7 @@
 	$: selectedDeployerAddress, targetChain, getDeployerInfo(selectedDeployerAddress, targetChain);
 </script>
 
-{#if !$signer}
+{#if !$connected}
 	<div class="flex w-1/2 flex-col gap-y-4">
 		<p>You should connect your wallet before interacting with the newtork</p>
 		<ConnectWallet />
@@ -239,7 +242,7 @@
 			<span>Select an origin chain:</span>
 			<Select
 				items={contractChains.map((chainId_) => ({
-					label: getNameFromChainId(chainId_),
+					label: getChainName(chainId_),
 					value: chainId_
 				}))}
 				on:change={changeOriginChain}

@@ -24,11 +24,8 @@
 	import { changeNetwork } from '$lib/connect-wallet';
 
 	import { InputDropdown } from '@rainprotocol/rain-svelte-components';
-	import {
-		getKnownContractAddressesForChain,
-		getNameFromChainId,
-		getCommonChains
-	} from '$lib/contracts';
+	import { getKnownContractAddressesForChain, getCommonChains } from '$lib/contracts';
+	import { getChainName } from '$lib/utils';
 
 	export let metadata: any,
 		abi: Abi,
@@ -177,7 +174,7 @@
 	<span>Select a chain</span>
 	<Select
 		items={availableChains.map((chainId_) => ({
-			label: getNameFromChainId(chainId_),
+			label: getChainName(chainId_),
 			value: chainId_
 		}))}
 		on:change={changeChain}

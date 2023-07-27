@@ -14,14 +14,13 @@
 	import {
 		getCommonChainsInAddresses,
 		getKnownContractAddressesForChain,
-		getNameFromChainId,
 		CloneFactoryAbi
 	} from '$lib/contracts';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { getNetworkByChainId } from '$lib/utils';
+	import { getChainName, getNetworkByChainId } from '$lib/utils';
 	import type { ContractReceipt } from 'ethers';
 
 	export let abi: Abi;
@@ -201,7 +200,7 @@
 	<span>Select the chain to deploy the proxy</span>
 	<Select
 		items={availableChains.map((chainId_) => ({
-			label: getNameFromChainId(chainId_),
+			label: getChainName(chainId_),
 			value: chainId_
 		}))}
 		on:change={changeChain}
