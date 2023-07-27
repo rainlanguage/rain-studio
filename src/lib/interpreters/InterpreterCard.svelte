@@ -4,7 +4,7 @@
 	import { Pills } from '@rainprotocol/rain-svelte-components';
 	import SvelteMarkdown from 'svelte4-markdown';
 	import { getChainsFromInterpreterAddresses } from '$lib/contracts';
-	import { interpreterOptions } from '$lib/utils';
+	import { getChainName, interpreterOptions } from '$lib/utils';
 
 	export let interpreter: any;
 	export let showDetailedInfo: boolean = false;
@@ -15,7 +15,7 @@
 <div
 	class="flex w-full cursor-pointer flex-col gap-y-2 rounded-2xl border border-gray-200 bg-white p-4 transition-transform hover:scale-105"
 >
-	<span class="font-semibold ">
+	<span class="font-semibold">
 		<p class="capitalize">
 			{interpreter.type}
 		</p>
@@ -33,7 +33,7 @@
 					<span
 						class="mt-3 self-center overflow-clip rounded-xl border border-gray-400 bg-gray-200 px-2 py-1 text-sm text-gray-900"
 					>
-						{chain.name}
+						{getChainName(chain.id)}
 					</span>
 				{/each}
 			</div>

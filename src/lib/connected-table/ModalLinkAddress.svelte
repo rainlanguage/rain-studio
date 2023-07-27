@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Button, Modal } from '@rainprotocol/rain-svelte-components';
 	import { getMessage } from '$lib/utils';
-	import { signer } from 'svelte-ethers-store';
 	import { isLinked, unwantedWallets } from '$lib/connected-table';
 	import { enhance } from '$app/forms';
 	import { ExclamationTriangle, CheckCircle } from '@steeze-ui/heroicons';
 	import CommonModal from '$lib/CommonModal.svelte';
+	import { signMessage } from '@wagmi/core';
 
 	// Types
 	import type { SubmitFunction } from '@sveltejs/kit/types';
@@ -21,7 +21,7 @@
 		const messageToSign = await getMessage(address);
 		let signedMessage = '';
 		try {
-			signedMessage = await $signer.signMessage(messageToSign);
+			signedMessage = await signMessage(messageToSign);
 		} catch (error) {
 			// Search for this error instances (?).
 			//@ts-expect-error

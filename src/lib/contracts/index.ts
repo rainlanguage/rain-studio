@@ -1,7 +1,7 @@
 import type { Database } from '$lib/types/generated-db-types';
 import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
-import { getNetworksByChainIds } from '$lib/utils';
-import { allChainsData, type ChainData } from 'svelte-ethers-store';
+import { getChainName, getNetworksByChainIds } from '$lib/utils';
+import type { Chain } from '@wagmi/core/chains';
 
 import CloneFactoryAbi from './CloneFactoryAbi.json';
 
@@ -22,7 +22,7 @@ export const getChainsFromInterpreterAddresses = (
 		[key: string]: any;
 		addresses: Database['public']['Tables']['deployers_addresses']['Row'];
 	}[]
-): ChainData[] => {
+): Chain[] => {
 	if (!interpreter_addresses.length) return [];
 
 	const uniqueChainIds = Array.from(
@@ -56,12 +56,6 @@ export const getKnownContractAddressesForChain = (
 		?.map((contractAddress) => {
 			return { label: contractAddress.address, value: contractAddress.address };
 		});
-};
-
-export const getNameFromChainId = (id: number): string => {
-	const name = allChainsData.find((chain) => chain.chainId == id)?.name;
-	if (!name) throw Error('Unknown chain_id');
-	return name;
 };
 
 // getting the chains for which there's both a known address for contract and interpreter

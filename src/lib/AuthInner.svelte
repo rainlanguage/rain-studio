@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { signer, signerAddress, connected } from 'svelte-ethers-store';
 	import { enhance } from '$app/forms';
 	import { Button } from '@rainprotocol/rain-svelte-components';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
+	import { signerAddress, connected } from 'svelte-wagmi';
+	import { signMessage } from '@wagmi/core';
 
 	// Types
 	import type { SubmitFunction } from '@sveltejs/kit/types';
@@ -24,15 +25,20 @@
 		return (await resp.json()).message;
 	};
 
-	const submitFunction: SubmitFunction = async ({ data }) => {
+	// const submitFunction: SubmitFunction = async ({ data }) => {
+	const submitFunction: SubmitFunction = async ({ data, cancel }) => {
 		// Get the message to signed based on the current address connected.
 		// Then show the pop-up from the wallet (metamask) to sign the message.
 		// If the user cancel/reject to sign the message, the submit is cancelled (no sign-in or sign-up).
-		const message = await getMessage($signerAddress);
-		const signature = await $signer.signMessage(message);
+		if (!$signerAddress) {
+			cancel();
+		} else {
+			const message = await getMessage($signerAddress);
+			const signature = await signMessage(message);
 
-		// Set the signature to the form data that will be sent to the server
-		data.set('signature', signature);
+			// Set the signature to the form data that will be sent to the server
+			data.set('signature', signature);
+		}
 
 		return async ({ result, update }) => {
 			if (result.type == 'success') {

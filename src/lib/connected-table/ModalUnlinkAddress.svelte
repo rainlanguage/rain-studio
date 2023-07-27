@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Button, Modal } from '@rainprotocol/rain-svelte-components';
-	import { signerAddress } from 'svelte-ethers-store';
 	import { isLinked, unwantedWallets } from '$lib/connected-table';
 	import { enhance } from '$app/forms';
 	import CommonModal from '$lib/CommonModal.svelte';
 	import { ExclamationCircle, CheckCircle } from '@steeze-ui/heroicons';
+	import { signerAddress } from 'svelte-wagmi';
 
 	// Types
 	import type { SubmitFunction } from '@sveltejs/kit/types';

@@ -15,12 +15,13 @@
 		getDeployTxData,
 		checkObtainTxHash
 	} from '@rainprotocol/cross-deploy';
-	import { chainId, signer } from 'svelte-ethers-store';
+	import { chainId, connected } from 'svelte-wagmi';
+	import { sendTransaction, prepareSendTransaction, waitForTransaction, type WaitForTransactionResult } from '@wagmi/core';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import {
 		Subgraphs,
 		getBlockExplorerUrl,
-		getChainsFromAddresses_,
+		getChainsFromAddresses,
 		getContractUrl,
 		networkOptions
 	} from '$lib/utils';
@@ -57,7 +58,7 @@
 	let storeAddresses: Item[];
 
 	// Handle send transaction
-	let txReceipt: TransactionReceipt | undefined;
+	let txReceipt: WaitForTransactionResult | undefined;
 	let txHash_: string;
 	let openWaitTx = false;
 	let waitTxResp = false;
@@ -86,7 +87,7 @@
 	const changeTargetChain = async (event_: Event) => {
 		const chainIdSelected = (event_.target as HTMLSelectElement).value;
 
-		if ($chainId != chainIdSelected) {
+		if ($chainId?.toString() != chainIdSelected) {
 			const resp = await changeNetwork(chainIdSelected);
 			if (!resp.success) {
 				targetChain = oldChain;
@@ -216,12 +217,21 @@
 		}
 
 		try {
-			const txData = await getDeployTxData(network, selectedInterpreterAddress, _options);
+			const txData = (await getDeployTxData(
+				network,
+				selectedInterpreterAddress,
+				_options
+			)) as `0x${string}`;
 			if (!txData) {
 				throw new Error('It cannot retrieve the contract information');
 			}
 
-			tx_ = await $signer.sendTransaction({ data: txData });
+			// TODO: CHECK `TO`
+			// tx_ = await sendTransaction({ to: '', data: txData });
+			const preparedTx = await prepareSendTransaction({ data: txData });
+			preparedTx;
+			tx_ = await sendTransaction(preparedTx);
+
 			// Do not wait anymore
 			waitTxResp = false;
 			txHash_ = tx_.hash;
@@ -229,7 +239,7 @@
 
 			urlExplorer = getBlockExplorerUrl($chainId);
 
-			txReceipt = await tx_.wait();
+			txReceipt = await waitForTransaction({ hash: tx_.hash });
 
 			waitTxReceipt = false;
 			showTxReceipt = true;
@@ -266,7 +276,7 @@
 		checking = false;
 	};
 
-	$: contractChains = getChainsFromAddresses_(interpreterAddresses);
+	$: contractChains = getChainsFromAddresses(interpreterAddresses);
 
 	$: knownAddressesForThisChain = getKnownContractAddressesForChain(
 		interpreterAddresses,
@@ -296,7 +306,7 @@
 	$: requiredTxhash && checkTxHash(requiredTxhash);
 </script>
 
-{#if !$signer}
+{#if !$connected}
 	<div class="flex w-1/2 flex-col gap-y-4">
 		<p>You should connect your wallet before interacting with the newtork</p>
 		<ConnectWallet />

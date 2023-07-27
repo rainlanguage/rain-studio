@@ -5,23 +5,17 @@
 	import {
 		type DISpair,
 		getRainNetworkForChainId,
-		getDeployTxData,
-		getContractDeployTxData,
-		NetworkProvider,
-		BlockScannerAPI,
-		RegistrySubgraph
+		getDeployTxData
 	} from '@rainprotocol/cross-deploy';
 	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
 	import { changeNetwork } from '$lib/connect-wallet';
-	import { createClient } from '@urql/core';
-	import { Subgraphs, getNetworkByChainId, networkOptions } from '$lib/utils';
+	import { Subgraphs, getBlockExplorerUrl, getContractUrl, networkOptions } from '$lib/utils';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import type { Item } from '@rainprotocol/rain-svelte-components/dist/input-dropdown/InputDropdown.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 
 	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
-	import { matchContracts } from '$lib/match-addresses';
 	import {
 		getKnownContractAddressesForChain,
 		getNameFromChainId,
@@ -195,10 +189,7 @@
 			txHash_ = tx_.hash;
 			waitTxReceipt = true;
 
-			const networkInfo = getNetworkByChainId($chainId);
-			if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
-				urlExplorer = networkInfo.explorers[0].url;
-			}
+			urlExplorer = getBlockExplorerUrl($chainId);
 
 			txReceipt = await tx_.wait();
 
@@ -364,7 +355,7 @@
 						class="text-blue-600"
 						target="_blank"
 						rel="noreferrer"
-						href={`${urlExplorer}/address/${txReceipt.contractAddress}`}
+						href={getContractUrl(txReceipt.contractAddress, targetChain)}
 					>
 						{txReceipt.contractAddress}
 					</a>

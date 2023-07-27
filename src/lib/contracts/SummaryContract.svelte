@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Section, SectionBody, SectionHeading } from '@rainprotocol/rain-svelte-components';
-	import { allChainsData } from 'svelte-ethers-store';
 	import SvelteMarkdown from 'svelte4-markdown';
 	import type { ContractAddressRow } from '$lib/types/types';
+	import { getChainName } from '$lib/utils';
 	// import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
 
 	export let metadata: any | null = null,
@@ -27,9 +27,9 @@
 				{#if contractAddresses}
 					{#each contractAddresses as address_}
 						<tr>
-							<td class="pt-3"
-								>{allChainsData.find((_chain) => _chain.chainId == address_.chain_id)?.name}</td
-							>
+							<td class="pt-3">
+								{getChainName(address_.chain_id)}
+							</td>
 							<td class="pt-3">{address_.chain_id}</td>
 							<!-- <td class="block w-48 truncate pt-3 md:w-full"> -->
 							<td class="block w-48 truncate pt-3 md:w-full">

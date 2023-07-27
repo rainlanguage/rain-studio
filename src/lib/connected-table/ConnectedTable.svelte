@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button, Ring, DisplayAddress, HoverTooltip } from '@rainprotocol/rain-svelte-components';
-	import { signerAddress, connected, allChainsData, chainId } from 'svelte-ethers-store';
 	import { page } from '$app/stores';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
@@ -14,6 +13,9 @@
 	} from './';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowUpRight } from '@steeze-ui/heroicons';
+	import { signerAddress, connected, chainId } from 'svelte-wagmi';
+	import { getChainName } from '$lib/utils';
+
 	// When size is small, hide the Connect Button/Unlink
 	export let size: 'normal' | 'small' = 'normal';
 
@@ -22,34 +24,36 @@
 	let openedModalLink = false;
 
 	const searchAddress = async () => {
-		if ($alreadySearched !== $signerAddress) {
-			// Save the address to avoid researching same address. Allow to search again when the account is changed.
-			alreadySearched.set($signerAddress);
+		if ($signerAddress) {
+			if ($alreadySearched !== $signerAddress) {
+				// Save the address to avoid researching same address. Allow to search again when the account is changed.
+				alreadySearched.set($signerAddress);
 
-			if ($page.data.wallets_linked.includes($signerAddress)) {
-				// It's linked to his account
-				isLinked.set(true);
-				isLinkedToOther.set(false);
-			} else {
-				// Search if it's linked to another account or it's available to link this to this acc
-				currentSearchStatus.set(SearchStatus.Searching);
-				loading = true;
-
-				let { data, error } = await supabaseClient
-					.from('wallets_linked')
-					.select('user_id')
-					.eq('address', $signerAddress);
-
-				if (error || (data && !data.length)) {
-					isLinked.set(false);
+				if ($page.data.wallets_linked.includes($signerAddress)) {
+					// It's linked to his account
+					isLinked.set(true);
 					isLinkedToOther.set(false);
 				} else {
-					isLinked.set(false);
-					isLinkedToOther.set(true);
-				}
+					// Search if it's linked to another account or it's available to link this to this acc
+					currentSearchStatus.set(SearchStatus.Searching);
+					loading = true;
 
-				loading = false;
-				currentSearchStatus.set(SearchStatus.Finished);
+					let { data, error } = await supabaseClient
+						.from('wallets_linked')
+						.select('user_id')
+						.eq('address', $signerAddress);
+
+					if (error || (data && !data.length)) {
+						isLinked.set(false);
+						isLinkedToOther.set(false);
+					} else {
+						isLinked.set(false);
+						isLinkedToOther.set(true);
+					}
+
+					loading = false;
+					currentSearchStatus.set(SearchStatus.Finished);
+				}
 			}
 		}
 	};
@@ -58,16 +62,16 @@
 		openedModalLink = true;
 	};
 
-	$: networkName = allChainsData.find((_chain) => _chain.chainId == $chainId)?.name;
+	$: networkName = getChainName($chainId);
 
 	$: if ($signerAddress) {
 		searchAddress();
 	}
 </script>
 
-<ModalUnlinkAddress bind:openedModal={openedModalUnlink} address={$signerAddress} />
+<ModalUnlinkAddress bind:openedModal={openedModalUnlink} address={$signerAddress ?? undefined} />
 
-<ModalLinkAddress bind:openedModal={openedModalLink} address={$signerAddress} />
+<ModalLinkAddress bind:openedModal={openedModalLink} address={$signerAddress ?? undefined} />
 
 <div class="flex w-full flex-col items-start gap-y-2.5">
 	<p class="small-regular text-gray-600">
@@ -84,7 +88,7 @@
 					{$signerAddress}
 				</p>
 			{:else}
-				<DisplayAddress address={$signerAddress} />
+				<DisplayAddress address={$signerAddress ?? ''} />
 			{/if}
 		</div>
 	{/if}

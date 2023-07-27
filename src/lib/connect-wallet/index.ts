@@ -1,10 +1,10 @@
-import { defaultConfig, wagmiLoaded, web3Modal, disconnectWagmi, chainId } from 'svelte-wagmi';
 import { browser } from '$app/environment';
 import { PUBLIC_WALLETCONNECT_ID, PUBLIC_ALCHEMY_ID } from '$env/static/public';
 import { get } from 'svelte/store';
-import { defaultChains, getNetworkByChainId_ } from '$lib/utils';
-import { toHex } from 'viem';
+
+import { defaultConfig, wagmiLoaded, web3Modal, disconnectWagmi, chainId } from 'svelte-wagmi';
 import { switchNetwork } from '@wagmi/core';
+import { defaultChains, getNetworkByChainId } from '$lib/utils';
 
 // Initialize this once the app is load
 if (browser) {
@@ -46,7 +46,7 @@ export const changeNetwork = async (
 
 	if (_currentChain == chainId_) return { success: true, message: 'Chain is currently selected' };
 
-	const chainData = getNetworkByChainId_(chainId_);
+	const chainData = getNetworkByChainId(chainId_);
 
 	if (!chainData) {
 		return { success: false, message: 'Rain Studio cannot handle this chain' };
