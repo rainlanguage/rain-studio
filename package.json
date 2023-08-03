@@ -48,7 +48,7 @@
 	"dependencies": {
 		"@formkit/auto-animate": "^0.7.0",
 		"@rainprotocol/cross-deploy": "^2.1.0",
-		"@rainprotocol/rain-svelte-components": "^0.0.46",
+		"@rainprotocol/rain-svelte-components": "^0.0.47",
 		"@sentry/node": "=7.58.0",
 		"@sentry/svelte": "=7.58.0",
 		"@sentry/tracing": "=7.58.0",
