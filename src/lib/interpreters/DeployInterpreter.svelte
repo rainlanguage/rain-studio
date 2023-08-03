@@ -232,8 +232,6 @@
 				throw new Error('It cannot retrieve the contract information');
 			}
 
-			// TODO: CHECK `TO`
-			// tx_ = await sendTransaction({ to: '', data: txData });
 			const preparedTx = await prepareSendTransaction({ data: txData });
 			tx_ = await sendTransaction(preparedTx);
 
@@ -251,14 +249,23 @@
 		} catch (error) {
 			// Do not wait anymore
 			waitTxResp = false;
+
+			// TODO: Work to found how silent the error/red lines checking the error
+			// instances. That would be better, but not sure how should be made here.
+
+			// @ts-expect-error Compile error: There is no instance definition to check
 			if (error.code == 'ACTION_REJECTED') {
 				// The user rejected the transaction
 				errorMsg = 'Transaction rejected or cancelled';
 			} else {
 				// Other error
+				// @ts-expect-error Compile error: There is no instance definition to check
 				if (error.reason) {
+					// @ts-expect-error Compile error: There is no instance definition to check
 					errorMsg = error.reason;
+					// @ts-expect-error Compile error: There is no instance definition to check
 				} else if (error.message) {
+					// @ts-expect-error Compile error: There is no instance definition to check
 					errorMsg = error.message;
 				} else {
 					errorMsg = JSON.stringify(error);
