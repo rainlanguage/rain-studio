@@ -27,8 +27,6 @@ if (browser) {
  */
 export const connectWallet = async () => {
 	get(web3Modal).openModal();
-
-	get;
 };
 
 export const disconectWallet = async () => {

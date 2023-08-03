@@ -1,14 +1,20 @@
 <script lang="ts">
-	import type { Abi } from 'abitype';
-	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
-	import { defaultEvmStores, contracts } from 'svelte-ethers-store';
-	import { chainId, connected } from 'svelte-wagmi';
-
-	import { writeContract, waitForTransaction, type WaitForTransactionResult } from '@wagmi/core';
-	import { isAddress } from 'viem';
-	import { prepareWriteFunction } from '$lib/contracts/contract-interactions';
-
 	import { setContext } from 'svelte';
+	import { chainId, connected } from 'svelte-wagmi';
+	import { writeContract, waitForTransaction } from '@wagmi/core';
+	import { decodeEventLog, encodeEventTopics, isAddress } from 'viem';
+	import { changeNetwork } from '$lib/connect-wallet';
+	import { getBlockExplorerUrl, getChainName } from '$lib/utils';
+	import {
+		getCommonChainsInAddresses,
+		getKnownContractAddressesForChain,
+		CloneFactoryAbi,
+		prepareWriteFunction
+	} from '$lib/contracts';
+
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
+	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import {
 		Button,
 		InitializeForm,
@@ -17,18 +23,10 @@
 		Ring,
 		InitFormUtils
 	} from '@rainprotocol/rain-svelte-components';
-	import {
-		getCommonChainsInAddresses,
-		getKnownContractAddressesForChain,
-		CloneFactoryAbi
-	} from '$lib/contracts';
-	import { changeNetwork } from '$lib/connect-wallet';
-	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
-	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
-	import { Icon } from '@steeze-ui/svelte-icon';
-	import { getBlockExplorerUrl, getChainName, getNetworkByChainId } from '$lib/utils';
 
-	import type { ContractReceipt } from 'ethers';
+	import type { Abi, Address } from 'abitype';
+	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
+	import type { WaitForTransactionResult } from '@wagmi/core';
 
 	export let abi: Abi;
 	export let contract_meta: any;
@@ -45,7 +43,7 @@
 	let selectedImplementation: string | -1; // the selected contract address
 
 	// Handle send transaction
-	let txReceipt: ContractReceipt | undefined;
+	let txReceipt: WaitForTransactionResult | undefined;
 	let txHash_: string;
 	let openWaitTx = false;
 	let waitTxResp = false;
@@ -92,33 +90,37 @@
 		}
 	};
 
-	const findProxyAddress = (txReceipt_: ContractReceipt) => {
-		const contract = $contracts.selectedCloneFactory;
+	const findProxyAddress = (txReceipt_: WaitForTransactionResult, address_: Address) => {
+		const NewCloneTopic = encodeEventTopics({
+			abi: CloneFactoryAbi,
+			eventName: 'NewClone'
+		})[0];
 
-		const eventObj = txReceipt_.events?.find((x) => {
-			if (
-				x.topics[0] == contract.filters['NewClone']().topics?.[0] &&
-				x.address.toLowerCase() == contract.address.toLowerCase()
-			) {
+		const eventLog = txReceipt_.logs.find((x) => {
+			if (x.topics[0] === NewCloneTopic && x.address.toLowerCase() === address_.toLowerCase()) {
 				return true;
 			}
 		});
 
-		if (!eventObj) {
+		if (!eventLog) {
 			throw new Error(
 				`Could not find event 'NewClone' event on the tx  ${txReceipt_.transactionHash}`
 			);
 		}
 
-		const decodedEvent = contract.interface.decodeEventLog(
-			'NewClone',
-			eventObj.data,
-			eventObj.topics
-		);
+		const { args } = decodeEventLog({
+			abi: CloneFactoryAbi,
+			data: eventLog.data,
+			topics: [NewCloneTopic]
+		});
 
-		const { clone } = decodedEvent;
+		if (!args) {
+			throw new Error(`Failed to decode the event ${eventLog.data}`);
+		}
 
-		return clone;
+		// @ts-expect-error At this point, the key `clone` should exist since the
+		// topic, address and the args (from decoding the event) pass the checkers.
+		return args.clone as Address;
 	};
 
 	// submit the transaction
@@ -126,36 +128,39 @@
 		openWaitTx = true;
 		waitTxResp = true;
 
-		// handling error cases
 		try {
-			// creating an ethers contract instance with the selected known address
-			if (typeof selectedCloneFactory != 'string') {
+			if (selectedCloneFactory === -1) {
 				throw new Error('Not clone factory address selected');
 			}
 
-			defaultEvmStores.attachContract(
-				'selectedCloneFactory',
-				selectedCloneFactory,
-				JSON.stringify(CloneFactoryAbi)
-			);
+			if (!isAddress(selectedCloneFactory)) {
+				throw new Error(`Not a valid hex contract address: ${selectedCloneFactory}`);
+			}
 
 			// Encode based on the config
 			const encodedConfig = InitFormUtils.encodeConfigs(result, abi, contract_meta);
 
+			const requestWrite = await prepareWriteFunction(
+				selectedCloneFactory,
+				CloneFactoryAbi,
+				'clone',
+				[selectedImplementation, encodedConfig]
+			);
+
 			// Send to the clonable
-			let tx_ = await $contracts.selectedCloneFactory.clone(selectedImplementation, encodedConfig);
+			const { hash } = await writeContract(requestWrite);
 
 			// Do not wait anymore
 			waitTxResp = false;
-			txHash_ = tx_.hash;
+			txHash_ = hash;
 			waitTxReceipt = true;
 
 			urlExplorer = getBlockExplorerUrl($chainId);
 
-			txReceipt = await tx_.wait();
+			txReceipt = await waitForTransaction({ hash });
 
 			if (txReceipt) {
-				proxyCloneAddress = findProxyAddress(txReceipt);
+				proxyCloneAddress = findProxyAddress(txReceipt, selectedCloneFactory);
 			}
 
 			waitTxReceipt = false;
@@ -177,6 +182,12 @@
 				if (error.reason) {
 					// @ts-expect-error Compile error: There is no instance definition to check
 					errorMsg = error.reason;
+
+					// @ts-expect-error Compile error: There is no instance definition to check
+				} else if (error.cause) {
+					// @ts-expect-error Compile error: There is no instance definition to check
+					errorMsg = error.cause;
+					///
 					// @ts-expect-error Compile error: There is no instance definition to check
 				} else if (error.message) {
 					// @ts-expect-error Compile error: There is no instance definition to check
@@ -200,26 +211,26 @@
 	$: cloneFactoriesForThisChain = getKnownContractAddressesForChain(cloneFactories, selectedChain);
 </script>
 
-<div class="flex flex-col gap-y-4">
-	<span>Select the chain to deploy the proxy</span>
-	<Select
-		items={availableChains.map((chainId_) => ({
-			label: getChainName(chainId_),
-			value: chainId_
-		}))}
-		on:change={changeChain}
-		bind:value={selectedChain}
-	/>
-	{#if selectedChain && selectedChain !== -1}
-		<span>Specify the configuration to create:</span>
-		<InitializeForm {abi} contractMeta={contract_meta} bind:isInitializable bind:result />
+{#if !$connected}
+	<div class="self-center">
+		<ConnectWallet />
+	</div>
+{:else}
+	<div class="flex flex-col gap-y-4">
+		<span>Select the chain to deploy the proxy</span>
+		<Select
+			items={availableChains.map((chainId_) => ({
+				label: getChainName(chainId_),
+				value: chainId_
+			}))}
+			on:change={changeChain}
+			bind:value={selectedChain}
+		/>
+		{#if selectedChain && selectedChain !== -1}
+			<span>Specify the configuration to create:</span>
+			<InitializeForm {abi} contractMeta={contract_meta} bind:isInitializable bind:result />
 
-		<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
-			{#if !$connected}
-				<div class="self-center">
-					<ConnectWallet />
-				</div>
-			{:else}
+			<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
 				<div class="flex items-center gap-x-2">
 					<div class="h-3 w-3 rounded-full bg-green-600" />
 					<span>Connected to {connectedChainName}</span>
@@ -250,10 +261,10 @@
 						variant="primary">Create proxy</Button
 					>
 				</div>
-			{/if}
-		</div>
-	{/if}
-</div>
+			</div>
+		{/if}
+	</div>
+{/if}
 
 <Modal bind:open={openWaitTx} disableOutsideClickClose>
 	<div class="flex w-full flex-col gap-5">
@@ -271,7 +282,7 @@
 					theme="solid"
 					class={`mr-1.5 h-16 w-16 py-0.5 text-red-500`}
 				/>
-				<p>
+				<p class="break-all">
 					{errorMsg}
 				</p>
 			</div>

@@ -1,9 +1,9 @@
+import { getNetworksByChainIds } from '$lib/utils';
+import { CloneFactoryAbi, prepareWriteFunction } from './contract-interactions';
+
+import type { Chain } from '@wagmi/core/chains';
 import type { Database } from '$lib/types/generated-db-types';
 import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
-import { getChainName, getNetworksByChainIds } from '$lib/utils';
-import type { Chain } from '@wagmi/core/chains';
-
-import CloneFactoryAbi from './CloneFactoryAbi.json';
 
 /** Key of the possible options, but just one should be selected at time. These
  * are mutually exclusive, but typescript will not throw an error, so this just
@@ -84,4 +84,4 @@ export const getCommonChainsInAddresses = (addresses: { chain_id: number }[]): n
 	return Array.from(chains.values());
 };
 
-export { CloneFactoryAbi };
+export { CloneFactoryAbi, prepareWriteFunction };
