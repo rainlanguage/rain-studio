@@ -1,7 +1,13 @@
 <script lang="ts">
 	import type { Abi } from 'abitype';
 	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
-	import { allChainsData, chainId, signer, defaultEvmStores, contracts } from 'svelte-ethers-store';
+	import { defaultEvmStores, contracts } from 'svelte-ethers-store';
+	import { chainId, connected } from 'svelte-wagmi';
+
+	import { writeContract, waitForTransaction, type WaitForTransactionResult } from '@wagmi/core';
+	import { isAddress } from 'viem';
+	import { prepareWriteFunction } from '$lib/contracts/contract-interactions';
+
 	import { setContext } from 'svelte';
 	import {
 		Button,
@@ -20,7 +26,8 @@
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { getChainName, getNetworkByChainId } from '$lib/utils';
+	import { getBlockExplorerUrl, getChainName, getNetworkByChainId } from '$lib/utils';
+
 	import type { ContractReceipt } from 'ethers';
 
 	export let abi: Abi;
@@ -72,7 +79,7 @@
 	const changeChain = async (event_: Event) => {
 		const chainIdSelected = (event_.target as HTMLSelectElement).value;
 
-		if ($chainId != chainIdSelected) {
+		if ($chainId?.toString() != chainIdSelected) {
 			const resp = await changeNetwork(chainIdSelected);
 			if (!resp.success) {
 				selectedChain = oldChain;
@@ -143,10 +150,7 @@
 			txHash_ = tx_.hash;
 			waitTxReceipt = true;
 
-			const networkInfo = getNetworkByChainId($chainId);
-			if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
-				urlExplorer = networkInfo.explorers[0].url;
-			}
+			urlExplorer = getBlockExplorerUrl($chainId);
 
 			txReceipt = await tx_.wait();
 
@@ -186,7 +190,7 @@
 		}
 	};
 
-	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
+	$: connectedChainName = getChainName($chainId);
 	$: availableChains = getCommonChainsInAddresses(deployerAddresses);
 	$: knownAddressesForThisChain = getKnownContractAddressesForChain(
 		contractAddresses,
@@ -211,7 +215,7 @@
 		<InitializeForm {abi} contractMeta={contract_meta} bind:isInitializable bind:result />
 
 		<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
-			{#if !$signer}
+			{#if !$connected}
 				<div class="self-center">
 					<ConnectWallet />
 				</div>
@@ -223,11 +227,7 @@
 				<div class="flex flex-col gap-y-6">
 					<div>
 						{#if cloneFactoriesForThisChain && cloneFactoriesForThisChain.length}
-							<span
-								>Select a known Clone Factory on {allChainsData.find(
-									(chain) => chain.chainId == $chainId
-								)?.name}</span
-							>
+							<span>Select a known Clone Factory on {getChainName($chainId)}</span>
 							<Select items={cloneFactoriesForThisChain} bind:value={selectedCloneFactory} />
 						{:else}
 							<span class="text-gray-500">No known Clone Factories for this chain.</span>
@@ -236,11 +236,7 @@
 
 					<div>
 						{#if knownAddressesForThisChain && knownAddressesForThisChain.length}
-							<span
-								>Select an addresses of this contract on {allChainsData.find(
-									(chain) => chain.chainId == $chainId
-								)?.name} to clone</span
-							>
+							<span>Select an addresses of this contract on {getChainName($chainId)} to clone</span>
 							<Select items={knownAddressesForThisChain} bind:value={selectedImplementation} />
 						{:else}
 							<span class="text-gray-500">No known deployments for this chain.</span>

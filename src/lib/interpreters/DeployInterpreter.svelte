@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
-	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
+	import type { ContractAddressRow } from '$lib/types/types';
 	import {
 		Button,
 		Input,
@@ -16,7 +16,12 @@
 		checkObtainTxHash
 	} from '@rainprotocol/cross-deploy';
 	import { chainId, connected } from 'svelte-wagmi';
-	import { sendTransaction, prepareSendTransaction, waitForTransaction, type WaitForTransactionResult } from '@wagmi/core';
+	import {
+		sendTransaction,
+		prepareSendTransaction,
+		waitForTransaction,
+		type WaitForTransactionResult
+	} from '@wagmi/core';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import {
 		Subgraphs,
@@ -222,6 +227,7 @@
 				selectedInterpreterAddress,
 				_options
 			)) as `0x${string}`;
+
 			if (!txData) {
 				throw new Error('It cannot retrieve the contract information');
 			}
@@ -229,7 +235,6 @@
 			// TODO: CHECK `TO`
 			// tx_ = await sendTransaction({ to: '', data: txData });
 			const preparedTx = await prepareSendTransaction({ data: txData });
-			preparedTx;
 			tx_ = await sendTransaction(preparedTx);
 
 			// Do not wait anymore

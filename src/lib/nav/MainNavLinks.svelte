@@ -3,13 +3,6 @@
 </script>
 
 <a
-	href="/connect"
-	class="nav-link"
-	on:click|preventDefault={() => {
-		goto('/connect');
-	}}>Connect</a
->
-<a
 	href="/contracts"
 	class="nav-link"
 	on:click|preventDefault={() => {

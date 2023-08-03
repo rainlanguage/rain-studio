@@ -7,7 +7,14 @@
 		getRainNetworkForChainId,
 		getDeployTxData
 	} from '@rainprotocol/cross-deploy';
-	import { chainId, signer } from 'svelte-ethers-store';
+	import { chainId, connected } from 'svelte-wagmi';
+	import {
+		sendTransaction,
+		prepareSendTransaction,
+		waitForTransaction,
+		type WaitForTransactionResult
+	} from '@wagmi/core';
+
 	import { changeNetwork } from '$lib/connect-wallet';
 	import {
 		Subgraphs,
@@ -21,9 +28,7 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 
-	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
 	import { getKnownContractAddressesForChain, getCommonChains } from '$lib/contracts';
-	import { connected } from 'svelte-wagmi';
 
 	export let contractAddresses: ContractAddressRow[],
 		deployerAddresses: DeployerAddressesRow[],
@@ -42,7 +47,7 @@
 	let dispairTarget: DISpair;
 
 	// Handle send transaction
-	let txReceipt: TransactionReceipt | undefined;
+	let txReceipt: WaitForTransactionResult | undefined;
 	let txHash_: string;
 	let openWaitTx = false;
 	let waitTxResp = false;
@@ -73,7 +78,7 @@
 	const changeTargetChain = async (event_: Event) => {
 		const chainIdSelected = (event_.target as HTMLSelectElement).value;
 
-		if ($chainId != chainIdSelected) {
+		if ($chainId?.toString() != chainIdSelected) {
 			const resp = await changeNetwork(chainIdSelected);
 			if (!resp.success) {
 				targetChain = oldChain;
@@ -177,16 +182,20 @@
 
 		// const txData = await getContractDeployTxData(network, fromDIS, toDIS, selectedContractAddress);
 
-		const txData = await getDeployTxData(network, selectedContractAddress, {
-			DIS: DISInstances
-		});
-
 		try {
+			const txData = (await getDeployTxData(network, selectedContractAddress, {
+				DIS: DISInstances
+			})) as `0x${string}`;
+
 			if (!txData) {
 				throw new Error('It cannot retrieve the contract information');
 			}
 
-			tx_ = await $signer.sendTransaction({ data: txData });
+			// TODO: CHECK `TO`
+			// tx_ = await sendTransaction({ to: '', data: txData });
+			const preparedTx = await prepareSendTransaction({ data: txData });
+			tx_ = await sendTransaction(preparedTx);
+
 			// Do not wait anymore
 			waitTxResp = false;
 			txHash_ = tx_.hash;
@@ -194,7 +203,7 @@
 
 			urlExplorer = getBlockExplorerUrl($chainId);
 
-			txReceipt = await tx_.wait();
+			txReceipt = await waitForTransaction({ hash: tx_.hash });
 
 			waitTxReceipt = false;
 			showTxReceipt = true;
@@ -214,7 +223,6 @@
 					errorMsg = JSON.stringify(error);
 				}
 			}
-			console.log(JSON.stringify(error));
 			errorTx = true;
 		}
 	};
