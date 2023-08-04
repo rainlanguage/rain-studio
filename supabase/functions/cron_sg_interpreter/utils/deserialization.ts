@@ -1,4 +1,4 @@
-import { arrayify, isBytesLike, inflate } from '../deps.ts';
+import { arrayify, isBytesLike, inflate, inflateRaw } from '../deps.ts';
 import { MetaContentV1SG } from '../types.ts';
 import { textDecoder } from './textDecoder.ts';
 
@@ -24,7 +24,12 @@ export function deserializeContent(content_: MetaContentV1SG): JSON | null {
 			return JSON.parse(decoded);
 		} else if (contentEncoding === 'deflate') {
 			// Inflate JSON
-			return inflateJson(payload);
+			const dataInflated = inflateJson(payload);
+			if (dataInflated) return dataInflated;
+
+			const dataRawInflated = rawInflateJson(payload);
+
+			if (dataRawInflated) return dataRawInflated;
 		}
 	}
 
@@ -45,6 +50,28 @@ export const inflateJson = (bytes: unknown): JSON | null => {
 
 		const _uint8Arr = arrayify(bytes, { allowMissingPrefix: true });
 		const inflated = inflate(_uint8Arr);
+		const decoded = textDecoder.decode(inflated);
+		const parsed = JSON.parse(decoded);
+
+		return parsed;
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};
+/**
+ * @public
+ * Inverse of `deflateJson`. Get a hex string  or Uint8Array and use inflateRaw
+ * the JSON to obtain an string with the decoded data.
+ *
+ * @param bytes - Bytes to infalte to json
+ */
+export const rawInflateJson = (bytes: unknown): JSON | null => {
+	try {
+		if (!isBytesLike(bytes)) throw new Error('invalid bytes');
+
+		const _uint8Arr = arrayify(bytes, { allowMissingPrefix: true });
+		const inflated = inflateRaw(_uint8Arr);
 		const decoded = textDecoder.decode(inflated);
 		const parsed = JSON.parse(decoded);
 
