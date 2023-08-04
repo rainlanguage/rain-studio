@@ -5,4 +5,13 @@ import cbor from 'https://esm.sh/v111/cbor@8.1.0';
 import { createClient as createDbClient } from 'https://esm.sh/@supabase/supabase-js@2.0.0-rc.12';
 import { createClient as createSgClient } from 'https://esm.sh/v111/@urql/core@3.2.0';
 
-export { arrayify, isBytesLike, hexlify, inflate, inflateRaw, cbor, createDbClient, createSgClient };
+export {
+	arrayify,
+	isBytesLike,
+	hexlify,
+	inflate,
+	inflateRaw,
+	cbor,
+	createDbClient,
+	createSgClient
+};
