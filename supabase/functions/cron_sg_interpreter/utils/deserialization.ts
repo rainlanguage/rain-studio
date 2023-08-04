@@ -59,6 +59,7 @@ export const inflateJson = (bytes: unknown): JSON | null => {
 		return null;
 	}
 };
+
 /**
  * @public
  * Inverse of `deflateJson`. Get a hex string  or Uint8Array and use inflateRaw
