@@ -18,8 +18,7 @@ import type {
 	Rainterpreter_storesDB
 } from '../types.ts';
 import { manageContractMetaSg, manageDeployerMetaSg } from './meta.ts';
-import { hasCloneMethod } from './index.ts';
-import { getClonableVersion } from '../../cron_sg_interpreter/utils/index.ts';
+import { getClonaFactoryVersion, hasCloneMethod } from './index.ts';
 
 export function filterNonAddedCloneFactories(
 	sgContracts_: Array<ContractSG>,
@@ -80,7 +79,7 @@ export function filterNonAddedCloneFactories(
 					const _hasCloneMethod = hasCloneMethod(abi, contractMeta);
 
 					if (_hasCloneMethod) {
-						const clonable_version = getClonableVersion(metaContent.abi);
+						const clonable_version = getClonaFactoryVersion(metaContent.abi);
 
 						factoriesToAdd[factoryID] = {
 							id: factoryID,
