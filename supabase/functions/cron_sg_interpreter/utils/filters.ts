@@ -24,11 +24,18 @@ import { buildMetadataFromMeta, getClonableVersion } from './index.ts';
  * @public
  * Filter the data from Database and the Subgraph prior insert to avoid already
  * added data.
+ *
+ * `dbDeployers_` will be used to check if some deployer is already added and it is
+ * possible to do the relation with the contract
+ *
+ * Since tecnically this code will be ran in the cronjob, if a next time the deployer
+ * exist, then will be used
  */
 export function filterNonAddedContracts(
 	sgContracts_: Array<ContractSG>,
 	dbContracts_: ContractDB[],
-	chain_id: number
+	chain_id: number,
+	dbDeployers_: DeployerDB[]
 ) {
 	const contractsToAdd: {
 		[key: string]: DataContractUpload;
@@ -44,19 +51,37 @@ export function filterNonAddedContracts(
 	function addAddress(contractData: ContractSG, contractId_: string) {
 		const { id: address, type, implementation, initialDeployer } = contractData;
 		const contractAddressID = uuidv5(address + chain_id.toString(), UUIDnamespace);
+		let deployerAddressID: string | undefined = undefined;
+
+		if (initialDeployer) {
+			deployerAddressID = uuidv5(initialDeployer.id + chain_id.toString(), UUIDnamespace);
+
+			let alreadyExist = false;
+
+			for (let i = 0; i < dbDeployers_.length; i++) {
+				const deployers_ = dbDeployers_[i];
+
+				const deployAddressTmp = deployers_.deployers_addresses.find(
+					(deployerAddress_) => deployerAddress_.id === deployerAddressID
+				);
+
+				if (deployAddressTmp) {
+					alreadyExist = true;
+					break;
+				}
+			}
+
+			if (!alreadyExist) return;
+		}
 
 		addressesToAdd[contractAddressID] = {
 			id: contractAddressID,
 			address: address,
 			chain_id: chain_id,
 			contract: contractId_,
-			type: type
+			type: type,
+			initial_deployer: deployerAddressID
 		};
-
-		if (initialDeployer) {
-			const deployerAddressID = uuidv5(initialDeployer.id + chain_id.toString(), UUIDnamespace);
-			addressesToAdd[contractAddressID].initial_deployer = deployerAddressID;
-		}
 
 		// If this contract address is a minima; proxy, then should be assigned the
 		// implementation

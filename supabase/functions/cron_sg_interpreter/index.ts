@@ -70,7 +70,7 @@ serve(async (req) => {
 			);
 
 			// Filter non added contracts
-			const filteredContracts = filterNonAddedContracts(sgContracts, dBContracts, chain_id);
+			const filteredContracts = filterNonAddedContracts(sgContracts, dBContracts, chain_id, deployersDB);
 
 			const filteredDeployers = filterNonAddedDeployers(deployersSG, deployersDB, chain_id);
 			const filteredRainterpreters = filterNonAddedRainterpreters(
@@ -187,7 +187,7 @@ serve(async (req) => {
 			}
 		);
 	} catch (error) {
-		return new Response(JSON.stringify({ error }), {
+		return new Response(JSON.stringify({ error, message: error.message }), {
 			headers: { 'Content-Type': 'application/json' },
 			status: 400
 		});
