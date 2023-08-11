@@ -1,9 +1,9 @@
 import type {
 	SupabaseClient,
-	ContractDB,
 	DeployerDB,
 	RainterpreterDB,
-	Rainterpreter_storesDB
+	Rainterpreter_storesDB,
+	CloneFactoryDB
 } from '../types.ts';
 
 /**
@@ -12,9 +12,11 @@ import type {
  * from `contracts_new` and the related information like contract addresses from
  * `contract_addresses_new`
  */
-export async function getDBContracts(supabaseClient_: SupabaseClient): Promise<ContractDB[]> {
-	const resp = await supabaseClient_.from('contracts_new').select('*, contract_addresses_new(*)');
-	if (resp.error) throw new Error(`Cannot query from DB:  ${resp.error}`);
+export async function getDBFactories(supabaseClient_: SupabaseClient): Promise<CloneFactoryDB[]> {
+	const resp = await supabaseClient_
+		.from('clone_factories')
+		.select('*, clone_factories_address(*)');
+	if (resp.error) throw new Error(`Cannot query from DB:  ${resp.error.message}`);
 
 	return resp.data;
 }

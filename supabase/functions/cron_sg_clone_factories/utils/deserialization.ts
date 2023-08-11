@@ -1,4 +1,5 @@
 import { arrayify, isBytesLike, inflate, inflateRaw } from '../deps.ts';
+
 import { MetaContentV1SG } from '../types.ts';
 import { textDecoder } from './textDecoder.ts';
 
@@ -82,3 +83,4 @@ export const rawInflateJson = (bytes: unknown): JSON | null => {
 		return null;
 	}
 };
+

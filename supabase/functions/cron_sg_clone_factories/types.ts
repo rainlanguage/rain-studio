@@ -7,6 +7,10 @@ import type { SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.0.0-
 
 export { Client as SubgraphClient, SupabaseClient };
 
+export type CloneFactoryDB = Database['public']['Tables']['clone_factories']['Row'] & {
+	clone_factories_address: Array<Database['public']['Tables']['clone_factories_address']['Row']>;
+};
+
 export type ContractDB = Database['public']['Tables']['contracts_new']['Row'] & {
 	contract_addresses_new: Array<Database['public']['Tables']['contract_addresses_new']['Row']>;
 };
@@ -62,7 +66,7 @@ export type ContractSG = {
 	/**
 	 * Hash of  the contract meta bytes of this contract
 	 */
-	contractMetaHash: string;
+	contractMetaHash: string | null;
 	/**
 	 * The ExpressionDeployer used on the Constructor of the contract
 	 */
@@ -222,6 +226,24 @@ export type RainterpreterStoreSG = {
 	instances: Array<Instance>;
 };
 
+export type DataFactoryUpload = {
+	id: string;
+	abi: any;
+	contract_meta: any | null;
+	contract_meta_hash: string | null;
+	meta_bytes: string;
+	slug: string;
+	clonable_version: string | null;
+};
+
+export type DataFactoryAddressUpload = {
+	id: string;
+	factory: string;
+	address: string;
+	chain_id: number;
+	initial_deployer?: string | null | undefined;
+};
+
 export type DataContractUpload = {
 	id: string;
 	abi: any;
@@ -230,7 +252,6 @@ export type DataContractUpload = {
 	slug: string;
 	meta_bytes: string;
 	contract_meta_hash: string;
-	clonable_version: string | null;
 };
 
 export type DataAddressUpload = {

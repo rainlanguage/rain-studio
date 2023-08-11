@@ -49,15 +49,22 @@ export const load: PageServerLoad = async (event) => {
 
 	if (contractQuery.error) throw error(404, 'Not found');
 
-	const deployersQuery = await supabaseClient.from('deployers_addresses').select('*, deployer(opmeta_bytes)');
+	const deployersQuery = await supabaseClient
+		.from('deployers_addresses')
+		.select('*, deployer(opmeta_bytes)');
 	if (deployersQuery.error) throw error(500, 'Something went wrong :(');
-	const deployerData = deployersQuery.data.map((deployer) => ({ ...deployer, opmeta: deployer.deployer.opmeta_bytes }));
+	const deployerData = deployersQuery.data.map((deployer) => ({
+		...deployer,
+		opmeta: deployer.deployer.opmeta_bytes
+	}));
 
 	// Aaddresses filtered with the proper chain ID in an array
-	const addresses = contractQuery.data.contract_addresses_new ? contractQuery.data.contract_addresses_new
-		.filter((element) => element.chainId == chainId)
-		.map((element) => element.knownAddresses)
-		.flat() : null;
+	const addresses = contractQuery.data.contract_addresses_new
+		? contractQuery.data.contract_addresses_new
+				.filter((element) => element.chainId == chainId)
+				.map((element) => element.knownAddresses)
+				.flat()
+		: null;
 
 	//	Only mumbai at the moment
 	const client = createClient({
@@ -75,49 +82,49 @@ export const load: PageServerLoad = async (event) => {
 
 	///////////////////////////////////////////// Test design data
 
-	// Expression from SG to obtain values
-	const query = `
-		query GetAllExpressions {
-			expressions {
-				id
-				contextScratch
-				config {
-					id
-					sources
-					constants
-				}
-				account {
-					id
-				}
-				event {
-					id
-					transaction {
-						id
-						timestamp
-						blockNumber
-					}
-				}
-				sender {
-					id
-					deployTransaction {
-						id
-						timestamp
-						blockNumber
-					}
-				}
-				interpreter {
-					id
-				}
-				interpreterInstance {
-					id
-				}
-			}
-		}
-	`;
-	const testQuery = await client.query(query, {}).toPromise();
+	// // Expression from SG to obtain values
+	// const query = `
+	// 	query GetAllExpressions {
+	// 		expressions {
+	// 			id
+	// 			contextScratch
+	// 			config {
+	// 				id
+	// 				sources
+	// 				constants
+	// 			}
+	// 			account {
+	// 				id
+	// 			}
+	// 			event {
+	// 				id
+	// 				transaction {
+	// 					id
+	// 					timestamp
+	// 					blockNumber
+	// 				}
+	// 			}
+	// 			sender {
+	// 				id
+	// 				deployTransaction {
+	// 					id
+	// 					timestamp
+	// 					blockNumber
+	// 				}
+	// 			}
+	// 			interpreter {
+	// 				id
+	// 			}
+	// 			interpreterInstance {
+	// 				id
+	// 			}
+	// 		}
+	// 	}
+	// `;
+	// const testQuery = await client.query(query, {}).toPromise();
 
-	recentExpressions = testQuery.data.expressions;
-	recentExpressions.sort(sortExpressions);
+	// recentExpressions = testQuery.data.expressions;
+	// recentExpressions.sort(sortExpressions);
 	///////////////////////////////////////////////////////////////////////
 
 	// Check on DB if the expression_.account.id is an regirtered user, saving the username and avatar.
@@ -174,12 +181,30 @@ export const load: PageServerLoad = async (event) => {
 		});
 	}
 
+	// Find CloneableVersion first of this contract
+	const { clonable_version } = contractQuery.data;
+	let cloneFactories: { id: string; address: string; chain_id: number }[] = [];
+
+	const { data: dataCloneFactories } = await supabaseClient
+		.from('clone_factories')
+		.select('clone_factories_address(id, address, chain_id)')
+		.eq('clonable_version', clonable_version);
+
+	if (dataCloneFactories) {
+		dataCloneFactories.forEach((value_) => {
+			if (value_.clone_factories_address) {
+				cloneFactories = cloneFactories.concat(value_.clone_factories_address);
+			}
+		});
+	}
+
 	return {
 		contract: contractQuery.data,
 		deployers: deployerData,
 		expressionSG: recentExpressions,
 		accountsData: _accountsData,
 		userLikes: _userLikes,
-		expressionLikes: _expressionLikes
+		expressionLikes: _expressionLikes,
+		cloneFactories
 	};
 };

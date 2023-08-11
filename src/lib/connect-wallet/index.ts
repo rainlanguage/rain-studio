@@ -2,6 +2,7 @@ import Web3Modal from 'web3modal';
 import { defaultEvmStores } from 'svelte-ethers-store';
 import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min';
 import { changeNetwork } from './handleNetwork';
+import { ethers } from 'ethers';
 
 const providerOptions = {
 	injected: {
@@ -22,10 +23,11 @@ const providerOptions = {
 export const connectWallet = async () => {
 	const web3Modal = new Web3Modal({
 		cacheProvider: true,
-		providerOptions
+		providerOptions,
+		network: 'any'
 	});
 	const _provider = await web3Modal.connect();
-	// ethersProvider = new providers.Web3Provider(provider);
+
 	defaultEvmStores.setProvider(_provider);
 };
 

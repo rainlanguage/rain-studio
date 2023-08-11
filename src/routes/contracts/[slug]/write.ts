@@ -1,6 +1,5 @@
-import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
+import type { DeployerAddressesRow } from '$lib/types/types';
 import type { Abi, AbiError, AbiEvent, AbiFunction } from 'abitype';
-import { allChainsData } from 'svelte-ethers-store';
 
 // getting all of the state changing methods for this abi
 export const getWriteMethods = (
@@ -76,16 +75,4 @@ export const getInterpretersForChain = (
 		}
 	});
 	return deployersForSelect;
-};
-
-// filtering to the known addresses for the selected chain
-export const getKnownContractAddressesForChain = (
-	contractAddresses: ContractAddressRow[],
-	chain_id: number
-) => {
-	return contractAddresses
-		.filter((contractAddress) => contractAddress.chain_id == chain_id)
-		?.map((contractAddress) => {
-			return { label: contractAddress.address, value: contractAddress.address };
-		});
 };
