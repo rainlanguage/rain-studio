@@ -6,7 +6,6 @@
 	import { Input } from '@rainprotocol/rain-svelte-components';
 	import { onMount } from 'svelte';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
-	import { connected } from 'svelte-ethers-store';
 	import { connectWallet } from '$lib/connect-wallet';
 	import Logo from '$lib/Logo.svelte';
 	import { breakpoint, Breakpoints } from '$lib/breakpoint-stores';

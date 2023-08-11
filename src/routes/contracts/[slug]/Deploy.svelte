@@ -5,28 +5,30 @@
 	import {
 		type DISpair,
 		getRainNetworkForChainId,
-		getDeployTxData,
-		getContractDeployTxData,
-		NetworkProvider,
-		BlockScannerAPI,
-		RegistrySubgraph
+		getDeployTxData
 	} from '@rainprotocol/cross-deploy';
-	import { chainId, connected, provider, signer } from 'svelte-ethers-store';
+	import { chainId, connected } from 'svelte-wagmi';
+	import {
+		sendTransaction,
+		prepareSendTransaction,
+		waitForTransaction,
+		type WaitForTransactionResult
+	} from '@wagmi/core';
+
 	import { changeNetwork } from '$lib/connect-wallet';
-	import { createClient } from '@urql/core';
-	import { Subgraphs, getNetworkByChainId, networkOptions } from '$lib/utils';
+	import {
+		Subgraphs,
+		getBlockExplorerUrl,
+		getChainName,
+		getContractUrl,
+		networkOptions
+	} from '$lib/utils';
 	import { supabaseClient } from '$lib/supabaseClient';
 	import type { Item } from '@rainprotocol/rain-svelte-components/dist/input-dropdown/InputDropdown.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CheckCircle, ExclamationTriangle } from '@steeze-ui/heroicons';
 
-	import type { TransactionReceipt } from '@ethersproject/abstract-provider';
-	import { matchContracts } from '$lib/match-addresses';
-	import {
-		getKnownContractAddressesForChain,
-		getNameFromChainId,
-		getCommonChains
-	} from '$lib/contracts';
+	import { getKnownContractAddressesForChain, getCommonChains } from '$lib/contracts';
 
 	export let contractAddresses: ContractAddressRow[],
 		deployerAddresses: DeployerAddressesRow[],
@@ -45,7 +47,7 @@
 	let dispairTarget: DISpair;
 
 	// Handle send transaction
-	let txReceipt: TransactionReceipt | undefined;
+	let txReceipt: WaitForTransactionResult | undefined;
 	let txHash_: string;
 	let openWaitTx = false;
 	let waitTxResp = false;
@@ -76,7 +78,7 @@
 	const changeTargetChain = async (event_: Event) => {
 		const chainIdSelected = (event_.target as HTMLSelectElement).value;
 
-		if ($chainId != chainIdSelected) {
+		if ($chainId?.toString() != chainIdSelected) {
 			const resp = await changeNetwork(chainIdSelected);
 			if (!resp.success) {
 				targetChain = oldChain;
@@ -180,27 +182,28 @@
 
 		// const txData = await getContractDeployTxData(network, fromDIS, toDIS, selectedContractAddress);
 
-		const txData = await getDeployTxData(network, selectedContractAddress, {
-			DIS: DISInstances
-		});
-
 		try {
+			const txData = (await getDeployTxData(network, selectedContractAddress, {
+				DIS: DISInstances
+			})) as `0x${string}`;
+
 			if (!txData) {
 				throw new Error('It cannot retrieve the contract information');
 			}
 
-			tx_ = await $signer.sendTransaction({ data: txData });
+			// TODO: CHECK `TO`
+			// tx_ = await sendTransaction({ to: '', data: txData });
+			const preparedTx = await prepareSendTransaction({ data: txData });
+			tx_ = await sendTransaction(preparedTx);
+
 			// Do not wait anymore
 			waitTxResp = false;
 			txHash_ = tx_.hash;
 			waitTxReceipt = true;
 
-			const networkInfo = getNetworkByChainId($chainId);
-			if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
-				urlExplorer = networkInfo.explorers[0].url;
-			}
+			urlExplorer = getBlockExplorerUrl($chainId);
 
-			txReceipt = await tx_.wait();
+			txReceipt = await waitForTransaction({ hash: tx_.hash });
 
 			waitTxReceipt = false;
 			showTxReceipt = true;
@@ -220,7 +223,6 @@
 					errorMsg = JSON.stringify(error);
 				}
 			}
-			console.log(JSON.stringify(error));
 			errorTx = true;
 		}
 	};
@@ -237,7 +239,7 @@
 	$: selectedDeployerAddress, targetChain, getDeployerInfo(selectedDeployerAddress, targetChain);
 </script>
 
-{#if !$signer}
+{#if !$connected}
 	<div class="flex w-1/2 flex-col gap-y-4">
 		<p>You should connect your wallet before interacting with the newtork</p>
 		<ConnectWallet />
@@ -248,7 +250,7 @@
 			<span>Select an origin chain:</span>
 			<Select
 				items={contractChains.map((chainId_) => ({
-					label: getNameFromChainId(chainId_),
+					label: getChainName(chainId_),
 					value: chainId_
 				}))}
 				on:change={changeOriginChain}
@@ -364,7 +366,7 @@
 						class="text-blue-600"
 						target="_blank"
 						rel="noreferrer"
-						href={`${urlExplorer}/address/${txReceipt.contractAddress}`}
+						href={getContractUrl(txReceipt.contractAddress, targetChain)}
 					>
 						{txReceipt.contractAddress}
 					</a>

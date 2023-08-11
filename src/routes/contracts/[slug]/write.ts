@@ -21,12 +21,6 @@ export const getWriteMethods = (
 		}));
 };
 
-export const getNameFromChainId = (id: number): string => {
-	const name = allChainsData.find((chain) => chain.chainId == id)?.name;
-	if (!name) throw Error('Unknown chain_id');
-	return name;
-};
-
 // getting the chains for which there's both a known address for contract and interpreter
 export const getCommonChains = (
 	deployers: DeployerAddressesRow[],

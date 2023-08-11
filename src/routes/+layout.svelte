@@ -9,7 +9,7 @@
 	import * as Sentry from '@sentry/svelte';
 	import { BrowserTracing } from '@sentry/tracing';
 	import ModalLinkAddress from '$lib/connected-table/ModalLinkAddress.svelte';
-	import { signerAddress, connected } from 'svelte-ethers-store';
+	import { signerAddress, connected } from 'svelte-wagmi';
 	import {
 		isLinked,
 		unwantedWallets,
@@ -73,6 +73,7 @@
 
 	$: if (
 		$connected &&
+		$signerAddress &&
 		!$isLinked &&
 		!$unwantedWallets.includes($signerAddress) &&
 		$currentSearchStatus === SearchStatus.Finished &&
@@ -90,7 +91,7 @@
 
 <svelte:window bind:outerWidth={$viewportWidth} />
 
-<ModalLinkAddress bind:openedModal={openedModalLink} address={$signerAddress} />
+<ModalLinkAddress bind:openedModal={openedModalLink} address={$signerAddress ?? undefined} />
 
 <div data-sveltekit-prefetch class="flex h-full min-h-screen flex-col">
 	<Nav />

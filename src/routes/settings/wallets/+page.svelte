@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { signerAddress } from 'svelte-ethers-store';
 	import { page } from '$app/stores';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
 	import ModalUnlinkAddress from '$lib/connected-table/ModalUnlinkAddress.svelte';
 	import { HoverTooltip } from '@rainprotocol/rain-svelte-components';
+	import { signerAddress } from 'svelte-wagmi';
 
 	let openedModal = false;
 	let addressToUnlink = '';

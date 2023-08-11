@@ -1,18 +1,25 @@
+import { mainnet, polygon, polygonMumbai } from '@wagmi/core/chains';
+import type { Chain } from '@wagmi/core/chains';
 import type { Database } from '$lib/types/generated-db-types';
-import { allChainsData, type ChainData } from 'svelte-ethers-store';
 
-export const networkOptions = [
-	{ label: 'Ethereum', value: 1 },
-	{ label: 'Polygon', value: 137 },
-	{ label: 'Mumbai', value: 80001 }
-];
+/**
+ * Default chains to be used by rain studio
+ */
+export const defaultChains = [mainnet, polygon, polygonMumbai];
 
-export const getNetworkByChainId = (chainId_: number | string): ChainData | undefined => {
-	return allChainsData.find((chain_) => chain_.chainId == chainId_);
+export const networkOptions = defaultChains.map((chain_) => {
+	return {
+		label: chain_.name,
+		value: chain_.id
+	};
+});
+
+export const getNetworkByChainId = (chainId_: number | string): Chain | undefined => {
+	return defaultChains.find((chain_) => chain_.id == chainId_);
 };
 
-export const getNetworksByChainIds = (chainId_: Array<number | string>): ChainData[] => {
-	return allChainsData.filter((chain_) => chainId_.includes(chain_.chainId));
+export const getNetworksByChainIds = (chainId_: Array<number | string>): Chain[] => {
+	return defaultChains.filter((chain_) => chainId_.includes(chain_.id));
 };
 
 /**
@@ -20,7 +27,7 @@ export const getNetworksByChainIds = (chainId_: Array<number | string>): ChainDa
  */
 export const getChainsFromAddresses = (
 	contract_addresses_: Database['public']['Tables']['contract_addresses_new']['Row'][]
-): ChainData[] => {
+): Chain[] => {
 	if (!contract_addresses_.length) return [];
 
 	const uniqueChainIds = Array.from(
@@ -28,4 +35,41 @@ export const getChainsFromAddresses = (
 	).sort();
 
 	return getNetworksByChainIds(uniqueChainIds);
+};
+
+export const getBlockExplorerUrl = (
+	chainId_: number | string | null | undefined,
+	key_: string = 'default'
+): string => {
+	if (chainId_ !== null && chainId_ !== undefined) {
+		const networkInfo = getNetworkByChainId(chainId_);
+		if (networkInfo && networkInfo.blockExplorers) {
+			const urlExplorer = networkInfo.blockExplorers[key_]?.url;
+
+			if (urlExplorer) return urlExplorer;
+		}
+	}
+
+	return '';
+};
+
+export const getContractUrl = (
+	address_: string | null | undefined,
+	chainId_: number | string
+): string => {
+	if (chainId_ !== null && chainId_ !== undefined) {
+		const urlExplorer = getBlockExplorerUrl(chainId_);
+		if (urlExplorer) return `${urlExplorer}/address/${address_}`;
+	}
+
+	return '';
+};
+
+export const getChainName = (chainId_: number | string | null | undefined): string => {
+	if (chainId_ !== null && chainId_ !== undefined) {
+		const name = getNetworkByChainId(chainId_)?.name;
+		if (name) return name;
+	}
+
+	return 'none';
 };

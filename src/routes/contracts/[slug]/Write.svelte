@@ -3,9 +3,10 @@
 	import { page } from '$app/stores';
 	import { Button, Select, Modal } from '@rainprotocol/rain-svelte-components';
 	import { AutoAbiFormSeparated } from '@rainprotocol/rain-svelte-components';
-	// import type { ContractMetadata } from 'rain-metadata/type-definitions/contract';
-	import { ethers } from 'ethers';
-	import { chainId, defaultEvmStores, contracts, signer, allChainsData } from 'svelte-ethers-store';
+	import { chainId, connected } from 'svelte-wagmi';
+	import { writeContract, waitForTransaction, type WaitForTransactionResult } from '@wagmi/core';
+	import { isAddress } from 'viem';
+	import { prepareWriteFunction } from '$lib/contracts/contract-interactions';
 	import SaveExpression, { type PresaveExpression } from '$lib/expressions/SaveExpression.svelte';
 	import LoadExpressionModal from '$lib/expressions/LoadExpressionModal.svelte';
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
@@ -24,11 +25,8 @@
 	import { changeNetwork } from '$lib/connect-wallet';
 
 	import { InputDropdown } from '@rainprotocol/rain-svelte-components';
-	import {
-		getKnownContractAddressesForChain,
-		getNameFromChainId,
-		getCommonChains
-	} from '$lib/contracts';
+	import { getKnownContractAddressesForChain, getCommonChains } from '$lib/contracts';
+	import { getChainName } from '$lib/utils';
 
 	export let metadata: any,
 		abi: Abi,
@@ -52,6 +50,7 @@
 	let loadExpressionModal: boolean = false;
 	let loadRaw: Function;
 	let expressionComponentName: string;
+	let selectedInterpreter: string | -1; // the selected contract address
 
 	let openHelpModal: boolean = false;
 
@@ -83,22 +82,36 @@
 
 	// submit the transaction
 	const submit = async () => {
-		// creating an ethers contract instance with the selected known address
-		if (typeof selectedContract == 'string' && ethers.utils.isAddress(selectedContract))
-			defaultEvmStores.attachContract(
-				'selectedContract',
-				selectedContract,
-				abi as unknown as string
-			);
+		if (selectedContract === -1) {
+			transactionError = 'No contract has been selected to interact';
+			return;
+		}
 
-		// handling error cases
-		if (selectedMethod == -1) throw Error('No method selected');
+		if (!isAddress(selectedContract)) {
+			transactionError = `Not a valid hex contract address: ${selectedContract}`;
+			return;
+		}
+
+		// isAddress()
+		if (selectedMethod === -1) {
+			transactionError = 'No method selected';
+			return;
+		}
 
 		try {
-			await $contracts.selectedContract[selectedMethod.name](...result);
+			const requestWrite = await prepareWriteFunction(
+				selectedContract,
+				abi,
+				selectedMethod.name,
+				result
+			);
+
+			const { hash } = await writeContract(requestWrite);
+			// TODO: Add TX modal to see result
+			await waitForTransaction({ hash });
 		} catch (error) {
-			// Maybe we need to handle each type of error?
 			transactionError = error;
+			console.log(error);
 		}
 	};
 
@@ -142,7 +155,7 @@
 	const changeChain = async (event_: Event) => {
 		const chainIdSelected = (event_.target as HTMLSelectElement).value;
 
-		if ($chainId != chainIdSelected) {
+		if ($chainId?.toString() != chainIdSelected) {
 			const resp = await changeNetwork(chainIdSelected);
 			if (!resp.success) {
 				selectedChain = oldChain;
@@ -154,7 +167,7 @@
 		}
 	};
 
-	$: connectedChainName = allChainsData.find((chain) => chain.chainId == $chainId)?.name;
+	$: connectedChainName = getChainName($chainId);
 
 	let items: any;
 	let selectedDeployer: any;
@@ -177,7 +190,7 @@
 	<span>Select a chain</span>
 	<Select
 		items={availableChains.map((chainId_) => ({
-			label: getNameFromChainId(chainId_),
+			label: getChainName(chainId_),
 			value: chainId_
 		}))}
 		on:change={changeChain}
@@ -211,7 +224,7 @@
 					/>
 				{/key}
 				<div class="mt-8 flex flex-col gap-y-4 rounded-lg border border-gray-300 p-4">
-					{#if !$signer}
+					{#if !$connected}
 						<div class="self-center">
 							<ConnectWallet />
 						</div>
@@ -222,11 +235,7 @@
 						</div>
 						<div class="flex flex-col gap-y-2">
 							{#if knownAddressesForThisChain.length}
-								<span
-									>Select from known addresses for this contract on {allChainsData.find(
-										(chain) => chain.chainId == $chainId
-									)?.name}</span
-								>
+								<span>Select from known addresses for this contract on {connectedChainName}</span>
 								<Select items={knownAddressesForThisChain} bind:value={selectedContract} />
 							{:else}
 								<span class="text-gray-500">No known deployments for this chain.</span>

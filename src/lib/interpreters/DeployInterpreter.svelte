@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ConnectWallet from '$lib/connect-wallet/ConnectWallet.svelte';
-	import type { ContractAddressRow, DeployerAddressesRow } from '$lib/types/types';
+	import type { ContractAddressRow } from '$lib/types/types';
 	import {
 		Button,
 		Input,
@@ -15,12 +15,19 @@
 		getDeployTxData,
 		checkObtainTxHash
 	} from '@rainprotocol/cross-deploy';
-	import { chainId, signer } from 'svelte-ethers-store';
+	import { chainId, connected } from 'svelte-wagmi';
+	import {
+		sendTransaction,
+		prepareSendTransaction,
+		waitForTransaction,
+		type WaitForTransactionResult
+	} from '@wagmi/core';
 	import { changeNetwork } from '$lib/connect-wallet';
 	import {
 		Subgraphs,
+		getBlockExplorerUrl,
 		getChainsFromAddresses,
-		getNetworkByChainId,
+		getContractUrl,
 		networkOptions
 	} from '$lib/utils';
 	import { supabaseClient } from '$lib/supabaseClient';
@@ -56,7 +63,7 @@
 	let storeAddresses: Item[];
 
 	// Handle send transaction
-	let txReceipt: TransactionReceipt | undefined;
+	let txReceipt: WaitForTransactionResult | undefined;
 	let txHash_: string;
 	let openWaitTx = false;
 	let waitTxResp = false;
@@ -85,7 +92,7 @@
 	const changeTargetChain = async (event_: Event) => {
 		const chainIdSelected = (event_.target as HTMLSelectElement).value;
 
-		if ($chainId != chainIdSelected) {
+		if ($chainId?.toString() != chainIdSelected) {
 			const resp = await changeNetwork(chainIdSelected);
 			if (!resp.success) {
 				targetChain = oldChain;
@@ -174,17 +181,6 @@
 		return true;
 	};
 
-	const getContractUrl = (address_: string, chainId_: number): string => {
-		const networkInfo = getNetworkByChainId(chainId_);
-		if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
-			const urlExplorer = networkInfo.explorers[0].url;
-
-			return `${urlExplorer}/address/${address_}`;
-		}
-
-		return '';
-	};
-
 	const closeModalTx = () => {
 		txReceipt = undefined;
 		openWaitTx = false;
@@ -226,37 +222,50 @@
 		}
 
 		try {
-			const txData = await getDeployTxData(network, selectedInterpreterAddress, _options);
+			const txData = (await getDeployTxData(
+				network,
+				selectedInterpreterAddress,
+				_options
+			)) as `0x${string}`;
+
 			if (!txData) {
 				throw new Error('It cannot retrieve the contract information');
 			}
 
-			tx_ = await $signer.sendTransaction({ data: txData });
+			const preparedTx = await prepareSendTransaction({ data: txData });
+			tx_ = await sendTransaction(preparedTx);
+
 			// Do not wait anymore
 			waitTxResp = false;
 			txHash_ = tx_.hash;
 			waitTxReceipt = true;
 
-			const networkInfo = getNetworkByChainId($chainId);
-			if (networkInfo && networkInfo.explorers && networkInfo.explorers.length) {
-				urlExplorer = networkInfo.explorers[0].url;
-			}
+			urlExplorer = getBlockExplorerUrl($chainId);
 
-			txReceipt = await tx_.wait();
+			txReceipt = await waitForTransaction({ hash: tx_.hash });
 
 			waitTxReceipt = false;
 			showTxReceipt = true;
 		} catch (error) {
 			// Do not wait anymore
 			waitTxResp = false;
+
+			// TODO: Work to found how silent the error/red lines checking the error
+			// instances. That would be better, but not sure how should be made here.
+
+			// @ts-expect-error Compile error: There is no instance definition to check
 			if (error.code == 'ACTION_REJECTED') {
 				// The user rejected the transaction
 				errorMsg = 'Transaction rejected or cancelled';
 			} else {
 				// Other error
+				// @ts-expect-error Compile error: There is no instance definition to check
 				if (error.reason) {
+					// @ts-expect-error Compile error: There is no instance definition to check
 					errorMsg = error.reason;
+					// @ts-expect-error Compile error: There is no instance definition to check
 				} else if (error.message) {
+					// @ts-expect-error Compile error: There is no instance definition to check
 					errorMsg = error.message;
 				} else {
 					errorMsg = JSON.stringify(error);
@@ -309,7 +318,7 @@
 	$: requiredTxhash && checkTxHash(requiredTxhash);
 </script>
 
-{#if !$signer}
+{#if !$connected}
 	<div class="flex w-1/2 flex-col gap-y-4">
 		<p>You should connect your wallet before interacting with the newtork</p>
 		<ConnectWallet />
@@ -319,8 +328,8 @@
 		<div class="flex flex-col gap-y-4">
 			<span>Select an origin chain:</span>
 			<Select
-				items={contractChains.map(({ name, chainId }) => {
-					return { label: name, value: chainId };
+				items={contractChains.map(({ name, id }) => {
+					return { label: name, value: id };
 				})}
 				on:change={changeOriginChain}
 				bind:value={originChain}
@@ -478,7 +487,7 @@
 						class="text-blue-600"
 						target="_blank"
 						rel="noreferrer"
-						href={`${urlExplorer}/address/${txReceipt.contractAddress}`}
+						href={getContractUrl(txReceipt.contractAddress, targetChain)}
 					>
 						{txReceipt.contractAddress}
 					</a>

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { connected } from 'svelte-ethers-store';
 	import { connectWallet } from '$lib/connect-wallet';
 	import ConnectedTable from '$lib/connected-table/ConnectedTable.svelte';
+	import { connected } from 'svelte-wagmi';
 
 	export let mobileContext: boolean = false;
 </script>
