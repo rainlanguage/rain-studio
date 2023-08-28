@@ -31,12 +31,13 @@
 					applications using Rainlang.</span
 				>
 				<div>
-					<Button
+					<!-- TODO: Disabled until we allow to sing in again -->
+					<!-- <Button
 						on:click={() => {
 							goto('/sign-in');
 						}}
 						variant="rain-primary">Sign up</Button
-					>
+					> -->
 					<Button
 						on:click={() => {
 							goto('/expressions');
@@ -53,7 +54,7 @@
 	</div>
 
 	<!-- express yourself -->
-	<div class="container mx-auto flex flex-col items-center gap-y-20 py-32 px-8 sm:px-0">
+	<div class="container mx-auto flex flex-col items-center gap-y-20 px-8 py-32 sm:px-0">
 		<div class="flex flex-col items-center gap-y-8">
 			<span class="text-4xl font-semibold">Express yourself.</span>
 			<span class="w-full max-w-3xl text-center text-xl"

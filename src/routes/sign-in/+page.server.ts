@@ -9,11 +9,14 @@ import type { TypedSupabaseClient } from '@supabase/auth-helpers-sveltekit/dist/
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load(event) {
-	const session = await getServerSession(event);
-	if (session) {
-		throw redirect(307, '/dashboard');
-	}
-	return { session };
+	throw redirect(307, '/dashboard');
+
+	// TODO: Disabled until we allow to sing in again
+	// const session = await getServerSession(event);
+	// if (session) {
+	// 	throw redirect(307, '/dashboard');
+	// }
+	// return { session };
 }
 
 /** @type {import('./$types').Actions} */
