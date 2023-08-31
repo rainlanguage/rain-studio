@@ -5,9 +5,9 @@ published: true
 
 In this guide, we'll show you how to use Rainlang to make simple calculations using Rain Studio.
 
-## Set up your environment
+<!-- ## Set up your environment
 
-To get started, open Rain Studio in your web browser and sign in. Create new expression by [clicking here](/expression/new) and and select "No contract". This will create a new blank expression in Rain Studio. In the beginning, it is important to practice writing Rainlang without writing for a specific contract
+To get started, open Rain Studio in your web browser and sign in. Create new expression by [clicking here](/expression/new) and and select "No contract". This will create a new blank expression in Rain Studio. In the beginning, it is important to practice writing Rainlang without writing for a specific contract -->
 
 ## Name your expression
 

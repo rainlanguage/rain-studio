@@ -38,11 +38,12 @@
 						}}
 						variant="rain-primary">Sign up</Button
 					> -->
-					<Button
+					<!-- TODO: Fix expressiosn and eval -->
+					<!-- <Button
 						on:click={() => {
 							goto('/expressions');
 						}}>Discover</Button
-					>
+					> -->
 				</div>
 			</div>
 		</div>
@@ -62,11 +63,12 @@
 				calculations on-chain and use the results to accomplish tasks like writing order strategies,
 				or minting, burning and transferring tokens.</span
 			>
-			<Button
+			<!-- TODO: Fix expressiosn and eval -->
+			<!-- <Button
 				on:click={() => {
 					goto('/expressions');
 				}}>Discover community expressions</Button
-			>
+			> -->
 		</div>
 		<div class="flex w-full max-w-6xl flex-col gap-12 md:flex-row">
 			<div class="flex flex-grow flex-col divide-y">

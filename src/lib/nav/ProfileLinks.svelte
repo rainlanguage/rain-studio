@@ -11,10 +11,11 @@
 	href="/settings/profile"
 	class={mobileContext ? 'mobile-profile-link text-gray-500' : 'profile-link'}>Profile</a
 >
-<a
+<!-- TODO: Fix expressiosn and eval -->
+<!-- <a
 	href={`/user/${$page.data.profile?.username}/expressions`}
 	class={mobileContext ? 'mobile-profile-link text-gray-500' : 'profile-link'}>Expressions</a
->
+> -->
 <!-- <a class="profile-link">Deployments</a> -->
 <div class="border-t border-gray-200" />
 {#if !$connected}
