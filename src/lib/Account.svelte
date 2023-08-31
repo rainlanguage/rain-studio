@@ -91,13 +91,14 @@
 
 <div class="flex w-max flex-col space-y-3 rounded-lg bg-white p-6 shadow-md">
 	<div class="w-full border-b-2 border-double border-gray-300 pb-4">
-		<a
+		<!-- TODO: Fix expressiosn and eval -->
+		<!-- <a
 			class="mx-auto flex w-5/6 rounded-[10px] border border-neutral-300 bg-blue-500 py-1 text-white hover:bg-blue-400"
 			href={`/user/${username}/expressions`}
 		>
 			<Icon class="h-6 w-4/12" src={TableCells} />
 			Expressions
-		</a>
+		</a> -->
 	</div>
 
 	<form

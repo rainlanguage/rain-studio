@@ -5,20 +5,20 @@ published: true
 
 Rain Studio is a web application that provides a user-friendly environment for reading, writing, testing, and deploying Rainlang expressions. It is a powerful tool for creating smart contracts and other blockchain-based applications.
 
-## Setting up your Rain Studio account
+<!-- ## Setting up your Rain Studio account
 
 Follow these steps to set up your account and start using Rain Studio:
 
 1. Click the [sign up](/sign-up) button.
 2. Connect your wallet, then sign in with your wallet.
-3. Once you have successfully signed up, you will be redirected to the dashboard.
+3. Once you have successfully signed up, you will be redirected to the dashboard. -->
 
 ## Using Rain Studio
 
 Rain Studio has several different sections that you can use to manage your expressions and contracts.
 
 - On the [Contracts](/contracts) page, you can view all the available smart contracts that you can write expressions for.
-- On the [Expressions](/expressions) page, you can see expressions that other users have written, and learn more about how to write your own expressions.
+<!-- - On the [Expressions](/expressions) page, you can see expressions that other users have written, and learn more about how to write your own expressions. -->
 - The [Docs](/docs) section provides guides and a reference for how to use Rain Studio and write rainlang expressions.
 - Your [Profile](/settings/profile) can be accessed by clicking on your avatar in the top right corner of the screen, and selecting "Profile" from the dropdown menu. Here, you can set an avatar and your username.
 

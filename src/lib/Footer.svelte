@@ -10,7 +10,7 @@
 		<div class="flex w-48 flex-col">
 			<span class="mb-2 font-semibold">Explore</span>
 			<a href="/contracts">Contracts</a>
-			<!-- TODO: Fix -->
+			<!-- TODO: Fix expressiosn and eval -->
 			<!-- <a href="/expressions">Expressions</a> -->
 		</div>
 		<div class="flex w-48 flex-col">
